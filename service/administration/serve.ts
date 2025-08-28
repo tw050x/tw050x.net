@@ -2,32 +2,45 @@ import { default as logger } from "@tw050x.net/logger";
 import { defineService } from "@tw050x.net/service";
 import { join } from "node:path";
 
-const onClose = () => {
-  logger.info('Server shut down gracefully');
-  process.exit(0);
-}
-
 defineService({
   getRoutesDirectory: () => join(__dirname, 'stack'),
   onPrepare: async (service) => {
     await Promise.all([
       service.configuration.use('administration.service.allowed-origins'),
+      service.configuration.use('administration.service.host'),
       service.configuration.use('cookie.access-token.name'),
+      service.configuration.use('cookie.login-state.name'),
+      service.configuration.use('cookie.login-state.domain'),
+      service.secrets.use('encrypter.secret-key'),
       service.secrets.use('jwt.secret-key'),
     ]);
   },
   onReady: async (service) => {
     const onEndProcess = () => {
-      logger.info('End process signal received,shutting down server...');
-      service.close(onClose);
+      service.configuration.destroy();
+      service.secrets.destroy();
+      const forceCloseTimeout = setTimeout(() => {
+        logger.info('Server forced shut down');
+        process.exit(1);
+      }, 30_000);
+      service.close(() => {
+        clearTimeout(forceCloseTimeout);
+        logger.info('Server shut down gracefully');
+        process.exit(0);
+      });
     }
 
-    process.on('SIGINT', onEndProcess);
-    process.on('SIGTERM', onEndProcess);
-
+    process.on('SIGINT', () => {
+      logger.info('End process signal received, shutting down server...');
+      onEndProcess();
+    });
+    process.on('SIGTERM', () => {
+      logger.info('End process signal received, shutting down server...');
+      onEndProcess();
+    });
     process.on('uncaughtException', (error) => {
       logger.error('Uncaught exception:', error);
-      service.close(onClose);
+      onEndProcess();
     });
 
     service.listen(3000, () => {

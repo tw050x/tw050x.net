@@ -9,6 +9,6 @@ import { ServerResponse } from 'node:http';
 export default function sendMovedTemporarilyRedirect(serverResponse: ServerResponse, url: URL) {
   serverResponse.statusCode = 302;
   serverResponse.setHeader('Content-Type', 'text/plain');
-  serverResponse.setHeader('Location', url.toString());
+  serverResponse.setHeader('HX-Redirect', url.toString());
   serverResponse.end(`Moved Temporarily to ${url.toString()}`);
 }

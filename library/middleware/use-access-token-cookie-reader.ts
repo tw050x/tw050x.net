@@ -109,8 +109,8 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       if (rol.includes(requiredPermission) === true) continue;
       else hasAllPermissions = false;
     }
-    if (hasAllPermissions === true) context.incomingMessage.accessTokenCookie.authorised = true;
-    else context.incomingMessage.accessTokenCookie.authorised = false;
+    if (hasAllPermissions === true) accessTokenCookie.authorised = true;
+    else accessTokenCookie.authorised = false;
 
     accessTokenCookie.payload = {
       rol,

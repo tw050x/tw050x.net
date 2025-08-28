@@ -10,6 +10,6 @@ import { ServerResponse } from 'node:http';
 export default function sendSeeOtherRedirect(serverResponse: ServerResponse, url: URL) {
   serverResponse.statusCode = 303;
   serverResponse.setHeader('Content-Type', 'text/plain');
-  serverResponse.setHeader('Location', url.toString());
+  serverResponse.setHeader('HX-Redirect', url.toString());
   serverResponse.end('Redirecting...');
 }

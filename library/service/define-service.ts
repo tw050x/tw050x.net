@@ -10,11 +10,16 @@ import { secretsManagerClient } from "./secrets-manager-client";
 export type Service = {
   close: (callback?: () => void) => void;
   configuration: {
+    destroy: () => Promise<void>;
     use: (key: string) => void;
+  },
+  database: {
+    destroy: () => Promise<void>;
   },
   listen: (port: number | string, callback?: () => void) => void;
   on: (event: string, listener: (...args: any[]) => void) => void;
   secrets: {
+    destroy: () => Promise<void>;
     use: (key: string) => void;
   }
 }
@@ -163,6 +168,9 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
 
   const service: Service = {
     configuration: {
+      destroy: async () => {
+        ssmClient.destroy();
+      },
       use: async (key: string) => {
         const cachedValue = configuration.get(key);
         if (cachedValue === null) {
@@ -200,6 +208,9 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
       eventEmitter.on(event, listener);
     },
     secrets: {
+      destroy: async () => {
+        secretsManagerClient.destroy();
+      },
       use: async (key: string) => {
         const cachedValue = secrets.get(key);
         if (cachedValue === null) {

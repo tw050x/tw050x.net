@@ -9,6 +9,6 @@ import { ServerResponse } from 'node:http';
 export default function sendMovedPermanentlyRedirect(serverResponse: ServerResponse, url: URL) {
   serverResponse.statusCode = 301;
   serverResponse.setHeader('Content-Type', 'text/plain');
-  serverResponse.setHeader('Location', url.toString());
+  serverResponse.setHeader('HX-Redirect', url.toString());
   serverResponse.end(`Moved Permanently to ${url.toString()}`);
 }
