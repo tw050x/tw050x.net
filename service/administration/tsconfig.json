@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "../../artifact/service/administration",
+    "rootDir": ".",
+  },
+  "exclude": [
+    "node_modules/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "stack/admin/dashboard/get.ts",
+    "stack/admin/dashboard/options.ts",
+    "serve.ts",
+    "template.ts",
+  ]
+}

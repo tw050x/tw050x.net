@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "../../artifact/service/marketing",
+    "rootDir": ".",
+  },
+  "exclude": [
+    "node_modules/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "stack/get.ts",
+    "stack/options.ts",
+    "serve.ts",
+    "template.ts",
+  ]
+}

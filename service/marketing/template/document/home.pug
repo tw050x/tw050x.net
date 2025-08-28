@@ -1,0 +1,20 @@
+doctype html
+html(lang="en")
+  head
+    base(href="/")
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Home
+
+    include /node_modules/@tw050x.net/uikit/partial/htmx
+    include /node_modules/@tw050x.net/uikit/partial/stylesheet
+
+    //- Reload the page every 5 minutes to prevent timeouts.
+    //- Doing this ensure that a fresh nonce is generated when the old once is expiring.
+    script.
+      setTimeout(() => {
+        window.location.reload();
+      }, 300_000);
+  body
+    div(class="flex flex-col px-8 pt-8")
+      h1(class="text-4xl") Home

@@ -1,0 +1,23 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "htmx-ext-response-targets": "^2.0.1",
+    "htmx.org": "^2.0.4",
+    "pug": "^3.0.3"
+  },
+  "description": "The @tw050x.net/uikit package project",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/uikit",
+  "main": "index.js",
+  "scripts": {
+    "js:compile": "tsc"
+  },
+  "types": "index.d.ts",
+  "version": "1.0.5"
+}

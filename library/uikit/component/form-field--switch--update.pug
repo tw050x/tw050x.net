@@ -1,0 +1,52 @@
+mixin form-field--switch--update(id, label, name, enabled, endpoint)
+  label(
+    class="flex items-center justify-between"
+    id=`${id}-label`
+    for=`${id}-input`,
+  )
+    span(class="text-sm font-medium text-gray-900") #{label}
+    form(
+      action=endpoint
+      method="post"
+      class="flex items-center"
+      hx-disabled-elt=`this, #${id}-label`
+      hx-ext="response-targets"
+      hx-indicator=`#${id}-saving-indicator`
+      hx-patch=endpoint
+      hx-swap="outerHTML"
+      hx-target=`#${id}-label`
+      id=`${id}-form`
+    )
+      input(
+        name=name
+        type="hidden"
+        value="true"
+      )
+      input(
+        checked=enabled,
+        class="hidden"
+        id=`${id}-input`
+        name=name
+        type="checkbox"
+        value="false"
+      )
+      div(
+        class="htmx-indicator text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-md border border-blue-200 mr-2"
+        id=`${id}-saving-indicator`
+      )
+        svg(class="w-3 h-3 mr-1 inline animate-spin", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15")
+        | Saving...
+      button(
+        class=`${[
+          'cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200',
+          enabled === true ? 'bg-green-500' : 'bg-gray-300'
+        ].join(' ')}`
+        type="submit"
+      )
+        span(
+          class=`${[
+            'inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200',
+            enabled === true ? 'translate-x-6' : 'translate-x-1'
+          ].join(' ')}`
+        )

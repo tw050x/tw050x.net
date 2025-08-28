@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "../../artifact/library/uikit",
+    "rootDir": ".",
+  },
+  "exclude": [
+    "node_modules/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "component.ts",
+    "document.ts",
+    "partial.ts",
+    "svg.ts",
+  ]
+}

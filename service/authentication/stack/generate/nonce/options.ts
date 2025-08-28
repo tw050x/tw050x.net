@@ -1,0 +1,15 @@
+import { default as logger } from "@tw050x.net/logger";
+import { useCors } from "@tw050x.net/middleware/use-cors";
+import { defineServiceMiddleware } from "@tw050x.net/service";
+
+export default defineServiceMiddleware([
+  async (context) => {
+    logger.debug(`OPTIONS ${context.incomingMessage.url}`);
+  },
+  useCors({
+    getConfiguration: async (configuration) => ({
+      allowedMethods: ['POST', 'OPTIONS'],
+      allowedOrigins: configuration.get('authentication.service.allowed-origins'),
+    }),
+  }),
+])

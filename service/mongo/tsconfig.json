@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "../../artifact/service/mongo",
+    "rootDir": ".",
+  },
+  "exclude": [
+    "data/",
+    "migration/",
+    "node_modules/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": []
+}

@@ -1,0 +1,9 @@
+
+# Directories
+node_modules/
+
+# Files
+*.js
+public/assets/*
+!public/assets/clipboard.js
+!public/assets/healthcheck.txt

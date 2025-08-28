@@ -1,0 +1,12 @@
+mixin button--text(options)
+  button(
+    class="flex cursor-pointer justify-center items-center px-3 py-1 text-sm leading-4 font-medium rounded transition-colors w-full sm:w-auto"
+    id=id
+    type=options.type
+  )
+    div(class="htmx-indicator-hide")
+      block icon
+      | #{options.text}
+    div(class="absolute mx-auto my-auto")
+      div(class="htmx-indicator text-white")
+        include ../svg/button-loader.pug

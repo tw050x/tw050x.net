@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "outDir": "../../artifact/service/assets",
+    "rootDir": ".",
+  },
+  "exclude": [
+    "node_modules/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": []
+}

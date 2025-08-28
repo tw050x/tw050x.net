@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "../../artifact/service/authentication",
+    "rootDir": ".",
+  },
+  "exclude": [
+    "node_modules/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "stack/generate/nonce/options.ts",
+    "stack/generate/nonce/post.ts",
+    "stack/login/get.ts",
+    "stack/login/options.ts",
+    "stack/login/post.ts",
+    "stack/token/refresh/options.ts",
+    "stack/token/refresh/post.ts",
+    "serve.ts",
+    "template.ts",
+  ]
+}

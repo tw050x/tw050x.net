@@ -1,0 +1,23 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "description": "The @tw050x.net/type-guard package project",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": {
+      "tsx": "./index.ts",
+      "default": "./index.js"
+    }
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/type-guard",
+  "scripts": {
+    "js:compile": "tsc"
+  },
+  "types": "index.d.ts",
+  "version": "1.0.5"
+}

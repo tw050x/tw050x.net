@@ -1,0 +1,32 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "@tw050x.net/service": "workspace:*",
+    "mongodb": "^6.12.0",
+    "pg": "^8.16.3"
+  },
+  "description": "The @tw050x.net/database package project",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": {
+      "tsx": "./index.ts",
+      "default": "./index.js"
+    },
+    "./helper": {
+      "tsx": "./helper.ts",
+      "default": "./helper.js"
+    }
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/database",
+  "scripts": {
+    "js:compile": "tsc"
+  },
+  "types": "index.d.ts",
+  "version": "1.0.0"
+}

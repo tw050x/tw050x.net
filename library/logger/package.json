@@ -1,0 +1,26 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "winston": "^3.17.0"
+  },
+  "description": "The @tw050x.net/logger package project",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": {
+      "tsx": "./index.ts",
+      "default": "./index.js"
+    }
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/logger",
+  "scripts": {
+    "js:compile": "tsc"
+  },
+  "types": "index.d.ts",
+  "version": "1.0.0"
+}

@@ -1,0 +1,319 @@
+{
+  "tasks": [
+    {
+      "label": "tsc: watch service - auth admin",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--noEmit", "--preserveWatchOutput", "--project", "service/auth-admin", "--watch"],
+      "group": "build",
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build service - auth admin",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--noEmit", "--project", "service/auth-admin"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch service - auth application",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--noEmit", "--preserveWatchOutput", "--project", "service/auth-application", "--watch"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build service - auth application",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--noEmit", "--project", "service/auth-application"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch service - automation admin",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--watch", "--preserveWatchOutput", "--project", "service/automation-admin"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build service - automation admin",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--project", "service/automation-admin"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch service - automation controller",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--watch", "--preserveWatchOutput", "--project", "service/automation-controller"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build service - automation controller",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--project", "service/automation-controller"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build library - middleware",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--noEmit", "--project", "library/middleware"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch library - uikit",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--noEmit", "--preserveWatchOutput", "--project", "library/uikit", "--watch"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build library - uikit",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--noEmit", "--project", "library/uikit"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch library - encryption",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--preserveWatchOutput", "--project", "library/encryption", "--watch"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build library - encryption",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--project", "library/encryption"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch daemon - automation agent",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--preserveWatchOutput", "--project", "daemon/automation-agent", "--watch"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build daemon - automation agent",
+      "type": "shell",
+      "command": "node_modules/.bin/tsc",
+      "args": ["--project", "daemon/automation-agent"],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch - all",
+      "dependsOn": [
+        "tsc: watch library - middleware",
+        "tsc: watch library - uikit",
+        "tsc: watch library - encryption",
+        "tsc: watch service - auth admin",
+        "tsc: watch service - auth application",
+        "tsc: watch service - auth middleware",
+        "tsc: watch service - automation admin",
+        "tsc: watch service - automation controller",
+        "tsc: watch service - smtp admin",
+        "tsc: watch service - smtp agent",
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build - all",
+      "dependsOn": [
+        "tsc: build library - middleware",
+        "tsc: build library - uikit",
+        "tsc: build library - encryption",
+        "tsc: build service - auth admin",
+        "tsc: build service - auth application",
+        "tsc: build service - automation admin",
+        "tsc: build service - automation controller",
+        "tsc: build service - smtp admin",
+        "tsc: build service - smtp agent"
+      ],
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tailwindcss: watch assets",
+      "type": "shell",
+      "command": "npx @tailwindcss/cli --input ./assets/style.css --minify --output ./assets/public/assets/stylesheet.css --cwd ${workspaceFolder} --watch",
+      "options": {
+        "cwd": "${workspaceFolder}/assets"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tailwindcss: build assets",
+      "type": "shell",
+      "command": "npx @tailwindcss/cli --input ./assets/style.css --minify --output ./assets/public/assets/stylesheet.css --cwd ${workspaceFolder}",
+      "options": {
+        "cwd": "${workspaceFolder}/assets"
+      },
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    }
+  ],
+  "version": "2.0.0"
+}

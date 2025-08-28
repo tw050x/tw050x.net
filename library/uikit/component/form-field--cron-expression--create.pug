@@ -1,0 +1,129 @@
+mixin form-field--cron-expression--create(options)
+  - var initialValues = (options.initialValue || '0 0 * * *').split(' ')
+  div(
+    class="create-field-container"
+    id=`${options.id}-container`
+  )
+    div(class="flex items-center justify-between mb-2")
+      label(
+        class="text-sm font-medium text-gray-900"
+      ) #{options.label}
+
+    div(class="grid grid-cols-5 gap-3")
+      div(class="text-center")
+        label(
+          for=`${options.id}-minute`
+          class="block text-xs font-medium text-gray-700 mb-1"
+        ) Minute
+        input(
+          class=[
+            "w-full p-2 bg-gray-200 rounded-md font-mono text-sm text-center",
+            "focus:ring-blue-500 focus:border-blue-500",
+            options.errors && options.errors.length > 0 ? "border-red-500" : "border-gray-300"
+          ].join(' ')
+          id=`${options.id}-minute`
+          name=`${options.inputName}-minute`
+          placeholder="*"
+          type="text"
+          value=initialValues[0] || '*'
+          onchange=`updateCronExpression('${options.id}', '${options.inputName}')`
+        )
+        div(class="text-xs text-gray-500 mt-1") 0-59
+
+      div(class="text-center")
+        label(
+          for=`${options.id}-hour`
+          class="block text-xs font-medium text-gray-700 mb-1"
+        ) Hour
+        input(
+          class=[
+            "w-full p-2 bg-gray-200 rounded-md font-mono text-sm text-center",
+            "focus:ring-blue-500 focus:border-blue-500",
+            options.errors && options.errors.length > 0 ? "border-red-500" : "border-gray-300"
+          ].join(' ')
+          id=`${options.id}-hour`
+          name=`${options.inputName}-hour`
+          placeholder="*"
+          type="text"
+          value=initialValues[1] || '*'
+          onchange=`updateCronExpression('${options.id}', '${options.inputName}')`
+        )
+        div(class="text-xs text-gray-500 mt-1") 0-23
+
+      div(class="text-center")
+        label(
+          for=`${options.id}-day`
+          class="block text-xs font-medium text-gray-700 mb-1"
+        ) Day
+        input(
+          class=[
+            "w-full p-2 bg-gray-200 rounded-md font-mono text-sm text-center",
+            "focus:ring-blue-500 focus:border-blue-500",
+            options.errors && options.errors.length > 0 ? "border-red-500" : "border-gray-300"
+          ].join(' ')
+          id=`${options.id}-day`
+          name=`${options.inputName}-day`
+          placeholder="*"
+          type="text"
+          value=initialValues[2] || '*'
+          onchange=`updateCronExpression('${options.id}', '${options.inputName}')`
+        )
+        div(class="text-xs text-gray-500 mt-1") 1-31
+
+      div(class="text-center")
+        label(
+          for=`${options.id}-month`
+          class="block text-xs font-medium text-gray-700 mb-1"
+        ) Month
+        input(
+          class=[
+            "w-full p-2 bg-gray-200 rounded-md font-mono text-sm text-center",
+            "focus:ring-blue-500 focus:border-blue-500",
+            options.errors && options.errors.length > 0 ? "border-red-500" : "border-gray-300"
+          ].join(' ')
+          id=`${options.id}-month`
+          name=`${options.inputName}-month`
+          placeholder="*"
+          type="text"
+          value=initialValues[3] || '*'
+          onchange=`updateCronExpression('${options.id}', '${options.inputName}')`
+        )
+        div(class="text-xs text-gray-500 mt-1") 1-12
+
+      div(class="text-center")
+        label(
+          for=`${options.id}-weekday`
+          class="block text-xs font-medium text-gray-700 mb-1"
+        ) Weekday
+        input(
+          class=[
+            "w-full p-2 bg-gray-200 rounded-md font-mono text-sm text-center",
+            "focus:ring-blue-500 focus:border-blue-500",
+            options.errors && options.errors.length > 0 ? "border-red-500" : "border-gray-300"
+          ].join(' ')
+          id=`${options.id}-weekday`
+          name=`${options.inputName}-weekday`
+          placeholder="*"
+          type="text"
+          value=initialValues[4] || '*'
+          onchange=`updateCronExpression('${options.id}', '${options.inputName}')`
+        )
+        div(class="text-xs text-gray-500 mt-1") 0-6
+
+    script.
+      function updateCronExpression(id, inputName) {
+        // This function can be used for validation or other purposes
+        // Individual inputs will be sent separately to the server
+      }
+
+    if options.errors && options.errors.length > 0
+      include ./notice--contained--error
+      div(class="mt-2")
+        +notice--contained--error()
+          if options.errors.length === 1
+            | #{options.errors[0]}
+          else
+            div The following errors occurred:
+            ul(class="list-disc list-inside space-y-1 mt-2 ml-4")
+              each error in options.errors
+                li #{error}

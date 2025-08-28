@@ -1,0 +1,40 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "devDependencies": {
+    "@types/bcrypt": "^5",
+    "@types/cookies": "^0.9.0",
+    "@types/cors": "^2",
+    "@types/express": "^4",
+    "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9",
+    "@types/node": "^22.10.2",
+    "@types/pug": "^2.0.10",
+    "@types/quoted-printable": "^1",
+    "@types/utf8": "^3",
+    "@types/validator": "^13.12.2",
+    "@yarnpkg/types": "^4.0.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.7.2"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/platform",
+  "private": true,
+  "repository": "git@gitlab.com:tw050x.net/platform.git",
+  "version": "0.0.0",
+  "workspaces": [
+    "assets",
+    "library/database",
+    "library/logger",
+    "library/middleware",
+    "library/service",
+    "library/type-guard",
+    "library/uikit",
+    "service/administration",
+    "service/authentication",
+    "service/marketing",
+    "service/traefik"
+  ],
+  "packageManager": "yarn@4.9.2"
+}

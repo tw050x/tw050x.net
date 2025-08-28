@@ -1,0 +1,6 @@
+include ../component/notice--contained--error
++notice--contained--error()
+  | There was a problem with your task:
+  ul(class="text-red-500 list-disc list-inside ml-4 mt-2")
+    each error in validationErrors
+      li= error.message

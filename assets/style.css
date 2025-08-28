@@ -1,0 +1,6 @@
+@import "tailwindcss";
+
+.htmx-request .htmx-indicator-hide,
+.htmx-request.htmx-indicator-hide {
+  visibility: hidden;
+}

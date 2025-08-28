@@ -1,0 +1,13 @@
+# BuildKit configuration file for Docker Compose
+#
+# Developer Notes:
+#
+# Either copy this file to /etc/buildkit/buildkitd.toml
+# or set the environment variable BUILDKITD_CONFIG to point to this file.
+# or create a custom builder and use the --builder flag with `docker compose`.
+#
+# Changes to this file should be discussed with the team before applying.
+#
+
+[worker.oci]
+  max-parallelism = 2

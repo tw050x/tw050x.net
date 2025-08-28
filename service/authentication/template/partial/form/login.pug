@@ -1,0 +1,20 @@
+form(action="/login", class="sm:w-144", hx-post="/login", hx-swap="outerHTML", id="sign-in-form" method="post", novalidate)
+  div(class="flex flex-col py-8 space-y-4")
+    label(class="flex flex-col")
+      | Email Address
+      input(class="border p-2 rounded-lg", name="email", type="email", value=(email ? email : ''))
+    label(class="flex flex-col")
+      | Password
+      input(class="border p-2 rounded-lg", name="password", type="password")
+  if validationErrors && validationErrors.length
+    div(class="flex text-sm flex-col bg-red-100 border border-red-400 rounded-lg p-4 mb-8")
+      | There was a problem with your credentials:
+      ul(class="text-red-500 list-disc list-inside ml-4 mt-2")
+        each error in validationErrors
+          li= error.message
+  div(class="flex")
+    button(class="bg-blue-500 hover:not-disabled:bg-blue-600 flex flex-row justify-center disabled:cursor-not-allowed not-disabled:cursor-pointer relative font-semibold px-8 py-4 rounded-lg text-white w-40 border-blue-700 border", id="sign-in-button", type="submit")
+      span(class="htmx-indicator-hide") Login
+      div(class="absolute mx-auto my-auto")
+        div(class="htmx-indicator text-white")
+          include /template/partial/svg/button-loader.pug

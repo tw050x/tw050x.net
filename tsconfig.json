@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "composite": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "target": "ES2022"
+  },
+  "exclude": [
+    ".vscode/",
+    ".yarn/",
+    "artifact/",
+    "container/",
+    "coverage/",
+    "documentation/",
+    "log/",
+    "node_modules/",
+    "playground/",
+    "tmp/"
+  ],
+  "references": [
+    { "path": "./library/database" },
+    { "path": "./library/logger" },
+    { "path": "./library/middleware" },
+    { "path": "./library/service" },
+    { "path": "./library/type-guard" },
+    { "path": "./library/uikit" },
+    { "path": "./service/administration" },
+    { "path": "./service/authentication" },
+    { "path": "./service/marketing" },
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
+}

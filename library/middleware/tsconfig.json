@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "../../artifact/library/middleware",
+    "rootDir": ".",
+  },
+  "exclude": [
+    "node_modules/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "use-access-token-cookie-reader.ts",
+    "use-access-token-cookie-writer.ts",
+    "use-cors.ts",
+    "use-login-state-cookie-reader.ts",
+    "use-login-state-cookie-writer.ts",
+    "use-refresh-token-cookie-reader.ts",
+    "use-refresh-token-cookie-writer.ts",
+    "use-refreshable-token-cookie-reader.ts",
+    "use-refreshable-token-cookie-writer.ts",
+  ]
+}

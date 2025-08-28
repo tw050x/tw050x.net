@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "outDir": "../../artifact/library/type-guard",
+    "rootDir": ".",
+  },
+  "exclude": [
+    "node_modules/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "index.ts",
+    "is-allowed-domain.ts",
+    "is-allowed-headers.ts",
+    "is-allowed-method.ts",
+    "is-allowed-origin.ts",
+  ]
+}

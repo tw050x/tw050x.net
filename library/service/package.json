@@ -1,0 +1,35 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.873.0",
+    "@aws-sdk/client-ssm": "^3.873.0",
+    "@tw050x.net/logger": "workspace:*",
+    "@tw050x.net/type-guard": "workspace:*",
+    "lru-cache": "^11.1.0",
+    "mongodb": "^6.12.0"
+  },
+  "description": "The @tw050x.net/service package project",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": {
+      "tsx": "./index.ts",
+      "default": "./index.js"
+    },
+    "./helper": {
+      "tsx": "./helper.ts",
+      "default": "./helper.js"
+    }
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/service",
+  "scripts": {
+    "js:compile": "tsc"
+  },
+  "types": "index.d.ts",
+  "version": "1.0.0"
+}

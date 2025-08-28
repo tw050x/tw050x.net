@@ -1,0 +1,19 @@
+doctype html
+html(lang="en")
+  head
+    base(href="/")
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    title Not Found
+
+    include ../partial/htmx
+    include ../partial/stylesheet
+  body
+    div(class="flex flex-col px-8 pt-8")
+      h1(class="text-4xl") There is nothing here.
+      div(class="flex flex-col py-8 space-y-4")
+          div(class="flex flex-col")
+            h2(class="text-xl font-semibold") We're not sure how you got here.
+            span
+              | You should navigate somewhere else, or&nbsp;
+              a(href="javascript:history.back()", class="text-blue-500 underline mt-8") go back.

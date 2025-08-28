@@ -1,0 +1,80 @@
+mixin form-field--text--update(options)
+  div(
+    class="update-field-container"
+    id=`${options.id}-container`
+  )
+    div(class="flex items-center justify-between mb-2")
+      label(
+        for=`${options.id}-input`
+        class="text-sm font-medium text-gray-900"
+      ) #{options.label}
+      div(
+        class="htmx-indicator text-xs font-medium text-blue-600 bg-blue-50 px-2 rounded-md border border-blue-200"
+        id=`${options.id}-saving-indicator`
+      )
+        svg(class="w-3 h-3 mr-1 inline animate-spin", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15")
+        | Saving...
+      div(
+        class="htmx-indicator text-xs font-medium text-red-600 bg-blue-50 px-2 rounded-md border border-blue-200"
+        id=`${options.id}-cancelling-indicator`
+      )
+        svg(class="w-3 h-3 mr-1 inline animate-spin", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+          path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15")
+        | Cancelling...
+    form(
+      action=options.endpoint
+      method="post"
+      hx-disabled-elt=`this, #${options.id}-save-button, #${options.id}-cancel-button`
+      hx-ext="response-targets"
+      hx-indicator=`#${options.id}-saving-indicator`
+      hx-patch=options.endpoint
+      hx-swap="outerHTML"
+      hx-target=`#${options.id}-container`
+      id=`${options.id}-form`
+    )
+      input(
+        autofocus
+        class=[
+          "w-full p-3 bg-gray-200 rounded-md",
+          "focus:ring-blue-500"
+        ].join(' ')
+        id=`${options.id}-input`
+        name=options.inputName
+        placeholder=options.placeholder
+        type="text"
+        value=options.initialValue || ''
+      )
+      if options.errors && options.errors.length > 0
+        include ./notice--contained--error
+        div(class="mt-4")
+          +notice--contained--error()
+            if options.errors.length === 1
+              | #{options.errors[0]}
+            else
+              div The following errors occurred:
+              ul(class="list-disc list-inside space-y-1 mt-2 ml-4")
+                each error in options.errors
+                  li #{error}
+      div(class="flex items-center justify-between mt-3")
+        div(class="flex space-x-2")
+          include ./button--contained
+          +button--contained({
+            id: `${options.id}-save-button`,
+          })
+            include ../svg/check.pug
+            | Save
+          a(
+            class="inline-flex items-center px-3 py-1 border border-gray-300 text-sm leading-4 font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+            href=options.endpoint
+            hx-disabled-elt=`this, #${options.id}-save-button, #${options.id}-cancel-button`
+            hx-ext="response-targets"
+            hx-get=options.endpoint
+            hx-indicator=`#${options.id}-cancelling-indicator`
+            hx-swap="outerHTML"
+            hx-target=`#${options.id}-container`
+            id=`${options.id}-cancel-button`
+          )
+            svg(class="w-4 h-4 mr-1", fill="none", stroke="currentColor", viewBox="0 0 24 24")
+              path(stroke-linecap="round", stroke-linejoin="round", stroke-width="2", d="M6 18L18 6M6 6l12 12")
+            | Cancel

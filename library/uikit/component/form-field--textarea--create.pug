@@ -1,0 +1,33 @@
+mixin form-field--textarea--create(options)
+  div(
+    class="form-field--textarea--create"
+    id=`${options.id}-container`
+  )
+    div(class="flex items-center justify-between mb-2")
+      label(
+        for=`${options.id}-input`
+        class="text-sm font-medium text-gray-900"
+      ) #{options.label}
+    div
+      textarea(
+        class=[
+          "w-full p-3 bg-gray-200 h-35 rounded-md",
+          "focus:ring-blue-500",
+          options.errors && options.errors.length > 0 ? "border-red-500 focus:border-red-500" : ""
+        ].join(' ')
+        id=`${options.id}-input`
+        name=options.inputName
+        placeholder=options.placeholder
+        rows="4"
+      ) #{options.initialValue || ''}
+    if options.errors && options.errors.length > 0
+      include ./notice--contained--error
+      div(class="mt-4")
+        +notice--contained--error()
+          if options.errors.length === 1
+            | #{options.errors[0]}
+          else
+            div The following errors occurred:
+            ul(class="list-disc list-inside space-y-1 mt-2 ml-4")
+              each error in options.errors
+                li #{error}

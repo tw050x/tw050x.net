@@ -1,0 +1,32 @@
+group "default" {
+  targets = [
+    "administration",
+    "assets",
+    "authentication",
+    "marketing"
+  ]
+}
+
+target "administration" {
+  dockerfile = "container/service/Dockerfile"
+  target = "service-administration"
+  tags = ["tw050x.net/administration:latest"]
+}
+
+target "assets" {
+  dockerfile = "container/assets/Dockerfile"
+  target = "assets"
+  tags = ["tw050x.net/assets:latest"]
+}
+
+target "authentication" {
+  dockerfile = "container/service/Dockerfile"
+  target = "service-authentication"
+  tags = ["tw050x.net/authentication:latest"]
+}
+
+target "marketing" {
+  dockerfile = "container/service/Dockerfile"
+  target = "service-marketing"
+  tags = ["tw050x.net/marketing:latest"]
+}

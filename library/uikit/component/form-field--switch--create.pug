@@ -1,0 +1,70 @@
+mixin form-field--switch--create(options)
+  div(
+    class="create-field-container"
+    id=`${options.id}-container`
+  )
+    label(
+      class="flex items-center justify-between"
+      for=`${options.id}-input`
+    )
+      span(class="text-sm font-medium text-gray-900") #{options.label}
+      div(class="flex items-center")
+        input(
+          checked=options.initialValue === true || options.initialValue === 'true'
+          class="hidden"
+          id=`${options.id}-input`
+          name=options.inputName
+          type="checkbox"
+          value="true"
+        )
+        button(
+          type="button"
+          class=`${[
+            'cursor-pointer relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-0',
+            options.initialValue === true || options.initialValue === 'true' ? 'bg-green-500' : 'bg-gray-300'
+          ].join(' ')}`
+          onclick=`toggleSwitch('${options.id}')`
+        )
+          span(
+            class=`${[
+              'inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-0',
+              options.initialValue === true || options.initialValue === 'true' ? 'translate-x-6' : 'translate-x-1'
+            ].join(' ')}`
+            id=`${options.id}-toggle`
+          )
+
+    if options.description
+      div(class="text-xs text-gray-600 mt-1 ml-0") #{options.description}
+
+    script.
+      function toggleSwitch(id) {
+        const checkbox = document.getElementById(id + '-input');
+        const button = checkbox.nextElementSibling;
+        const toggle = document.getElementById(id + '-toggle');
+
+        checkbox.checked = !checkbox.checked;
+
+        if (checkbox.checked) {
+          button.classList.remove('bg-gray-300');
+          button.classList.add('bg-green-500');
+          toggle.classList.remove('translate-x-1');
+          toggle.classList.add('translate-x-6');
+        } else {
+          button.classList.remove('bg-green-500');
+          button.classList.add('bg-gray-300');
+          toggle.classList.remove('translate-x-6');
+          toggle.classList.add('translate-x-1');
+        }
+      }
+
+    if options.errors && options.errors.length > 0
+      include ./notice--contained--error
+      div(class="mt-2")
+        +notice--contained--error()
+          if options.errors.length === 1
+            | #{options.errors[0]}
+          else
+            div The following errors occurred:
+            ul(class="list-disc list-inside space-y-1 mt-2 ml-4")
+              each error in options.errors
+                li #{error}
