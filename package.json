@@ -1,6 +1,8 @@
 {
   "author": "tw050x (Richard Kielty)",
   "devDependencies": {
+    "@kitajs/html": "^4.2.9",
+    "@kitajs/ts-html-plugin": "^4.1.2",
     "@types/bcrypt": "^5",
     "@types/cookies": "^0.9.0",
     "@types/cors": "^2",
@@ -8,7 +10,6 @@
     "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9",
     "@types/node": "^22.10.2",
-    "@types/pug": "^2.0.10",
     "@types/quoted-printable": "^1",
     "@types/utf8": "^3",
     "@types/validator": "^13.12.2",
@@ -20,8 +21,12 @@
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net/platform",
+  "packageManager": "yarn@4.9.2",
   "private": true,
   "repository": "git@gitlab.com:tw050x.net/platform.git",
+  "scripts": {
+    "test": "xss-scan"
+  },
   "version": "0.0.0",
   "workspaces": [
     "assets",
@@ -35,6 +40,5 @@
     "service/authentication",
     "service/marketing",
     "service/traefik"
-  ],
-  "packageManager": "yarn@4.9.2"
+  ]
 }

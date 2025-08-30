@@ -1,9 +1,0 @@
-mixin form-field-group(options = {})
-  div(class="border border-gray-300 rounded-lg overflow-hidden")
-    div(
-      class=[
-        'flex flex-col space-y-8 p-4',
-        options.separater === true ? '[&>*:not(:first-child)]:border-t [&>*:not(:first-child)]:border-t-gray-300 [&>*]:border-b-0' : ''
-      ].join(' ')
-    )
-      block

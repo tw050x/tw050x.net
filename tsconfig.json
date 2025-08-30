@@ -4,15 +4,19 @@
     "composite": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "plugins": [
+      { "name": "@kitajs/ts-html-plugin" }
+    ],
     "strict": true,
-    "target": "ES2022"
+    "target": "es2024",
   },
   "exclude": [
     ".vscode/",
     ".yarn/",
-    "artifact/",
     "container/",
     "coverage/",
     "documentation/",
@@ -31,10 +35,5 @@
     { "path": "./service/administration" },
     { "path": "./service/authentication" },
     { "path": "./service/marketing" },
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "CommonJS"
-    }
-  }
+  ]
 }

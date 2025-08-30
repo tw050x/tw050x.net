@@ -13,14 +13,8 @@
     "typescript": "^5.7.2"
   },
   "exports": {
-    ".": {
-      "tsx": "./index.ts",
-      "default": "./index.js"
-    },
-    "./helper": {
-      "tsx": "./helper.ts",
-      "default": "./helper.js"
-    }
+    ".": "./artifact/index.js",
+    "./helper": "./artifact/helper.js"
   },
   "installConfig": {
     "hoistingLimits": "workspaces"
@@ -30,6 +24,6 @@
   "scripts": {
     "js:compile": "tsc"
   },
-  "types": "index.d.ts",
+  "types": "artifact/index.d.ts",
   "version": "1.0.0"
 }

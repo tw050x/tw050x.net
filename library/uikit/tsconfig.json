@@ -1,16 +1,21 @@
 {
   "compilerOptions": {
-    "outDir": "../../artifact/library/uikit",
-    "rootDir": ".",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "outDir": "./artifact",
+    "rootDir": "./src",
   },
   "exclude": [
     "node_modules/",
   ],
   "extends": "../../tsconfig.json",
   "files": [
-    "component.ts",
-    "document.ts",
-    "partial.ts",
-    "svg.ts",
+    "src/component/Htmx.tsx",
+    "src/component/Stylesheet.tsx",
+    "src/document/Forbidden.tsx",
+    "src/document/Unrecoverable.tsx",
+    "src/component.ts",
+    "src/document.ts",
+    "src/index.ts",
   ]
 }

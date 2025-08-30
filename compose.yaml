@@ -2,13 +2,13 @@
 services:
 
   administration-service:
-    command: [ "tsx", "--watch-path=/srv", "service/administration/serve.ts" ]
+    command: [ "nodemon", "--watch-path=/srv", "service/administration/artifact/serve.js" ]
     # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/administration/serve.ts" ]
     depends_on:
       assets:
         condition: service_healthy
-      authentication-service:
-        condition: service_healthy
+      # authentication-service:
+      #   condition: service_healthy
       localstack-service:
         condition: service_healthy
       mongo-database:
@@ -33,6 +33,9 @@ services:
     mem_limit: 200mb
     pull_policy: never
     volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
       - source: ./library
         target: /srv/library
         type: bind
@@ -68,7 +71,7 @@ services:
         type: bind
 
   authentication-service:
-    command: [ "tsx", "--watch-path=/srv", "service/authentication/serve.ts" ]
+    command: [ "nodemon", "--watch-path=/srv", "service/authentication/artifact/serve.js" ]
     # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/authentication/serve.ts" ]
     depends_on:
       assets:
@@ -97,6 +100,9 @@ services:
     mem_limit: 200mb
     pull_policy: never
     volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
       - source: ./library
         target: /srv/library
         type: bind
@@ -142,7 +148,7 @@ services:
         type: bind
 
   marketing-service:
-    command: [ "tsx", "--watch-path=/srv", "service/marketing/serve.ts" ]
+    command: [ "nodemon", "--watch-path=/srv", "service/marketing/artifact/serve.js" ]
     # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/marketing/serve.ts" ]
     depends_on:
       localstack-service:
@@ -170,6 +176,9 @@ services:
     mem_limit: 200mb
     pull_policy: never
     volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
       - source: ./library
         target: /srv/library
         type: bind

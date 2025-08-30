@@ -1,16 +1,26 @@
 {
   "compilerOptions": {
-    "outDir": "../../artifact/service/administration",
-    "rootDir": ".",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "outDir": "./artifact",
+    "rootDir": "./src",
   },
   "exclude": [
     "node_modules/",
   ],
   "extends": "../../tsconfig.json",
   "files": [
-    "stack/admin/dashboard/get.ts",
-    "stack/admin/dashboard/options.ts",
-    "serve.ts",
-    "template.ts",
+    "src/stack/admin/dashboard/get.tsx",
+    "src/stack/admin/dashboard/options.ts",
+    "src/template/document/Dashboard.tsx",
+    "src/serve.ts",
+  ],
+  "references": [
+    { "path": "../../library/database" },
+    { "path": "../../library/logger" },
+    { "path": "../../library/middleware" },
+    { "path": "../../library/service" },
+    { "path": "../../library/type-guard" },
+    { "path": "../../library/uikit" }
   ]
 }

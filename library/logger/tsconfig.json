@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "../../artifact/library/logger",
-    "rootDir": ".",
+    "outDir": "./artifact",
+    "rootDir": "./src",
   },
   "exclude": [
     "node_modules/",
   ],
   "extends": "../../tsconfig.json",
   "files": [
-    "index.ts",
+    "src/index.ts",
   ]
 }

@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
-    "outDir": "../../artifact/library/database",
-    "rootDir": ".",
+    "outDir": "./artifact",
+    "rootDir": "./src",
   },
   "exclude": [
     "node_modules/",
   ],
   "extends": "../../tsconfig.json",
   "files": [
-    "helper/sanitize-mongodb-filter-or-pipeline.ts",
-    "helper.ts",
-    "index.ts",
+    "src/helper/sanitize-mongodb-filter-or-pipeline.ts",
+    "src/helper.ts",
+    "src/index.ts",
+  ],
+  "references": [
+    { "path": "../service" },
   ]
 }

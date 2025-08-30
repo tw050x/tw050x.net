@@ -1,21 +1,30 @@
 {
   "compilerOptions": {
-    "outDir": "../../artifact/service/authentication",
-    "rootDir": ".",
+    "outDir": "./artifact",
+    "rootDir": "./src",
   },
   "exclude": [
     "node_modules/",
   ],
   "extends": "../../tsconfig.json",
   "files": [
-    "stack/generate/nonce/options.ts",
-    "stack/generate/nonce/post.ts",
-    "stack/login/get.ts",
-    "stack/login/options.ts",
-    "stack/login/post.ts",
-    "stack/token/refresh/options.ts",
-    "stack/token/refresh/post.ts",
-    "serve.ts",
-    "template.ts",
+    "src/stack/generate/nonce/options.ts",
+    "src/stack/generate/nonce/post.ts",
+    "src/stack/login/get.tsx",
+    "src/stack/login/options.ts",
+    "src/stack/login/post.tsx",
+    "src/stack/token/refresh/options.ts",
+    "src/stack/token/refresh/post.tsx",
+    "src/template/component/LoginForm.tsx",
+    "src/template/document/LoginDocument.tsx",
+    "src/serve.ts",
+  ],
+  "references": [
+    { "path": "../../library/database" },
+    { "path": "../../library/logger" },
+    { "path": "../../library/middleware" },
+    { "path": "../../library/service" },
+    { "path": "../../library/type-guard" },
+    { "path": "../../library/uikit" },
   ]
 }

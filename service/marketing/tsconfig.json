@@ -1,16 +1,23 @@
 {
   "compilerOptions": {
-    "outDir": "../../artifact/service/marketing",
-    "rootDir": ".",
+    "outDir": "./artifact",
+    "rootDir": "./src",
   },
   "exclude": [
     "node_modules/",
   ],
   "extends": "../../tsconfig.json",
   "files": [
-    "stack/get.ts",
-    "stack/options.ts",
-    "serve.ts",
-    "template.ts",
+    "src/stack/get.tsx",
+    "src/stack/options.ts",
+    "src/template/document/Home.tsx",
+    "src/serve.ts",
+  ],
+  "references": [
+    { "path": "../../library/logger" },
+    { "path": "../../library/middleware" },
+    { "path": "../../library/service" },
+    { "path": "../../library/type-guard" },
+    { "path": "../../library/uikit" },
   ]
 }

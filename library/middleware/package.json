@@ -13,42 +13,16 @@
     "typescript": "^5.7.2"
   },
   "exports": {
-    "./use-access-token-cookie-reader": {
-      "tsx": "./use-access-token-cookie-reader.ts",
-      "default": "./use-access-token-cookie-reader.js"
-    },
-    "./use-access-token-cookie-writer": {
-      "tsx": "./use-access-token-cookie-writer.ts",
-      "default": "./use-access-token-cookie-writer.js"
-    },
-    "./use-cors": {
-      "tsx": "./use-cors.ts",
-      "default": "./use-cors.js"
-    },
-    "./use-login-state-cookie-reader": {
-      "tsx": "./use-login-state-cookie-reader.ts",
-      "default": "./use-login-state-cookie-reader.js"
-    },
-    "./use-login-state-cookie-writer": {
-      "tsx": "./use-login-state-cookie-writer.ts",
-      "default": "./use-login-state-cookie-writer.js"
-    },
-    "./use-refresh-token-cookie-reader": {
-      "tsx": "./use-refresh-token-cookie-reader.ts",
-      "default": "./use-refresh-token-cookie-reader.js"
-    },
-    "./use-refresh-token-cookie-writer": {
-      "tsx": "./use-refresh-token-cookie-writer.ts",
-      "default": "./use-refresh-token-cookie-writer.js"
-    },
-    "./use-refreshable-token-cookie-reader": {
-      "tsx": "./use-refreshable-token-cookie-reader.ts",
-      "default": "./use-refreshable-token-cookie-reader.js"
-    },
-    "./use-refreshable-token-cookie-writer": {
-      "tsx": "./use-refreshable-token-cookie-writer.ts",
-      "default": "./use-refreshable-token-cookie-writer.js"
-    }
+    ".": "./artifact/index.js",
+    "./use-access-token-cookie-reader": "./artifact/use-access-token-cookie-reader.js",
+    "./use-access-token-cookie-writer": "./artifact/use-access-token-cookie-writer.js",
+    "./use-cors": "./artifact/use-cors.js",
+    "./use-login-state-cookie-reader": "./artifact/use-login-state-cookie-reader.js",
+    "./use-login-state-cookie-writer": "./artifact/use-login-state-cookie-writer.js",
+    "./use-refresh-token-cookie-reader": "./artifact/use-refresh-token-cookie-reader.js",
+    "./use-refresh-token-cookie-writer": "./artifact/use-refresh-token-cookie-writer.js",
+    "./use-refreshable-token-cookie-reader": "./artifact/use-refreshable-token-cookie-reader.js",
+    "./use-refreshable-token-cookie-writer": "./artifact/use-refreshable-token-cookie-writer.js"
   },
   "installConfig": {
     "hoistingLimits": "workspaces"
@@ -58,6 +32,6 @@
   "scripts": {
     "js:compile": "tsc"
   },
-  "types": "index.d.ts",
+  "types": "./artifact/index.d.ts",
   "version": "1.0.0"
 }
