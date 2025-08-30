@@ -1,13 +1,13 @@
-import { ServerResponse } from 'node:http';
+import { ServiceContext } from "../../define-service";
 
 /**
  * Sends an HTML response with the specified status code and data.
  *
- * @param serverResponse - The HTTP server response object.
+ * @param context - The service context object.
  * @param text - The plain text content to send in the response.
  */
-export default function sendOKTextResponse(serverResponse: ServerResponse, text: string) {
-  serverResponse.statusCode = 200;
-  serverResponse.setHeader('Content-Type', 'text/plain');
-  serverResponse.end(text);
+export default function sendOKTextResponse(context: ServiceContext, text: string) {
+  context.serverResponse.statusCode = 200;
+  context.serverResponse.setHeader('Content-Type', 'text/plain');
+  context.serverResponse.end(text);
 }

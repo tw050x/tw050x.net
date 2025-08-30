@@ -81,7 +81,7 @@ export default defineServiceMiddleware([
     catch (error) {
       if (error instanceof ZodError) error.errors.forEach((issue) => logger.error('unable to parse incoming message body field', { issue }));
       else logger.error('unable to parse incoming message body fields', { error });
-      return void sendBadRequestHTMLResponse(context.serverResponse, loginFormPartial({
+      return void sendBadRequestHTMLResponse(context, loginFormPartial({
         email: email,
         validationErrors: [{ message: 'Invalid email or password' }],
       }));
@@ -95,11 +95,11 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error('error when finding database document', { error });
-      return void sendInternalServerErrorHTMLResponse(context.serverResponse, unrecoverableDocument());
+      return void sendInternalServerErrorHTMLResponse(context, unrecoverableDocument());
     }
     if (credentialDocument === null) {
       logger.error('credential document not found', { email });
-      return void sendBadRequestHTMLResponse(context.serverResponse, loginFormPartial({
+      return void sendBadRequestHTMLResponse(context, loginFormPartial({
         email: email,
         validationErrors: [{ message: 'Invalid email or password' }],
       }));
@@ -110,7 +110,7 @@ export default defineServiceMiddleware([
     const passwordMatch = await compare(password, credentialDocument.passwordHash);
     if (passwordMatch === false) {
       logger.error('password does not match', { email });
-      return void sendBadRequestHTMLResponse(context.serverResponse, loginFormPartial({
+      return void sendBadRequestHTMLResponse(context, loginFormPartial({
         email: email,
         validationErrors: [{ message: 'Invalid email or password' }],
       }));
@@ -127,7 +127,7 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error('unable to fetch user permissions', { error });
-      return void sendInternalServerErrorHTMLResponse(context.serverResponse, unrecoverableDocument());
+      return void sendInternalServerErrorHTMLResponse(context, unrecoverableDocument());
     }
 
     // create authentication cookies and set them on the response
@@ -154,7 +154,7 @@ export default defineServiceMiddleware([
     context.serverResponse.loginStateCookie.clear();
     const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${context.configuration.get('authentication.service.host')}`);
     return void sendSeeOtherRedirect(
-      context.serverResponse,
+      context,
       returnUrl
     )
   },

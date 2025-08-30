@@ -12,6 +12,7 @@ defineService({
   onReady: async (service) => {
     const onEndProcess = () => {
       service.configuration.destroy();
+      service.database.destroy();
       service.secrets.destroy();
       const forceCloseTimeout = setTimeout(() => {
         logger.info('Server forced shut down');

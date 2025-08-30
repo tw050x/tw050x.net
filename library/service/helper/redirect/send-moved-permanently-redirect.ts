@@ -1,14 +1,18 @@
-import { ServerResponse } from 'node:http';
+import { ServiceContext } from '../../define-service';
 
 /**
  * Sends an redirect response to the provided URL
  *
- * @param serverResponse - The HTTP server response object.
+ * @param context - The service context object.
  * @param url - The text content to send in the response.
  */
-export default function sendMovedPermanentlyRedirect(serverResponse: ServerResponse, url: URL) {
-  serverResponse.statusCode = 301;
-  serverResponse.setHeader('Content-Type', 'text/plain');
-  serverResponse.setHeader('HX-Redirect', url.toString());
-  serverResponse.end(`Moved Permanently to ${url.toString()}`);
+export default function sendMovedPermanentlyRedirect(context: ServiceContext, url: URL) {
+  let redirectHeader = 'Location'
+  if (context.incomingMessage.headers['hx-request'] === 'true') {
+    redirectHeader = 'HX-Redirect';
+  }
+  context.serverResponse.statusCode = 301;
+  context.serverResponse.setHeader('Content-Type', 'text/plain');
+  context.serverResponse.setHeader(redirectHeader, url.toString());
+  context.serverResponse.end(`Moved Permanently to ${url.toString()}`);
 }

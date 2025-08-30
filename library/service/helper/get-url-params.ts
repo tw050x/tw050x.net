@@ -1,9 +1,9 @@
-import { IncomingMessage } from "node:http";
+import { ServiceContext } from "../define-service";
 
 /**
  * Extracts URL path parameters from an HTTP request URL by matching against a route pattern
  *
- * @param incomingMessage - The HTTP request object
+ * @param context - The service context object
  * @param pattern - The route pattern with parameter placeholders (e.g., "/admin/agent/:uuid")
  * @returns A record containing all matched path parameters as key-value pairs
  *
@@ -13,15 +13,15 @@ import { IncomingMessage } from "node:http";
  * @example
  * const params = getUrlParams(req, "/users/:userId/posts/:postId");
  */
-export default function getUrlParams(incomingMessage: IncomingMessage, pattern: string): Record<string, string> {
+export default function getUrlParams(context: ServiceContext, pattern: string): Record<string, string> {
   // Extract the URL path from the incoming message
   // Handle case where url might be undefined
-  if (!incomingMessage.url) {
+  if (!context.incomingMessage.url) {
     return {};
   }
 
   // Parse the URL to get just the pathname
-  const url = new URL(incomingMessage.url, `http://${incomingMessage.headers.host}`);
+  const url = new URL(context.incomingMessage.url, `http://${context.incomingMessage.headers.host}`);
   const pathname = url.pathname;
 
   // Split both the pattern and actual path into segments

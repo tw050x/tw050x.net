@@ -6,6 +6,7 @@ import { IncomingMessage, ServerResponse, createServer } from "node:http";
 import { default as discoverRoutes } from "./routes";
 import { ssmClient } from "./ssm-client";
 import { secretsManagerClient } from "./secrets-manager-client";
+import { mongoClient } from "./mongo-client";
 
 export type Service = {
   close: (callback?: () => void) => void;
@@ -200,6 +201,11 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
     },
     close: (callback) => {
       server.close(callback);
+    },
+    database: {
+      destroy: async () => {
+        await mongoClient.close();
+      }
     },
     listen: (port, callback) => {
       server.listen(port, callback);

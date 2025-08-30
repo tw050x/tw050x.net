@@ -52,18 +52,18 @@ export default defineServiceMiddleware([
     // if there are errors, log them and return a 400 Bad Request response
     if (context.incomingMessage.refreshTokenCookie.errors.length > 0) {
       context.incomingMessage.refreshTokenCookie.errors.forEach((error) => logger.error('Bearer token error', { error }));
-      return void sendBadRequestJSONResponse(context.serverResponse);
+      return void sendBadRequestJSONResponse(context);
     }
 
     // If the bearer token is not authorised or payload is null,
     // return an error
     if (context.incomingMessage.refreshTokenCookie.payload === undefined) {
       logger.error('Bearer token payload is null');
-      return void sendUnauthorizedJSONResponse(context.serverResponse);
+      return void sendUnauthorizedJSONResponse(context);
     }
     if (context.incomingMessage.refreshTokenCookie.payload.sub === undefined) {
       logger.error('Bearer token payload sub is undefined');
-      return void sendUnauthorizedJSONResponse(context.serverResponse);
+      return void sendUnauthorizedJSONResponse(context);
     }
 
     // fetch the user permissions
@@ -77,7 +77,7 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error('unable to fetch user permissions', { error });
-      return void sendInternalServerErrorHTMLResponse(context.serverResponse, unrecoverableDocument());
+      return void sendInternalServerErrorHTMLResponse(context, unrecoverableDocument());
     }
 
     // generate a new access token
@@ -93,7 +93,7 @@ export default defineServiceMiddleware([
     context.serverResponse.accessTokenCookie.set(accessToken);
     const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${context.configuration.get('authentication.service.host')}`);
     return void sendSeeOtherRedirect(
-      context.serverResponse,
+      context,
       returnUrl,
     )
   }

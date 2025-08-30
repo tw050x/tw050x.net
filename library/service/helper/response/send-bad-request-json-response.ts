@@ -1,14 +1,14 @@
-import { ServerResponse } from 'node:http';
+import { ServiceContext } from '../../define-service';
 
 /**
  * Sends a JSON response with the specified status code and data.
  *
- * @param serverResponse - The HTTP server response object.
+ * @param context - The service context object.
  */
-export default function sendBadRequestJSONResponse(serverResponse: ServerResponse) {
-  serverResponse.statusCode = 400;
-  serverResponse.setHeader('Content-Type', 'application/json');
-  serverResponse.end(JSON.stringify({
+export default function sendBadRequestJSONResponse(context: ServiceContext) {
+  context.serverResponse.statusCode = 400;
+  context.serverResponse.setHeader('Content-Type', 'application/json');
+  context.serverResponse.end(JSON.stringify({
     error: 'bad request'
   }));
 }

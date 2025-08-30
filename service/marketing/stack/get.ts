@@ -15,6 +15,6 @@ export default defineServiceMiddleware([
     }),
   }),
   async (context) => {
-    return void sendOKHTMLResponse(context.serverResponse, homeDocument());
+    return void sendOKHTMLResponse(context, homeDocument());
   }
 ])

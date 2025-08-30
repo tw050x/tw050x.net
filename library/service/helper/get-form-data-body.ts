@@ -1,4 +1,4 @@
-import { IncomingMessage } from "node:http";
+import { ServiceContext } from "../define-service";
 
 /**
  * Extracts form data from an HTTP request body.
@@ -6,25 +6,25 @@ import { IncomingMessage } from "node:http";
  * Returns null if the body cannot be parsed as form data.
  *
  * Example:
- * const formData = await getFormDataBody(request);
+ * const formData = await getFormDataBody(context);
  * // Returns: { name: "John", email: "john@example.com" }
  */
-export default async function getFormDataBody(incomingMessage: IncomingMessage): Promise<Record<string, string> | null> {
+export default async function getFormDataBody(context: ServiceContext): Promise<Record<string, string> | null> {
   let body = '';
 
   // Handle errors during data collection
-  incomingMessage.on('error', (error) => {
+  context.incomingMessage.on('error', (error) => {
     throw new Error(`Error collecting request body: ${error.message}`);
   });
 
   // collect chunks of data from the incoming message
-  incomingMessage.on('data', (chunk: Buffer) => {
+  context.incomingMessage.on('data', (chunk: Buffer) => {
     body += chunk.toString();
   });
 
   // wait for the end of the incoming message
   await new Promise<void>((resolve) => {
-    incomingMessage.on('end', () => {
+    context.incomingMessage.on('end', () => {
       resolve();
     });
   });

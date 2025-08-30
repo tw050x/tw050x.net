@@ -94,7 +94,7 @@ export default defineServiceMiddleware([
         logger.error('unable to verify refresh token', { error });
         context.serverResponse.refreshableTokenCookie.clear();
         context.serverResponse.refreshTokenCookie.clear();
-        return void sendForbiddenHTMLResponse(context.serverResponse, forbiddenDocument());
+        return void sendForbiddenHTMLResponse(context, forbiddenDocument());
       }
 
       // fetch the user permissions
@@ -108,7 +108,7 @@ export default defineServiceMiddleware([
       }
       catch (error) {
         logger.error('unable to fetch user permissions', { error });
-        return void sendInternalServerErrorHTMLResponse(context.serverResponse, unrecoverableDocument());
+        return void sendInternalServerErrorHTMLResponse(context, unrecoverableDocument());
       }
 
       // create the access token cookie
@@ -122,10 +122,10 @@ export default defineServiceMiddleware([
       const accessToken = sign(accessTokenPayload, context.secrets.get('jwt.secret-key'), accessTokenOptions);
       context.serverResponse.accessTokenCookie.set(accessToken);
       const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${context.configuration.get('authentication.service.host')}`);
-      return void sendFoundRedirect(context.serverResponse, returnUrl);
+      return void sendFoundRedirect(context, returnUrl);
     }
 
     // return the login page
-    return void sendOKHTMLResponse(context.serverResponse, loginDocument());
+    return void sendOKHTMLResponse(context, loginDocument());
   }
 ])

@@ -34,6 +34,6 @@ export default defineServiceMiddleware([
     await database.authentication.nonces.insertOne({ createdAt: new Date(), value: nonce });
 
     // return the nonce
-    return void sendOKTextResponse(context.serverResponse, nonce);
+    return void sendOKTextResponse(context, nonce);
   }
 ])

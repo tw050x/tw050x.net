@@ -1,15 +1,19 @@
-import { ServerResponse } from 'node:http';
+import { ServiceContext } from '../../define-service';
 
 
 /**
  * Sends a JSON response with the specified status code and data.
  *
- * @param serverResponse - The HTTP server response object.
+ * @param context - The service context object.
  * @param url - The URL to redirect to.
  */
-export default function sendSeeOtherRedirect(serverResponse: ServerResponse, url: URL) {
-  serverResponse.statusCode = 303;
-  serverResponse.setHeader('Content-Type', 'text/plain');
-  serverResponse.setHeader('HX-Redirect', url.toString());
-  serverResponse.end('Redirecting...');
+export default function sendSeeOtherRedirect(context: ServiceContext, url: URL) {
+  let redirectHeader = 'Location'
+  if (context.incomingMessage.headers['hx-request'] === 'true') {
+    redirectHeader = 'HX-Redirect';
+  }
+  context.serverResponse.statusCode = 303;
+  context.serverResponse.setHeader('Content-Type', 'text/plain');
+  context.serverResponse.setHeader(redirectHeader, url.toString());
+  context.serverResponse.end('Redirecting...');
 }
