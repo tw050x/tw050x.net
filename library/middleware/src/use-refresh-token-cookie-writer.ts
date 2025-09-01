@@ -1,4 +1,4 @@
-import { default as logger } from "@tw050x.net/logger";
+import { logger } from "@tw050x.net/logger";
 import { ServiceContext } from "@tw050x.net/service";
 import { default as Cookies } from "cookies";
 import { addDays, differenceInSeconds } from "date-fns";

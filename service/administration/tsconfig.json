@@ -20,7 +20,7 @@
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
     { "path": "../../library/service" },
-    { "path": "../../library/type-guard" },
-    { "path": "../../library/uikit" }
+    { "path": "../../library/uikit" },
+    { "path": "../../library/utility" },
   ]
 }

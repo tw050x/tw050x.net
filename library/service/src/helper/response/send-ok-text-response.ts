@@ -6,7 +6,7 @@ import { ServiceContext } from "../../define-service";
  * @param context - The service context object.
  * @param text - The plain text content to send in the response.
  */
-export default function sendOKTextResponse(context: ServiceContext, text: string) {
+export const sendOKTextResponse = (context: ServiceContext, text: string) => {
   context.serverResponse.statusCode = 200;
   context.serverResponse.setHeader('Content-Type', 'text/plain');
   context.serverResponse.end(text);

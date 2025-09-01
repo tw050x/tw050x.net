@@ -1,28 +1,24 @@
 {
   "author": "tw050x (Richard Kielty)",
-  "dependencies": {
-    "htmx-ext-response-targets": "^2.0.1",
-    "htmx.org": "^2.0.4"
-  },
   "description": "The @tw050x.net/uikit package project",
   "devDependencies": {
     "@kitajs/html": "^4.2.9",
-    "@kitajs/ts-html-plugin": "^4.1.2",
+    "@types/node": "^22.10.2",
+    "htmx-ext-response-targets": "^2.0.1",
+    "htmx.org": "^2.0.4",
     "typescript": "^5.7.2"
   },
   "exports": {
     "./component/Htmx": "./artifact/component/Htmx.js",
+    "./component/Header": "./artifact/component/Header.js",
     "./component/Stylesheet": "./artifact/component/Stylesheet.js",
     "./document/Forbidden": "./artifact/document/Forbidden.js",
     "./document/Unrecoverable": "./artifact/document/Unrecoverable.js"
   },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
   "license": "UNLICENSED",
   "name": "@tw050x.net/uikit",
   "scripts": {
-    "js:compile": "tsc"
+    "tsc": "tsc"
   },
   "types": "artifact/index.d.ts",
   "version": "1.0.5"

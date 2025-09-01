@@ -4,3 +4,46 @@
 .htmx-request.htmx-indicator-hide {
   visibility: hidden;
 }
+
+.asides aside {
+  @apply fixed top-0 right-0;
+  @apply h-screen w-screen;
+  @apply bg-white;
+
+  /* Medium Screen Size */
+  @apply sm:rounded-tl-2xl sm:rounded-bl-2xl;
+  @apply sm:shadow-xl;
+  @apply sm:w-160;
+}
+
+.asides aside {
+  opacity: 1;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.asides aside.htmx-added {
+  opacity: 0;
+}
+
+@media (min-width: 640px) {
+  .asides aside {
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .asides aside.htmx-added {
+    opacity: 1;
+    width: 0;
+  }
+
+  .asides aside:nth-last-child(2):nth-child(n+2) {
+    @apply sm:w-154;
+  }
+
+  .asides aside:nth-last-child(1):nth-child(n+2) {
+    @apply sm:w-154;
+  }
+
+  .asides aside:nth-last-child(1):nth-child(n+3) {
+    @apply sm:w-148;
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "description": "The Navigation Service project for tw050x.net",
+  "dependencies": {
+    "@kitajs/html": "^4.2.9",
+    "@tw050x.net/logger": "workspace:*",
+    "@tw050x.net/middleware": "workspace:*",
+    "@tw050x.net/service": "workspace:*",
+    "@tw050x.net/uikit": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/navigation",
+  "private": true,
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "version": "1.0.0"
+}

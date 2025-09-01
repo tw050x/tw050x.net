@@ -4,25 +4,46 @@
     "@aws-sdk/client-secrets-manager": "^3.873.0",
     "@aws-sdk/client-ssm": "^3.873.0",
     "@tw050x.net/logger": "workspace:*",
-    "@tw050x.net/type-guard": "workspace:*",
+    "@tw050x.net/utility": "workspace:*",
     "lru-cache": "^11.1.0",
     "mongodb": "^6.12.0"
   },
   "description": "The @tw050x.net/service package project",
   "devDependencies": {
+    "@types/node": "^22.10.2",
     "typescript": "^5.7.2"
   },
   "exports": {
     ".": "./artifact/index.js",
-    "./helper": "./artifact/helper.js"
-  },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
+    "./helper": "./artifact/helper.js",
+    "./helper/redirect/send-found-redirect": "./artifact/helper/redirect/send-found-redirect.js",
+    "./helper/redirect/send-moved-permanently-redirect": "./artifact/helper/redirect/send-moved-permanently-redirect.js",
+    "./helper/redirect/send-moved-temporarily-redirect": "./artifact/helper/redirect/send-moved-temporarily-redirect.js",
+    "./helper/redirect/send-see-other-redirect": "./artifact/helper/redirect/send-see-other-redirect.js",
+    "./helper/response/send-accepted-json-response": "./artifact/helper/response/send-accepted-json-response.js",
+    "./helper/response/send-bad-request-html-response": "./artifact/helper/response/send-bad-request-html-response.js",
+    "./helper/response/send-bad-request-json-response": "./artifact/helper/response/send-bad-request-json-response.js",
+    "./helper/response/send-created-json-response": "./artifact/helper/response/send-created-json-response.js",
+    "./helper/response/send-forbidden-html-response": "./artifact/helper/response/send-forbidden-html-response.js",
+    "./helper/response/send-internal-server-error-html-response": "./artifact/helper/response/send-internal-server-error-html-response.js",
+    "./helper/response/send-internal-server-error-json-response": "./artifact/helper/response/send-internal-server-error-json-response.js",
+    "./helper/response/send-not-found-html-response": "./artifact/helper/response/send-not-found-html-response.js",
+    "./helper/response/send-not-found-json-response": "./artifact/helper/response/send-not-found-json-response.js",
+    "./helper/response/send-not-implemented-text-response": "./artifact/helper/response/send-not-implemented-text-response.js",
+    "./helper/response/send-ok-html-response": "./artifact/helper/response/send-ok-html-response.js",
+    "./helper/response/send-ok-json-response": "./artifact/helper/response/send-ok-json-response.js",
+    "./helper/response/send-ok-text-response": "./artifact/helper/response/send-ok-text-response.js",
+    "./helper/response/send-unauthorised-html-response": "./artifact/helper/response/send-unauthorised-html-response.js",
+    "./helper/response/send-unauthorised-json-response": "./artifact/helper/response/send-unauthorised-json-response.js",
+    "./helper/get-form-data-body": "./artifact/helper/get-form-data-body.js",
+    "./helper/get-json-body": "./artifact/helper/get-json-body.js",
+    "./helper/get-url-params": "./artifact/helper/get-url-params.js",
+    "./helper/get-url-query": "./artifact/helper/get-url-query.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net/service",
   "scripts": {
-    "js:compile": "tsc"
+    "tsc": "tsc"
   },
   "types": "artifact/index.d.ts",
   "version": "1.0.0"

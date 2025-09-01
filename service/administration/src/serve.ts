@@ -1,4 +1,4 @@
-import { default as logger } from "@tw050x.net/logger";
+import { logger } from "@tw050x.net/logger";
 import { defineService } from "@tw050x.net/service";
 import { join } from "node:path";
 

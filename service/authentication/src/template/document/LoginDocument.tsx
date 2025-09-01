@@ -5,16 +5,13 @@ import { default as Stylesheet } from "@tw050x.net/uikit/component/Stylesheet";
 /**
  * Props for the login document.
  */
-type Props = {
-  nonce: string;
-}
+type Props = {}
 
 /**
  * The login document.
  *
  */
-const LoginDocument: Component<Props> = ({ nonce }) => {
-  console.log('nonce', nonce);
+const LoginDocument: Component<Props> = ({  }) => {
   return (
     <>
       {'<!doctype html>'}
@@ -29,8 +26,13 @@ const LoginDocument: Component<Props> = ({ nonce }) => {
           <Stylesheet />
         </head>
         <body>
-          <div class="flex flex-col px-8 pt-8">
-            <h1 class="text-4xl">Login</h1>
+          <main class="bg-sky-950 text-white w-screen h-screen"></main>
+          <div class="asides">
+            <div
+              hx-get="/login/aside/login-form"
+              hx-swap="outerHTML settle:.1s"
+              hx-trigger="load"
+            />
           </div>
         </body>
       </html>

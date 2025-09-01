@@ -1,6 +1,6 @@
-import { default as logger } from "@tw050x.net/logger";
+import { logger } from "@tw050x.net/logger";
 import { ServiceContext } from "@tw050x.net/service";
-import { isAllowedDomain } from "@tw050x.net/type-guard";
+import { isAllowedDomain } from "@tw050x.net/utility/is-allowed-domain";
 import { createDecipheriv } from "node:crypto";
 import { default as Cookies } from "cookies";
 

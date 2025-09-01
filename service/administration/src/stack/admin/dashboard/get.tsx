@@ -1,7 +1,7 @@
 import { useAccessTokenCookieReader } from "@tw050x.net/middleware/use-access-token-cookie-reader";
 import { useLoginStateCookieWriter } from "@tw050x.net/middleware/use-login-state-cookie-writer";
 import { useCors } from "@tw050x.net/middleware/use-cors";
-import { default as logger } from "@tw050x.net/logger";
+import { logger } from "@tw050x.net/logger";
 import { defineServiceMiddleware } from "@tw050x.net/service";
 import { sendInternalServerErrorHTMLResponse, sendMovedTemporarilyRedirect, sendOKHTMLResponse, sendUnauthorizedHTMLResponse } from "@tw050x.net/service/helper";
 import { default as ForbiddenDocument } from "@tw050x.net/uikit/document/Forbidden";

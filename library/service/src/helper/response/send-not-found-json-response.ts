@@ -6,7 +6,7 @@ import { ServiceContext } from '../../define-service';
  * @param context - The service context object.
  * @param json - The JSON content to send in the response.
  */
-export default function sendNotFoundJSONResponse(context: ServiceContext) {
+export const sendNotFoundJSONResponse = (context: ServiceContext) => {
   context.serverResponse.statusCode = 404;
   context.serverResponse.setHeader('Content-Type', 'application/json');
   context.serverResponse.end(JSON.stringify({

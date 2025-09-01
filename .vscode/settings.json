@@ -1,33 +1,39 @@
 {
-
   // Chat
   "chat.agent.enabled": true,
-
   // Editor
   "editor.formatOnSave": false,
-
   // Files
   "files.associations": {
-    "cron.d/*": "shellscript",
+    "*.css": "tailwindcss",
     "copilot-instructions.md": "markdown"
   },
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
-
   // Jest
   "jest.runMode": "on-demand",
-
   // Testing
   "testing.automaticallyOpenTestResults": "neverOpen",
-
   // MarkDown
   "[markdown]": {
     "editor.wordWrap": "bounded",
     "editor.wordWrapColumn": 80
   },
-
+  // Search
+  "search.exclude": {
+    "**/.yarn": true,
+    "**/.pnp.*": true
+  },
+  // Terminal
+  "terminal.integrated.profiles.osx": {
+    "zsh": {
+      "path": "zsh",
+      "args": []
+    }
+  },
+  "terminal.integrated.defaultProfile.osx": "zsh",
   // TypeScript
-  "typescript.tsdk": "node_modules/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true
+  "typescript.tsdk": ".yarn/sdks/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
 }

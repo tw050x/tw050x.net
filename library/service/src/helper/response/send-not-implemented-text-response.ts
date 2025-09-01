@@ -5,7 +5,7 @@ import { ServiceContext } from '../../define-service';
  *
  * @param context - The service context object.
  */
-export default function sendNotImplementedTextResponse(context: ServiceContext) {
+export const sendNotImplementedTextResponse = (context: ServiceContext) => {
   context.serverResponse.statusCode = 501;
   context.serverResponse.setHeader('Content-Type', 'text/plain');
   context.serverResponse.end('Not Implemented');

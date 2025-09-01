@@ -11,32 +11,24 @@ ENV CYPRESS_INSTALL_BINARY=0
 ENV NODE_ENV=build
 
 ## Install all dependencies
-RUN yarn install --immutable
+RUN yarn workspaces focus @tw050x.net/assets
 
 ## Build the project
-RUN yarn workspaces foreach --all run js:compile
-
-# Dendencies Image
-FROM node:23 AS dependencies
-WORKDIR /dependencies
-COPY . /dependencies
-
-# Set arguments
-ARG NODE_ENV=production
-
-## Set the environment variables
-ENV CYPRESS_INSTALL_BINARY=0
-ENV NODE_ENV=production
-
-## Install production dependencies
-RUN yarn install --immutable
+RUN yarn workspace @tw050x.net/assets run css:compile
 
 FROM node:23.11.1-alpine3.22 AS assets
 RUN apk add --no-cache curl
-RUN npm install -g tsx --production --no-optional && npm cache clean --force
+RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
-COPY --from=build /build/assets/serve.json /srv/serve.json
+COPY --from=build /build/.yarn /srv/.yarn
+COPY --from=build /build/.pnp.cjs /srv/.pnp.cjs
+COPY --from=build /build/.yarnrc.yml /srv/.yarnrc.yml
+COPY --from=build /build/package.json /srv/package.json
+COPY --from=build /build/yarn.lock /srv/yarn.lock
 COPY --from=build /build/assets/public /srv/assets/public
-COPY --from=dependencies /dependencies/assets/node_modules /srv/assets/node_modules
+COPY --from=build /build/assets/package.json /srv/assets/package.json
+COPY --from=build /build/assets/tsconfig.json /srv/assets/tsconfig.json
+COPY --from=build /build/assets/serve.json /srv/assets/serve.json
+RUN yarn workspaces focus --production @tw050x.net/assets
 ENTRYPOINT [ "sh", "-c" ]
-CMD [ "/srv/assets/node_modules/.bin/serve --config /srv/serve.json --listen tcp://0.0.0.0:3000" ]
+CMD [ "yarn workspace @tw050x.net/assets serve --config /srv/assets/serve.json --listen tcp://0.0.0.0:3000" ]

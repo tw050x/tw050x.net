@@ -4,7 +4,7 @@ import { ServiceContext } from "../define-service";
  *
  * @param context - The service context object
  */
-export default async function getJSONBody(context: ServiceContext): Promise<unknown> {
+export const getJSONBody = async (context: ServiceContext): Promise<unknown> => {
   let body = '';
 
   // Handle errors during data collection

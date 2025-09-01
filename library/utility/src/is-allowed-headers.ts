@@ -3,7 +3,7 @@
  * Parses comma-separated header string from Access-Control-Request-Headers
  * Returns true if all headers are defined and exist in the allowedHeaders array
  */
-export default function isAllowedHeaders(headers: string | undefined, allowedHeaders: readonly string[]): headers is string {
+export const isAllowedHeaders = (headers: string | undefined, allowedHeaders: readonly string[]): headers is string => {
   if (headers === undefined) {
     return false;
   }

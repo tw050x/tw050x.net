@@ -5,14 +5,18 @@ import { useLoginStateCookieReader } from "@tw050x.net/middleware/use-login-stat
 import { useLoginStateCookieWriter } from "@tw050x.net/middleware/use-login-state-cookie-writer";
 import { useRefreshTokenCookieWriter } from "@tw050x.net/middleware/use-refresh-token-cookie-writer";
 import { useRefreshableTokenCookieWriter } from "@tw050x.net/middleware/use-refreshable-token-cookie-writer";
-import { default as logger } from "@tw050x.net/logger";
+import { logger } from "@tw050x.net/logger";
 import { defineServiceMiddleware } from "@tw050x.net/service";
-import { getFormDataBody, sendBadRequestHTMLResponse, sendInternalServerErrorHTMLResponse, sendSeeOtherRedirect } from "@tw050x.net/service/helper";
+import { getFormDataBody } from "@tw050x.net/service/helper/get-form-data-body";
+import { sendSeeOtherRedirect } from "@tw050x.net/service/helper/redirect/send-see-other-redirect";
+import { sendBadRequestHTMLResponse } from "@tw050x.net/service/helper/response/send-bad-request-html-response";
+import { sendInternalServerErrorHTMLResponse } from "@tw050x.net/service/helper/response/send-internal-server-error-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net/uikit/document/Unrecoverable";
 import { compare } from "bcryptjs";
 import { SignOptions, sign } from "jsonwebtoken";
 import { escape, trim } from "validator";
 import { default as zod, ZodError } from "zod";
+import { generateLoginFormNonce } from '../../helper/generate-login-form-nonce';
 import { default as LoginForm } from '../../template/component/LoginForm';
 
 const postLoginFormDataSchema = zod.object({
@@ -69,6 +73,16 @@ export default defineServiceMiddleware([
   async (context) => {
     const body = await getFormDataBody(context);
 
+    //
+    let nonce;
+    try {
+      nonce = await generateLoginFormNonce();
+    }
+    catch (error) {
+      logger.error('unable to generate nonce', { error });
+      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+    }
+
     // validate the email and password fields
     // return an error if they are invalid
     let email;
@@ -85,6 +99,7 @@ export default defineServiceMiddleware([
         context,
         await <LoginForm
           email={email}
+          nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
         />
       );
@@ -106,6 +121,7 @@ export default defineServiceMiddleware([
         context,
         await <LoginForm
           email={email}
+          nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
         />
       );
@@ -120,6 +136,7 @@ export default defineServiceMiddleware([
         context,
         await <LoginForm
           email={email}
+          nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
         />
       );

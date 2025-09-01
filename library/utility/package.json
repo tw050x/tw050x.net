@@ -1,0 +1,24 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "description": "The @tw050x.net/utility package project",
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    "./assert-unreachable": "./artifact/assert-unreachable.js",
+    "./is-allowed-domain": "./artifact/is-allowed-domain.js",
+    "./is-allowed-headers": "./artifact/is-allowed-headers.js",
+    "./is-allowed-method": "./artifact/is-allowed-method.js",
+    "./is-allowed-origin": "./artifact/is-allowed-origin.js"
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/utility",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "types": "artifact/index.d.ts",
+  "version": "1.0.0"
+}

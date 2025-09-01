@@ -23,7 +23,6 @@
     "src/helper/response/send-forbidden-html-response.ts",
     "src/helper/response/send-internal-server-error-html-response.ts",
     "src/helper/response/send-internal-server-error-json-response.ts",
-    "src/helper/response/send-moved-temporarily-text-response.ts",
     "src/helper/response/send-not-found-html-response.ts",
     "src/helper/response/send-not-found-json-response.ts",
     "src/helper/response/send-not-implemented-text-response.ts",
@@ -43,6 +42,6 @@
   ],
   "references": [
     { "path": "../logger" },
-    { "path": "../type-guard" },
+    { "path": "../utility" },
   ]
 }

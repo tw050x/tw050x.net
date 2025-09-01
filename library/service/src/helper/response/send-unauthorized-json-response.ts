@@ -5,7 +5,7 @@ import { ServiceContext } from '../../define-service';
  *
  * @param context - The service context object.
  */
-export default function sendUnauthorizedJSONResponse(context: ServiceContext) {
+export const sendUnauthorizedJSONResponse = (context: ServiceContext) => {
   context.serverResponse.statusCode = 401;
   context.serverResponse.setHeader('Content-Type', 'application/json');
   context.serverResponse.end(JSON.stringify({

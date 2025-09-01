@@ -2,6 +2,7 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "composite": true,
+    "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
@@ -25,15 +26,17 @@
     "playground/",
     "tmp/"
   ],
+  "files": [],
   "references": [
     { "path": "./library/database" },
     { "path": "./library/logger" },
     { "path": "./library/middleware" },
     { "path": "./library/service" },
-    { "path": "./library/type-guard" },
     { "path": "./library/uikit" },
+    { "path": "./library/utility" },
     { "path": "./service/administration" },
     { "path": "./service/authentication" },
     { "path": "./service/marketing" },
+    { "path": "./service/navigation" },
   ]
 }

@@ -1,29 +1,24 @@
 {
   "author": "tw050x (Richard Kielty)",
-  "description": "The Marketing App project for tw050x.net",
+  "description": "The Marketing Service project for tw050x.net",
   "dependencies": {
-    "@kitajs/html": "^4.2.9",
     "@tw050x.net/logger": "workspace:*",
     "@tw050x.net/middleware": "workspace:*",
     "@tw050x.net/service": "workspace:*",
-    "@tw050x.net/type-guard": "workspace:*",
-    "@tw050x.net/uikit": "workspace:*",
-    "bcryptjs": "^3.0.2",
-    "jsonwebtoken": "^9.0.2",
-    "validator": "^13.12.0",
-    "zod": "^3.24.2"
+    "@tw050x.net/uikit": "workspace:*"
   },
   "devDependencies": {
+    "@kitajs/html": "^4.2.9",
+    "@types/node": "^22.10.2",
+    "nodemon": "^3.1.10",
     "typescript": "^5.7.2"
-  },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net/marketing",
   "private": true,
   "scripts": {
-    "js:compile": "tsc"
+    "nodemon": "nodemon",
+    "tsc": "tsc"
   },
   "version": "1.0.0"
 }

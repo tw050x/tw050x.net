@@ -13,9 +13,13 @@
     "src/component/Htmx.tsx",
     "src/component/Stylesheet.tsx",
     "src/document/Forbidden.tsx",
+    "src/document/NotFound.tsx",
     "src/document/Unrecoverable.tsx",
     "src/component.ts",
     "src/document.ts",
     "src/index.ts",
+  ],
+  "references": [
+    { "path": "../utility" }
   ]
 }

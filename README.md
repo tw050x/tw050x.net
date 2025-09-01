@@ -1,6 +1,6 @@
 # tw050x.net/platform
 
-Welcome to the Kiel Capital platform repository. This repository contains the code for the entire Kiel Capital platform. This file will get you started on running the platform locally. For high level platform documentation. see the documentation directory.
+Welcome to the unnamed ecommerce platform repository. This repository contains the code for the entire unnamed ecommerce platform. This file will get you started on running the platform locally. For high level platform documentation. see the documentation directory.
 
 ## Installation
 
@@ -12,7 +12,7 @@ nvm use
 
 > Install `nvm` from [here](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
 
-Once that is completed you will be able to install the dependencies. We use `Yarn` as our package manager. Install the dependencies using:
+Once you have the correct version of Node installed you will be able to install the dependencies. We use `Yarn` as our package manager. Install the dependencies using:
 
 ```bash
 yarn install
@@ -37,10 +37,26 @@ docker buildx create --name tw050x.net.builder --driver docker-container --confi
 Then to run the servers locally use `docker compose`.
 
 ```bash
-docker buildx bake --builder tw050x.net.builder --file bake.hcl --load
+yarn build:docker
 docker compose up --detach
 ```
 
 > The build command could take a while. Go make a drink. Take a walk.
 
-> Running `docker compose up` without first running the build will likely crash the process due to a lack of available resources. the `up` command will run unlimited parallel processes which cannot be configured. The `build` command above will only build 1 service at a time.
+You will also need to run `tsc` on your machine for the proiject you are working on.
+
+```bash
+# Service (only run one)
+yarn workspace @tw050x.net/administration tsc --build
+yarn workspace @tw050x.net/authentication tsc --build
+yarn workspace @tw050x.net/marketing tsc --build
+
+# Libraries
+yarn workspace @tw050x.net/database tsc --build
+yarn workspace @tw050x.net/logger tsc --build
+yarn workspace @tw050x.net/middleware tsc --build
+yarn workspace @tw050x.net/service tsc --build
+yarn workspace @tw050x.net/uikit tsc --build
+```
+
+This should run compilation for that project and all dependencies. In turn that should restart the server in the docker container (assuming you used `docker compose up` as described above).

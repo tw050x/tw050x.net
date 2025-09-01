@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { createLogger, format, transports } from "winston";
 
-const logger = createLogger({
+export const logger = createLogger({
   level: process.env.LOGS_LEVEL || 'info',
   format: format.combine(
     format.timestamp(),
@@ -21,5 +21,3 @@ if (process.env.NODE_ENV !== 'production') {
     })
   );
 }
-
-export default logger;

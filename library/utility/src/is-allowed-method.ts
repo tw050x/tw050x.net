@@ -6,6 +6,6 @@ export type AllowedHttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'H
  * Returns true if value is defined and exists in the allowedMethods array
  * Narrows the type to the specific subset of methods provided
  */
-export default function isAllowedMethod<T extends readonly AllowedHttpMethod[]>(value: string | undefined, allowedMethods: T): value is T[number] {
+export const isAllowedMethod = <T extends readonly AllowedHttpMethod[]>(value: string | undefined, allowedMethods: T): value is T[number] => {
   return value !== undefined && (allowedMethods as readonly string[]).includes(value);
 }

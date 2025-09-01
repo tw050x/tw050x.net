@@ -6,7 +6,7 @@ import { ServiceContext } from '../../define-service';
  * @param context - The service context object.
  * @param html - The HTML content to send in the response.
  */
-export default function sendNotFoundHTMLResponse(context: ServiceContext, html: string) {
+export const sendNotFoundHTMLResponse = (context: ServiceContext, html: string) => {
   context.serverResponse.statusCode = 404;
   context.serverResponse.setHeader('Content-Type', 'text/html');
   context.serverResponse.end(html);

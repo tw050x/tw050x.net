@@ -3,7 +3,7 @@ import { useAccessTokenCookieWriter } from "@tw050x.net/middleware/use-access-to
 import { useCors } from "@tw050x.net/middleware/use-cors";
 import { useLoginStateCookieReader } from "@tw050x.net/middleware/use-login-state-cookie-reader";
 import { useRefreshTokenCookieReader } from "@tw050x.net/middleware/use-refresh-token-cookie-reader";
-import { default as logger } from "@tw050x.net/logger";
+import { logger } from "@tw050x.net/logger";
 import { defineServiceMiddleware } from "@tw050x.net/service";
 import { sendBadRequestJSONResponse, sendInternalServerErrorHTMLResponse, sendSeeOtherRedirect, sendUnauthorizedJSONResponse } from "@tw050x.net/service/helper";
 import { default as UnrecoverableDocument } from "@tw050x.net/uikit/document/Unrecoverable";
@@ -18,7 +18,7 @@ export default defineServiceMiddleware([
     logger.debug(`POST ${context.incomingMessage.url}`);
   },
   useCors({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async () => ({
       allowedMethods: ['POST', 'OPTIONS'],
       allowedOrigins: '*',
     }),

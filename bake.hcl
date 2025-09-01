@@ -9,7 +9,7 @@ group "default" {
 
 target "administration" {
   dockerfile = "container/service/Dockerfile"
-  target = "service-administration"
+  target = "administration"
   tags = ["tw050x.net/administration:latest"]
 }
 
@@ -21,12 +21,12 @@ target "assets" {
 
 target "authentication" {
   dockerfile = "container/service/Dockerfile"
-  target = "service-authentication"
+  target = "authentication"
   tags = ["tw050x.net/authentication:latest"]
 }
 
 target "marketing" {
   dockerfile = "container/service/Dockerfile"
-  target = "service-marketing"
+  target = "marketing"
   tags = ["tw050x.net/marketing:latest"]
 }

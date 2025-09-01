@@ -13,7 +13,7 @@ import { ServiceContext } from "../define-service";
  * @example
  * const params = getUrlParams(req, "/users/:userId/posts/:postId");
  */
-export default function getUrlParams(context: ServiceContext, pattern: string): Record<string, string> {
+export const getUrlParams = async (context: ServiceContext, pattern: string): Promise<Record<string, string>> => {
   // Extract the URL path from the incoming message
   // Handle case where url might be undefined
   if (!context.incomingMessage.url) {

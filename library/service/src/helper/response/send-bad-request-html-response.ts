@@ -5,7 +5,7 @@ import { ServiceContext } from '../../define-service';
  *
  * @param context - The service context object.
  */
-export default function sendBadRequestHTMLResponse(context: ServiceContext, html: string) {
+export const sendBadRequestHTMLResponse = (context: ServiceContext, html: string) => {
   context.serverResponse.statusCode = 400;
   context.serverResponse.setHeader('Content-Type', 'text/html');
   context.serverResponse.end(html);

@@ -5,18 +5,16 @@
   },
   "description": "The @tw050x.net/logger package project",
   "devDependencies": {
+    "@types/node": "^22.10.2",
     "typescript": "^5.7.2"
   },
   "exports": {
     ".": "./artifact/index.js"
   },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
   "license": "UNLICENSED",
   "name": "@tw050x.net/logger",
   "scripts": {
-    "js:compile": "tsc"
+    "tsc": "tsc"
   },
   "types": "artifact/index.d.ts",
   "version": "1.0.0"

@@ -3,13 +3,16 @@
   "dependencies": {
     "@tw050x.net/logger": "workspace:*",
     "@tw050x.net/service": "workspace:*",
-    "@tw050x.net/type-guard": "workspace:*",
+    "@tw050x.net/utility": "workspace:*",
     "cookies": "^0.9.1",
     "date-fns": "^4.1.0",
     "jsonwebtoken": "^9.0.2"
   },
   "description": "The @tw050x.net/middleware package project",
   "devDependencies": {
+    "@types/cookies": "^0.9.0",
+    "@types/jsonwebtoken": "^9",
+    "@types/node": "^22.10.2",
     "typescript": "^5.7.2"
   },
   "exports": {
@@ -24,13 +27,10 @@
     "./use-refreshable-token-cookie-reader": "./artifact/use-refreshable-token-cookie-reader.js",
     "./use-refreshable-token-cookie-writer": "./artifact/use-refreshable-token-cookie-writer.js"
   },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
   "license": "UNLICENSED",
   "name": "@tw050x.net/middleware",
   "scripts": {
-    "js:compile": "tsc"
+    "tsc": "tsc"
   },
   "types": "./artifact/index.d.ts",
   "version": "1.0.0"

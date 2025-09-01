@@ -8,8 +8,11 @@
   ],
   "extends": "../../tsconfig.json",
   "files": [
+    "src/helper/generate-login-form-nonce.ts",
     "src/stack/generate/nonce/options.ts",
     "src/stack/generate/nonce/post.ts",
+    "src/stack/login/aside/login-form/get.tsx",
+    "src/stack/login/aside/login-form/options.ts",
     "src/stack/login/get.tsx",
     "src/stack/login/options.ts",
     "src/stack/login/post.tsx",
@@ -24,7 +27,7 @@
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
     { "path": "../../library/service" },
-    { "path": "../../library/type-guard" },
     { "path": "../../library/uikit" },
+    { "path": "../../library/utility" },
   ]
 }

@@ -1,4 +1,4 @@
-import { default as logger } from "@tw050x.net/logger"
+import { logger } from "@tw050x.net/logger"
 import { GetSecretValueCommand } from "@aws-sdk/client-secrets-manager"
 import { GetParameterCommand } from "@aws-sdk/client-ssm"
 import { EventEmitter } from "node:events";

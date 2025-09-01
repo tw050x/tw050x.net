@@ -7,7 +7,7 @@
  * @param allowedDomains - Array of allowed domain strings
  * @returns true if domain is a string and in the allowed list of domains
  */
-const isAllowedDomain = <T extends readonly string[]>(domain: unknown, allowedDomains: T): domain is T[number] => {
+export const isAllowedDomain = <T extends readonly string[]>(domain: unknown, allowedDomains: T): domain is T[number] => {
   // Check if domain is a string type
   // Return false if not a string
   if (typeof domain !== 'string') {
@@ -24,5 +24,3 @@ const isAllowedDomain = <T extends readonly string[]>(domain: unknown, allowedDo
   }
   return false;
 }
-
-export default isAllowedDomain;

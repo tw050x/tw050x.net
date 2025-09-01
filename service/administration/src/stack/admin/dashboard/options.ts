@@ -1,4 +1,4 @@
-import { default as logger } from "@tw050x.net/logger";
+import { logger } from "@tw050x.net/logger";
 import { useCors } from "@tw050x.net/middleware/use-cors";
 import { defineServiceMiddleware } from "@tw050x.net/service";
 

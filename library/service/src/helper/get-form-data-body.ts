@@ -9,7 +9,7 @@ import { ServiceContext } from "../define-service";
  * const formData = await getFormDataBody(context);
  * // Returns: { name: "John", email: "john@example.com" }
  */
-export default async function getFormDataBody(context: ServiceContext): Promise<Record<string, string> | null> {
+export const getFormDataBody = async (context: ServiceContext): Promise<Record<string, string> | null> => {
   let body = '';
 
   // Handle errors during data collection

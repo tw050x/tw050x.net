@@ -1,5 +1,5 @@
 import { database } from '@tw050x.net/database';
-import { default as logger } from "@tw050x.net/logger";
+import { logger } from "@tw050x.net/logger";
 import { useAccessTokenCookieReader } from "@tw050x.net/middleware/use-access-token-cookie-reader";
 import { useAccessTokenCookieWriter } from "@tw050x.net/middleware/use-access-token-cookie-writer";
 import { useCors } from "@tw050x.net/middleware/use-cors";
@@ -9,10 +9,12 @@ import { useRefreshTokenCookieWriter } from "@tw050x.net/middleware/use-refresh-
 import { useRefreshableTokenCookieReader } from "@tw050x.net/middleware/use-refreshable-token-cookie-reader";
 import { useRefreshableTokenCookieWriter } from "@tw050x.net/middleware/use-refreshable-token-cookie-writer";
 import { defineServiceMiddleware } from "@tw050x.net/service";
-import { sendForbiddenHTMLResponse, sendFoundRedirect, sendInternalServerErrorHTMLResponse, sendOKHTMLResponse } from "@tw050x.net/service/helper";
+import { sendFoundRedirect } from "@tw050x.net/service/helper/redirect/send-found-redirect";
+import { sendForbiddenHTMLResponse } from "@tw050x.net/service/helper/response/send-forbidden-html-response";
+import { sendInternalServerErrorHTMLResponse } from "@tw050x.net/service/helper/response/send-internal-server-error-html-response";
+import { sendOKHTMLResponse } from "@tw050x.net/service/helper/response/send-ok-html-response";
 import { default as ForbiddenDocument } from "@tw050x.net/uikit/document/Forbidden";
 import { default as UnrecoverableDocument } from "@tw050x.net/uikit/document/Unrecoverable";
-import { randomBytes } from "node:crypto";
 import { SignOptions, sign, verify } from "jsonwebtoken";
 import { default as LoginDocument } from "../../template/document/LoginDocument";
 
@@ -76,9 +78,9 @@ export default defineServiceMiddleware([
   }),
 
   // check if the user has a valid access token
-  async (context) => {
+  // async (context) => {
 
-  },
+  // },
 
   // check if the user has a valid refresh token
   async (context) => {
@@ -145,30 +147,7 @@ export default defineServiceMiddleware([
   // user is not authenticated and does not have a valid refresh token
   async (context) => {
 
-    // generate a nonce for the login form
-    let nonce;
-    try {
-      let existingNonce;
-      do {
-        nonce = randomBytes(16).toString('hex');
-        existingNonce = await database.authentication.nonces.findOne({
-          type: 'login',
-          value: nonce
-        });
-      }
-      while (existingNonce !== null);
-      await database.authentication.nonces.insertOne({
-        createdAt: new Date(),
-        type: 'login',
-        value: nonce,
-      });
-    }
-    catch (error) {
-      logger.error('unable to generate nonce', { error });
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
-    }
-
     // return the login page
-    return void sendOKHTMLResponse(context, await <LoginDocument nonce={nonce} />);
+    return void sendOKHTMLResponse(context, await <LoginDocument />);
   }
 ])

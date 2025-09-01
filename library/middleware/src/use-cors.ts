@@ -1,6 +1,8 @@
-import { default as logger } from "@tw050x.net/logger";
+import { logger } from "@tw050x.net/logger";
 import { ServiceContext } from "@tw050x.net/service";
-import { isAllowedHeaders, isAllowedMethod, isAllowedOrigin, AllowedHttpMethod } from "@tw050x.net/type-guard";
+import { isAllowedHeaders } from "@tw050x.net/utility/is-allowed-headers";
+import { isAllowedMethod, AllowedHttpMethod } from "@tw050x.net/utility/is-allowed-method";
+import { isAllowedOrigin } from "@tw050x.net/utility/is-allowed-origin";
 
 type UseCorsFactoryOptions = {
   getConfiguration: (context: ServiceContext['configuration']) => Promise<{

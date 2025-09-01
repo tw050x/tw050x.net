@@ -1,9 +1,11 @@
+import { Component } from "@kitajs/html";
 
 /**
  *
  */
-export default function Stylsheet() {
+const Stylesheet: Component = () => {
   return (
     <link rel="stylesheet" href="/assets/stylesheet.css" />
   );
 }
+export default Stylesheet;

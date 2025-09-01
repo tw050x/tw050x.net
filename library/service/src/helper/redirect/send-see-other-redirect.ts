@@ -7,7 +7,7 @@ import { ServiceContext } from '../../define-service';
  * @param context - The service context object.
  * @param url - The URL to redirect to.
  */
-export default function sendSeeOtherRedirect(context: ServiceContext, url: URL) {
+export const sendSeeOtherRedirect = async (context: ServiceContext, url: URL) => {
   let redirectHeader = 'Location'
   if (context.incomingMessage.headers['hx-request'] === 'true') {
     redirectHeader = 'HX-Redirect';

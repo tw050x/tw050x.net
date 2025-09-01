@@ -3,8 +3,8 @@
     {
       "label": "tsc: build service - administration",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "service/administration"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/administration", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -17,8 +17,8 @@
     {
       "label": "tsc: watch service - administration",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "--preserveWatchOutput", "--watch",  "service/administration"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/administration", "tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -32,8 +32,8 @@
     {
       "label": "tsc: build service - authentication",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "service/authentication"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/authentication", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -46,8 +46,8 @@
     {
       "label": "tsc: watch service - authentication",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "--preserveWatchOutput", "--watch", "service/authentication"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/authentication", "tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -61,8 +61,8 @@
     {
       "label": "tsc: build service - marketing",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "service/marketing"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/marketing", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -75,8 +75,8 @@
     {
       "label": "tsc: watch service - marketing",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "--preserveWatchOutput", "--watch", "service/marketing"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/marketing", "tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -90,8 +90,8 @@
     {
       "label": "tsc: build library - database",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "library/database"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/database", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -104,8 +104,8 @@
     {
       "label": "tsc: watch library - database",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "--preserveWatchOutput", "--watch", "library/database"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/database", "tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -119,8 +119,8 @@
     {
       "label": "tsc: build library - logger",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "library/logger"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/logger", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -133,8 +133,8 @@
     {
       "label": "tsc: watch library - logger",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "--preserveWatchOutput", "--watch", "library/logger"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/logger", "tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -148,8 +148,8 @@
     {
       "label": "tsc: build library - middleware",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "library/middleware"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/middleware", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -162,8 +162,8 @@
     {
       "label": "tsc: watch library - middleware",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "--preserveWatchOutput", "--watch", "library/middleware"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/middleware", "tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -177,8 +177,8 @@
     {
       "label": "tsc: build library - service",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "library/service"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/service", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -191,37 +191,8 @@
     {
       "label": "tsc: watch library - service",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "--preserveWatchOutput", "--watch", "library/service"],
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build library - type-guard",
-      "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "library/type-guard"],
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch library - type-guard",
-      "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "--preserveWatchOutput", "--watch", "library/type-guard"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/service", "tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -235,8 +206,8 @@
     {
       "label": "tsc: build library - uikit",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "library/uikit"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/uikit", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -249,8 +220,8 @@
     {
       "label": "tsc: watch library - uikit",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "--preserveWatchOutput", "--watch", "library/uikit"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/uikit", "tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -262,12 +233,27 @@
       }
     },
     {
-      "label": "tsc: build library - uikit",
+      "label": "tsc: build library - utility",
       "type": "shell",
-      "command": "node_modules/.bin/tsc",
-      "args": ["--build", "library/uikit"],
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/utility", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch library - utility",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net/utility", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "group": "build",
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -282,7 +268,6 @@
         "tsc: build library - logger",
         "tsc: build library - middleware",
         "tsc: build library - service",
-        "tsc: build library - type-guard",
         "tsc: build library - uikit",
         "tsc: build service - administration",
         "tsc: build service - authentication",

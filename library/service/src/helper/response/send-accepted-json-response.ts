@@ -7,7 +7,7 @@ import { ServiceContext } from '../../define-service';
  * @param context - The service context object.
  * @param data - The JSON data to send in the response.
  */
-export default function sendAcceptedJSONResponse(context: ServiceContext, data: Record<string, unknown>) {
+export const sendAcceptedJSONResponse = (context: ServiceContext, data: Record<string, unknown>) => {
   context.serverResponse.statusCode = 202;
   context.serverResponse.setHeader('Content-Type', 'application/json');
   context.serverResponse.end(JSON.stringify(data));
