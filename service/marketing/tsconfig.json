@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
     "outDir": "./artifact",
     "rootDir": "./src",
+    "types": ["@kitajs/html/htmx.d.ts"],
   },
   "exclude": [
     "node_modules/",

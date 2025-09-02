@@ -1,5 +1,8 @@
 {
   "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "@tw050x.net/utility": "workspace:*"
+  },
   "description": "The @tw050x.net/uikit package project",
   "devDependencies": {
     "@kitajs/html": "^4.2.9",
@@ -9,8 +12,9 @@
     "typescript": "^5.7.2"
   },
   "exports": {
-    "./component/Htmx": "./artifact/component/Htmx.js",
+    "./component/Button": "./artifact/component/Button.js",
     "./component/Header": "./artifact/component/Header.js",
+    "./component/Htmx": "./artifact/component/Htmx.js",
     "./component/Stylesheet": "./artifact/component/Stylesheet.js",
     "./document/Forbidden": "./artifact/document/Forbidden.js",
     "./document/Unrecoverable": "./artifact/document/Unrecoverable.js"

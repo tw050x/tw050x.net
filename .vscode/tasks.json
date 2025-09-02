@@ -285,7 +285,14 @@
     {
       "label": "tailwindcss: watch assets",
       "type": "shell",
-      "command": "npx @tailwindcss/cli --input ./assets/style.css --minify --output ./assets/public/assets/stylesheet.css --cwd ${workspaceFolder} --watch",
+      "command": "yarn",
+      "args": [
+        "workspace", "@tw050x.net/assets", "@tailwindcss/cli",
+        "--cwd", "${workspaceFolder}",
+        "--input", "./assets/style.css",
+        "--output", "./assets/public/assets/stylesheet.css",
+        "--watch"
+      ],
       "options": {
         "cwd": "${workspaceFolder}/assets"
       },
@@ -300,7 +307,13 @@
     {
       "label": "tailwindcss: build assets",
       "type": "shell",
-      "command": "npx @tailwindcss/cli --input ./assets/style.css --minify --output ./assets/public/assets/stylesheet.css --cwd ${workspaceFolder}",
+      "command": "yarn",
+      "args": [
+        "workspace", "@tw050x.net/assets", "@tailwindcss/cli",
+        "--cwd", "${workspaceFolder}",
+        "--input", "./assets/style.css",
+        "--output", "./assets/public/assets/stylesheet.css",
+      ],
       "options": {
         "cwd": "${workspaceFolder}/assets"
       },

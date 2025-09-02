@@ -4,12 +4,18 @@
     "jsxImportSource": "@kitajs/html",
     "outDir": "./artifact",
     "rootDir": "./src",
+    "types": [
+      "@types/node",
+      "@kitajs/html/htmx.d.ts"
+    ],
   },
   "exclude": [
     "node_modules/",
   ],
   "extends": "../../tsconfig.json",
   "files": [
+    "src/component/Button.tsx",
+    "src/component/Header.tsx",
     "src/component/Htmx.tsx",
     "src/component/Stylesheet.tsx",
     "src/document/Forbidden.tsx",

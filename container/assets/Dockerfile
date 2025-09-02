@@ -14,7 +14,7 @@ ENV NODE_ENV=build
 RUN yarn workspaces focus @tw050x.net/assets
 
 ## Build the project
-RUN yarn workspace @tw050x.net/assets run css:compile
+RUN yarn workspace @tw050x.net/assets run @tailwindcss/cli --input ./style.css --output ./public/assets/stylesheet.css --minify
 
 FROM node:23.11.1-alpine3.22 AS assets
 RUN apk add --no-cache curl

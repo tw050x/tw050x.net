@@ -7,14 +7,14 @@
   },
   "description": "The Assets Service project for tw050x.net",
   "devDependencies": {
-    "@tailwindcss/cli": "^4.0.12",
+    "@tailwindcss/cli": "^4.1.12",
     "tailwindcss": "^4.0.12"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net/assets",
   "private": true,
   "scripts": {
-    "css:compile": "npx @tailwindcss/cli --input ./style.css --output ./public/assets/stylesheet.css --minify"
+    "@tailwindcss/cli": "tailwindcss"
   },
   "version": "1.0.0"
 }

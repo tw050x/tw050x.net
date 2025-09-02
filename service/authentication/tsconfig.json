@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
     "outDir": "./artifact",
     "rootDir": "./src",
+    "types": ["@kitajs/html/htmx.d.ts"],
   },
   "exclude": [
     "node_modules/",
@@ -19,6 +22,8 @@
     "src/stack/token/refresh/options.ts",
     "src/stack/token/refresh/post.tsx",
     "src/template/component/LoginForm.tsx",
+    "src/template/component/LoginFormEmailAddressField.tsx",
+    "src/template/component/LoginFormPasswordField.tsx",
     "src/template/document/LoginDocument.tsx",
     "src/serve.ts",
   ],

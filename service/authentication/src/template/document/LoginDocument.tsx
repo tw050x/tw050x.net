@@ -3,15 +3,17 @@ import { default as Htmx } from "@tw050x.net/uikit/component/Htmx";
 import { default as Stylesheet } from "@tw050x.net/uikit/component/Stylesheet";
 
 /**
- * Props for the login document.
+ * Props for the `<LoginDocument />` component.
  */
 type Props = {}
 
 /**
- * The login document.
+ * The `<LoginDocument />` component.
  *
+ * @param props
+ * @returns {JSX.Element}
  */
-const LoginDocument: Component<Props> = ({  }) => {
+const LoginDocument: Component<Props> = () => {
   return (
     <>
       {'<!doctype html>'}
@@ -26,7 +28,7 @@ const LoginDocument: Component<Props> = ({  }) => {
           <Stylesheet />
         </head>
         <body>
-          <main class="bg-sky-950 text-white w-screen h-screen"></main>
+          <main class="bg-sky-950 text-white w-screen min-h-screen"></main>
           <div class="asides">
             <div
               hx-get="/login/aside/login-form"
