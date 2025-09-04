@@ -1,7 +1,4 @@
 
-# MacOS Files
-.DS_Store
-
 # Top level directories
 .secret/*
 .ssh/*
@@ -23,13 +20,10 @@ tmp/*
 **/*.tfvars
 **/.env
 
-# Yarn files
-.yarn/install-state.gz
-yarn-error.log
-
-# Pipelines files
-vars.yml
-
-# Environment Files
+# Files
+.DS_Store
 .env*
 !.env.example
+.yarn/install-state.gz
+tsconfig.tsbuildinfo
+yarn-error.log

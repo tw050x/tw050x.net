@@ -36,7 +36,9 @@
     { "path": "./library/utility" },
     { "path": "./service/administration" },
     { "path": "./service/authentication" },
+    { "path": "./service/error" },
     { "path": "./service/marketing" },
     { "path": "./service/navigation" },
+    { "path": "./service/user" }
   ]
 }

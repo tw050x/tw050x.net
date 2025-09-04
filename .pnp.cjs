@@ -51,6 +51,10 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:service/authentication"\
     },\
     {\
+      "name": "@tw050x.net/error",\
+      "reference": "workspace:service/error"\
+    },\
+    {\
       "name": "@tw050x.net/marketing",\
       "reference": "workspace:service/marketing"\
     },\
@@ -61,6 +65,10 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@tw050x.net/traefik",\
       "reference": "workspace:service/traefik"\
+    },\
+    {\
+      "name": "@tw050x.net/user",\
+      "reference": "workspace:service/user"\
     }\
   ],\
   "enableTopLevelFallback": true,\
@@ -71,6 +79,7 @@ const RAW_RUNTIME_STATE =
     ["@tw050x.net/assets", ["workspace:assets"]],\
     ["@tw050x.net/authentication", ["workspace:service/authentication"]],\
     ["@tw050x.net/database", ["workspace:library/database"]],\
+    ["@tw050x.net/error", ["workspace:service/error"]],\
     ["@tw050x.net/logger", ["workspace:library/logger"]],\
     ["@tw050x.net/marketing", ["workspace:service/marketing"]],\
     ["@tw050x.net/middleware", ["workspace:library/middleware"]],\
@@ -79,6 +88,7 @@ const RAW_RUNTIME_STATE =
     ["@tw050x.net/service", ["workspace:library/service"]],\
     ["@tw050x.net/traefik", ["workspace:service/traefik"]],\
     ["@tw050x.net/uikit", ["workspace:library/uikit"]],\
+    ["@tw050x.net/user", ["workspace:service/user"]],\
     ["@tw050x.net/utility", ["workspace:library/utility"]]\
   ],\
   "fallbackPool": [\
@@ -1812,6 +1822,23 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
+    ["@tw050x.net/error", [\
+      ["workspace:service/error", {\
+        "packageLocation": "./service/error/",\
+        "packageDependencies": [\
+          ["@kitajs/html", "npm:4.2.9"],\
+          ["@tw050x.net/error", "workspace:service/error"],\
+          ["@tw050x.net/logger", "workspace:library/logger"],\
+          ["@tw050x.net/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net/service", "workspace:library/service"],\
+          ["@tw050x.net/uikit", "workspace:library/uikit"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["nodemon", "npm:3.1.10"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
     ["@tw050x.net/logger", [\
       ["workspace:library/logger", {\
         "packageLocation": "./library/logger/",\
@@ -1870,6 +1897,11 @@ const RAW_RUNTIME_STATE =
           ["@tw050x.net/navigation", "workspace:service/navigation"],\
           ["@tw050x.net/service", "workspace:library/service"],\
           ["@tw050x.net/uikit", "workspace:library/uikit"],\
+          ["@types/bcrypt", "npm:5.0.2"],\
+          ["@types/jsonwebtoken", "npm:9.0.10"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["@types/validator", "npm:13.15.2"],\
+          ["nodemon", "npm:3.1.10"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
@@ -1925,6 +1957,32 @@ const RAW_RUNTIME_STATE =
           ["htmx-ext-response-targets", "npm:2.0.3"],\
           ["htmx.org", "npm:2.0.6"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net/user", [\
+      ["workspace:service/user", {\
+        "packageLocation": "./service/user/",\
+        "packageDependencies": [\
+          ["@kitajs/html", "npm:4.2.9"],\
+          ["@tw050x.net/database", "workspace:library/database"],\
+          ["@tw050x.net/logger", "workspace:library/logger"],\
+          ["@tw050x.net/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net/service", "workspace:library/service"],\
+          ["@tw050x.net/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net/user", "workspace:service/user"],\
+          ["@types/bcrypt", "npm:5.0.2"],\
+          ["@types/jsonwebtoken", "npm:9.0.10"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["@types/validator", "npm:13.15.2"],\
+          ["bcryptjs", "npm:3.0.2"],\
+          ["jsonwebtoken", "npm:9.0.2"],\
+          ["mongodb", "virtual:5423608c6ede58d560d6d7e49f37f5135a5423464cde10009df14c4e1da06e780d16825785580d64acf95b27922cb12e5cd5d826d48239ccd2ff517654768091#npm:6.18.0"],\
+          ["nodemon", "npm:3.1.10"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
+          ["validator", "npm:13.15.15"],\
+          ["zod", "npm:3.25.76"]\
         ],\
         "linkType": "SOFT"\
       }]\

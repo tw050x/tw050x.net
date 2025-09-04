@@ -26,8 +26,10 @@
     "library/utility",
     "service/administration",
     "service/authentication",
+    "service/error",
     "service/marketing",
     "service/navigation",
-    "service/traefik"
+    "service/traefik",
+    "service/user"
   ]
 }

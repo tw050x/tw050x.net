@@ -5,7 +5,7 @@ import { default as Button } from "@tw050x.net/uikit/component/Button";
 import { default as Header } from "@tw050x.net/uikit/component/Header";
 
 /**
- * Props for the `<LoginForm />` component.
+ * Props for the `<RegisterForm />` component.
  */
 type Props = {
   email?: string;
@@ -14,12 +14,12 @@ type Props = {
 }
 
 /**
- * The `<LoginForm />` component.
+ * The `<RegisterForm />` component.
  *
  * @param props
  * @returns {JSX.Element}
  */
-const LoginForm: Component<Props> = ({ email = '', nonce, validationErrors = [] }) => {
+const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = [] }) => {
   const headerClassOverrides = {
     container: ['mb-12'],
   }
@@ -36,7 +36,7 @@ const LoginForm: Component<Props> = ({ email = '', nonce, validationErrors = [] 
               <EmailAddressField value={email} />
             </div>
             <div class="mb-6">
-              <PasswordField />
+              <PasswordField forceConfirmation={true} />
             </div>
             <div>
               <Button type="submit" variant="contained">
@@ -53,4 +53,4 @@ const LoginForm: Component<Props> = ({ email = '', nonce, validationErrors = [] 
     </div>
   );
 }
-export default LoginForm;
+export default RegisterForm;

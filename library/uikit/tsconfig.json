@@ -14,6 +14,8 @@
   ],
   "extends": "../../tsconfig.json",
   "files": [
+    "src/component/Form/EmailAddressField.tsx",
+    "src/component/Form/PasswordField.tsx",
     "src/component/Button.tsx",
     "src/component/Header.tsx",
     "src/component/Htmx.tsx",

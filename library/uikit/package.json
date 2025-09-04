@@ -12,6 +12,8 @@
     "typescript": "^5.7.2"
   },
   "exports": {
+    "./component/Form/EmailAddressField": "./artifact/component/Form/EmailAddressField.js",
+    "./component/Form/PasswordField": "./artifact/component/Form/PasswordField.js",
     "./component/Button": "./artifact/component/Button.js",
     "./component/Header": "./artifact/component/Header.js",
     "./component/Htmx": "./artifact/component/Htmx.js",

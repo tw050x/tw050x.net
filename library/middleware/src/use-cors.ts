@@ -30,7 +30,7 @@ export const useCors = (options: UseCorsFactoryOptions) => async (context: Servi
     configuration = await options.getConfiguration(context.configuration);
   }
   catch (error) {
-    logger.error('unable to read access token cookie', { error });
+    logger.error('unable to read useCors() configuration', { error });
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }

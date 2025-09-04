@@ -1,8 +1,7 @@
 {
   "author": "tw050x (Richard Kielty)",
-  "description": "The Navigation Service project for tw050x.net",
+  "description": "The Error Service project for tw050x.net",
   "dependencies": {
-    "@kitajs/html": "^4.2.9",
     "@tw050x.net/logger": "workspace:*",
     "@tw050x.net/middleware": "workspace:*",
     "@tw050x.net/service": "workspace:*",
@@ -10,17 +9,15 @@
   },
   "devDependencies": {
     "@kitajs/html": "^4.2.9",
-    "@types/bcrypt": "^5",
-    "@types/jsonwebtoken": "^9",
     "@types/node": "^22.10.2",
-    "@types/validator": "^13.12.2",
     "nodemon": "^3.1.10",
     "typescript": "^5.7.2"
   },
   "license": "UNLICENSED",
-  "name": "@tw050x.net/navigation",
+  "name": "@tw050x.net/error",
   "private": true,
   "scripts": {
+    "nodemon": "nodemon",
     "tsc": "tsc"
   },
   "version": "1.0.0"

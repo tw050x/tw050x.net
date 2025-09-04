@@ -1597,6 +1597,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@tw050x.net/error@workspace:service/error":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net/error@workspace:service/error"
+  dependencies:
+    "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net/logger": "workspace:*"
+    "@tw050x.net/middleware": "workspace:*"
+    "@tw050x.net/service": "workspace:*"
+    "@tw050x.net/uikit": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    nodemon: "npm:^3.1.10"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@tw050x.net/logger@workspace:*, @tw050x.net/logger@workspace:library/logger":
   version: 0.0.0-use.local
   resolution: "@tw050x.net/logger@workspace:library/logger"
@@ -1648,6 +1663,11 @@ __metadata:
     "@tw050x.net/middleware": "workspace:*"
     "@tw050x.net/service": "workspace:*"
     "@tw050x.net/uikit": "workspace:*"
+    "@types/bcrypt": "npm:^5"
+    "@types/jsonwebtoken": "npm:^9"
+    "@types/node": "npm:^22.10.2"
+    "@types/validator": "npm:^13.12.2"
+    nodemon: "npm:^3.1.10"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
@@ -1694,6 +1714,30 @@ __metadata:
     htmx-ext-response-targets: "npm:^2.0.1"
     htmx.org: "npm:^2.0.4"
     typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@tw050x.net/user@workspace:service/user":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net/user@workspace:service/user"
+  dependencies:
+    "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net/database": "workspace:*"
+    "@tw050x.net/logger": "workspace:*"
+    "@tw050x.net/middleware": "workspace:*"
+    "@tw050x.net/service": "workspace:*"
+    "@tw050x.net/uikit": "workspace:*"
+    "@types/bcrypt": "npm:^5"
+    "@types/jsonwebtoken": "npm:^9"
+    "@types/node": "npm:^22.10.2"
+    "@types/validator": "npm:^13.12.2"
+    bcryptjs: "npm:^3.0.2"
+    jsonwebtoken: "npm:^9.0.2"
+    mongodb: "npm:^6.12.0"
+    nodemon: "npm:^3.1.10"
+    typescript: "npm:^5.7.2"
+    validator: "npm:^13.12.0"
+    zod: "npm:^3.24.2"
   languageName: unknown
   linkType: soft
 

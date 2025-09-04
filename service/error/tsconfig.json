@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "outDir": "./artifact",
+    "rootDir": "./src",
+    "types": ["@kitajs/html/htmx.d.ts"],
+  },
+  "exclude": [
+    "node_modules/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "src/stack/404/get.tsx",
+    "src/stack/404/options.ts",
+    "src/template/document/NotFound.tsx",
+    "src/serve.ts",
+  ],
+  "references": [
+    { "path": "../../library/logger" },
+    { "path": "../../library/middleware" },
+    { "path": "../../library/service" },
+    { "path": "../../library/uikit" },
+  ]
+}

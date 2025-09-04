@@ -1,17 +1,19 @@
 import { Component } from "@kitajs/html";
 
 /**
- * Props for the `<LoginFormPasswordField />` component.
+ * Props for the `<EmailAddressField />` component.
  */
-type Props = {};
+type Props = {
+  value: string;
+};
 
 /**
- * The `<LoginFormPasswordField />` component.
+ * The `<EmailAddressField />` component.
  *
  * @param props
  * @returns {JSX.Element}
  */
-const LoginFormPasswordField: Component<Props> = ({}) => {
+const EmailAddressField: Component<Props> = ({ value }) => {
   const containerClasses = [
     'relative',
     'border border-gray-600',
@@ -35,12 +37,10 @@ const LoginFormPasswordField: Component<Props> = ({}) => {
   ]
   return (
     <div class={containerClasses}>
-      <label for="password" class={labelClasses}>
-        Password
-      </label>
-      <input type="password" id="password" name="password" required class={inputClasses} />
+      <label for="email-address" class={labelClasses}>Email Address</label>
+      <input type="text" id="email-address" name="email-address" value={value} required class={inputClasses} />
     </div>
   );
 };
 
-export default LoginFormPasswordField;
+export default EmailAddressField;
