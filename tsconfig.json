@@ -22,23 +22,24 @@
     "coverage/",
     "documentation/",
     "log/",
-    "node_modules/",
     "playground/",
     "tmp/"
   ],
   "files": [],
   "references": [
-    { "path": "./library/database" },
-    { "path": "./library/logger" },
-    { "path": "./library/middleware" },
-    { "path": "./library/service" },
-    { "path": "./library/uikit" },
-    { "path": "./library/utility" },
-    { "path": "./service/administration" },
-    { "path": "./service/authentication" },
-    { "path": "./service/error" },
-    { "path": "./service/marketing" },
-    { "path": "./service/navigation" },
-    { "path": "./service/user" }
+    { "path": "./database/authentication-database" },
+    { "path": "./library/database-library" },
+    { "path": "./library/logger-library" },
+    { "path": "./library/middleware-library" },
+    { "path": "./library/service-library" },
+    { "path": "./library/uikit-library" },
+    { "path": "./library/utility-library" },
+    { "path": "./service/administration-service" },
+    { "path": "./service/assets-service" },
+    { "path": "./service/authentication-service" },
+    { "path": "./service/error-service" },
+    { "path": "./service/marketing-service" },
+    { "path": "./service/navigation-service" },
+    { "path": "./service/user-service" }
   ]
 }

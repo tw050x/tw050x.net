@@ -1,53 +1,53 @@
 group "default" {
   targets = [
-    "administration",
-    "assets",
-    "authentication",
-    "error",
-    "marketing",
-    "navigation",
-    "user"
+    "administration-service",
+    "assets-service",
+    "authentication-service",
+    "error-service",
+    "marketing-service",
+    "navigation-service",
+    "user-service"
   ]
 }
 
-target "administration" {
+target "administration-service" {
   dockerfile = "container/service/Dockerfile"
-  target = "administration"
-  tags = ["tw050x.net/administration:latest"]
+  target = "administration-service"
+  tags = ["tw050x.net/administration-service:latest"]
 }
 
-target "assets" {
-  dockerfile = "container/assets/Dockerfile"
-  target = "assets"
-  tags = ["tw050x.net/assets:latest"]
+target "assets-service" {
+  dockerfile = "container/service/Dockerfile"
+  target = "assets-service"
+  tags = ["tw050x.net/assets-service:latest"]
 }
 
-target "authentication" {
+target "authentication-service" {
   dockerfile = "container/service/Dockerfile"
-  target = "authentication"
-  tags = ["tw050x.net/authentication:latest"]
+  target = "authentication-service"
+  tags = ["tw050x.net/authentication-service:latest"]
 }
 
-target "error" {
+target "error-service" {
   dockerfile = "container/service/Dockerfile"
-  target = "error"
-  tags = ["tw050x.net/error:latest"]
+  target = "error-service"
+  tags = ["tw050x.net/error-service:latest"]
 }
 
-target "marketing" {
+target "marketing-service" {
   dockerfile = "container/service/Dockerfile"
-  target = "marketing"
-  tags = ["tw050x.net/marketing:latest"]
+  target = "marketing-service"
+  tags = ["tw050x.net/marketing-service:latest"]
 }
 
-target "navigation" {
+target "navigation-service" {
   dockerfile = "container/service/Dockerfile"
-  target = "navigation"
-  tags = ["tw050x.net/navigation:latest"]
+  target = "navigation-service"
+  tags = ["tw050x.net/navigation-service:latest"]
 }
 
-target "user" {
+target "user-service" {
   dockerfile = "container/service/Dockerfile"
-  target = "user"
-  tags = ["tw050x.net/user:latest"]
+  target = "user-service"
+  tags = ["tw050x.net/user-service:latest"]
 }

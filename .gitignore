@@ -1,29 +1,38 @@
 
 # Top level directories
-.secret/*
-.ssh/*
 artifact/*
-certificate/*
 coverage/*
 log/*
-node_modules/*
 tmp/*
 
-# Directories & files in subdirectories
-**/.secret/*
+# Docker
 **/data/*
+
+# MacOS
+.DS_Store
+
+# Environment
+.env*
+!.env.example
+
+# Terraform
 **/.terraform/
-**/node_modules/*
 **/*.override.tf
 **/*.tfstate
 **/*.tfstate.backup
 **/*.tfvars
 **/.env
 
-# Files
-.DS_Store
-.env*
-!.env.example
-.yarn/install-state.gz
+# Typescript
 tsconfig.tsbuildinfo
-yarn-error.log
+
+# Yarn
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/unplugged
+!.yarn/versions
+.yarn/install-state.gz

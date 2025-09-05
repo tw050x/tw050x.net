@@ -1,0 +1,9 @@
+
+# Directories
+
+# Files
+*.js
+public/assets/*
+!public/assets/htmx-ext/
+!public/assets/healthcheck.txt
+!public/assets/htmx.min.js

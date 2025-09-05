@@ -1,0 +1,21 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "winston": "^3.17.0"
+  },
+  "description": "The @tw050x.net/logger-library package project",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": "./artifact/index.js"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/logger-library",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "types": "artifact/index.d.ts",
+  "version": "1.0.0"
+}

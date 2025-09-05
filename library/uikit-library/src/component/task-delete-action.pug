@@ -1,0 +1,38 @@
+div
+  if task.deletedAt != undefined
+    include /node_modules/@tw050x.net/uikit-library/component/button-field--action--destructive-success
+    +button-field--action--destructive-success({
+      id: 'delete-action',
+      label: 'Delete',
+      name: 'delete',
+      buttonText: 'Schedule Deletion',
+      confirmText: 'Are you sure you want to schedule this task for deletion?',
+      endpoint: `/admin/tasks/${task.uuid}`,
+    })
+  else if task.scheduledForDeletionAt != undefined
+    include /node_modules/@tw050x.net/uikit-library/component/button-field--action--destructive-pending
+    +button-field--action--destructive-pending({
+      forceId: 'force-delete-action',
+      forceFormInputName: 'delete',
+      forceText: 'Force Delete',
+      forceEndpoint: `/admin/tasks/${task.uuid}`,
+      forceConfirmText: 'Are you sure you want to forcefully delete this task?',
+      id: 'force-delete-or-undo-delete-action',
+      infoText: 'Scheduled for deletion',
+      label: 'Delete',
+      undoId: 'undo-delete-action',
+      undoFormInputName: 'delete',
+      undoText: 'Undo',
+      undoEndpoint: `/admin/tasks/${task.uuid}`,
+      undoConfirmText: 'Are you sure you want to undo the scheduled deletion of this task?',
+    })
+  else
+    include /node_modules/@tw050x.net/uikit-library/component/button-field--action--destructive
+    +button-field--action--destructive({
+      id: 'delete-action',
+      label: 'Delete',
+      name: 'delete',
+      buttonText: 'Schedule Deletion',
+      confirmText: 'Are you sure you want to schedule this task for deletion?',
+      endpoint: `/admin/tasks/${task.uuid}`,
+    })

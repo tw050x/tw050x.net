@@ -1,0 +1,15 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "description": "The database project for tw050x.net/traefik",
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/traefik-service",
+  "scripts": {
+    "generate-certificate-authority": "script/generate-certificate-authority.sh",
+    "generate-certificates": "script/generate-certificates.sh"
+  },
+  "private": true,
+  "version": "0.0.1"
+}

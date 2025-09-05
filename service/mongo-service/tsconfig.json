@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./artifact",
+    "rootDir": "./src",
+  },
+  "exclude": [
+    "data/",
+    "migration/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": []
+}

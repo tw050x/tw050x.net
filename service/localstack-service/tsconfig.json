@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "outDir": "../../artifact/service/localstack",
+    "rootDir": ".",
+  },
+  "exclude": [
+    "data/",
+  ],
+  "extends": "../../tsconfig.json",
+  "files": []
+}

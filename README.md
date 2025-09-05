@@ -46,17 +46,20 @@ docker compose up --detach
 You will also need to run `tsc` on your machine for the proiject you are working on.
 
 ```bash
-# Service (only run one)
-yarn workspace @tw050x.net/administration tsc --build
-yarn workspace @tw050x.net/authentication tsc --build
-yarn workspace @tw050x.net/marketing tsc --build
+# Services
+yarn workspace @tw050x.net/administration-service tsc --build
+yarn workspace @tw050x.net/authentication-service tsc --build
+yarn workspace @tw050x.net/marketing-service tsc --build
 
 # Libraries
 yarn workspace @tw050x.net/database tsc --build
-yarn workspace @tw050x.net/logger tsc --build
-yarn workspace @tw050x.net/middleware tsc --build
-yarn workspace @tw050x.net/service tsc --build
-yarn workspace @tw050x.net/uikit tsc --build
+yarn workspace @tw050x.net/logger-library tsc --build
+yarn workspace @tw050x.net/middleware-library tsc --build
+yarn workspace @tw050x.net/service-library tsc --build
+yarn workspace @tw050x.net/uikit-library tsc --build
+
+# Databases
+yarn workspace @tw050x.net/authentication-database tsc --build
 ```
 
 This should run compilation for that project and all dependencies. In turn that should restart the server in the docker container (assuming you used `docker compose up` as described above).

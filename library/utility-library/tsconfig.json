@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "outDir": "./artifact",
+    "rootDir": "./src",
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "src/assert-unreachable.ts",
+    "src/index.ts",
+    "src/is-allowed-domain.ts",
+    "src/is-allowed-headers.ts",
+    "src/is-allowed-method.ts",
+    "src/is-allowed-origin.ts",
+  ]
+}

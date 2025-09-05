@@ -1,0 +1,37 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "@tw050x.net/logger-library": "workspace:*",
+    "@tw050x.net/service-library": "workspace:*",
+    "@tw050x.net/utility-library": "workspace:*",
+    "cookies": "^0.9.1",
+    "date-fns": "^4.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "description": "The @tw050x.net/middleware-library package project",
+  "devDependencies": {
+    "@types/cookies": "^0.9.0",
+    "@types/jsonwebtoken": "^9",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": "./artifact/index.js",
+    "./use-access-token-cookie-reader": "./artifact/use-access-token-cookie-reader.js",
+    "./use-access-token-cookie-writer": "./artifact/use-access-token-cookie-writer.js",
+    "./use-cors": "./artifact/use-cors.js",
+    "./use-login-state-cookie-reader": "./artifact/use-login-state-cookie-reader.js",
+    "./use-login-state-cookie-writer": "./artifact/use-login-state-cookie-writer.js",
+    "./use-refresh-token-cookie-reader": "./artifact/use-refresh-token-cookie-reader.js",
+    "./use-refresh-token-cookie-writer": "./artifact/use-refresh-token-cookie-writer.js",
+    "./use-refreshable-token-cookie-reader": "./artifact/use-refreshable-token-cookie-reader.js",
+    "./use-refreshable-token-cookie-writer": "./artifact/use-refreshable-token-cookie-writer.js"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/middleware-library",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "types": "./artifact/index.d.ts",
+  "version": "1.0.0"
+}

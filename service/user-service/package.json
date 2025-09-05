@@ -1,0 +1,34 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "description": "The User Service project for tw050x.net",
+  "dependencies": {
+    "@tw050x.net/authentication-database": "workspace:*",
+    "@tw050x.net/database-library": "workspace:*",
+    "@tw050x.net/logger-library": "workspace:*",
+    "@tw050x.net/middleware-library": "workspace:*",
+    "@tw050x.net/service-library": "workspace:*",
+    "@tw050x.net/uikit-library": "workspace:*",
+    "bcryptjs": "^3.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.12.0",
+    "validator": "^13.12.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@kitajs/html": "^4.2.9",
+    "@types/bcrypt": "^5",
+    "@types/jsonwebtoken": "^9",
+    "@types/node": "^22.10.2",
+    "@types/validator": "^13.12.2",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.7.2"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net/user-service",
+  "private": true,
+  "scripts": {
+    "nodemon": "nodemon",
+    "tsc": "tsc"
+  },
+  "version": "1.0.0"
+}

@@ -15,81 +15,86 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:."\
     },\
     {\
-      "name": "@tw050x.net/assets",\
-      "reference": "workspace:assets"\
+      "name": "@tw050x.net/authentication-database",\
+      "reference": "workspace:database/authentication-database"\
     },\
     {\
-      "name": "@tw050x.net/database",\
-      "reference": "workspace:library/database"\
+      "name": "@tw050x.net/database-library",\
+      "reference": "workspace:library/database-library"\
     },\
     {\
-      "name": "@tw050x.net/logger",\
-      "reference": "workspace:library/logger"\
+      "name": "@tw050x.net/logger-library",\
+      "reference": "workspace:library/logger-library"\
     },\
     {\
-      "name": "@tw050x.net/middleware",\
-      "reference": "workspace:library/middleware"\
+      "name": "@tw050x.net/middleware-library",\
+      "reference": "workspace:library/middleware-library"\
     },\
     {\
-      "name": "@tw050x.net/service",\
-      "reference": "workspace:library/service"\
+      "name": "@tw050x.net/service-library",\
+      "reference": "workspace:library/service-library"\
     },\
     {\
-      "name": "@tw050x.net/uikit",\
-      "reference": "workspace:library/uikit"\
+      "name": "@tw050x.net/uikit-library",\
+      "reference": "workspace:library/uikit-library"\
     },\
     {\
-      "name": "@tw050x.net/utility",\
-      "reference": "workspace:library/utility"\
+      "name": "@tw050x.net/utility-library",\
+      "reference": "workspace:library/utility-library"\
     },\
     {\
-      "name": "@tw050x.net/administration",\
-      "reference": "workspace:service/administration"\
+      "name": "@tw050x.net/administration-service",\
+      "reference": "workspace:service/administration-service"\
     },\
     {\
-      "name": "@tw050x.net/authentication",\
-      "reference": "workspace:service/authentication"\
+      "name": "@tw050x.net/assets-service",\
+      "reference": "workspace:service/assets-service"\
     },\
     {\
-      "name": "@tw050x.net/error",\
-      "reference": "workspace:service/error"\
+      "name": "@tw050x.net/authentication-service",\
+      "reference": "workspace:service/authentication-service"\
     },\
     {\
-      "name": "@tw050x.net/marketing",\
-      "reference": "workspace:service/marketing"\
+      "name": "@tw050x.net/error-service",\
+      "reference": "workspace:service/error-service"\
     },\
     {\
-      "name": "@tw050x.net/navigation",\
-      "reference": "workspace:service/navigation"\
+      "name": "@tw050x.net/marketing-service",\
+      "reference": "workspace:service/marketing-service"\
     },\
     {\
-      "name": "@tw050x.net/traefik",\
-      "reference": "workspace:service/traefik"\
+      "name": "@tw050x.net/navigation-service",\
+      "reference": "workspace:service/navigation-service"\
     },\
     {\
-      "name": "@tw050x.net/user",\
-      "reference": "workspace:service/user"\
+      "name": "@tw050x.net/traefik-service",\
+      "reference": "workspace:service/traefik-service"\
+    },\
+    {\
+      "name": "@tw050x.net/user-service",\
+      "reference": "workspace:service/user-service"\
     }\
   ],\
   "enableTopLevelFallback": true,\
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "pnpZipBackend": "libzip",\
   "fallbackExclusionList": [\
-    ["@tw050x.net/administration", ["workspace:service/administration"]],\
-    ["@tw050x.net/assets", ["workspace:assets"]],\
-    ["@tw050x.net/authentication", ["workspace:service/authentication"]],\
-    ["@tw050x.net/database", ["workspace:library/database"]],\
-    ["@tw050x.net/error", ["workspace:service/error"]],\
-    ["@tw050x.net/logger", ["workspace:library/logger"]],\
-    ["@tw050x.net/marketing", ["workspace:service/marketing"]],\
-    ["@tw050x.net/middleware", ["workspace:library/middleware"]],\
-    ["@tw050x.net/navigation", ["workspace:service/navigation"]],\
+    ["@tw050x.net/administration-service", ["workspace:service/administration-service"]],\
+    ["@tw050x.net/assets-service", ["workspace:service/assets-service"]],\
+    ["@tw050x.net/authentication-database", ["workspace:database/authentication-database"]],\
+    ["@tw050x.net/authentication-service", ["workspace:service/authentication-service"]],\
+    ["@tw050x.net/database-library", ["workspace:library/database-library"]],\
+    ["@tw050x.net/error-service", ["workspace:service/error-service"]],\
+    ["@tw050x.net/logger-library", ["workspace:library/logger-library"]],\
+    ["@tw050x.net/marketing-service", ["workspace:service/marketing-service"]],\
+    ["@tw050x.net/middleware-library", ["workspace:library/middleware-library"]],\
+    ["@tw050x.net/navigation-service", ["workspace:service/navigation-service"]],\
     ["@tw050x.net/platform", ["workspace:."]],\
-    ["@tw050x.net/service", ["workspace:library/service"]],\
-    ["@tw050x.net/traefik", ["workspace:service/traefik"]],\
-    ["@tw050x.net/uikit", ["workspace:library/uikit"]],\
-    ["@tw050x.net/user", ["workspace:service/user"]],\
-    ["@tw050x.net/utility", ["workspace:library/utility"]]\
+    ["@tw050x.net/service-library", ["workspace:library/service-library"]],\
+    ["@tw050x.net/traefik-service", ["workspace:service/traefik-service"]],\
+    ["@tw050x.net/uikit-library", ["workspace:library/uikit-library"]],\
+    ["@tw050x.net/user-service", ["workspace:service/user-service"]],\
+    ["@tw050x.net/utility-library", ["workspace:library/utility-library"]]\
   ],\
   "fallbackPool": [\
   ],\
@@ -692,31 +697,31 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@emnapi/core", [\
-      ["npm:1.4.5", {\
-        "packageLocation": "../../../../.yarn/berry/cache/@emnapi-core-npm-1.4.5-ec124a1813-10c0.zip/node_modules/@emnapi/core/",\
+      ["npm:1.5.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@emnapi-core-npm-1.5.0-e779459685-10c0.zip/node_modules/@emnapi/core/",\
         "packageDependencies": [\
-          ["@emnapi/core", "npm:1.4.5"],\
-          ["@emnapi/wasi-threads", "npm:1.0.4"],\
+          ["@emnapi/core", "npm:1.5.0"],\
+          ["@emnapi/wasi-threads", "npm:1.1.0"],\
           ["tslib", "npm:2.8.1"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@emnapi/runtime", [\
-      ["npm:1.4.5", {\
-        "packageLocation": "../../../../.yarn/berry/cache/@emnapi-runtime-npm-1.4.5-3b801be1ae-10c0.zip/node_modules/@emnapi/runtime/",\
+      ["npm:1.5.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@emnapi-runtime-npm-1.5.0-ed48adceaa-10c0.zip/node_modules/@emnapi/runtime/",\
         "packageDependencies": [\
-          ["@emnapi/runtime", "npm:1.4.5"],\
+          ["@emnapi/runtime", "npm:1.5.0"],\
           ["tslib", "npm:2.8.1"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@emnapi/wasi-threads", [\
-      ["npm:1.0.4", {\
-        "packageLocation": "../../../../.yarn/berry/cache/@emnapi-wasi-threads-npm-1.0.4-ac6c94b37b-10c0.zip/node_modules/@emnapi/wasi-threads/",\
+      ["npm:1.1.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@emnapi-wasi-threads-npm-1.1.0-4dc2c60138-10c0.zip/node_modules/@emnapi/wasi-threads/",\
         "packageDependencies": [\
-          ["@emnapi/wasi-threads", "npm:1.0.4"],\
+          ["@emnapi/wasi-threads", "npm:1.1.0"],\
           ["tslib", "npm:2.8.1"]\
         ],\
         "linkType": "HARD"\
@@ -860,8 +865,8 @@ const RAW_RUNTIME_STATE =
       ["npm:0.2.12", {\
         "packageLocation": "../../../../.yarn/berry/cache/@napi-rs-wasm-runtime-npm-0.2.12-8f0d65e253-10c0.zip/node_modules/@napi-rs/wasm-runtime/",\
         "packageDependencies": [\
-          ["@emnapi/core", "npm:1.4.5"],\
-          ["@emnapi/runtime", "npm:1.4.5"],\
+          ["@emnapi/core", "npm:1.5.0"],\
+          ["@emnapi/runtime", "npm:1.5.0"],\
           ["@napi-rs/wasm-runtime", "npm:0.2.12"],\
           ["@tybys/wasm-util", "npm:0.10.0"]\
         ],\
@@ -1576,54 +1581,54 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@tailwindcss/cli", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "../../../../.yarn/berry/cache/@tailwindcss-cli-npm-4.1.12-e8ae46fab5-10c0.zip/node_modules/@tailwindcss/cli/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@tailwindcss-cli-npm-4.1.13-2f6facd6f3-10c0.zip/node_modules/@tailwindcss/cli/",\
         "packageDependencies": [\
           ["@parcel/watcher", "npm:2.5.1"],\
-          ["@tailwindcss/cli", "npm:4.1.12"],\
-          ["@tailwindcss/node", "npm:4.1.12"],\
-          ["@tailwindcss/oxide", "npm:4.1.12"],\
+          ["@tailwindcss/cli", "npm:4.1.13"],\
+          ["@tailwindcss/node", "npm:4.1.13"],\
+          ["@tailwindcss/oxide", "npm:4.1.13"],\
           ["enhanced-resolve", "npm:5.18.3"],\
           ["mri", "npm:1.2.0"],\
           ["picocolors", "npm:1.1.1"],\
-          ["tailwindcss", "npm:4.1.12"]\
+          ["tailwindcss", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/node", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "../../../../.yarn/berry/cache/@tailwindcss-node-npm-4.1.12-35c5a53c14-10c0.zip/node_modules/@tailwindcss/node/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "../../../../.yarn/berry/cache/@tailwindcss-node-npm-4.1.13-742e12f554-10c0.zip/node_modules/@tailwindcss/node/",\
         "packageDependencies": [\
           ["@jridgewell/remapping", "npm:2.3.5"],\
-          ["@tailwindcss/node", "npm:4.1.12"],\
+          ["@tailwindcss/node", "npm:4.1.13"],\
           ["enhanced-resolve", "npm:5.18.3"],\
           ["jiti", "npm:2.5.1"],\
           ["lightningcss", "npm:1.30.1"],\
           ["magic-string", "npm:0.30.18"],\
           ["source-map-js", "npm:1.2.1"],\
-          ["tailwindcss", "npm:4.1.12"]\
+          ["tailwindcss", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-npm-4.1.12-7de31f0280/node_modules/@tailwindcss/oxide/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-npm-4.1.13-d9007c0f9c/node_modules/@tailwindcss/oxide/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-android-arm64", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-darwin-arm64", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-darwin-x64", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-freebsd-x64", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-linux-arm-gnueabihf", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-linux-arm64-gnu", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-linux-arm64-musl", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-linux-x64-gnu", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-linux-x64-musl", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-wasm32-wasi", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-win32-arm64-msvc", "npm:4.1.12"],\
-          ["@tailwindcss/oxide-win32-x64-msvc", "npm:4.1.12"],\
+          ["@tailwindcss/oxide", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-android-arm64", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-darwin-arm64", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-darwin-x64", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-freebsd-x64", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-linux-arm-gnueabihf", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-linux-arm64-gnu", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-linux-arm64-musl", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-linux-x64-gnu", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-linux-x64-musl", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-wasm32-wasi", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-win32-arm64-msvc", "npm:4.1.13"],\
+          ["@tailwindcss/oxide-win32-x64-msvc", "npm:4.1.13"],\
           ["detect-libc", "npm:2.0.4"],\
           ["tar", "npm:7.4.3"]\
         ],\
@@ -1631,95 +1636,95 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@tailwindcss/oxide-android-arm64", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-android-arm64-npm-4.1.12-8e2126a415/node_modules/@tailwindcss/oxide-android-arm64/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-android-arm64-npm-4.1.13-73fad67363/node_modules/@tailwindcss/oxide-android-arm64/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-android-arm64", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-android-arm64", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-darwin-arm64", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-darwin-arm64-npm-4.1.12-016979fb18/node_modules/@tailwindcss/oxide-darwin-arm64/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-darwin-arm64-npm-4.1.13-fbee43ab94/node_modules/@tailwindcss/oxide-darwin-arm64/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-darwin-arm64", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-darwin-arm64", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-darwin-x64", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-darwin-x64-npm-4.1.12-3286c5f115/node_modules/@tailwindcss/oxide-darwin-x64/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-darwin-x64-npm-4.1.13-ad38982e18/node_modules/@tailwindcss/oxide-darwin-x64/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-darwin-x64", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-darwin-x64", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-freebsd-x64", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-freebsd-x64-npm-4.1.12-fad48e9993/node_modules/@tailwindcss/oxide-freebsd-x64/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-freebsd-x64-npm-4.1.13-3f4a2dbfb5/node_modules/@tailwindcss/oxide-freebsd-x64/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-freebsd-x64", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-freebsd-x64", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-linux-arm-gnueabihf", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-arm-gnueabihf-npm-4.1.12-9825c638ab/node_modules/@tailwindcss/oxide-linux-arm-gnueabihf/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-arm-gnueabihf-npm-4.1.13-efc2871eae/node_modules/@tailwindcss/oxide-linux-arm-gnueabihf/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-linux-arm-gnueabihf", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-linux-arm-gnueabihf", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-linux-arm64-gnu", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-arm64-gnu-npm-4.1.12-e34ede25e7/node_modules/@tailwindcss/oxide-linux-arm64-gnu/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-arm64-gnu-npm-4.1.13-81ae18aa7e/node_modules/@tailwindcss/oxide-linux-arm64-gnu/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-linux-arm64-gnu", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-linux-arm64-gnu", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-linux-arm64-musl", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-arm64-musl-npm-4.1.12-899e362877/node_modules/@tailwindcss/oxide-linux-arm64-musl/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-arm64-musl-npm-4.1.13-749b29dd10/node_modules/@tailwindcss/oxide-linux-arm64-musl/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-linux-arm64-musl", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-linux-arm64-musl", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-linux-x64-gnu", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-x64-gnu-npm-4.1.12-d1f46b8e28/node_modules/@tailwindcss/oxide-linux-x64-gnu/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-x64-gnu-npm-4.1.13-63ecfe1659/node_modules/@tailwindcss/oxide-linux-x64-gnu/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-linux-x64-gnu", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-linux-x64-gnu", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-linux-x64-musl", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-x64-musl-npm-4.1.12-3c0dfdb6c3/node_modules/@tailwindcss/oxide-linux-x64-musl/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-linux-x64-musl-npm-4.1.13-7d4933db92/node_modules/@tailwindcss/oxide-linux-x64-musl/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-linux-x64-musl", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-linux-x64-musl", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-wasm32-wasi", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-wasm32-wasi-npm-4.1.12-eb141149a5/node_modules/@tailwindcss/oxide-wasm32-wasi/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-wasm32-wasi-npm-4.1.13-14369803ce/node_modules/@tailwindcss/oxide-wasm32-wasi/",\
         "packageDependencies": [\
-          ["@emnapi/core", "npm:1.4.5"],\
-          ["@emnapi/runtime", "npm:1.4.5"],\
-          ["@emnapi/wasi-threads", "npm:1.0.4"],\
+          ["@emnapi/core", "npm:1.5.0"],\
+          ["@emnapi/runtime", "npm:1.5.0"],\
+          ["@emnapi/wasi-threads", "npm:1.1.0"],\
           ["@napi-rs/wasm-runtime", "npm:0.2.12"],\
-          ["@tailwindcss/oxide-wasm32-wasi", "npm:4.1.12"],\
+          ["@tailwindcss/oxide-wasm32-wasi", "npm:4.1.13"],\
           ["@tybys/wasm-util", "npm:0.10.0"],\
           ["tslib", "npm:2.8.1"]\
         ],\
@@ -1727,38 +1732,37 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["@tailwindcss/oxide-win32-arm64-msvc", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-win32-arm64-msvc-npm-4.1.12-dca908de1b/node_modules/@tailwindcss/oxide-win32-arm64-msvc/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-win32-arm64-msvc-npm-4.1.13-07e725f633/node_modules/@tailwindcss/oxide-win32-arm64-msvc/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-win32-arm64-msvc", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-win32-arm64-msvc", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
     ["@tailwindcss/oxide-win32-x64-msvc", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-win32-x64-msvc-npm-4.1.12-4cac26004f/node_modules/@tailwindcss/oxide-win32-x64-msvc/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "./.yarn/unplugged/@tailwindcss-oxide-win32-x64-msvc-npm-4.1.13-7dd3a04922/node_modules/@tailwindcss/oxide-win32-x64-msvc/",\
         "packageDependencies": [\
-          ["@tailwindcss/oxide-win32-x64-msvc", "npm:4.1.12"]\
+          ["@tailwindcss/oxide-win32-x64-msvc", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@tw050x.net/administration", [\
-      ["workspace:service/administration", {\
-        "packageLocation": "./service/administration/",\
+    ["@tw050x.net/administration-service", [\
+      ["workspace:service/administration-service", {\
+        "packageLocation": "./service/administration-service/",\
         "packageDependencies": [\
           ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/administration", "workspace:service/administration"],\
-          ["@tw050x.net/database", "workspace:library/database"],\
-          ["@tw050x.net/logger", "workspace:library/logger"],\
-          ["@tw050x.net/middleware", "workspace:library/middleware"],\
-          ["@tw050x.net/service", "workspace:library/service"],\
-          ["@tw050x.net/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net/administration-service", "workspace:service/administration-service"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
+          ["@tw050x.net/service-library", "workspace:library/service-library"],\
+          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
           ["@types/node", "npm:22.17.2"],\
           ["date-fns", "npm:4.1.0"],\
           ["http-status-codes", "npm:2.3.0"],\
-          ["mongodb", "virtual:5423608c6ede58d560d6d7e49f37f5135a5423464cde10009df14c4e1da06e780d16825785580d64acf95b27922cb12e5cd5d826d48239ccd2ff517654768091#npm:6.18.0"],\
+          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
           ["nodemon", "npm:3.1.10"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["uuid", "npm:11.1.0"],\
@@ -1768,38 +1772,52 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/assets", [\
-      ["workspace:assets", {\
-        "packageLocation": "./assets/",\
+    ["@tw050x.net/assets-service", [\
+      ["workspace:service/assets-service", {\
+        "packageLocation": "./service/assets-service/",\
         "packageDependencies": [\
-          ["@tailwindcss/cli", "npm:4.1.12"],\
-          ["@tw050x.net/assets", "workspace:assets"],\
+          ["@tailwindcss/cli", "npm:4.1.13"],\
+          ["@tw050x.net/assets-service", "workspace:service/assets-service"],\
           ["htmx-ext-response-targets", "npm:2.0.3"],\
           ["htmx.org", "npm:2.0.6"],\
-          ["serve", "npm:14.2.4"],\
-          ["tailwindcss", "npm:4.1.12"]\
+          ["serve", "npm:14.2.5"],\
+          ["tailwindcss", "npm:4.1.13"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/authentication", [\
-      ["workspace:service/authentication", {\
-        "packageLocation": "./service/authentication/",\
+    ["@tw050x.net/authentication-database", [\
+      ["workspace:database/authentication-database", {\
+        "packageLocation": "./database/authentication-database/",\
+        "packageDependencies": [\
+          ["@tw050x.net/authentication-database", "workspace:database/authentication-database"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["bson", "npm:6.10.4"],\
+          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net/authentication-service", [\
+      ["workspace:service/authentication-service", {\
+        "packageLocation": "./service/authentication-service/",\
         "packageDependencies": [\
           ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/authentication", "workspace:service/authentication"],\
-          ["@tw050x.net/database", "workspace:library/database"],\
-          ["@tw050x.net/logger", "workspace:library/logger"],\
-          ["@tw050x.net/middleware", "workspace:library/middleware"],\
-          ["@tw050x.net/service", "workspace:library/service"],\
-          ["@tw050x.net/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net/authentication-database", "workspace:database/authentication-database"],\
+          ["@tw050x.net/authentication-service", "workspace:service/authentication-service"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
+          ["@tw050x.net/service-library", "workspace:library/service-library"],\
+          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
           ["@types/bcrypt", "npm:5.0.2"],\
           ["@types/jsonwebtoken", "npm:9.0.10"],\
           ["@types/node", "npm:22.17.2"],\
           ["@types/validator", "npm:13.15.2"],\
           ["bcryptjs", "npm:3.0.2"],\
           ["jsonwebtoken", "npm:9.0.2"],\
-          ["mongodb", "virtual:5423608c6ede58d560d6d7e49f37f5135a5423464cde10009df14c4e1da06e780d16825785580d64acf95b27922cb12e5cd5d826d48239ccd2ff517654768091#npm:6.18.0"],\
+          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
           ["nodemon", "npm:3.1.10"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["validator", "npm:13.15.15"],\
@@ -1808,30 +1826,28 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/database", [\
-      ["workspace:library/database", {\
-        "packageLocation": "./library/database/",\
+    ["@tw050x.net/database-library", [\
+      ["workspace:library/database-library", {\
+        "packageLocation": "./library/database-library/",\
         "packageDependencies": [\
-          ["@tw050x.net/database", "workspace:library/database"],\
-          ["@tw050x.net/service", "workspace:library/service"],\
+          ["@tw050x.net/database-library", "workspace:library/database-library"],\
           ["@types/node", "npm:22.17.2"],\
-          ["bson", "npm:6.10.4"],\
-          ["mongodb", "virtual:5423608c6ede58d560d6d7e49f37f5135a5423464cde10009df14c4e1da06e780d16825785580d64acf95b27922cb12e5cd5d826d48239ccd2ff517654768091#npm:6.18.0"],\
+          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/error", [\
-      ["workspace:service/error", {\
-        "packageLocation": "./service/error/",\
+    ["@tw050x.net/error-service", [\
+      ["workspace:service/error-service", {\
+        "packageLocation": "./service/error-service/",\
         "packageDependencies": [\
           ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/error", "workspace:service/error"],\
-          ["@tw050x.net/logger", "workspace:library/logger"],\
-          ["@tw050x.net/middleware", "workspace:library/middleware"],\
-          ["@tw050x.net/service", "workspace:library/service"],\
-          ["@tw050x.net/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net/error-service", "workspace:service/error-service"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
+          ["@tw050x.net/service-library", "workspace:library/service-library"],\
+          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
           ["@types/node", "npm:22.17.2"],\
           ["nodemon", "npm:3.1.10"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
@@ -1839,11 +1855,11 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/logger", [\
-      ["workspace:library/logger", {\
-        "packageLocation": "./library/logger/",\
+    ["@tw050x.net/logger-library", [\
+      ["workspace:library/logger-library", {\
+        "packageLocation": "./library/logger-library/",\
         "packageDependencies": [\
-          ["@tw050x.net/logger", "workspace:library/logger"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
           ["@types/node", "npm:22.17.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["winston", "npm:3.17.0"]\
@@ -1851,16 +1867,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/marketing", [\
-      ["workspace:service/marketing", {\
-        "packageLocation": "./service/marketing/",\
+    ["@tw050x.net/marketing-service", [\
+      ["workspace:service/marketing-service", {\
+        "packageLocation": "./service/marketing-service/",\
         "packageDependencies": [\
           ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/logger", "workspace:library/logger"],\
-          ["@tw050x.net/marketing", "workspace:service/marketing"],\
-          ["@tw050x.net/middleware", "workspace:library/middleware"],\
-          ["@tw050x.net/service", "workspace:library/service"],\
-          ["@tw050x.net/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net/marketing-service", "workspace:service/marketing-service"],\
+          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
+          ["@tw050x.net/service-library", "workspace:library/service-library"],\
+          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
           ["@types/node", "npm:22.17.2"],\
           ["nodemon", "npm:3.1.10"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
@@ -1868,14 +1884,14 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/middleware", [\
-      ["workspace:library/middleware", {\
-        "packageLocation": "./library/middleware/",\
+    ["@tw050x.net/middleware-library", [\
+      ["workspace:library/middleware-library", {\
+        "packageLocation": "./library/middleware-library/",\
         "packageDependencies": [\
-          ["@tw050x.net/logger", "workspace:library/logger"],\
-          ["@tw050x.net/middleware", "workspace:library/middleware"],\
-          ["@tw050x.net/service", "workspace:library/service"],\
-          ["@tw050x.net/utility", "workspace:library/utility"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
+          ["@tw050x.net/service-library", "workspace:library/service-library"],\
+          ["@tw050x.net/utility-library", "workspace:library/utility-library"],\
           ["@types/cookies", "npm:0.9.1"],\
           ["@types/jsonwebtoken", "npm:9.0.10"],\
           ["@types/node", "npm:22.17.2"],\
@@ -1887,16 +1903,16 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/navigation", [\
-      ["workspace:service/navigation", {\
-        "packageLocation": "./service/navigation/",\
+    ["@tw050x.net/navigation-service", [\
+      ["workspace:service/navigation-service", {\
+        "packageLocation": "./service/navigation-service/",\
         "packageDependencies": [\
           ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/logger", "workspace:library/logger"],\
-          ["@tw050x.net/middleware", "workspace:library/middleware"],\
-          ["@tw050x.net/navigation", "workspace:service/navigation"],\
-          ["@tw050x.net/service", "workspace:library/service"],\
-          ["@tw050x.net/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
+          ["@tw050x.net/navigation-service", "workspace:service/navigation-service"],\
+          ["@tw050x.net/service-library", "workspace:library/service-library"],\
+          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
           ["@types/bcrypt", "npm:5.0.2"],\
           ["@types/jsonwebtoken", "npm:9.0.10"],\
           ["@types/node", "npm:22.17.2"],\
@@ -1920,39 +1936,39 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/service", [\
-      ["workspace:library/service", {\
-        "packageLocation": "./library/service/",\
+    ["@tw050x.net/service-library", [\
+      ["workspace:library/service-library", {\
+        "packageLocation": "./library/service-library/",\
         "packageDependencies": [\
           ["@aws-sdk/client-secrets-manager", "npm:3.873.0"],\
           ["@aws-sdk/client-ssm", "npm:3.873.0"],\
-          ["@tw050x.net/logger", "workspace:library/logger"],\
-          ["@tw050x.net/service", "workspace:library/service"],\
-          ["@tw050x.net/utility", "workspace:library/utility"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net/service-library", "workspace:library/service-library"],\
+          ["@tw050x.net/utility-library", "workspace:library/utility-library"],\
           ["@types/node", "npm:22.17.2"],\
           ["lru-cache", "npm:11.1.0"],\
-          ["mongodb", "virtual:5423608c6ede58d560d6d7e49f37f5135a5423464cde10009df14c4e1da06e780d16825785580d64acf95b27922cb12e5cd5d826d48239ccd2ff517654768091#npm:6.18.0"],\
+          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/traefik", [\
-      ["workspace:service/traefik", {\
-        "packageLocation": "./service/traefik/",\
+    ["@tw050x.net/traefik-service", [\
+      ["workspace:service/traefik-service", {\
+        "packageLocation": "./service/traefik-service/",\
         "packageDependencies": [\
-          ["@tw050x.net/traefik", "workspace:service/traefik"]\
+          ["@tw050x.net/traefik-service", "workspace:service/traefik-service"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/uikit", [\
-      ["workspace:library/uikit", {\
-        "packageLocation": "./library/uikit/",\
+    ["@tw050x.net/uikit-library", [\
+      ["workspace:library/uikit-library", {\
+        "packageLocation": "./library/uikit-library/",\
         "packageDependencies": [\
           ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/uikit", "workspace:library/uikit"],\
-          ["@tw050x.net/utility", "workspace:library/utility"],\
+          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
+          ["@tw050x.net/utility-library", "workspace:library/utility-library"],\
           ["@types/node", "npm:22.17.2"],\
           ["htmx-ext-response-targets", "npm:2.0.3"],\
           ["htmx.org", "npm:2.0.6"],\
@@ -1961,24 +1977,25 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/user", [\
-      ["workspace:service/user", {\
-        "packageLocation": "./service/user/",\
+    ["@tw050x.net/user-service", [\
+      ["workspace:service/user-service", {\
+        "packageLocation": "./service/user-service/",\
         "packageDependencies": [\
           ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/database", "workspace:library/database"],\
-          ["@tw050x.net/logger", "workspace:library/logger"],\
-          ["@tw050x.net/middleware", "workspace:library/middleware"],\
-          ["@tw050x.net/service", "workspace:library/service"],\
-          ["@tw050x.net/uikit", "workspace:library/uikit"],\
-          ["@tw050x.net/user", "workspace:service/user"],\
+          ["@tw050x.net/authentication-database", "workspace:database/authentication-database"],\
+          ["@tw050x.net/database-library", "workspace:library/database-library"],\
+          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
+          ["@tw050x.net/service-library", "workspace:library/service-library"],\
+          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
+          ["@tw050x.net/user-service", "workspace:service/user-service"],\
           ["@types/bcrypt", "npm:5.0.2"],\
           ["@types/jsonwebtoken", "npm:9.0.10"],\
           ["@types/node", "npm:22.17.2"],\
           ["@types/validator", "npm:13.15.2"],\
           ["bcryptjs", "npm:3.0.2"],\
           ["jsonwebtoken", "npm:9.0.2"],\
-          ["mongodb", "virtual:5423608c6ede58d560d6d7e49f37f5135a5423464cde10009df14c4e1da06e780d16825785580d64acf95b27922cb12e5cd5d826d48239ccd2ff517654768091#npm:6.18.0"],\
+          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
           ["nodemon", "npm:3.1.10"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["validator", "npm:13.15.15"],\
@@ -1987,11 +2004,11 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/utility", [\
-      ["workspace:library/utility", {\
-        "packageLocation": "./library/utility/",\
+    ["@tw050x.net/utility-library", [\
+      ["workspace:library/utility-library", {\
+        "packageLocation": "./library/utility-library/",\
         "packageDependencies": [\
-          ["@tw050x.net/utility", "workspace:library/utility"],\
+          ["@tw050x.net/utility-library", "workspace:library/utility-library"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
@@ -2256,17 +2273,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["accepts", [\
-      ["npm:1.3.8", {\
-        "packageLocation": "../../../../.yarn/berry/cache/accepts-npm-1.3.8-9a812371c9-10c0.zip/node_modules/accepts/",\
-        "packageDependencies": [\
-          ["accepts", "npm:1.3.8"],\
-          ["mime-types", "npm:2.1.35"],\
-          ["negotiator", "npm:0.6.3"]\
-        ],\
-        "linkType": "HARD"\
-      }]\
-    ]],\
     ["agent-base", [\
       ["npm:7.1.4", {\
         "packageLocation": "../../../../.yarn/berry/cache/agent-base-npm-7.1.4-cb8b4604d5-10c0.zip/node_modules/agent-base/",\
@@ -2477,6 +2483,13 @@ const RAW_RUNTIME_STATE =
           ["bytes", "npm:3.0.0"]\
         ],\
         "linkType": "HARD"\
+      }],\
+      ["npm:3.1.2", {\
+        "packageLocation": "../../../../.yarn/berry/cache/bytes-npm-3.1.2-28b8643004-10c0.zip/node_modules/bytes/",\
+        "packageDependencies": [\
+          ["bytes", "npm:3.1.2"]\
+        ],\
+        "linkType": "HARD"\
       }]\
     ]],\
     ["cacache", [\
@@ -2681,16 +2694,16 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["compression", [\
-      ["npm:1.7.4", {\
-        "packageLocation": "../../../../.yarn/berry/cache/compression-npm-1.7.4-e0cd6afa69-10c0.zip/node_modules/compression/",\
+      ["npm:1.8.1", {\
+        "packageLocation": "../../../../.yarn/berry/cache/compression-npm-1.8.1-e34a5db404-10c0.zip/node_modules/compression/",\
         "packageDependencies": [\
-          ["accepts", "npm:1.3.8"],\
-          ["bytes", "npm:3.0.0"],\
+          ["bytes", "npm:3.1.2"],\
           ["compressible", "npm:2.0.18"],\
-          ["compression", "npm:1.7.4"],\
-          ["debug", "virtual:e0cd6afa69db469de21c754be1546e018ea723a8653bf7c1fdbb52b3d67b9c4065461f2d7632852c8644c3b36b5304269483ba2eb51ad39f9eae03847036d7a9#npm:2.6.9"],\
-          ["on-headers", "npm:1.0.2"],\
-          ["safe-buffer", "npm:5.1.2"],\
+          ["compression", "npm:1.8.1"],\
+          ["debug", "virtual:e34a5db40400b9e5b2ff4a99207e6e6259d3054982622ae91b68c81eb2631164c6d9db4ab29c0dbf7620574b8d6b678f010601eafc55a6b832550053c1b61b7b#npm:2.6.9"],\
+          ["negotiator", "npm:0.6.4"],\
+          ["on-headers", "npm:1.1.0"],\
+          ["safe-buffer", "npm:5.2.1"],\
           ["vary", "npm:1.1.2"]\
         ],\
         "linkType": "HARD"\
@@ -2798,11 +2811,11 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["virtual:e0cd6afa69db469de21c754be1546e018ea723a8653bf7c1fdbb52b3d67b9c4065461f2d7632852c8644c3b36b5304269483ba2eb51ad39f9eae03847036d7a9#npm:2.6.9", {\
-        "packageLocation": "./.yarn/__virtual__/debug-virtual-3f5cb29632/5/.yarn/berry/cache/debug-npm-2.6.9-7d4cb597dc-10c0.zip/node_modules/debug/",\
+      ["virtual:e34a5db40400b9e5b2ff4a99207e6e6259d3054982622ae91b68c81eb2631164c6d9db4ab29c0dbf7620574b8d6b678f010601eafc55a6b832550053c1b61b7b#npm:2.6.9", {\
+        "packageLocation": "./.yarn/__virtual__/debug-virtual-63e86aadbc/5/.yarn/berry/cache/debug-npm-2.6.9-7d4cb597dc-10c0.zip/node_modules/debug/",\
         "packageDependencies": [\
           ["@types/supports-color", null],\
-          ["debug", "virtual:e0cd6afa69db469de21c754be1546e018ea723a8653bf7c1fdbb52b3d67b9c4065461f2d7632852c8644c3b36b5304269483ba2eb51ad39f9eae03847036d7a9#npm:2.6.9"],\
+          ["debug", "virtual:e34a5db40400b9e5b2ff4a99207e6e6259d3054982622ae91b68c81eb2631164c6d9db4ab29c0dbf7620574b8d6b678f010601eafc55a6b832550053c1b61b7b#npm:2.6.9"],\
           ["ms", "npm:2.0.0"],\
           ["supports-color", null]\
         ],\
@@ -3727,13 +3740,6 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "HARD"\
       }],\
-      ["npm:1.52.0", {\
-        "packageLocation": "../../../../.yarn/berry/cache/mime-db-npm-1.52.0-b5371d6fd2-10c0.zip/node_modules/mime-db/",\
-        "packageDependencies": [\
-          ["mime-db", "npm:1.52.0"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:1.54.0", {\
         "packageLocation": "../../../../.yarn/berry/cache/mime-db-npm-1.54.0-82cccb9d70-10c0.zip/node_modules/mime-db/",\
         "packageDependencies": [\
@@ -3748,14 +3754,6 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["mime-db", "npm:1.33.0"],\
           ["mime-types", "npm:2.1.18"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
-      ["npm:2.1.35", {\
-        "packageLocation": "../../../../.yarn/berry/cache/mime-types-npm-2.1.35-dd9ea9f3e2-10c0.zip/node_modules/mime-types/",\
-        "packageDependencies": [\
-          ["mime-db", "npm:1.52.0"],\
-          ["mime-types", "npm:2.1.35"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -3893,8 +3891,8 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:5423608c6ede58d560d6d7e49f37f5135a5423464cde10009df14c4e1da06e780d16825785580d64acf95b27922cb12e5cd5d826d48239ccd2ff517654768091#npm:6.18.0", {\
-        "packageLocation": "./.yarn/__virtual__/mongodb-virtual-c3b55bc328/5/.yarn/berry/cache/mongodb-npm-6.18.0-342a68d88b-10c0.zip/node_modules/mongodb/",\
+      ["virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0", {\
+        "packageLocation": "./.yarn/__virtual__/mongodb-virtual-f56547bd0f/5/.yarn/berry/cache/mongodb-npm-6.18.0-342a68d88b-10c0.zip/node_modules/mongodb/",\
         "packageDependencies": [\
           ["@aws-sdk/credential-providers", null],\
           ["@mongodb-js/saslprep", "npm:1.3.0"],\
@@ -3909,7 +3907,7 @@ const RAW_RUNTIME_STATE =
           ["bson", "npm:6.10.4"],\
           ["gcp-metadata", null],\
           ["kerberos", null],\
-          ["mongodb", "virtual:5423608c6ede58d560d6d7e49f37f5135a5423464cde10009df14c4e1da06e780d16825785580d64acf95b27922cb12e5cd5d826d48239ccd2ff517654768091#npm:6.18.0"],\
+          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
           ["mongodb-client-encryption", null],\
           ["mongodb-connection-string-url", "npm:3.0.2"],\
           ["snappy", null],\
@@ -3971,10 +3969,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["negotiator", [\
-      ["npm:0.6.3", {\
-        "packageLocation": "../../../../.yarn/berry/cache/negotiator-npm-0.6.3-9d50e36171-10c0.zip/node_modules/negotiator/",\
+      ["npm:0.6.4", {\
+        "packageLocation": "../../../../.yarn/berry/cache/negotiator-npm-0.6.4-4a96086720-10c0.zip/node_modules/negotiator/",\
         "packageDependencies": [\
-          ["negotiator", "npm:0.6.3"]\
+          ["negotiator", "npm:0.6.4"]\
         ],\
         "linkType": "HARD"\
       }],\
@@ -4064,10 +4062,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["on-headers", [\
-      ["npm:1.0.2", {\
-        "packageLocation": "../../../../.yarn/berry/cache/on-headers-npm-1.0.2-e7cd3ea25e-10c0.zip/node_modules/on-headers/",\
+      ["npm:1.1.0", {\
+        "packageLocation": "../../../../.yarn/berry/cache/on-headers-npm-1.1.0-7d18779060-10c0.zip/node_modules/on-headers/",\
         "packageDependencies": [\
-          ["on-headers", "npm:1.0.2"]\
+          ["on-headers", "npm:1.1.0"]\
         ],\
         "linkType": "HARD"\
       }]\
@@ -4304,13 +4302,6 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["safe-buffer", [\
-      ["npm:5.1.2", {\
-        "packageLocation": "../../../../.yarn/berry/cache/safe-buffer-npm-5.1.2-c27fedf6c4-10c0.zip/node_modules/safe-buffer/",\
-        "packageDependencies": [\
-          ["safe-buffer", "npm:5.1.2"]\
-        ],\
-        "linkType": "HARD"\
-      }],\
       ["npm:5.2.1", {\
         "packageLocation": "../../../../.yarn/berry/cache/safe-buffer-npm-5.2.1-3481c8aa9b-10c0.zip/node_modules/safe-buffer/",\
         "packageDependencies": [\
@@ -4347,8 +4338,8 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["serve", [\
-      ["npm:14.2.4", {\
-        "packageLocation": "../../../../.yarn/berry/cache/serve-npm-14.2.4-fa63e36b8f-10c0.zip/node_modules/serve/",\
+      ["npm:14.2.5", {\
+        "packageLocation": "../../../../.yarn/berry/cache/serve-npm-14.2.5-39933234ed-10c0.zip/node_modules/serve/",\
         "packageDependencies": [\
           ["@zeit/schemas", "npm:2.36.0"],\
           ["ajv", "npm:8.12.0"],\
@@ -4357,9 +4348,9 @@ const RAW_RUNTIME_STATE =
           ["chalk", "npm:5.0.1"],\
           ["chalk-template", "npm:0.4.0"],\
           ["clipboardy", "npm:3.0.0"],\
-          ["compression", "npm:1.7.4"],\
+          ["compression", "npm:1.8.1"],\
           ["is-port-reachable", "npm:4.0.0"],\
-          ["serve", "npm:14.2.4"],\
+          ["serve", "npm:14.2.5"],\
           ["serve-handler", "npm:6.1.6"],\
           ["update-check", "npm:1.5.4"]\
         ],\
@@ -4603,10 +4594,10 @@ const RAW_RUNTIME_STATE =
       }]\
     ]],\
     ["tailwindcss", [\
-      ["npm:4.1.12", {\
-        "packageLocation": "../../../../.yarn/berry/cache/tailwindcss-npm-4.1.12-f62134eba8-10c0.zip/node_modules/tailwindcss/",\
+      ["npm:4.1.13", {\
+        "packageLocation": "../../../../.yarn/berry/cache/tailwindcss-npm-4.1.13-cd23a25efb-10c0.zip/node_modules/tailwindcss/",\
         "packageDependencies": [\
-          ["tailwindcss", "npm:4.1.12"]\
+          ["tailwindcss", "npm:4.1.13"]\
         ],\
         "linkType": "HARD"\
       }]\

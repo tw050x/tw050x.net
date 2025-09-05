@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "outDir": "./artifact",
+    "rootDir": "./src",
+    "types": ["@kitajs/html/htmx.d.ts"],
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "src/helper/generate-register-form-nonce.ts",
+    "src/stack/register/get.tsx",
+    "src/stack/register/options.ts",
+    "src/stack/register/post.tsx",
+    "src/template/component/RegisterForm.tsx",
+    "src/template/document/RegisterDocument.tsx",
+    "src/serve.ts",
+  ],
+  "references": [
+    { "path": "../../database/authentication-database" },
+    { "path": "../../library/database-library" },
+    { "path": "../../library/logger-library" },
+    { "path": "../../library/middleware-library" },
+    { "path": "../../library/service-library" },
+    { "path": "../../library/uikit-library" },
+    { "path": "../../library/utility-library" },
+  ]
+}

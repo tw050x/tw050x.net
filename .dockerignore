@@ -5,22 +5,18 @@
 artifact/
 configuration/
 coverage/
-daemon/automation-agent/node_modules/
 documentation/
 infrastructure/
-library/**/node_modules/
 log/
-node_modules/
 playground/
 script/
 service/**/data/
 service/**/migration/
-service/**/node_modules/
-service/traefik/certificate-authorities/
-service/traefik/certificates/
-service/traefik/script/
+service/traefik-service/certificate-authorities/
+service/traefik-service/certificates/
+service/traefik-service/script/
 terraform/
 tmp/
 
 # Files
-service/traefik/stack.traefik.toml
+service/traefik-service/stack.traefik.toml
