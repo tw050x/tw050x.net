@@ -14,8 +14,8 @@ fi
 
 echo "Build docker image"
 docker build \
-  --file container/service/mongo-service/Dockerfile \
-  --tag registry.gitlab.com/tw050x.net/platform/service/mongo-service \
+  --file container/service/mongo/Dockerfile \
+  --tag registry.gitlab.com/tw050x.net/platform/service/mongo \
   .
 
 echo "Push docker image to registry"
@@ -23,4 +23,4 @@ docker login \
   --username $ACCESS_TOKEN_USER \
   --password $ACCESS_TOKEN \
   registry.gitlab.com
-docker push registry.gitlab.com/tw050x.net/platform/service/mongo-service
+docker push registry.gitlab.com/tw050x.net/platform/service/mongo

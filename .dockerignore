@@ -12,11 +12,11 @@ playground/
 script/
 service/**/data/
 service/**/migration/
-service/traefik-service/certificate-authorities/
-service/traefik-service/certificates/
-service/traefik-service/script/
+service/traefik/certificate-authorities/
+service/traefik/certificates/
+service/traefik/script/
 terraform/
 tmp/
 
 # Files
-service/traefik-service/stack.traefik.toml
+**/tsconfig.tsbuildinfo

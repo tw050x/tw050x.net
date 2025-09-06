@@ -1,36 +1,36 @@
 
 services:
 
-  administration-service:
-    command: [ "yarn", "workspace", "@tw050x.net/administration-service", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
-    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/administration-service/serve.ts" ]
+  administration:
+    command: [ "yarn", "workspace", "@tw050x.net.service/administration", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/administration/serve.ts" ]
     depends_on:
-      assets-service:
+      assets:
         condition: service_healthy
-      authentication-service:
+      authentication:
         condition: service_healthy
-      localstack-service:
+      localstack:
         condition: service_healthy
-      mongo-service:
+      mongo:
         condition: service_healthy
-      traefik-service:
+      traefik:
         condition: service_healthy
     env_file:
-      - .env.administration-service
+      - .env.administration
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net/administration-service:latest
+    image: tw050x.net/administration:latest
     labels:
       - traefik.enable=true
-      - traefik.http.routers.administration-service.entrypoints=websecure
-      - traefik.http.routers.administration-service.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.administration-service.rule=Host(`tw050x.dev`) && PathPrefix(`/admin/`)
-      - traefik.http.routers.administration-service.tls=true
-      - traefik.http.services.administration-service.loadbalancer.server.port=3000
+      - traefik.http.routers.administration.entrypoints=websecure
+      - traefik.http.routers.administration.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.administration.rule=Host(`tw050x.dev`) && PathPrefix(`/admin/`)
+      - traefik.http.routers.administration.tls=true
+      - traefik.http.services.administration.loadbalancer.server.port=3000
     mem_limit: 200mb
     pull_policy: never
     volumes:
@@ -40,16 +40,16 @@ services:
       - source: ./library
         target: /srv/library
         type: bind
-      - source: ./log/administration-service
+      - source: ./log/administration
         target: /log
         type: bind
-      - source: ./service/administration-service
-        target: /srv/service/administration-service
+      - source: ./service/administration
+        target: /srv/service/administration
         type: bind
 
-  assets-service:
+  assets:
     depends_on:
-      traefik-service:
+      traefik:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/assets/healthcheck.txt || exit 1"]
@@ -57,49 +57,49 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net/assets-service:latest
+    image: tw050x.net/assets:latest
     labels:
       - traefik.enable=true
-      - traefik.http.routers.assets-service.entrypoints=websecure
-      - traefik.http.routers.assets-service.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.assets-service.rule=Host(`tw050x.dev`) && PathPrefix(`/assets/`)
-      - traefik.http.routers.assets-service.tls=true
-      - traefik.http.services.assets-service.loadbalancer.server.port=3000
+      - traefik.http.routers.assets.entrypoints=websecure
+      - traefik.http.routers.assets.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.assets.rule=Host(`tw050x.dev`) && PathPrefix(`/assets/`)
+      - traefik.http.routers.assets.tls=true
+      - traefik.http.services.assets.loadbalancer.server.port=3000
     mem_limit: 200mb
     pull_policy: never
     volumes:
-      - source: ./service/assets-service/public
-        target: /srv/service/assets-service/public
+      - source: ./service/assets/public
+        target: /srv/service/assets/public
         type: bind
 
-  authentication-service:
-    command: [ "yarn", "workspace", "@tw050x.net/authentication-service", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
-    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/authentication-service/serve.ts" ]
+  authentication:
+    command: [ "yarn", "workspace", "@tw050x.net.service/authentication", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/authentication/serve.ts" ]
     depends_on:
-      assets-service:
+      assets:
         condition: service_healthy
-      localstack-service:
+      localstack:
         condition: service_healthy
-      mongo-service:
+      mongo:
         condition: service_healthy
-      traefik-service:
+      traefik:
         condition: service_healthy
     env_file:
-      - .env.authentication-service
+      - .env.authentication
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net/authentication-service:latest
+    image: tw050x.net/authentication:latest
     labels:
       - traefik.enable=true
-      - traefik.http.routers.authentication-service.entrypoints=websecure
-      - traefik.http.routers.authentication-service.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.authentication-service.rule=Host(`tw050x.dev`) && PathPrefix(`/login`)
-      - traefik.http.routers.authentication-service.tls=true
-      - traefik.http.services.authentication-service.loadbalancer.server.port=3000
+      - traefik.http.routers.authentication.entrypoints=websecure
+      - traefik.http.routers.authentication.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.authentication.rule=Host(`tw050x.dev`) && PathPrefix(`/login`)
+      - traefik.http.routers.authentication.tls=true
+      - traefik.http.services.authentication.loadbalancer.server.port=3000
     mem_limit: 200mb
     pull_policy: never
     volumes:
@@ -109,37 +109,37 @@ services:
       - source: ./library
         target: /srv/library
         type: bind
-      - source: ./log/authentication-service
+      - source: ./log/authentication
         target: /log
         type: bind
-      - source: ./service/authentication-service
-        target: /srv/service/authentication-service
+      - source: ./service/authentication
+        target: /srv/service/authentication
         type: bind
 
-  error-service:
-    command: [ "yarn", "workspace", "@tw050x.net/error-service", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
-    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/error-service/serve.ts" ]
+  error:
+    command: [ "yarn", "workspace", "@tw050x.net.service/error", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/error/serve.ts" ]
     depends_on:
-      assets-service:
+      assets:
         condition: service_healthy
-      localstack-service:
+      localstack:
         condition: service_healthy
-      traefik-service:
+      traefik:
         condition: service_healthy
     env_file:
-      - .env.error-service
+      - .env.error
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net/error-service:latest
+    image: tw050x.net/error:latest
     labels:
       - traefik.enable=true
-      - traefik.http.routers.error-service.entrypoints=websecure
-      - traefik.http.routers.error-service.tls=true
-      - traefik.http.services.error-service.loadbalancer.server.port=3000
+      - traefik.http.routers.error.entrypoints=websecure
+      - traefik.http.routers.error.tls=true
+      - traefik.http.services.error.loadbalancer.server.port=3000
     mem_limit: 200mb
     pull_policy: never
     volumes:
@@ -149,58 +149,58 @@ services:
       - source: ./library
         target: /srv/library
         type: bind
-      - source: ./log/error-service
+      - source: ./log/error
         target: /log
         type: bind
-      - source: ./service/error-service
-        target: /srv/service/error-service
+      - source: ./service/error
+        target: /srv/service/error
         type: bind
 
-  localstack-service:
+  localstack:
     env_file:
-      - .env.localstack-service
+      - .env.localstack
     # image: localstack/localstack
     image: gresau/localstack-persist:latest # don't trust this
     ports:
       - "127.0.0.1:4566:4566"
       - "127.0.0.1:4510-4559:4510-4559"
     volumes:
-      - source: ./service/localstack-service/data
+      - source: ./service/localstack/data
         target: /persisted-data
         type: bind
       - source: /var/run/docker.sock
         target: /var/run/docker.sock
         type: bind
 
-  marketing-service:
-    command: [ "yarn", "workspace", "@tw050x.net/marketing-service", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
-    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/marketing-service/serve.ts" ]
+  marketing:
+    command: [ "yarn", "workspace", "@tw050x.net.service/marketing", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/marketing/serve.ts" ]
     depends_on:
-      assets-service:
+      assets:
         condition: service_healthy
-      localstack-service:
+      localstack:
         condition: service_healthy
-      mongo-service:
+      mongo:
         condition: service_healthy
-      traefik-service:
+      traefik:
         condition: service_healthy
     env_file:
-      - .env.marketing-service
+      - .env.marketing
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net/marketing-service:latest
+    image: tw050x.net/marketing:latest
     labels:
       - traefik.enable=true
-      - traefik.http.routers.marketing-service.entrypoints=websecure
-      - traefik.http.routers.marketing-service.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.marketing-service.rule=Host(`tw050x.dev`) && PathPrefix(`/`)
-      - traefik.http.routers.marketing-service.priority=1
-      - traefik.http.routers.marketing-service.tls=true
-      - traefik.http.services.marketing-service.loadbalancer.server.port=3000
+      - traefik.http.routers.marketing.entrypoints=websecure
+      - traefik.http.routers.marketing.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.marketing.rule=Host(`tw050x.dev`) && PathPrefix(`/`)
+      - traefik.http.routers.marketing.priority=1
+      - traefik.http.routers.marketing.tls=true
+      - traefik.http.services.marketing.loadbalancer.server.port=3000
     mem_limit: 200mb
     pull_policy: never
     volumes:
@@ -210,16 +210,16 @@ services:
       - source: ./library
         target: /srv/library
         type: bind
-      - source: ./log/marketing-service
+      - source: ./log/marketing
         target: /log
         type: bind
-      - source: ./service/marketing-service
-        target: /srv/service/marketing-service
+      - source: ./service/marketing
+        target: /srv/service/marketing
         type: bind
 
-  mongo-service:
+  mongo:
     env_file:
-      - .env.mongo-service
+      - .env.mongo
     healthcheck:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
       interval: 30s
@@ -231,17 +231,17 @@ services:
       - 27017:27017
     restart: always
     volumes:
-      - source: ./service/mongo-service/data
+      - source: ./service/mongo/data
         target: /data/db
         type: bind
 
-  traefik-service:
+  traefik:
     image: traefik:v3.3.2
     depends_on:
       traefik-socket:
         condition: service_healthy
     env_file:
-      - .env.traefik-service
+      - .env.traefik
     healthcheck:
       test: ["CMD-SHELL", "traefik healthcheck --ping"]
       interval: 1m30s
@@ -250,23 +250,23 @@ services:
       start_period: 30s
     labels:
       - traefik.enable=true
-      - traefik.http.routers.traefik-service.entrypoints=websecure
-      - traefik.http.routers.traefik-service.rule=Host(`traefik.tw050x.dev`)
-      - traefik.http.routers.traefik-service.service=api@internal
-      - traefik.http.routers.traefik-service.tls=true
+      - traefik.http.routers.traefik.entrypoints=websecure
+      - traefik.http.routers.traefik.rule=Host(`traefik.tw050x.dev`)
+      - traefik.http.routers.traefik.service=api@internal
+      - traefik.http.routers.traefik.tls=true
     mem_limit: 200mb
     ports:
       - 80:80
       - 443:443
     restart: always
     volumes:
-      - ./service/traefik-service/compose.traefik.toml:/etc/traefik/traefik.toml
-      - ./service/traefik-service/certificates:/root/certificates
+      - ./service/traefik/compose.traefik.toml:/etc/traefik/traefik.toml
+      - ./service/traefik/certificates:/root/certificates
 
   traefik-socket:
     image: tecnativa/docker-socket-proxy:0.3.0
     env_file:
-      - .env.traefik-service
+      - .env.traefik
     healthcheck:
       test: ["CMD-SHELL", "wget --spider http://localhost:2375/version || exit 1"]
       interval: 30s
@@ -278,46 +278,49 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
-  user-service:
-    command: [ "yarn", "workspace", "@tw050x.net/user-service", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
-    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/user-service/serve.ts" ]
+  user:
+    command: [ "yarn", "workspace", "@tw050x.net.service/user", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/user/serve.ts" ]
     depends_on:
-      assets-service:
+      assets:
         condition: service_healthy
-      localstack-service:
+      localstack:
         condition: service_healthy
-      mongo-service:
+      mongo:
         condition: service_healthy
-      traefik-service:
+      traefik:
         condition: service_healthy
     env_file:
-      - .env.user-service
+      - .env.user
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net/user-service:latest
+    image: tw050x.net/user:latest
     labels:
       - traefik.enable=true
-      - traefik.http.routers.user-service.entrypoints=websecure
-      - traefik.http.routers.user-service.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.user-service.rule=Host(`tw050x.dev`) && PathPrefix(`/register`)
-      - traefik.http.routers.user-service.tls=true
-      - traefik.http.services.user-service.loadbalancer.server.port=3000
+      - traefik.http.routers.user.entrypoints=websecure
+      - traefik.http.routers.user.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.user.rule=Host(`tw050x.dev`) && PathPrefix(`/register`)
+      - traefik.http.routers.user.tls=true
+      - traefik.http.services.user.loadbalancer.server.port=3000
     mem_limit: 200mb
     pull_policy: never
     volumes:
       - source: ./tsconfig.json
         target: /srv/tsconfig.json
         type: bind
+      - source: ./database
+        target: /srv/database
+        type: bind
       - source: ./library
         target: /srv/library
         type: bind
-      - source: ./log/user-service
+      - source: ./log/user
         target: /log
         type: bind
-      - source: ./service/user-service
-        target: /srv/service/user-service
+      - source: ./service/user
+        target: /srv/service/user
         type: bind

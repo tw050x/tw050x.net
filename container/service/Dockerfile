@@ -15,12 +15,12 @@ RUN yarn
 
 ## Build the project
 RUN yarn workspaces foreach \
-  --from @tw050x.net/administration-service \
-  --from @tw050x.net/authentication-service \
-  --from @tw050x.net/error-service \
-  --from @tw050x.net/marketing-service \
-  --from @tw050x.net/navigation-service \
-  --from @tw050x.net/user-service \
+  --from @tw050x.net.service/administration \
+  --from @tw050x.net.service/authentication \
+  --from @tw050x.net.service/error \
+  --from @tw050x.net.service/marketing \
+  --from @tw050x.net.service/navigation \
+  --from @tw050x.net.service/user \
   --recursive \
   --topological \
   run tsc
@@ -33,148 +33,149 @@ COPY .yarnrc.yml /srv/.yarnrc.yml
 COPY package.json /srv/package.json
 COPY yarn.lock /srv/yarn.lock
 
-FROM node:23.11.1-alpine3.22 AS database-library
+FROM node:23.11.1-alpine3.22 AS database
 WORKDIR /srv
-COPY --from=build /build/library/database-library/artifact /srv/library/database-library/artifact
-COPY --from=build /build/library/database-library/package.json /srv/library/database-library/package.json
-COPY --from=build /build/library/database-library/tsconfig.json /srv/library/database-library/tsconfig.json
+COPY --from=build /build/library/database/artifact /srv/library/database/artifact
+COPY --from=build /build/library/database/package.json /srv/library/database/package.json
+COPY --from=build /build/library/database/tsconfig.json /srv/library/database/tsconfig.json
 
-FROM node:23.11.1-alpine3.22 AS logger-library
+FROM node:23.11.1-alpine3.22 AS logger
 WORKDIR /srv
-COPY --from=build /build/library/logger-library/artifact /srv/library/logger-library/artifact
-COPY --from=build /build/library/logger-library/package.json /srv/library/logger-library/package.json
-COPY --from=build /build/library/logger-library/tsconfig.json /srv/library/logger-library/tsconfig.json
+COPY --from=build /build/library/logger/artifact /srv/library/logger/artifact
+COPY --from=build /build/library/logger/package.json /srv/library/logger/package.json
+COPY --from=build /build/library/logger/tsconfig.json /srv/library/logger/tsconfig.json
 
-FROM node:23.11.1-alpine3.22 AS middleware-library
+FROM node:23.11.1-alpine3.22 AS middleware
 WORKDIR /srv
-COPY --from=build /build/library/middleware-library/artifact /srv/library/middleware-library/artifact
-COPY --from=build /build/library/middleware-library/package.json /srv/library/middleware-library/package.json
-COPY --from=build /build/library/middleware-library/tsconfig.json /srv/library/middleware-library/tsconfig.json
+COPY --from=build /build/library/middleware/artifact /srv/library/middleware/artifact
+COPY --from=build /build/library/middleware/package.json /srv/library/middleware/package.json
+COPY --from=build /build/library/middleware/tsconfig.json /srv/library/middleware/tsconfig.json
 
-FROM node:23.11.1-alpine3.22 AS service-library
+FROM node:23.11.1-alpine3.22 AS service
 WORKDIR /srv
-COPY --from=build /build/library/service-library/artifact /srv/library/service-library/artifact
-COPY --from=build /build/library/service-library/package.json /srv/library/service-library/package.json
-COPY --from=build /build/library/service-library/tsconfig.json /srv/library/service-library/tsconfig.json
+COPY --from=build /build/library/service/artifact /srv/library/service/artifact
+COPY --from=build /build/library/service/package.json /srv/library/service/package.json
+COPY --from=build /build/library/service/tsconfig.json /srv/library/service/tsconfig.json
 
-FROM node:23.11.1-alpine3.22 AS uikit-library
+FROM node:23.11.1-alpine3.22 AS uikit
 WORKDIR /srv
-COPY --from=build /build/library/uikit-library/artifact /srv/library/uikit-library/artifact
-COPY --from=build /build/library/uikit-library/package.json /srv/library/uikit-library/package.json
-COPY --from=build /build/library/uikit-library/tsconfig.json /srv/library/uikit-library/tsconfig.json
+COPY --from=build /build/library/uikit/artifact /srv/library/uikit/artifact
+COPY --from=build /build/library/uikit/package.json /srv/library/uikit/package.json
+COPY --from=build /build/library/uikit/tsconfig.json /srv/library/uikit/tsconfig.json
 
-FROM node:23.11.1-alpine3.22 AS utility-library
+FROM node:23.11.1-alpine3.22 AS utility
 WORKDIR /srv
-COPY --from=build /build/library/utility-library/artifact /srv/library/utility-library/artifact
-COPY --from=build /build/library/utility-library/package.json /srv/library/utility-library/package.json
-COPY --from=build /build/library/utility-library/tsconfig.json /srv/library/utility-library/tsconfig.json
+COPY --from=build /build/library/utility/artifact /srv/library/utility/artifact
+COPY --from=build /build/library/utility/package.json /srv/library/utility/package.json
+COPY --from=build /build/library/utility/tsconfig.json /srv/library/utility/tsconfig.json
 
-FROM node:23.11.1-alpine3.22 AS administration-service
+FROM node:23.11.1-alpine3.22 AS administration
 RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
-COPY --from=database-library /srv/library/database-library /srv/library/database-library
-COPY --from=logger-library /srv/library/logger-library /srv/library/logger-library
-COPY --from=middleware-library /srv/library/middleware-library /srv/library/middleware-library
-COPY --from=service-library /srv/library/service-library /srv/library/service-library
-COPY --from=uikit-library /srv/library/uikit-library /srv/library/uikit-library
-COPY --from=utility-library /srv/library/utility-library /srv/library/utility-library
-COPY --from=build /build/service/administration-service/artifact /srv/service/administration-service/artifact
-COPY --from=build /build/service/administration-service/package.json /srv/service/administration-service/package.json
-COPY --from=build /build/service/administration-service/tsconfig.json /srv/service/administration-service/tsconfig.json
-RUN yarn workspaces focus @tw050x.net/administration-service
-CMD [ "node", "service/administration-service/artifact/serve.js" ]
+COPY --from=database /srv/library/database /srv/library/database
+COPY --from=logger /srv/library/logger /srv/library/logger
+COPY --from=middleware /srv/library/middleware /srv/library/middleware
+COPY --from=service /srv/library/service /srv/library/service
+COPY --from=uikit /srv/library/uikit /srv/library/uikit
+COPY --from=utility /srv/library/utility /srv/library/utility
+COPY --from=build /build/service/administration/artifact /srv/service/administration/artifact
+COPY --from=build /build/service/administration/package.json /srv/service/administration/package.json
+COPY --from=build /build/service/administration/tsconfig.json /srv/service/administration/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.service/administration
+CMD [ "node", "service/administration/artifact/serve.js" ]
 
-FROM node:23.11.1-alpine3.22 AS assets-service
+FROM node:23.11.1-alpine3.22 AS assets
 RUN apk add --no-cache curl
 RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
-COPY --from=build /build/service/assets-service/public /srv/service/assets-service/public
-COPY --from=build /build/service/assets-service/package.json /srv/service/assets-service/package.json
-COPY --from=build /build/service/assets-service/tsconfig.json /srv/service/assets-service/tsconfig.json
-COPY --from=build /build/service/assets-service/serve.json /srv/service/assets-service/serve.json
-RUN yarn workspaces focus --production @tw050x.net/assets-service
+COPY --from=build /build/service/assets/public /srv/service/assets/public
+COPY --from=build /build/service/assets/package.json /srv/service/assets/package.json
+COPY --from=build /build/service/assets/tsconfig.json /srv/service/assets/tsconfig.json
+COPY --from=build /build/service/assets/serve.json /srv/service/assets/serve.json
+RUN yarn workspaces focus --production @tw050x.net.service/assets
 ENTRYPOINT [ "sh", "-c" ]
-CMD [ "yarn workspace @tw050x.net/assets-service serve --config /srv/service/assets-service/serve.json --listen tcp://0.0.0.0:3000" ]
+CMD [ "yarn workspace @tw050x.net.service/assets serve --config /srv/service/assets/serve.json --listen tcp://0.0.0.0:3000" ]
 
-FROM node:23.11.1-alpine3.22 AS authentication-service
+FROM node:23.11.1-alpine3.22 AS authentication
 RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
-COPY --from=database-library /srv/library/database-library /srv/library/database-library
-COPY --from=logger-library /srv/library/logger-library /srv/library/logger-library
-COPY --from=middleware-library /srv/library/middleware-library /srv/library/middleware-library
-COPY --from=service-library /srv/library/service-library /srv/library/service-library
-COPY --from=uikit-library /srv/library/uikit-library /srv/library/uikit-library
-COPY --from=utility-library /srv/library/utility-library /srv/library/utility-library
-COPY --from=build /build/database/authentication-database /srv/database/authentication-database
-COPY --from=build /build/service/authentication-service/artifact /srv/service/authentication-service/artifact
-COPY --from=build /build/service/authentication-service/package.json /srv/service/authentication-service/package.json
-COPY --from=build /build/service/authentication-service/tsconfig.json /srv/service/authentication-service/tsconfig.json
-RUN yarn workspaces focus @tw050x.net/authentication-service
-CMD [ "node", "service/authentication-service/artifact/serve.js" ]
+COPY --from=database /srv/library/database /srv/library/database
+COPY --from=logger /srv/library/logger /srv/library/logger
+COPY --from=middleware /srv/library/middleware /srv/library/middleware
+COPY --from=service /srv/library/service /srv/library/service
+COPY --from=uikit /srv/library/uikit /srv/library/uikit
+COPY --from=utility /srv/library/utility /srv/library/utility
+COPY --from=build /build/database/authentication /srv/database/authentication
+COPY --from=build /build/service/authentication/artifact /srv/service/authentication/artifact
+COPY --from=build /build/service/authentication/package.json /srv/service/authentication/package.json
+COPY --from=build /build/service/authentication/tsconfig.json /srv/service/authentication/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.service/authentication
+CMD [ "node", "service/authentication/artifact/serve.js" ]
 
-FROM node:23.11.1-alpine3.22 AS error-service
+FROM node:23.11.1-alpine3.22 AS error
 RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
-COPY --from=logger-library /srv/library/logger-library /srv/library/logger-library
-COPY --from=middleware-library /srv/library/middleware-library /srv/library/middleware-library
-COPY --from=service-library /srv/library/service-library /srv/library/service-library
-COPY --from=uikit-library /srv/library/uikit-library /srv/library/uikit-library
-COPY --from=utility-library /srv/library/utility-library /srv/library/utility-library
-COPY --from=build /build/service/error-service/artifact /srv/service/error-service/artifact
-COPY --from=build /build/service/error-service/package.json /srv/service/error-service/package.json
-COPY --from=build /build/service/error-service/tsconfig.json /srv/service/error-service/tsconfig.json
-RUN yarn workspaces focus @tw050x.net/error-service
-CMD [ "node", "service/error-service/artifact/serve.js" ]
+COPY --from=logger /srv/library/logger /srv/library/logger
+COPY --from=middleware /srv/library/middleware /srv/library/middleware
+COPY --from=service /srv/library/service /srv/library/service
+COPY --from=uikit /srv/library/uikit /srv/library/uikit
+COPY --from=utility /srv/library/utility /srv/library/utility
+COPY --from=build /build/service/error/artifact /srv/service/error/artifact
+COPY --from=build /build/service/error/package.json /srv/service/error/package.json
+COPY --from=build /build/service/error/tsconfig.json /srv/service/error/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.service/error
+CMD [ "node", "service/error/artifact/serve.js" ]
 
-FROM node:23.11.1-alpine3.22 AS marketing-service
+FROM node:23.11.1-alpine3.22 AS marketing
 RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
-COPY --from=database-library /srv/library/database-library /srv/library/database-library
-COPY --from=logger-library /srv/library/logger-library /srv/library/logger-library
-COPY --from=middleware-library /srv/library/middleware-library /srv/library/middleware-library
-COPY --from=service-library /srv/library/service-library /srv/library/service-library
-COPY --from=uikit-library /srv/library/uikit-library /srv/library/uikit-library
-COPY --from=utility-library /srv/library/utility-library /srv/library/utility-library
-COPY --from=build /build/service/marketing-service/artifact /srv/service/marketing-service/artifact
-COPY --from=build /build/service/marketing-service/package.json /srv/service/marketing-service/package.json
-COPY --from=build /build/service/marketing-service/tsconfig.json /srv/service/marketing-service/tsconfig.json
-RUN yarn workspaces focus @tw050x.net/marketing-service
-CMD [ "node", "service/marketing-service/artifact/serve.js" ]
+COPY --from=database /srv/library/database /srv/library/database
+COPY --from=logger /srv/library/logger /srv/library/logger
+COPY --from=middleware /srv/library/middleware /srv/library/middleware
+COPY --from=service /srv/library/service /srv/library/service
+COPY --from=uikit /srv/library/uikit /srv/library/uikit
+COPY --from=utility /srv/library/utility /srv/library/utility
+COPY --from=build /build/service/marketing/artifact /srv/service/marketing/artifact
+COPY --from=build /build/service/marketing/package.json /srv/service/marketing/package.json
+COPY --from=build /build/service/marketing/tsconfig.json /srv/service/marketing/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.service/marketing
+CMD [ "node", "service/marketing/artifact/serve.js" ]
 
-FROM node:23.11.1-alpine3.22 AS navigation-service
+FROM node:23.11.1-alpine3.22 AS navigation
 RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
-COPY --from=database-library /srv/library/database-library /srv/library/database-library
-COPY --from=logger-library /srv/library/logger-library /srv/library/logger-library
-COPY --from=middleware-library /srv/library/middleware-library /srv/library/middleware-library
-COPY --from=service-library /srv/library/service-library /srv/library/service-library
-COPY --from=uikit-library /srv/library/uikit-library /srv/library/uikit-library
-COPY --from=utility-library /srv/library/utility-library /srv/library/utility-library
-COPY --from=build /build/service/navigation-service/artifact /srv/service/navigation-service/artifact
-COPY --from=build /build/service/navigation-service/package.json /srv/service/navigation-service/package.json
-COPY --from=build /build/service/navigation-service/tsconfig.json /srv/service/navigation-service/tsconfig.json
-RUN yarn workspaces focus @tw050x.net/navigation-service
-CMD [ "node", "service/navigation-service/artifact/serve.js" ]
+COPY --from=database /srv/library/database /srv/library/database
+COPY --from=logger /srv/library/logger /srv/library/logger
+COPY --from=middleware /srv/library/middleware /srv/library/middleware
+COPY --from=service /srv/library/service /srv/library/service
+COPY --from=uikit /srv/library/uikit /srv/library/uikit
+COPY --from=utility /srv/library/utility /srv/library/utility
+COPY --from=build /build/service/navigation/artifact /srv/service/navigation/artifact
+COPY --from=build /build/service/navigation/package.json /srv/service/navigation/package.json
+COPY --from=build /build/service/navigation/tsconfig.json /srv/service/navigation/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.service/navigation
+CMD [ "node", "service/navigation/artifact/serve.js" ]
 
-FROM node:23.11.1-alpine3.22 AS user-service
+FROM node:23.11.1-alpine3.22 AS user
 RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
-COPY --from=database-library /srv/library/database-library /srv/library/database-library
-COPY --from=logger-library /srv/library/logger-library /srv/library/logger-library
-COPY --from=middleware-library /srv/library/middleware-library /srv/library/middleware-library
-COPY --from=service-library /srv/library/service-library /srv/library/service-library
-COPY --from=uikit-library /srv/library/uikit-library /srv/library/uikit-library
-COPY --from=utility-library /srv/library/utility-library /srv/library/utility-library
-COPY --from=build /build/database/authentication-database /srv/database/authentication-database
-COPY --from=build /build/service/user-service/artifact /srv/service/user-service/artifact
-COPY --from=build /build/service/user-service/package.json /srv/service/user-service/package.json
-COPY --from=build /build/service/user-service/tsconfig.json /srv/service/user-service/tsconfig.json
-RUN yarn workspaces focus @tw050x.net/user-service
-CMD [ "node", "service/user-service/artifact/serve.js" ]
+COPY --from=database /srv/library/database /srv/library/database
+COPY --from=logger /srv/library/logger /srv/library/logger
+COPY --from=middleware /srv/library/middleware /srv/library/middleware
+COPY --from=service /srv/library/service /srv/library/service
+COPY --from=uikit /srv/library/uikit /srv/library/uikit
+COPY --from=utility /srv/library/utility /srv/library/utility
+COPY --from=build /build/database/authentication /srv/database/authentication
+COPY --from=build /build/database/user /srv/database/user
+COPY --from=build /build/service/user/artifact /srv/service/user/artifact
+COPY --from=build /build/service/user/package.json /srv/service/user/package.json
+COPY --from=build /build/service/user/tsconfig.json /srv/service/user/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.service/user
+CMD [ "node", "service/user/artifact/serve.js" ]

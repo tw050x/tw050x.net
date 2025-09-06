@@ -1,0 +1,32 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "@tw050x.net.library/utility": "workspace:*"
+  },
+  "description": "The @tw050x.net.library/uikit package project",
+  "devDependencies": {
+    "@kitajs/html": "^4.2.9",
+    "@types/node": "^22.10.2",
+    "htmx-ext-response-targets": "^2.0.1",
+    "htmx.org": "^2.0.4",
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    "./component/Form/EmailAddressField": "./artifact/component/Form/EmailAddressField.js",
+    "./component/Form/PasswordField": "./artifact/component/Form/PasswordField.js",
+    "./component/Button": "./artifact/component/Button.js",
+    "./component/Header": "./artifact/component/Header.js",
+    "./component/Htmx": "./artifact/component/Htmx.js",
+    "./component/Notice": "./artifact/component/Notice.js",
+    "./component/Stylesheet": "./artifact/component/Stylesheet.js",
+    "./document/Forbidden": "./artifact/document/Forbidden.js",
+    "./document/Unrecoverable": "./artifact/document/Unrecoverable.js"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net.library/uikit",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "types": "artifact/index.d.ts",
+  "version": "1.0.5"
+}

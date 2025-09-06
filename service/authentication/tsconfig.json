@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "outDir": "./artifact",
+    "rootDir": "./src",
+    "types": ["@kitajs/html/htmx.d.ts"],
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "src/helper/generate-login-form-nonce.ts",
+    "src/stack/generate/nonce/options.ts",
+    "src/stack/generate/nonce/post.ts",
+    "src/stack/login/aside/login-aside/get.tsx",
+    "src/stack/login/aside/login-aside/options.ts",
+    "src/stack/login/get.tsx",
+    "src/stack/login/options.ts",
+    "src/stack/login/post.tsx",
+    "src/stack/token/refresh/options.ts",
+    "src/stack/token/refresh/post.tsx",
+    "src/template/component/LoginAside.tsx",
+    "src/template/component/LoginForm.tsx",
+    "src/template/document/LoginDocument.tsx",
+    "src/serve.ts",
+  ],
+  "references": [
+    { "path": "../../library/database" },
+    { "path": "../../library/logger" },
+    { "path": "../../library/middleware" },
+    { "path": "../../library/service" },
+    { "path": "../../library/uikit" },
+    { "path": "../../library/utility" },
+  ]
+}

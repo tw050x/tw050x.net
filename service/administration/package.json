@@ -1,0 +1,33 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "description": "The Administration Service project for tw050x.net",
+  "dependencies": {
+    "@tw050x.net.library/logger": "workspace:*",
+    "@tw050x.net.library/middleware": "workspace:*",
+    "@tw050x.net.library/service": "workspace:*",
+    "@tw050x.net.library/uikit": "workspace:*",
+    "date-fns": "^4.1.0",
+    "http-status-codes": "^2.3.0",
+    "mongodb": "^6.12.0",
+    "uuid": "^11.0.3",
+    "validator": "^13.12.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@kitajs/html": "^4.2.9",
+    "@types/node": "^22.10.2",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.7.2"
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net.service/administration",
+  "private": true,
+  "scripts": {
+    "nodemon": "nodemon",
+    "tsc": "tsc"
+  },
+  "version": "1.0.0"
+}

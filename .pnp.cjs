@@ -15,86 +15,91 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:."\
     },\
     {\
-      "name": "@tw050x.net/authentication-database",\
-      "reference": "workspace:database/authentication-database"\
+      "name": "@tw050x.net.database/authentication",\
+      "reference": "workspace:database/authentication"\
     },\
     {\
-      "name": "@tw050x.net/database-library",\
-      "reference": "workspace:library/database-library"\
+      "name": "@tw050x.net.database/user",\
+      "reference": "workspace:database/user"\
     },\
     {\
-      "name": "@tw050x.net/logger-library",\
-      "reference": "workspace:library/logger-library"\
+      "name": "@tw050x.net.library/database",\
+      "reference": "workspace:library/database"\
     },\
     {\
-      "name": "@tw050x.net/middleware-library",\
-      "reference": "workspace:library/middleware-library"\
+      "name": "@tw050x.net.library/logger",\
+      "reference": "workspace:library/logger"\
     },\
     {\
-      "name": "@tw050x.net/service-library",\
-      "reference": "workspace:library/service-library"\
+      "name": "@tw050x.net.library/middleware",\
+      "reference": "workspace:library/middleware"\
     },\
     {\
-      "name": "@tw050x.net/uikit-library",\
-      "reference": "workspace:library/uikit-library"\
+      "name": "@tw050x.net.library/service",\
+      "reference": "workspace:library/service"\
     },\
     {\
-      "name": "@tw050x.net/utility-library",\
-      "reference": "workspace:library/utility-library"\
+      "name": "@tw050x.net.library/uikit",\
+      "reference": "workspace:library/uikit"\
     },\
     {\
-      "name": "@tw050x.net/administration-service",\
-      "reference": "workspace:service/administration-service"\
+      "name": "@tw050x.net.library/utility",\
+      "reference": "workspace:library/utility"\
     },\
     {\
-      "name": "@tw050x.net/assets-service",\
-      "reference": "workspace:service/assets-service"\
+      "name": "@tw050x.net.service/administration",\
+      "reference": "workspace:service/administration"\
     },\
     {\
-      "name": "@tw050x.net/authentication-service",\
-      "reference": "workspace:service/authentication-service"\
+      "name": "@tw050x.net.service/assets",\
+      "reference": "workspace:service/assets"\
     },\
     {\
-      "name": "@tw050x.net/error-service",\
-      "reference": "workspace:service/error-service"\
+      "name": "@tw050x.net.service/authentication",\
+      "reference": "workspace:service/authentication"\
     },\
     {\
-      "name": "@tw050x.net/marketing-service",\
-      "reference": "workspace:service/marketing-service"\
+      "name": "@tw050x.net.service/error",\
+      "reference": "workspace:service/error"\
     },\
     {\
-      "name": "@tw050x.net/navigation-service",\
-      "reference": "workspace:service/navigation-service"\
+      "name": "@tw050x.net.service/marketing",\
+      "reference": "workspace:service/marketing"\
     },\
     {\
-      "name": "@tw050x.net/traefik-service",\
-      "reference": "workspace:service/traefik-service"\
+      "name": "@tw050x.net.service/navigation",\
+      "reference": "workspace:service/navigation"\
     },\
     {\
-      "name": "@tw050x.net/user-service",\
-      "reference": "workspace:service/user-service"\
+      "name": "@tw050x.net.service/traefik",\
+      "reference": "workspace:service/traefik"\
+    },\
+    {\
+      "name": "@tw050x.net.service/user",\
+      "reference": "workspace:service/user"\
     }\
   ],\
   "enableTopLevelFallback": true,\
   "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
   "pnpZipBackend": "libzip",\
   "fallbackExclusionList": [\
-    ["@tw050x.net/administration-service", ["workspace:service/administration-service"]],\
-    ["@tw050x.net/assets-service", ["workspace:service/assets-service"]],\
-    ["@tw050x.net/authentication-database", ["workspace:database/authentication-database"]],\
-    ["@tw050x.net/authentication-service", ["workspace:service/authentication-service"]],\
-    ["@tw050x.net/database-library", ["workspace:library/database-library"]],\
-    ["@tw050x.net/error-service", ["workspace:service/error-service"]],\
-    ["@tw050x.net/logger-library", ["workspace:library/logger-library"]],\
-    ["@tw050x.net/marketing-service", ["workspace:service/marketing-service"]],\
-    ["@tw050x.net/middleware-library", ["workspace:library/middleware-library"]],\
-    ["@tw050x.net/navigation-service", ["workspace:service/navigation-service"]],\
-    ["@tw050x.net/platform", ["workspace:."]],\
-    ["@tw050x.net/service-library", ["workspace:library/service-library"]],\
-    ["@tw050x.net/traefik-service", ["workspace:service/traefik-service"]],\
-    ["@tw050x.net/uikit-library", ["workspace:library/uikit-library"]],\
-    ["@tw050x.net/user-service", ["workspace:service/user-service"]],\
-    ["@tw050x.net/utility-library", ["workspace:library/utility-library"]]\
+    ["@tw050x.net.database/authentication", ["workspace:database/authentication"]],\
+    ["@tw050x.net.database/user", ["workspace:database/user"]],\
+    ["@tw050x.net.library/database", ["workspace:library/database"]],\
+    ["@tw050x.net.library/logger", ["workspace:library/logger"]],\
+    ["@tw050x.net.library/middleware", ["workspace:library/middleware"]],\
+    ["@tw050x.net.library/service", ["workspace:library/service"]],\
+    ["@tw050x.net.library/uikit", ["workspace:library/uikit"]],\
+    ["@tw050x.net.library/utility", ["workspace:library/utility"]],\
+    ["@tw050x.net.service/administration", ["workspace:service/administration"]],\
+    ["@tw050x.net.service/assets", ["workspace:service/assets"]],\
+    ["@tw050x.net.service/authentication", ["workspace:service/authentication"]],\
+    ["@tw050x.net.service/error", ["workspace:service/error"]],\
+    ["@tw050x.net.service/marketing", ["workspace:service/marketing"]],\
+    ["@tw050x.net.service/navigation", ["workspace:service/navigation"]],\
+    ["@tw050x.net.service/traefik", ["workspace:service/traefik"]],\
+    ["@tw050x.net.service/user", ["workspace:service/user"]],\
+    ["@tw050x.net/platform", ["workspace:."]]\
   ],\
   "fallbackPool": [\
   ],\
@@ -1749,117 +1754,51 @@ const RAW_RUNTIME_STATE =
         "linkType": "HARD"\
       }]\
     ]],\
-    ["@tw050x.net/administration-service", [\
-      ["workspace:service/administration-service", {\
-        "packageLocation": "./service/administration-service/",\
+    ["@tw050x.net.database/authentication", [\
+      ["workspace:database/authentication", {\
+        "packageLocation": "./database/authentication/",\
         "packageDependencies": [\
-          ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/administration-service", "workspace:service/administration-service"],\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
-          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
-          ["@tw050x.net/service-library", "workspace:library/service-library"],\
-          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
-          ["@types/node", "npm:22.17.2"],\
-          ["date-fns", "npm:4.1.0"],\
-          ["http-status-codes", "npm:2.3.0"],\
-          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
-          ["nodemon", "npm:3.1.10"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
-          ["uuid", "npm:11.1.0"],\
-          ["validator", "npm:13.15.15"],\
-          ["zod", "npm:3.25.76"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@tw050x.net/assets-service", [\
-      ["workspace:service/assets-service", {\
-        "packageLocation": "./service/assets-service/",\
-        "packageDependencies": [\
-          ["@tailwindcss/cli", "npm:4.1.13"],\
-          ["@tw050x.net/assets-service", "workspace:service/assets-service"],\
-          ["htmx-ext-response-targets", "npm:2.0.3"],\
-          ["htmx.org", "npm:2.0.6"],\
-          ["serve", "npm:14.2.5"],\
-          ["tailwindcss", "npm:4.1.13"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@tw050x.net/authentication-database", [\
-      ["workspace:database/authentication-database", {\
-        "packageLocation": "./database/authentication-database/",\
-        "packageDependencies": [\
-          ["@tw050x.net/authentication-database", "workspace:database/authentication-database"],\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net.database/authentication", "workspace:database/authentication"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
           ["@types/node", "npm:22.17.2"],\
           ["bson", "npm:6.10.4"],\
-          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
+          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/authentication-service", [\
-      ["workspace:service/authentication-service", {\
-        "packageLocation": "./service/authentication-service/",\
+    ["@tw050x.net.database/user", [\
+      ["workspace:database/user", {\
+        "packageLocation": "./database/user/",\
         "packageDependencies": [\
-          ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/authentication-database", "workspace:database/authentication-database"],\
-          ["@tw050x.net/authentication-service", "workspace:service/authentication-service"],\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
-          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
-          ["@tw050x.net/service-library", "workspace:library/service-library"],\
-          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
-          ["@types/bcrypt", "npm:5.0.2"],\
-          ["@types/jsonwebtoken", "npm:9.0.10"],\
+          ["@tw050x.net.database/user", "workspace:database/user"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
           ["@types/node", "npm:22.17.2"],\
-          ["@types/validator", "npm:13.15.2"],\
-          ["bcryptjs", "npm:3.0.2"],\
-          ["jsonwebtoken", "npm:9.0.2"],\
-          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
-          ["nodemon", "npm:3.1.10"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
-          ["validator", "npm:13.15.15"],\
-          ["zod", "npm:3.25.76"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@tw050x.net/database-library", [\
-      ["workspace:library/database-library", {\
-        "packageLocation": "./library/database-library/",\
-        "packageDependencies": [\
-          ["@tw050x.net/database-library", "workspace:library/database-library"],\
-          ["@types/node", "npm:22.17.2"],\
-          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
+          ["bson", "npm:6.10.4"],\
+          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/error-service", [\
-      ["workspace:service/error-service", {\
-        "packageLocation": "./service/error-service/",\
+    ["@tw050x.net.library/database", [\
+      ["workspace:library/database", {\
+        "packageLocation": "./library/database/",\
         "packageDependencies": [\
-          ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/error-service", "workspace:service/error-service"],\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
-          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
-          ["@tw050x.net/service-library", "workspace:library/service-library"],\
-          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
+          ["@tw050x.net.library/database", "workspace:library/database"],\
           ["@types/node", "npm:22.17.2"],\
-          ["nodemon", "npm:3.1.10"],\
+          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/logger-library", [\
-      ["workspace:library/logger-library", {\
-        "packageLocation": "./library/logger-library/",\
+    ["@tw050x.net.library/logger", [\
+      ["workspace:library/logger", {\
+        "packageLocation": "./library/logger/",\
         "packageDependencies": [\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
           ["@types/node", "npm:22.17.2"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
           ["winston", "npm:3.17.0"]\
@@ -1867,31 +1806,14 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/marketing-service", [\
-      ["workspace:service/marketing-service", {\
-        "packageLocation": "./service/marketing-service/",\
+    ["@tw050x.net.library/middleware", [\
+      ["workspace:library/middleware", {\
+        "packageLocation": "./library/middleware/",\
         "packageDependencies": [\
-          ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
-          ["@tw050x.net/marketing-service", "workspace:service/marketing-service"],\
-          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
-          ["@tw050x.net/service-library", "workspace:library/service-library"],\
-          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
-          ["@types/node", "npm:22.17.2"],\
-          ["nodemon", "npm:3.1.10"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@tw050x.net/middleware-library", [\
-      ["workspace:library/middleware-library", {\
-        "packageLocation": "./library/middleware-library/",\
-        "packageDependencies": [\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
-          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
-          ["@tw050x.net/service-library", "workspace:library/service-library"],\
-          ["@tw050x.net/utility-library", "workspace:library/utility-library"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
+          ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net.library/service", "workspace:library/service"],\
+          ["@tw050x.net.library/utility", "workspace:library/utility"],\
           ["@types/cookies", "npm:0.9.1"],\
           ["@types/jsonwebtoken", "npm:9.0.10"],\
           ["@types/node", "npm:22.17.2"],\
@@ -1903,22 +1825,198 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net/navigation-service", [\
-      ["workspace:service/navigation-service", {\
-        "packageLocation": "./service/navigation-service/",\
+    ["@tw050x.net.library/service", [\
+      ["workspace:library/service", {\
+        "packageLocation": "./library/service/",\
+        "packageDependencies": [\
+          ["@aws-sdk/client-secrets-manager", "npm:3.873.0"],\
+          ["@aws-sdk/client-ssm", "npm:3.873.0"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
+          ["@tw050x.net.library/service", "workspace:library/service"],\
+          ["@tw050x.net.library/utility", "workspace:library/utility"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["lru-cache", "npm:11.1.0"],\
+          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.library/uikit", [\
+      ["workspace:library/uikit", {\
+        "packageLocation": "./library/uikit/",\
         "packageDependencies": [\
           ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
-          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
-          ["@tw050x.net/navigation-service", "workspace:service/navigation-service"],\
-          ["@tw050x.net/service-library", "workspace:library/service-library"],\
-          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
+          ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net.library/utility", "workspace:library/utility"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["htmx-ext-response-targets", "npm:2.0.3"],\
+          ["htmx.org", "npm:2.0.6"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.library/utility", [\
+      ["workspace:library/utility", {\
+        "packageLocation": "./library/utility/",\
+        "packageDependencies": [\
+          ["@tw050x.net.library/utility", "workspace:library/utility"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.service/administration", [\
+      ["workspace:service/administration", {\
+        "packageLocation": "./service/administration/",\
+        "packageDependencies": [\
+          ["@kitajs/html", "npm:4.2.9"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
+          ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net.library/service", "workspace:library/service"],\
+          ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net.service/administration", "workspace:service/administration"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["date-fns", "npm:4.1.0"],\
+          ["http-status-codes", "npm:2.3.0"],\
+          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
+          ["nodemon", "npm:3.1.10"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
+          ["uuid", "npm:11.1.0"],\
+          ["validator", "npm:13.15.15"],\
+          ["zod", "npm:3.25.76"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.service/assets", [\
+      ["workspace:service/assets", {\
+        "packageLocation": "./service/assets/",\
+        "packageDependencies": [\
+          ["@tailwindcss/cli", "npm:4.1.13"],\
+          ["@tw050x.net.service/assets", "workspace:service/assets"],\
+          ["htmx-ext-response-targets", "npm:2.0.3"],\
+          ["htmx.org", "npm:2.0.6"],\
+          ["serve", "npm:14.2.5"],\
+          ["tailwindcss", "npm:4.1.13"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.service/authentication", [\
+      ["workspace:service/authentication", {\
+        "packageLocation": "./service/authentication/",\
+        "packageDependencies": [\
+          ["@kitajs/html", "npm:4.2.9"],\
+          ["@tw050x.net.database/authentication", "workspace:database/authentication"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
+          ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net.library/service", "workspace:library/service"],\
+          ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net.service/authentication", "workspace:service/authentication"],\
+          ["@types/bcrypt", "npm:5.0.2"],\
+          ["@types/jsonwebtoken", "npm:9.0.10"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["@types/validator", "npm:13.15.2"],\
+          ["bcryptjs", "npm:3.0.2"],\
+          ["jsonwebtoken", "npm:9.0.2"],\
+          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
+          ["nodemon", "npm:3.1.10"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
+          ["validator", "npm:13.15.15"],\
+          ["zod", "npm:3.25.76"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.service/error", [\
+      ["workspace:service/error", {\
+        "packageLocation": "./service/error/",\
+        "packageDependencies": [\
+          ["@kitajs/html", "npm:4.2.9"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
+          ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net.library/service", "workspace:library/service"],\
+          ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net.service/error", "workspace:service/error"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["nodemon", "npm:3.1.10"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.service/marketing", [\
+      ["workspace:service/marketing", {\
+        "packageLocation": "./service/marketing/",\
+        "packageDependencies": [\
+          ["@kitajs/html", "npm:4.2.9"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
+          ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net.library/service", "workspace:library/service"],\
+          ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net.service/marketing", "workspace:service/marketing"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["nodemon", "npm:3.1.10"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.service/navigation", [\
+      ["workspace:service/navigation", {\
+        "packageLocation": "./service/navigation/",\
+        "packageDependencies": [\
+          ["@kitajs/html", "npm:4.2.9"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
+          ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net.library/service", "workspace:library/service"],\
+          ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net.service/navigation", "workspace:service/navigation"],\
           ["@types/bcrypt", "npm:5.0.2"],\
           ["@types/jsonwebtoken", "npm:9.0.10"],\
           ["@types/node", "npm:22.17.2"],\
           ["@types/validator", "npm:13.15.2"],\
           ["nodemon", "npm:3.1.10"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.service/traefik", [\
+      ["workspace:service/traefik", {\
+        "packageLocation": "./service/traefik/",\
+        "packageDependencies": [\
+          ["@tw050x.net.service/traefik", "workspace:service/traefik"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.service/user", [\
+      ["workspace:service/user", {\
+        "packageLocation": "./service/user/",\
+        "packageDependencies": [\
+          ["@kitajs/html", "npm:4.2.9"],\
+          ["@tw050x.net.database/authentication", "workspace:database/authentication"],\
+          ["@tw050x.net.database/user", "workspace:database/user"],\
+          ["@tw050x.net.library/database", "workspace:library/database"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
+          ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net.library/service", "workspace:library/service"],\
+          ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net.service/user", "workspace:service/user"],\
+          ["@types/bcrypt", "npm:5.0.2"],\
+          ["@types/jsonwebtoken", "npm:9.0.10"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["@types/validator", "npm:13.15.2"],\
+          ["bcryptjs", "npm:3.0.2"],\
+          ["jsonwebtoken", "npm:9.0.2"],\
+          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
+          ["nodemon", "npm:3.1.10"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
+          ["validator", "npm:13.15.15"],\
+          ["zod", "npm:3.25.76"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -1931,84 +2029,6 @@ const RAW_RUNTIME_STATE =
           ["@kitajs/ts-html-plugin", "virtual:a5ec8f0fcf633647a15311415a56598d6f1e530273db3c4c2633f1d9de9107b832494db16351d547d536344b25347349f5c2d0c308c7e5c1a9b091f8698d97a7#npm:4.1.2"],\
           ["@tw050x.net/platform", "workspace:."],\
           ["@yarnpkg/types", "npm:4.0.1"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@tw050x.net/service-library", [\
-      ["workspace:library/service-library", {\
-        "packageLocation": "./library/service-library/",\
-        "packageDependencies": [\
-          ["@aws-sdk/client-secrets-manager", "npm:3.873.0"],\
-          ["@aws-sdk/client-ssm", "npm:3.873.0"],\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
-          ["@tw050x.net/service-library", "workspace:library/service-library"],\
-          ["@tw050x.net/utility-library", "workspace:library/utility-library"],\
-          ["@types/node", "npm:22.17.2"],\
-          ["lru-cache", "npm:11.1.0"],\
-          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@tw050x.net/traefik-service", [\
-      ["workspace:service/traefik-service", {\
-        "packageLocation": "./service/traefik-service/",\
-        "packageDependencies": [\
-          ["@tw050x.net/traefik-service", "workspace:service/traefik-service"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@tw050x.net/uikit-library", [\
-      ["workspace:library/uikit-library", {\
-        "packageLocation": "./library/uikit-library/",\
-        "packageDependencies": [\
-          ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
-          ["@tw050x.net/utility-library", "workspace:library/utility-library"],\
-          ["@types/node", "npm:22.17.2"],\
-          ["htmx-ext-response-targets", "npm:2.0.3"],\
-          ["htmx.org", "npm:2.0.6"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@tw050x.net/user-service", [\
-      ["workspace:service/user-service", {\
-        "packageLocation": "./service/user-service/",\
-        "packageDependencies": [\
-          ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net/authentication-database", "workspace:database/authentication-database"],\
-          ["@tw050x.net/database-library", "workspace:library/database-library"],\
-          ["@tw050x.net/logger-library", "workspace:library/logger-library"],\
-          ["@tw050x.net/middleware-library", "workspace:library/middleware-library"],\
-          ["@tw050x.net/service-library", "workspace:library/service-library"],\
-          ["@tw050x.net/uikit-library", "workspace:library/uikit-library"],\
-          ["@tw050x.net/user-service", "workspace:service/user-service"],\
-          ["@types/bcrypt", "npm:5.0.2"],\
-          ["@types/jsonwebtoken", "npm:9.0.10"],\
-          ["@types/node", "npm:22.17.2"],\
-          ["@types/validator", "npm:13.15.2"],\
-          ["bcryptjs", "npm:3.0.2"],\
-          ["jsonwebtoken", "npm:9.0.2"],\
-          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
-          ["nodemon", "npm:3.1.10"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
-          ["validator", "npm:13.15.15"],\
-          ["zod", "npm:3.25.76"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
-    ["@tw050x.net/utility-library", [\
-      ["workspace:library/utility-library", {\
-        "packageLocation": "./library/utility-library/",\
-        "packageDependencies": [\
-          ["@tw050x.net/utility-library", "workspace:library/utility-library"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\
         "linkType": "SOFT"\
@@ -3891,8 +3911,8 @@ const RAW_RUNTIME_STATE =
         ],\
         "linkType": "SOFT"\
       }],\
-      ["virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0", {\
-        "packageLocation": "./.yarn/__virtual__/mongodb-virtual-f56547bd0f/5/.yarn/berry/cache/mongodb-npm-6.18.0-342a68d88b-10c0.zip/node_modules/mongodb/",\
+      ["virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0", {\
+        "packageLocation": "./.yarn/__virtual__/mongodb-virtual-829134ce84/5/.yarn/berry/cache/mongodb-npm-6.18.0-342a68d88b-10c0.zip/node_modules/mongodb/",\
         "packageDependencies": [\
           ["@aws-sdk/credential-providers", null],\
           ["@mongodb-js/saslprep", "npm:1.3.0"],\
@@ -3907,7 +3927,7 @@ const RAW_RUNTIME_STATE =
           ["bson", "npm:6.10.4"],\
           ["gcp-metadata", null],\
           ["kerberos", null],\
-          ["mongodb", "virtual:eef667704afe083303eceda895f63d0b25e8122a55b77b4ee70a7aeba3d58ca8aac1c7baf7bc26d15b21b8320060ae93b0aab12ddc034564b3971fc509830b24#npm:6.18.0"],\
+          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
           ["mongodb-client-encryption", null],\
           ["mongodb-connection-string-url", "npm:3.0.2"],\
           ["snappy", null],\

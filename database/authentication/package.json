@@ -1,0 +1,23 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "@tw050x.net.library/logger": "workspace:*",
+    "bson": "^6.10.4",
+    "mongodb": "^6.12.0"
+  },
+  "description": "The @tw050x.net.database/authentication package project",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": "./artifact/index.js"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net.database/authentication",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "types": "artifact/index.d.ts",
+  "version": "1.0.0"
+}

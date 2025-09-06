@@ -14,8 +14,8 @@ fi
 
 echo "Build docker image"
 docker build \
-  --file container/service/administration-service/Dockerfile \
-  --tag registry.gitlab.com/tw050x.net/platform/service/administration-service \
+  --file container/service/administration/Dockerfile \
+  --tag registry.gitlab.com/tw050x.net/platform/service/administration \
   .
 
 echo "Push docker image to registry"
@@ -23,4 +23,4 @@ docker login \
   --username $ACCESS_TOKEN_USER \
   --password $ACCESS_TOKEN \
   registry.gitlab.com
-docker push registry.gitlab.com/tw050x.net/platform/service/administration-service-app
+docker push registry.gitlab.com/tw050x.net/platform/service/administration-app
