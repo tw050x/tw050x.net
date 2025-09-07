@@ -4,7 +4,7 @@ import { Component } from "@kitajs/html";
  * Props for the `<PasswordField />` component.
  */
 type Props = {
-  autocomplete: 'new-password' | 'current-password';
+  autocomplete: 'off' | 'new-password' | 'current-password';
   id: string;
   label: string;
   name: string;
@@ -17,7 +17,7 @@ type Props = {
  * @param props
  * @returns {JSX.Element}
  */
-const PasswordField: Component<Props> = ({ autocomplete: safeAutocomplete, id: safeId, label: safeLabel = 'Password', name: safeName, onClickHandler: safeOnClickHandler }) => {
+const PasswordField: Component<Props> = ({ autocomplete = 'current-password', id: safeId, label: safeLabel = 'Password', name: safeName, onClickHandler: safeOnClickHandler }) => {
   const containerClasses = [
     'relative',
     'border border-gray-600',
@@ -68,7 +68,7 @@ const PasswordField: Component<Props> = ({ autocomplete: safeAutocomplete, id: s
         {safeLabel}
       </label>
       <input
-        autocomplete={safeAutocomplete}
+        autocomplete={autocomplete}
         class={inputClasses}
         id={`${safeId}-input`}
         name={safeName}

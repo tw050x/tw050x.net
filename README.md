@@ -34,10 +34,11 @@ First you will need to create a custom builder instance using the config in the 
 docker buildx create --name tw050x.net.builder --driver docker-container --config ./buildkitd.toml
 ```
 
+> You can use `yarn build:docker` as a replacement for the above command.
+
 Then to run the servers locally use `docker compose`.
 
 ```bash
-yarn build:docker
 docker compose up --detach
 ```
 
@@ -50,16 +51,83 @@ You will also need to run `tsc` on your machine for the proiject you are working
 yarn workspace @tw050x.net.service/administration tsc --build
 yarn workspace @tw050x.net.service/authentication tsc --build
 yarn workspace @tw050x.net.service/marketing tsc --build
+yarn workspace @tw050x.net.service/navigation tsc --build
+yarn workspace @tw050x.net.service/user tsc --build
 
 # Libraries
-yarn workspace @tw050x.net/database tsc --build
+yarn workspace @tw050x.net.library/database tsc --build
 yarn workspace @tw050x.net.library/logger tsc --build
 yarn workspace @tw050x.net.library/middleware tsc --build
 yarn workspace @tw050x.net.library/service tsc --build
 yarn workspace @tw050x.net.library/uikit tsc --build
+yarn workspace @tw050x.net.library/utility tsc --build
 
 # Databases
 yarn workspace @tw050x.net.database/authentication tsc --build
+yarn workspace @tw050x.net.database/user tsc --build
 ```
 
 This should run compilation for that project and all dependencies. In turn that should restart the server in the docker container (assuming you used `docker compose up` as described above).
+
+## Setup MongoDB Replica Set
+
+This repo requires a MongoDB replica set to be running. The `docker compose` file will create the necessary containers for you. However you will need to connect to the primary instance and run the replica set initiation command.
+
+> You should only have to do this once. Unless you delete the volume directories in the `./service/mongo/data` directory.
+
+```bash
+
+# Read the environment variables from the .env.mongo file
+set -a
+source .env.mongo
+set +a
+
+# Connect to the primary MongoDB instance
+docker exec -it master-mongo-primary-1 mongosh --username root --password password --authenticationDatabase admin
+```
+
+Once connected run the following command to initiate the replica set:
+
+```js
+rs.initiate({
+  _id: "rs0",
+  members: [
+    { _id: 0, host: "mongo-primary:27017", priority: 2 },
+    { _id: 1, host: "mongo-secondary-a:27017", priority: 1 }
+  ]
+})
+```
+
+> You should notice the prompt change to include the replica set name.
+
+You can check the status of the replica set using:
+
+```js
+rs.status()
+```
+
+To add more instances to the replica set, connect to the primary instance (shown above) and run `rs.add("mongo-secondary-b:27017")`.
+
+Be sure to add the DNS names of the new instances to you hosts file:
+
+```
+127.0.0.1 mongo-primary mongo-primary-a
+```
+
+> This is necessary as connectiong via Compass will start with `localhost` but will be redirected to the replica set members DNS names. If you cannot access those replica sets via the DNS names used on the docker network, the connection will fail.
+
+You can now connect to the replica set using the following connection string formats:
+
+#### Compass
+
+```
+mongodb://root:password@localhost:27017,localhost:27018/?replicaSet=rs0&authSource=admin
+```
+
+#### Docker
+
+This should be used in the `.env.<service-name>` files for the services that need to connect to MongoDB.
+
+```
+mongodb://root:password@mongo-primary:27017,mongo-secondary-a:27017/?replicaSet=rs0&authSource=admin
+```

@@ -1,4 +1,4 @@
-import { database as authenticationDatabase } from '@tw050x.net.database/authentication';
+import { database as userDatabase } from '@tw050x.net.database/user';
 import { logger } from "@tw050x.net.library/logger";
 import { useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
 import { useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
@@ -127,26 +127,11 @@ export default defineServiceMiddleware([
         return void sendForbiddenHTMLResponse(context, await <ForbiddenDocument />);
       }
 
-      // fetch the user permissions
-      // return an error if unable to fetch the user permissions
-      let permissionsDocuments;
-      try {
-        permissionsDocuments = await authenticationDatabase.permissions.find({
-          user_uuid: refreshTokenPayload.sub,
-          enabled: true
-        }).toArray();
-      }
-      catch (error) {
-        logger.error('unable to fetch user permissions', { error });
-        return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
-      }
-
       // create the access token cookie
       const accessTokenOptions: SignOptions = {
         expiresIn: '1d',
       };
       const accessTokenPayload = {
-        rol: permissionsDocuments.map((document) => document.key),
         sub: refreshTokenPayload.sub
       };
       const accessToken = sign(accessTokenPayload, context.secrets.get('jwt.secret-key'), accessTokenOptions);

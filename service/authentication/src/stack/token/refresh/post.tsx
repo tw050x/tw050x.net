@@ -1,12 +1,12 @@
-import { database as authenticationDatabase } from "@tw050x.net.database/authentication";
 import { useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
 import { useCors } from "@tw050x.net.library/middleware/use-cors";
 import { useLoginStateCookieReader } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
 import { useRefreshTokenCookieReader } from "@tw050x.net.library/middleware/use-refresh-token-cookie-reader";
 import { logger } from "@tw050x.net.library/logger";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendBadRequestJSONResponse, sendInternalServerErrorHTMLResponse, sendSeeOtherRedirect, sendUnauthorizedJSONResponse } from "@tw050x.net.library/service/helper";
-import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { sendSeeOtherRedirect } from "@tw050x.net.library/service/helper/redirect/send-see-other-redirect";
+import { sendUnauthorizedJSONResponse } from "@tw050x.net.library/service/helper/response/send-unauthorized-json-response";
+import { sendBadRequestJSONResponse } from "@tw050x.net.library/service/helper/response/send-bad-request-json-response";
 import { SignOptions, sign } from "jsonwebtoken";
 
 /**
@@ -66,27 +66,12 @@ export default defineServiceMiddleware([
       return void sendUnauthorizedJSONResponse(context);
     }
 
-    // fetch the user permissions
-    // return an error if unable to fetch the user permissions
-    let permissionsDocuments;
-    try {
-      permissionsDocuments = await authenticationDatabase.permissions.find({
-        user_uuid: context.incomingMessage.refreshTokenCookie.payload.sub,
-        enabled: true
-      }).toArray();
-    }
-    catch (error) {
-      logger.error('unable to fetch user permissions', { error });
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
-    }
-
     // generate a new access token
     const jwtSecretKey = await context.secrets.get('jwt.secret-key');
     const accessTokenOptions: SignOptions = {
       expiresIn: '1d',
     };
     const accessTokenPayload = {
-      rol: permissionsDocuments.map((document) => document.key),
       sub: context.incomingMessage.refreshTokenCookie.payload.sub
     };
     const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);

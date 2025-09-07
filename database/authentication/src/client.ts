@@ -8,10 +8,10 @@ if (process.env.MONGO_CLIENT_URI === undefined) {
   throw new Error('MONGO_CLIENT_URI is not defined')
 }
 
-const authPassword = process.env.MONGO_CLIENT_AUTH_PASSWORD;
-const authUsername = process.env.MONGO_CLIENT_AUTH_USERNAME;
 
 // Only assign auth username & password if they exist
+const authPassword = process.env.MONGO_CLIENT_AUTH_PASSWORD;
+const authUsername = process.env.MONGO_CLIENT_AUTH_USERNAME;
 authGuard: {
   if (authPassword === undefined) break authGuard;
   if (authPassword === '') break authGuard;
@@ -21,6 +21,14 @@ authGuard: {
     password: authPassword,
     username: authUsername,
   }
+}
+
+// Only assign replicaSet if it exists
+const replicaSet = process.env.MONGO_CLIENT_REPLICA_SET;
+replicaSetGuard: {
+  if (replicaSet === undefined) break replicaSetGuard;
+  if (replicaSet === '') break replicaSetGuard;
+  configuration.replicaSet = replicaSet;
 }
 
 export const mongoClient = new MongoClient(process.env.MONGO_CLIENT_URI, configuration);

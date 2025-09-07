@@ -109,6 +109,7 @@ COPY --from=service /srv/library/service /srv/library/service
 COPY --from=uikit /srv/library/uikit /srv/library/uikit
 COPY --from=utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/database/authentication /srv/database/authentication
+COPY --from=build /build/database/user /srv/database/user
 COPY --from=build /build/service/authentication/artifact /srv/service/authentication/artifact
 COPY --from=build /build/service/authentication/package.json /srv/service/authentication/package.json
 COPY --from=build /build/service/authentication/tsconfig.json /srv/service/authentication/tsconfig.json

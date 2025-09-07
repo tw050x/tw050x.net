@@ -1,4 +1,4 @@
-import { database as authenticationDatabase } from '@tw050x.net.database/authentication';
+import { database as userDatabase } from "@tw050x.net.database/user";
 import { useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
 import { useCors } from "@tw050x.net.library/middleware/use-cors";
 import { useLoginStateCookieReader } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
@@ -11,14 +11,14 @@ import { getFormDataBody } from "@tw050x.net.library/service/helper/get-form-dat
 import { sendSeeOtherRedirect } from "@tw050x.net.library/service/helper/redirect/send-see-other-redirect";
 import { sendBadRequestHTMLResponse } from "@tw050x.net.library/service/helper/response/send-bad-request-html-response";
 import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
-import { sendOKJSONResponse } from "@tw050x.net.library/service/helper/response/send-ok-json-response";
+import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { compare } from "bcryptjs";
 import { SignOptions, sign } from "jsonwebtoken";
 import { escape, trim } from "validator";
 import { default as zod, ZodError } from "zod";
-import { generateLoginFormNonce } from '../../helper/generate-login-form-nonce';
-import { default as LoginForm } from '../../template/component/LoginForm';
+import { generateLoginFormNonce } from "../../helper/generate-login-form-nonce";
+import { default as LoginForm } from "../../template/component/LoginForm";
 
 const postLoginFormDataSchema = zod.object({
   email: zod.string().email('An email address is required'),
@@ -72,13 +72,14 @@ export default defineServiceMiddleware([
     }),
   }),
 
-
-
   // Render the login page in a disabled if it is not enabled
   async (context) => {
     const loginEnabled = context.configuration.get('authentication.service.login-enabled');
     if (loginEnabled === 'false') {
-      return void sendOKJSONResponse(context, { message: 'Login is currently disabled' });
+      return void sendOKHTMLResponse(
+        context,
+        await <span>Login is currently disabled</span>
+      );
     }
   },
 
@@ -86,7 +87,7 @@ export default defineServiceMiddleware([
   async (context) => {
     const body = await getFormDataBody(context);
 
-    //
+    // generate a nonce for the login form
     let nonce;
     try {
       nonce = await generateLoginFormNonce();
@@ -97,7 +98,7 @@ export default defineServiceMiddleware([
     }
 
     // validate the email and password fields
-    // return an error if they are invalid
+    // return an error if the data is invalid
     let email;
     let password;
     try {
@@ -111,7 +112,7 @@ export default defineServiceMiddleware([
       return void sendBadRequestHTMLResponse(
         context,
         await <LoginForm
-          email={email}
+          email={body?.email}
           nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
         />
@@ -122,7 +123,7 @@ export default defineServiceMiddleware([
     // if it doesnt exist then return an error
     let credentialDocument;
     try {
-      credentialDocument = await authenticationDatabase.credentials.findOne({ email });
+      credentialDocument = await userDatabase.credentials.findOne({ email });
     }
     catch (error) {
       logger.error('error when finding database document', { error });
@@ -133,7 +134,7 @@ export default defineServiceMiddleware([
       return void sendBadRequestHTMLResponse(
         context,
         await <LoginForm
-          email={email}
+          email={body?.email}
           nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
         />
@@ -155,20 +156,6 @@ export default defineServiceMiddleware([
       );
     }
 
-    // fetch the user permissions
-    // return an error if unable to fetch the user permissions
-    let permissionsDocuments;
-    try {
-      permissionsDocuments = await authenticationDatabase.permissions.find({
-        user_uuid: credentialDocument.uuid,
-        enabled: true
-      }).toArray();
-    }
-    catch (error) {
-      logger.error('unable to fetch user permissions', { error });
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
-    }
-
     // create authentication cookies and set them on the response
     const jwtSecretKey = context.secrets.get('jwt.secret-key');
     const refreshTokenOptions: SignOptions = {
@@ -181,10 +168,8 @@ export default defineServiceMiddleware([
       expiresIn: '1d',
     };
     const accessTokenPayload = {
-      rol: permissionsDocuments.map((document) => document.key),
       sub: credentialDocument.uuid
     };
-
     const refreshToken = sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
     const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
     context.serverResponse.refreshableTokenCookie.set('true');

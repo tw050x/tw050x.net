@@ -25,6 +25,8 @@
     "src/serve.ts",
   ],
   "references": [
+    { "path": "../../database/authentication" },
+    { "path": "../../database/user" },
     { "path": "../../library/database" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },

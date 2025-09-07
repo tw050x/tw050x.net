@@ -1663,6 +1663,7 @@ __metadata:
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.database/authentication": "workspace:*"
+    "@tw050x.net.database/user": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"

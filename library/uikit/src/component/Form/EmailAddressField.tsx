@@ -4,6 +4,7 @@ import { Component } from "@kitajs/html";
  * Props for the `<EmailAddressField />` component.
  */
 type Props = {
+  autocomplete?: 'off' | 'email';
   value: string;
 };
 
@@ -13,7 +14,7 @@ type Props = {
  * @param props
  * @returns {JSX.Element}
  */
-const EmailAddressField: Component<Props> = ({ value }) => {
+const EmailAddressField: Component<Props> = ({ autocomplete = 'email', value }) => {
   const containerClasses = [
     'relative',
     'border border-gray-600',
@@ -37,14 +38,14 @@ const EmailAddressField: Component<Props> = ({ value }) => {
   ]
   return (
     <div class={containerClasses}>
-      <label class={labelClasses} for="email-address">
+      <label class={labelClasses} for="email">
         Email Address
       </label>
       <input
-        autocomplete="email"
+        autocomplete={autocomplete}
         class={inputClasses}
-        id="email-address"
-        name="email-address"
+        id="email"
+        name="email"
         novalidate
         type="text"
         value={value}

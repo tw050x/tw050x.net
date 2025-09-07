@@ -1910,6 +1910,7 @@ const RAW_RUNTIME_STATE =
         "packageDependencies": [\
           ["@kitajs/html", "npm:4.2.9"],\
           ["@tw050x.net.database/authentication", "workspace:database/authentication"],\
+          ["@tw050x.net.database/user", "workspace:database/user"],\
           ["@tw050x.net.library/logger", "workspace:library/logger"],\
           ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
           ["@tw050x.net.library/service", "workspace:library/service"],\

@@ -7,6 +7,8 @@ defineService({
   onPrepare: async (service) => {
     await Promise.all([
       service.configuration.use('user.service.allowed-origins'),
+      service.configuration.use('user.service.allowed-return-url-domains'),
+      service.configuration.use('user.service.host'),
       service.configuration.use('user.service.registration-enabled'),
       service.configuration.use('cookie.access-token.name'),
       service.configuration.use('cookie.access-token.domain'),

@@ -43,7 +43,10 @@ const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = 
         hx-target-400="this"
       >
         <div class="mb-6">
-          <EmailAddressField value={email} />
+          <EmailAddressField
+            autocomplete="off"
+            value={email}
+          />
         </div>
         <div class="mb-6">
           <PasswordField
