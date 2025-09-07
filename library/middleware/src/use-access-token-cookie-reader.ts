@@ -7,7 +7,6 @@ type AccessTokenCookie = {
   authorised: boolean | null;
   errors: Array<Error>;
   payload?: {
-    rol: Array<string>;
     sub: string;
     uid?: string;
   }
@@ -84,19 +83,6 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       break verifyCookieGuard;
     }
 
-    if (Array.isArray(accessTokenPayload.rol) === false) {
-      logger.error('access token payload rol is not an array');
-      accessTokenCookie.errors.push(new Error('access token payload rol is not an array'));
-      break verifyCookieGuard;
-    }
-
-    const rol = accessTokenPayload.rol;
-    if (rol.find((rol) => typeof rol !== 'string') !== undefined) {
-      logger.error('access token payload rol contains non-string values');
-      accessTokenCookie.errors.push(new Error('access token payload rol contains non-string values'));
-      break verifyCookieGuard;
-    }
-
     const sub = accessTokenPayload.sub;
     if (typeof sub !== 'string') {
       logger.error('access token payload sub is not a string');
@@ -104,15 +90,16 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       break verifyCookieGuard;
     }
 
+    // TODO: check for user permissions in the databases
+
     let hasAllPermissions = true;
     for (const requiredPermission of requiredPermissions) {
-      if (rol.includes(requiredPermission) === true) continue;
-      else hasAllPermissions = false;
+      // if (rol.includes(requiredPermission) === true) continue;
+      // else hasAllPermissions = false;
     }
     if (hasAllPermissions === true) accessTokenCookie.authorised = true;
     else accessTokenCookie.authorised = false;
     accessTokenCookie.payload = {
-      rol,
       sub,
     }
   }

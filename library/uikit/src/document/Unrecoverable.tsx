@@ -25,7 +25,7 @@ export default function UnrecoverableDocument() {
               <div class="flex flex-col">
                 <h2 class="text-xl font-semibold"> We couldn't save this request.</h2>
                 <span>
-                  | Please try again in a few minutes, or&nbsp;
+                  Please try again in a few minutes, or&nbsp;
                   <a href="javascript:history.back()" class="text-blue-500 underline mt-8">go back.</a>
                 </span>
               </div>
