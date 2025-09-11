@@ -3,8 +3,8 @@ import { useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-lo
 import { useCors } from "@tw050x.net.library/middleware/use-cors";
 import { logger } from "@tw050x.net.library/logger";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
-import { authGate } from "../../..//middleware/auth-gate";
+import { sendOKHTMLResponse} from "@tw050x.net.library/service/helper/response/send-ok-html-response";
+import { authGate } from "../../../middleware/auth-gate";
 import { default as DashboardDocument } from "../../../template/document/Dashboard";
 
 export default defineServiceMiddleware([
@@ -21,7 +21,7 @@ export default defineServiceMiddleware([
     getConfiguration: async ({ configuration }) => ({
       cookieName: configuration.get('cookie.access-token.name'),
       requiredPermissions: [
-        'read:administration:dashboard-page',
+        'read:administration:users-page',
       ]
     }),
     getSecrets: async ({ secrets }) => ({

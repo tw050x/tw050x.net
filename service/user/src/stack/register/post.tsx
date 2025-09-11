@@ -33,43 +33,43 @@ export default defineServiceMiddleware([
     logger.debug(`POST ${context.incomingMessage.url}`);
   },
   useCors({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       allowedMethods: ['GET', 'OPTIONS', 'POST'],
       allowedOrigins: configuration.get('user.service.allowed-origins')
     })
   }),
   useAccessTokenCookieWriter({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       cookieName: configuration.get('cookie.access-token.name'),
       cookieDomain: configuration.get('cookie.access-token.domain'),
     }),
   }),
   useLoginStateCookieReader({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       allowedReturnUrlDomains: configuration.get('user.service.allowed-return-url-domains'),
       cookieName: configuration.get('cookie.login-state.name'),
     }),
-    getSecrets: async (secrets) => ({
+    getSecrets: async ({ secrets }) => ({
       encrypterSecretKey: secrets.get('encrypter.secret-key'),
     }),
   }),
   useLoginStateCookieWriter({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       cookieName: configuration.get('cookie.login-state.name'),
       cookieDomain: configuration.get('cookie.login-state.domain'),
     }),
-    getSecrets: async (secrets) => ({
+    getSecrets: async ({ secrets }) => ({
       encrypterSecretKey: secrets.get('encrypter.secret-key'),
     }),
   }),
   useRefreshTokenCookieWriter({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       cookieName: configuration.get('cookie.refresh-token.name'),
       cookieDomain: configuration.get('cookie.refresh-token.domain'),
     }),
   }),
   useRefreshableTokenCookieWriter({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       cookieName: configuration.get('cookie.refreshable-token.name'),
       cookieDomain: configuration.get('cookie.refreshable-token.domain'),
     }),

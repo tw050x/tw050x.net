@@ -1,11 +1,18 @@
 import { Component } from "@kitajs/html";
 import { default as Htmx } from "@tw050x.net.library/uikit/component/Htmx";
 import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Stylesheet";
+import { default as MenuInitiator } from "../component/MenuInitiator";
 
+/**
+ * Props for the `<DashboardDocument />` component.
+ */
 type Props = {};
 
 /**
+ * The `<DashboardDocument />` component.
  *
+ * @param props
+ * @returns {JSX.Element}
  */
 const DashboardDocument: Component<Props> = () => {
   return (
@@ -16,15 +23,14 @@ const DashboardDocument: Component<Props> = () => {
           <base href="/" />
           <meta charset="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>Administration Dashboard</title>
+          <title>Dashboard | Administration</title>
 
           <Htmx />
           <Stylesheet />
         </head>
         <body>
-          <div class="flex flex-col px-8 pt-8">
-            <h1 class="text-4xl">Dashboard</h1>
-          </div>
+          <MenuInitiator />
+          <main class="w-screen min-h-screen"></main>
         </body>
       </html>
     </>

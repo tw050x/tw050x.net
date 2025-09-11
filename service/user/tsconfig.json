@@ -9,6 +9,7 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
+    "src/middleware/registration-enabled-gate.tsx",
     "src/helper/generate-register-form-nonce.ts",
     "src/stack/register/aside/register-aside/get.tsx",
     "src/stack/register/aside/register-aside/options.ts",

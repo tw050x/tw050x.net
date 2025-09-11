@@ -13,7 +13,7 @@ declare module "node:http" {
 }
 
 type UseRefreshableTokenCookieOptions = {
-  getConfiguration: (context: ServiceContext['configuration']) => Promise<{
+  getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
     cookieName: string;
     cookieDomain: string;
   }>;
@@ -30,7 +30,7 @@ export const useRefreshableTokenCookieWriter = (options: UseRefreshableTokenCook
   let configuration;
 
   try {
-    configuration = await options.getConfiguration(context.configuration);
+    configuration = await options.getConfiguration({ configuration: context.configuration });
   }
   catch (error) {
     logger.error('unable to read access token cookie', { error });

@@ -24,26 +24,26 @@ export default defineServiceMiddleware([
     }),
   }),
   useAccessTokenCookieWriter({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       cookieName: configuration.get('cookie.access-token.name'),
       cookieDomain: configuration.get('cookie.access-token.domain'),
     }),
   }),
   useLoginStateCookieReader({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       allowedReturnUrlDomains: configuration.get('authentication.service.allowed-return-url-domains'),
       cookieName: configuration.get('cookie.login-state.name'),
     }),
-    getSecrets: async (secrets) => ({
+    getSecrets: async ({ secrets }) => ({
       encrypterSecretKey: secrets.get('encrypter.secret-key'),
     }),
   }),
   useRefreshTokenCookieReader({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       cookieName: configuration.get('cookie.refresh-token.name'),
     }),
-    getSecrets: async (configuration) => ({
-      jwtSecretKey: configuration.get('jwt.secret-key'),
+    getSecrets: async ({ secrets }) => ({
+      jwtSecretKey: secrets.get('jwt.secret-key'),
     }),
   }),
   async (context) => {

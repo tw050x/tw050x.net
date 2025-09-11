@@ -18,10 +18,10 @@ declare module "node:http" {
 }
 
 type UseRefreshTokenCookieReaderOptions = {
-  getConfiguration: (context: ServiceContext['configuration']) => Promise<{
+  getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
     cookieName: string;
   }>;
-  getSecrets: (context: ServiceContext['secrets']) => Promise<{
+  getSecrets: (context: { secrets: ServiceContext['secrets'] }) => Promise<{
     jwtSecretKey: string;
   }>;
 }
@@ -38,8 +38,8 @@ export const useRefreshTokenCookieReader = (options: UseRefreshTokenCookieReader
   let secrets;
 
   try {
-    configuration = await options.getConfiguration(context.configuration);
-    secrets = await options.getSecrets(context.secrets);
+    configuration = await options.getConfiguration({ configuration: context.configuration });
+    secrets = await options.getSecrets({ secrets: context.secrets });
   }
   catch (error) {
     logger.error('unable to read access token cookie', { error });

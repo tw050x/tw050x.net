@@ -20,11 +20,11 @@ declare module "node:http" {
 }
 
 type UseAccessTokenCookieReaderOptions = {
-  getConfiguration: (context: ServiceContext['configuration']) => Promise<{
+  getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
     cookieName: string;
     requiredPermissions?: Array<string>;
   }>;
-  getSecrets: (context: ServiceContext['secrets']) => Promise<{
+  getSecrets: (context: { secrets: ServiceContext['secrets'] }) => Promise<{
     jwtSecretKey: string;
   }>;
 }
@@ -41,8 +41,8 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
   let secrets;
 
   try {
-    configuration = await options.getConfiguration(context.configuration);
-    secrets = await options.getSecrets(context.secrets);
+    configuration = await options.getConfiguration({ configuration: context.configuration });
+    secrets = await options.getSecrets({ secrets: context.secrets });
   }
   catch (error) {
     logger.error('unable to read access token cookie', { error });
@@ -91,6 +91,15 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
     }
 
     // TODO: check for user permissions in the databases
+    let permissions: Array<string> = [];
+    try {
+      // permissions = await
+    }
+    catch (error) {
+      logger.error('unable to fetch user permissions from database', { error });
+      accessTokenCookie.errors.push(new Error('unable to fetch user permissions from database'));
+      break verifyCookieGuard;
+    }
 
     let hasAllPermissions = true;
     for (const requiredPermission of requiredPermissions) {

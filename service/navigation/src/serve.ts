@@ -6,7 +6,7 @@ defineService({
   getRoutesDirectory: () => join(__dirname, 'stack'),
   onPrepare: async (service) => {
     await Promise.all([
-      service.configuration.use('marketing.service.allowed-origins')
+      service.configuration.use('navigation.service.allowed-origins')
     ]);
   },
   onReady: async (service) => {

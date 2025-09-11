@@ -17,12 +17,12 @@ declare module "node:http" {
 }
 
 type UseLoginStateCookieReaderOptions = {
-  getConfiguration: (context: ServiceContext['configuration']) => Promise<{
+  getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
     allowedReturnUrlDomains: string;
     cookieName: string;
     stateCipherAlgorithm?: string;
   }>;
-  getSecrets: (context: ServiceContext['secrets']) => Promise<{
+  getSecrets: (context: { secrets: ServiceContext['secrets'] }) => Promise<{
     encrypterSecretKey: string;
   }>;
 }
@@ -41,8 +41,8 @@ export const useLoginStateCookieReader = (options: UseLoginStateCookieReaderOpti
   let secrets;
 
   try {
-    configuration = await options.getConfiguration(context.configuration);
-    secrets = await options.getSecrets(context.secrets);
+    configuration = await options.getConfiguration({ configuration: context.configuration });
+    secrets = await options.getSecrets({ secrets: context.secrets });
   }
   catch (error) {
     logger.error('unable to read access token cookie', { error });

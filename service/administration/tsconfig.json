@@ -9,9 +9,14 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
+    "src/middleware/auth-gate.tsx",
     "src/stack/admin/dashboard/get.tsx",
     "src/stack/admin/dashboard/options.ts",
+    "src/stack/admin/users/get.tsx",
+    "src/stack/admin/users/options.ts",
+    "src/template/component/MenuInitiator.tsx",
     "src/template/document/Dashboard.tsx",
+    "src/template/document/Users.tsx",
     "src/serve.ts",
   ],
   "references": [

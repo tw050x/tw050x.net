@@ -17,6 +17,15 @@ export type NonceDocument = {
 }
 
 //
+export type PermissionsDocument = {
+  createdAt: Date;
+  updatedAt: Date;
+  enabled: boolean;
+  key: string;
+  uuid: string;
+}
+
+//
 export type ProfileDocument = {
   createdAt: Date;
   updatedAt: Date;
@@ -44,6 +53,15 @@ export const database = {
       return mongoClient.db(process.env.SERVICE_USER_DATABASE_NAME).collection<NonceDocument>(noncesCollectionName);
     }
     throw new Error(`Missing environment variable: SERVICE_USER_DATABASE_NONCES_COLLECTION_NAME`);
+  },
+  get permissions() {
+    const permissionsCollectionName = process.env.SERVICE_USER_DATABASE_PERMISSIONS_COLLECTION_NAME;
+    guard: {
+      if (permissionsCollectionName === undefined) break guard;
+      if (permissionsCollectionName === '') break guard;
+      return mongoClient.db(process.env.SERVICE_USER_DATABASE_NAME).collection<PermissionsDocument>(permissionsCollectionName);
+    }
+    throw new Error(`Missing environment variable: SERVICE_USER_DATABASE_PERMISSIONS_COLLECTION_NAME`);
   },
   get profile() {
     const profileCollectionName = process.env.SERVICE_USER_DATABASE_PROFILE_COLLECTION_NAME;

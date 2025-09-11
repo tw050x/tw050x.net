@@ -5,7 +5,7 @@ import { isAllowedMethod, AllowedHttpMethod } from "@tw050x.net.library/utility/
 import { isAllowedOrigin } from "@tw050x.net.library/utility/is-allowed-origin";
 
 type UseCorsFactoryOptions = {
-  getConfiguration: (context: ServiceContext['configuration']) => Promise<{
+  getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
     allowedHeaders?: readonly string[] | '*';
     allowedMethods: readonly AllowedHttpMethod[] | '*';
     allowedOrigins?: string | '*';
@@ -27,7 +27,7 @@ export const useCors = (options: UseCorsFactoryOptions) => async (context: Servi
   let configuration;
 
   try {
-    configuration = await options.getConfiguration(context.configuration);
+    configuration = await options.getConfiguration({ configuration: context.configuration });
   }
   catch (error) {
     logger.error('unable to read useCors() configuration', { error });

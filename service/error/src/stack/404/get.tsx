@@ -9,7 +9,7 @@ export default defineServiceMiddleware([
     logger.debug(`GET ${context.incomingMessage.url}`);
   },
   useCors({
-    getConfiguration: async (configuration) => ({
+    getConfiguration: async ({ configuration }) => ({
       allowedMethods: ['GET', 'OPTIONS'],
       allowedOrigins: configuration.get('error.service.allowed-origins'),
     }),
