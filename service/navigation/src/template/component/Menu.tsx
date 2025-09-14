@@ -6,7 +6,9 @@ import { default as ChevronRight } from "@tw050x.net.library/uikit/svg/ChevronRi
  * Props for the `<Menu />` component.
  */
 export type Props = {
-  items: { label: string; href: string, IconComponent: Component }[];
+  items:
+    | { label: string; href: string, IconComponent: Component }[]
+    | { label: string; src: string, IconComponent: Component }[];
   state: 'open' | 'collapsed';
 }
 
@@ -28,12 +30,24 @@ const Menu: Component<Props> = (props) => {
         <hr class="text-gray-600" />
         <div class="flex flex-col flex-1 border-b border-gray-600">
           <div class="flex flex-col divide-y divide-gray-600 border-t border-b border-gray-600">
-            {props.items.map((item) => (
-              <a class="text-white hover:no-underline p-4" href={item.href}>
-                <span class="menu-icon"><item.IconComponent /></span>
-                <span class="hidden-when-w-16">{item.label}</span>
-              </a>
-            ))}
+            {props.items.map((item) => {
+              if ('src' in item) {
+                return (
+                  <a>{item.label}</a>
+                )
+              }
+
+              if ('href' in item) {
+                return (
+                  <a class="text-white hover:no-underline p-4" href={item.href}>
+                    <span class="menu-icon"><item.IconComponent /></span>
+                    <span class="hidden-when-w-16">{item.label}</span>
+                  </a>
+                );
+              }
+
+              return null;
+            })}
           </div>
         </div>
         <hr class="text-gray-600" />
