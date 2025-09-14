@@ -1976,9 +1976,11 @@ const RAW_RUNTIME_STATE =
           ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
           ["@tw050x.net.service/navigation", "workspace:service/navigation"],\
           ["@types/bcrypt", "npm:5.0.2"],\
+          ["@types/cookies", "npm:0.9.1"],\
           ["@types/jsonwebtoken", "npm:9.0.10"],\
           ["@types/node", "npm:22.17.2"],\
           ["@types/validator", "npm:13.15.2"],\
+          ["cookies", "npm:0.9.1"],\
           ["nodemon", "npm:3.1.10"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
         ],\

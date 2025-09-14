@@ -4,17 +4,17 @@ import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Style
 import { default as MenuInitiator } from "../component/MenuInitiator";
 
 /**
- * Props for the `<Dashboard />` component.
+ * Props for the `<Products />` component.
  */
 type Props = {};
 
 /**
- * The `<Dashboard />` component.
+ * The `<Products />` component.
  *
  * @param props
  * @returns {JSX.Element}
  */
-const Dashboard: Component<Props> = () => {
+const Products: Component<Props> = () => {
   return (
     <>
       {'<!doctype html>'}
@@ -23,7 +23,7 @@ const Dashboard: Component<Props> = () => {
           <base href="/" />
           <meta charset="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>Dashboard | Administration</title>
+          <title>Products | Administration</title>
 
           <Htmx />
           <Stylesheet />
@@ -36,4 +36,4 @@ const Dashboard: Component<Props> = () => {
     </>
   );
 }
-export default Dashboard;
+export default Products;

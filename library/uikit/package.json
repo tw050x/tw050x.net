@@ -20,7 +20,15 @@
     "./component/Notice": "./artifact/component/Notice.js",
     "./component/Stylesheet": "./artifact/component/Stylesheet.js",
     "./document/Forbidden": "./artifact/document/Forbidden.js",
-    "./document/Unrecoverable": "./artifact/document/Unrecoverable.js"
+    "./document/Unrecoverable": "./artifact/document/Unrecoverable.js",
+    "./svg/Brands": "./artifact/svg/Brands.js",
+    "./svg/ButtonLoader": "./artifact/svg/ButtonLoader.js",
+    "./svg/Check": "./artifact/svg/Check.js",
+    "./svg/ChevronLeft": "./artifact/svg/ChevronLeft.js",
+    "./svg/ChevronRight": "./artifact/svg/ChevronRight.js",
+    "./svg/Dashboard": "./artifact/svg/Dashboard.js",
+    "./svg/Products": "./artifact/svg/Products.js",
+    "./svg/Users": "./artifact/svg/Users.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/uikit",

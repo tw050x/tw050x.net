@@ -4,17 +4,17 @@ import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Style
 import { default as MenuInitiator } from "../component/MenuInitiator";
 
 /**
- * Props for the `<DashboardDocument />` component.
+ * Props for the `<Users />` component.
  */
 type Props = {};
 
 /**
- * The `<DashboardDocument />` component.
+ * The `<Users />` component.
  *
  * @param props
  * @returns {JSX.Element}
  */
-const DashboardDocument: Component<Props> = () => {
+const Users: Component<Props> = () => {
   return (
     <>
       {'<!doctype html>'}
@@ -30,10 +30,10 @@ const DashboardDocument: Component<Props> = () => {
         </head>
         <body>
           <MenuInitiator />
-          <main class="w-screen min-h-screen"></main>
+          <main></main>
         </body>
       </html>
     </>
   );
 }
-export default DashboardDocument;
+export default Users;

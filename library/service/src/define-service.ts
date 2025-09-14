@@ -69,6 +69,16 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
       return void serverResponse.end('Healthy');
     }
 
+    // if the url path ends with a trailing slash (and is not just "/"), redirect to the non-trailing slash version
+    normaliseUrlGuard: {
+      if (urlPath === '/') break normaliseUrlGuard;
+      if (urlPath.endsWith('/') === false) break normaliseUrlGuard;
+      serverResponse.writeHead(301, {
+        'Location': urlPath.slice(0, -1)
+      });
+      return void serverResponse.end();
+    }
+
     // match to an event name
     // check for exact match first, then wildcard patterns by length
     const requestEventPattern = `${method} ${urlPath}`;

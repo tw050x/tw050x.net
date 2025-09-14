@@ -4,6 +4,7 @@ import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { registrationEnabledGate } from "../../middleware/registration-enabled-gate";
 import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce"
 import { default as RegisterDocument } from "../../template/document/RegisterDocument";
 
@@ -17,18 +18,16 @@ export default defineServiceMiddleware([
       allowedOrigins: configuration.get('user.service.allowed-origins'),
     }),
   }),
-
-  // Render the registration page in a disabled if it is not enabled
-  async (context) => {
-    const registrationEnabled = context.configuration.get('user.service.registration-enabled');
-    if (registrationEnabled === 'false') {
-      const registerAsideProps = {
-        disabled: true,
-        message: 'Registration is currently disabled.',
-      } as const;
-      return void sendOKHTMLResponse(context, await <RegisterDocument registerAsideProps={registerAsideProps} />);
-    }
-  },
+  registrationEnabledGate({
+    getResponseHtml: async () => (
+      <RegisterDocument
+        registerAsideProps={{
+          disabled: true,
+          message: "Registration is currently disabled."
+        }}
+      />
+    )
+  }),
 
   // Render the register page
   async (context) => {

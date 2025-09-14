@@ -5,7 +5,7 @@ import { logger } from "@tw050x.net.library/logger";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendOKHTMLResponse} from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { authGate } from "../../../middleware/auth-gate";
-import { default as Users } from "../../../template/document/Users";
+import { default as Products } from "../../../template/document/Products";
 
 export default defineServiceMiddleware([
   async (context) => {
@@ -39,6 +39,6 @@ export default defineServiceMiddleware([
   }),
   authGate(),
   async (context) => {
-    return void sendOKHTMLResponse(context, await <Users />);
+    return void sendOKHTMLResponse(context, await <Products />);
   }
 ])

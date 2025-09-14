@@ -4,4 +4,5 @@ artifact/
 
 # Files
 *.js
+!src/template/component/Menu/toggle-menu.js
 tsconfig.tsbuildinfo

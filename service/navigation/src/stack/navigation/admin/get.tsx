@@ -2,6 +2,11 @@ import { logger } from "@tw050x.net.library/logger";
 import { useCors } from "@tw050x.net.library/middleware/use-cors";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper";
+import { default as Cookies } from "cookies";
+import { default as Brands } from "@tw050x.net.library/uikit/svg/Brands";
+import { default as Dashboard } from "@tw050x.net.library/uikit/svg/Dashboard";
+import { default as Products } from "@tw050x.net.library/uikit/svg/Products";
+import { default as Users} from "@tw050x.net.library/uikit/svg/Users";
 import { default as Menu } from "../../../template/component/Menu";
 
 export default defineServiceMiddleware([
@@ -15,11 +20,29 @@ export default defineServiceMiddleware([
     }),
   }),
   async (context) => {
+    const cookies = new Cookies(context.incomingMessage, context.serverResponse);
+
+    // TODO: fetch menu items from a database
     const menuItems = [
-      { label: 'Dashboard', href: '/admin/dashboard' },
-      { label: 'Users', href: '/admin/users' },
+      { label: 'Dashboard', href: '/admin/dashboard', IconComponent: Dashboard },
+      { label: 'Brands', href: '/admin/brands', IconComponent: Brands },
+      { label: 'Products', href: '/admin/products', IconComponent: Products },
+      { label: 'Users', href: '/admin/users', IconComponent: Users },
     ]
 
-    return void sendOKHTMLResponse(context, await <Menu items={menuItems} />);
+    // determine what menu state to set
+    const menuStateCookieValue = cookies.get('ui.menu.state');
+    let menuState: 'open' | 'collapsed';
+    switch (menuStateCookieValue) {
+      case 'open':
+      case 'collapsed':
+        menuState = menuStateCookieValue;
+        break;
+      case undefined:
+      default:
+        menuState = 'open';
+    }
+
+    return void sendOKHTMLResponse(context, await <Menu items={menuItems} state={menuState} />);
   }
 ])

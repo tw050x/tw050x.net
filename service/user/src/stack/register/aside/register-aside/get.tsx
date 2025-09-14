@@ -18,7 +18,14 @@ export default defineServiceMiddleware([
       allowedOrigins: configuration.get('user.service.allowed-origins'),
     })
   }),
-  registrationEnabledGate(),
+  registrationEnabledGate({
+    getResponseHtml: async () => (
+      <RegisterAside
+        disabled={true}
+        message="Registration is currently disabled."
+      />
+    )
+  }),
 
   // Render the login aside
   async (context) => {
