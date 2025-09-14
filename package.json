@@ -25,7 +25,7 @@
     "library/service",
     "library/uikit",
     "library/utility",
-    "service/administration",
+    "service/portal",
     "service/assets",
     "service/authentication",
     "service/error",

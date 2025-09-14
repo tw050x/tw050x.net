@@ -35,7 +35,7 @@
     { "path": "./library/service" },
     { "path": "./library/uikit" },
     { "path": "./library/utility" },
-    { "path": "./service/administration" },
+    { "path": "./service/portal" },
     { "path": "./service/assets" },
     { "path": "./service/authentication" },
     { "path": "./service/error" },

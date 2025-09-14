@@ -47,10 +47,6 @@ const RAW_RUNTIME_STATE =
       "reference": "workspace:library/utility"\
     },\
     {\
-      "name": "@tw050x.net.service/administration",\
-      "reference": "workspace:service/administration"\
-    },\
-    {\
       "name": "@tw050x.net.service/assets",\
       "reference": "workspace:service/assets"\
     },\
@@ -69,6 +65,10 @@ const RAW_RUNTIME_STATE =
     {\
       "name": "@tw050x.net.service/navigation",\
       "reference": "workspace:service/navigation"\
+    },\
+    {\
+      "name": "@tw050x.net.service/portal",\
+      "reference": "workspace:service/portal"\
     },\
     {\
       "name": "@tw050x.net.service/traefik",\
@@ -91,12 +91,12 @@ const RAW_RUNTIME_STATE =
     ["@tw050x.net.library/service", ["workspace:library/service"]],\
     ["@tw050x.net.library/uikit", ["workspace:library/uikit"]],\
     ["@tw050x.net.library/utility", ["workspace:library/utility"]],\
-    ["@tw050x.net.service/administration", ["workspace:service/administration"]],\
     ["@tw050x.net.service/assets", ["workspace:service/assets"]],\
     ["@tw050x.net.service/authentication", ["workspace:service/authentication"]],\
     ["@tw050x.net.service/error", ["workspace:service/error"]],\
     ["@tw050x.net.service/marketing", ["workspace:service/marketing"]],\
     ["@tw050x.net.service/navigation", ["workspace:service/navigation"]],\
+    ["@tw050x.net.service/portal", ["workspace:service/portal"]],\
     ["@tw050x.net.service/traefik", ["workspace:service/traefik"]],\
     ["@tw050x.net.service/user", ["workspace:service/user"]],\
     ["@tw050x.net/platform", ["workspace:."]]\
@@ -1867,29 +1867,6 @@ const RAW_RUNTIME_STATE =
         "linkType": "SOFT"\
       }]\
     ]],\
-    ["@tw050x.net.service/administration", [\
-      ["workspace:service/administration", {\
-        "packageLocation": "./service/administration/",\
-        "packageDependencies": [\
-          ["@kitajs/html", "npm:4.2.9"],\
-          ["@tw050x.net.library/logger", "workspace:library/logger"],\
-          ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
-          ["@tw050x.net.library/service", "workspace:library/service"],\
-          ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
-          ["@tw050x.net.service/administration", "workspace:service/administration"],\
-          ["@types/node", "npm:22.17.2"],\
-          ["date-fns", "npm:4.1.0"],\
-          ["http-status-codes", "npm:2.3.0"],\
-          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
-          ["nodemon", "npm:3.1.10"],\
-          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
-          ["uuid", "npm:11.1.0"],\
-          ["validator", "npm:13.15.15"],\
-          ["zod", "npm:3.25.76"]\
-        ],\
-        "linkType": "SOFT"\
-      }]\
-    ]],\
     ["@tw050x.net.service/assets", [\
       ["workspace:service/assets", {\
         "packageLocation": "./service/assets/",\
@@ -1983,6 +1960,29 @@ const RAW_RUNTIME_STATE =
           ["cookies", "npm:0.9.1"],\
           ["nodemon", "npm:3.1.10"],\
           ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"]\
+        ],\
+        "linkType": "SOFT"\
+      }]\
+    ]],\
+    ["@tw050x.net.service/portal", [\
+      ["workspace:service/portal", {\
+        "packageLocation": "./service/portal/",\
+        "packageDependencies": [\
+          ["@kitajs/html", "npm:4.2.9"],\
+          ["@tw050x.net.library/logger", "workspace:library/logger"],\
+          ["@tw050x.net.library/middleware", "workspace:library/middleware"],\
+          ["@tw050x.net.library/service", "workspace:library/service"],\
+          ["@tw050x.net.library/uikit", "workspace:library/uikit"],\
+          ["@tw050x.net.service/portal", "workspace:service/portal"],\
+          ["@types/node", "npm:22.17.2"],\
+          ["date-fns", "npm:4.1.0"],\
+          ["http-status-codes", "npm:2.3.0"],\
+          ["mongodb", "virtual:87330fecadffef275119f0d867925abf9a0ee828da2086faac8b9fd9cce3d347da81422f75c33df089ea16baa2bd2d81ba20f2db67a2608b3f2e3282979e4af5#npm:6.18.0"],\
+          ["nodemon", "npm:3.1.10"],\
+          ["typescript", "patch:typescript@npm%3A5.9.2#optional!builtin<compat/typescript>::version=5.9.2&hash=5786d5"],\
+          ["uuid", "npm:11.1.0"],\
+          ["validator", "npm:13.15.15"],\
+          ["zod", "npm:3.25.76"]\
         ],\
         "linkType": "SOFT"\
       }]\

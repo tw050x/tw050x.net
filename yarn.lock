@@ -1624,27 +1624,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/administration@workspace:service/administration":
-  version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/administration@workspace:service/administration"
-  dependencies:
-    "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.library/logger": "workspace:*"
-    "@tw050x.net.library/middleware": "workspace:*"
-    "@tw050x.net.library/service": "workspace:*"
-    "@tw050x.net.library/uikit": "workspace:*"
-    "@types/node": "npm:^22.10.2"
-    date-fns: "npm:^4.1.0"
-    http-status-codes: "npm:^2.3.0"
-    mongodb: "npm:^6.12.0"
-    nodemon: "npm:^3.1.10"
-    typescript: "npm:^5.7.2"
-    uuid: "npm:^11.0.3"
-    validator: "npm:^13.12.0"
-    zod: "npm:^3.24.2"
-  languageName: unknown
-  linkType: soft
-
 "@tw050x.net.service/assets@workspace:service/assets":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.service/assets@workspace:service/assets"
@@ -1729,6 +1708,27 @@ __metadata:
     cookies: "npm:^0.9.1"
     nodemon: "npm:^3.1.10"
     typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@tw050x.net.service/portal@workspace:service/portal":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.service/portal@workspace:service/portal"
+  dependencies:
+    "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/middleware": "workspace:*"
+    "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/uikit": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    date-fns: "npm:^4.1.0"
+    http-status-codes: "npm:^2.3.0"
+    mongodb: "npm:^6.12.0"
+    nodemon: "npm:^3.1.10"
+    typescript: "npm:^5.7.2"
+    uuid: "npm:^11.0.3"
+    validator: "npm:^13.12.0"
+    zod: "npm:^3.24.2"
   languageName: unknown
   linkType: soft
 

@@ -226,7 +226,7 @@ export default defineServiceMiddleware([
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();
-    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${context.configuration.get('user.service.host')}/admin/dashboard`);
+    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${context.configuration.get('user.service.host')}/portal/dashboard`);
     return void sendSeeOtherRedirect(
       context,
       returnUrl

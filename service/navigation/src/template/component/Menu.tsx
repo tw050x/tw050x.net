@@ -1,9 +1,10 @@
 import { Component } from "@kitajs/html";
 import { default as ChevronLeft } from "@tw050x.net.library/uikit/svg/ChevronLeft";
 import { default as ChevronRight } from "@tw050x.net.library/uikit/svg/ChevronRight";
+import { default as Portal } from "@tw050x.net.library/uikit/svg/Portal";
 
 /**
- * Props for the `<Menu />` component.
+ * Props for the `<PortalMenu />` component.
  */
 export type Props = {
   items:
@@ -13,18 +14,19 @@ export type Props = {
 }
 
 /**
- * The `<Menu />` component.
+ * The `<PortalMenu />` component.
  *
  * @param props
  * @returns {JSX.Element}
  */
-const Menu: Component<Props> = (props) => {
+const PortalMenu: Component<Props> = (props) => {
   return (
     <>
       <nav data-state={props.state}>
-        <header>
-          <h1 class="text-white text-2xl font-bold p-4">
-            <span class="hidden-when-w-16">Admin</span>
+        <header class="flex flex-col">
+          <h1 class="text-white p-4 flex">
+            <span class="portal-menu-icon"><Portal /></span>
+            <span class="portal-menu-text hidden-when-w-16">Portal</span>
           </h1>
         </header>
         <hr class="text-gray-600" />
@@ -40,7 +42,7 @@ const Menu: Component<Props> = (props) => {
               if ('href' in item) {
                 return (
                   <a class="text-white hover:no-underline p-4" href={item.href}>
-                    <span class="menu-icon"><item.IconComponent /></span>
+                    <span class="portal-menu-icon"><item.IconComponent /></span>
                     <span class="hidden-when-w-16">{item.label}</span>
                   </a>
                 );
@@ -51,11 +53,11 @@ const Menu: Component<Props> = (props) => {
           </div>
         </div>
         <hr class="text-gray-600" />
-        <div class="flex">
+        <div class="flex flex-col">
           <button class="text-white text-left cursor-pointer hover:no-underline p-4 flex-1" onclick="toggleMenu()">
-            <span class="menu-icon hidden-when-data-state-collapsed"><ChevronLeft /></span>
-            <span class="menu-icon hidden-when-data-state-open"><ChevronRight /></span>
-            <span class="menu-text hidden-when-w-16">Collapse</span>
+            <span class="portal-menu-icon hidden-when-data-state-collapsed"><ChevronLeft /></span>
+            <span class="portal-menu-icon hidden-when-data-state-open"><ChevronRight /></span>
+            <span class="portal-menu-text hidden-when-w-16">Collapse</span>
           </button>
         </div>
       </nav>
@@ -73,4 +75,4 @@ const Menu: Component<Props> = (props) => {
     </>
   )
 }
-export default Menu;
+export default PortalMenu;

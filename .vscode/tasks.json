@@ -30,10 +30,10 @@
       }
     },
     {
-      "label": "tsc: build service - administration",
+      "label": "tsc: build service - portal",
       "type": "shell",
       "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/administration", "tsc", "--build"],
+      "args": ["workspace", "@tw050x.net.service/portal", "tsc", "--build"],
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -44,10 +44,10 @@
       }
     },
     {
-      "label": "tsc: watch service - administration",
+      "label": "tsc: watch service - portal",
       "type": "shell",
       "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/administration", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "args": ["workspace", "@tw050x.net.service/portal", "tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -386,7 +386,7 @@
         "tsc: build library - middleware",
         "tsc: build library - service",
         "tsc: build library - uikit",
-        "tsc: build service - administration",
+        "tsc: build service - portal",
         "tsc: build service - authentication",
         "tsc: build service - error",
         "tsc: build service - marketing",

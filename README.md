@@ -48,10 +48,10 @@ You will also need to run `tsc` on your machine for the proiject you are working
 
 ```bash
 # Services
-yarn workspace @tw050x.net.service/administration tsc --build
 yarn workspace @tw050x.net.service/authentication tsc --build
 yarn workspace @tw050x.net.service/marketing tsc --build
 yarn workspace @tw050x.net.service/navigation tsc --build
+yarn workspace @tw050x.net.service/portal tsc --build
 yarn workspace @tw050x.net.service/user tsc --build
 
 # Libraries

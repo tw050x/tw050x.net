@@ -27,6 +27,7 @@
     "./svg/ChevronLeft": "./artifact/svg/ChevronLeft.js",
     "./svg/ChevronRight": "./artifact/svg/ChevronRight.js",
     "./svg/Dashboard": "./artifact/svg/Dashboard.js",
+    "./svg/Portal": "./artifact/svg/Portal.js",
     "./svg/Products": "./artifact/svg/Products.js",
     "./svg/Users": "./artifact/svg/Users.js"
   },

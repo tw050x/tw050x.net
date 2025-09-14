@@ -105,14 +105,18 @@ nav[data-state="open"] span.hidden-when-data-state-open {
 nav button, nav a {
   @apply whitespace-nowrap;
   @apply flex items-center;
+  @apply hover:bg-gray-700/50 transition-all duration-200;
+  @apply inline-block;
 }
 
-nav .menu-icon {
-  @apply w-6 h-6 inline-block ml-0.5 mr-2;
+nav .portal-menu-icon {
+  @apply w-6 h-6 ml-0.5 mr-2;
+  @apply inline-block;
   @apply align-middle;
+
 }
 
-nav .menu-text {
+nav .portal-menu-text {
   @apply align-middle;
   @apply leading-6;
 }

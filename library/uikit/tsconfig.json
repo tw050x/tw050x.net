@@ -28,6 +28,7 @@
     "src/svg/ChevronLeft.tsx",
     "src/svg/ChevronRight.tsx",
     "src/svg/Dashboard.tsx",
+    "src/svg/Portal.tsx",
     "src/svg/Products.tsx",
     "src/svg/Users.tsx",
     "src/component.ts",

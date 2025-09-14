@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "outDir": "./artifact",
+    "rootDir": "./src",
+    "types": ["@kitajs/html/htmx.d.ts"],
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "src/middleware/auth-gate.tsx",
+    "src/stack/portal/brands/get.tsx",
+    "src/stack/portal/brands/options.ts",
+    "src/stack/portal/dashboard/get.tsx",
+    "src/stack/portal/dashboard/options.ts",
+    "src/stack/portal/products/get.tsx",
+    "src/stack/portal/products/options.ts",
+    "src/stack/portal/users/get.tsx",
+    "src/stack/portal/users/options.ts",
+    "src/stack/portal/get.tsx",
+    "src/stack/portal/options.ts",
+    "src/template/component/MenuInitiator.tsx",
+    "src/template/document/Brands.tsx",
+    "src/template/document/Dashboard.tsx",
+    "src/template/document/Products.tsx",
+    "src/template/document/Users.tsx",
+    "src/serve.ts",
+  ],
+  "references": [
+    { "path": "../../library/logger" },
+    { "path": "../../library/middleware" },
+    { "path": "../../library/service" },
+    { "path": "../../library/uikit" },
+    { "path": "../../library/utility" },
+  ]
+}

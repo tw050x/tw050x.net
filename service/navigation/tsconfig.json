@@ -11,8 +11,8 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
-    "src/stack/navigation/admin/get.tsx",
-    "src/stack/navigation/admin/options.ts",
+    "src/stack/navigation/portal/get.tsx",
+    "src/stack/navigation/portal/options.ts",
     "src/template/component/Menu.tsx",
     "src/serve.ts",
   ],

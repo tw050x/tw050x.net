@@ -1,52 +1,6 @@
 
 services:
 
-  administration:
-    command: [ "yarn", "workspace", "@tw050x.net.service/administration", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
-    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/administration/serve.ts" ]
-    depends_on:
-      assets:
-        condition: service_healthy
-      authentication:
-        condition: service_healthy
-      localstack:
-        condition: service_healthy
-      mongo-primary:
-        condition: service_healthy
-      traefik:
-        condition: service_healthy
-    env_file:
-      - .env.administration
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-    image: tw050x.net/administration:latest
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.administration.entrypoints=websecure
-      - traefik.http.routers.administration.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.administration.rule=Host(`tw050x.dev`) && PathPrefix(`/admin/`)
-      - traefik.http.routers.administration.tls=true
-      - traefik.http.services.administration.loadbalancer.server.port=3000
-    mem_limit: 200mb
-    pull_policy: never
-    volumes:
-      - source: ./tsconfig.json
-        target: /srv/tsconfig.json
-        type: bind
-      - source: ./library
-        target: /srv/library
-        type: bind
-      - source: ./log/administration
-        target: /log
-        type: bind
-      - source: ./service/administration
-        target: /srv/service/administration
-        type: bind
-
   assets:
     depends_on:
       traefik:
@@ -220,6 +174,55 @@ services:
         target: /srv/service/marketing
         type: bind
 
+  mongo-primary:
+    command: --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all
+    depends_on:
+      mongo-secondary-a:
+        condition: service_healthy
+    env_file:
+      - .env.mongo
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    image: mongo:8.0.12
+    ports:
+      - 27017:27017
+    restart: always
+    volumes:
+      - source: ./service/mongo/data/primary
+        target: /data/db
+        type: bind
+      - read_only: true
+        source: ./service/mongo/mongo-keyfile
+        target: /etc/mongo-keyfile
+        type: bind
+
+  mongo-secondary-a:
+    command: --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all
+    env_file:
+      - .env.mongo
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    image: mongo:8.0.12
+    ports:
+      - 27018:27017
+    restart: always
+    volumes:
+      - source: ./service/mongo/data/secondary-a
+        target: /data/db
+        type: bind
+      - read_only: true
+        source: ./service/mongo/mongo-keyfile
+        target: /etc/mongo-keyfile
+        type: bind
+
   navigation:
     command: [ "yarn", "workspace", "@tw050x.net.service/navigation", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
     # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/navigation/serve.ts" ]
@@ -264,53 +267,50 @@ services:
         target: /srv/service/navigation
         type: bind
 
-  mongo-primary:
-    command: --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all
+  portal:
+    command: [ "yarn", "workspace", "@tw050x.net.service/portal", "run", "nodemon", "--watch-path=/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/portal/serve.ts" ]
     depends_on:
-      mongo-secondary-a:
+      assets:
+        condition: service_healthy
+      authentication:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
         condition: service_healthy
     env_file:
-      - .env.mongo
+      - .env.portal
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
-      timeout: 10s
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
       retries: 5
-      start_period: 40s
-    image: mongo:8.0.12
-    ports:
-      - 27017:27017
-    restart: always
+      start_period: 30s
+    image: tw050x.net/portal:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.portal.entrypoints=websecure
+      - traefik.http.routers.portal.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.portal.rule=Host(`tw050x.dev`) && PathPrefix(`/portal`)
+      - traefik.http.routers.portal.tls=true
+      - traefik.http.services.portal.loadbalancer.server.port=3000
+    mem_limit: 200mb
+    pull_policy: never
     volumes:
-      - source: ./service/mongo/primary/data
-        target: /data/db
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
         type: bind
-      - read_only: true
-        source: ./service/mongo/mongo-keyfile
-        target: /etc/mongo-keyfile
+      - source: ./library
+        target: /srv/library
         type: bind
-
-  mongo-secondary-a:
-    command: --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all
-    env_file:
-      - .env.mongo
-    healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-      start_period: 40s
-    image: mongo:8.0.12
-    ports:
-      - 27018:27017
-    restart: always
-    volumes:
-      - source: ./service/mongo/secondary-a/data
-        target: /data/db
+      - source: ./log/portal
+        target: /log
         type: bind
-      - read_only: true
-        source: ./service/mongo/mongo-keyfile
-        target: /etc/mongo-keyfile
+      - source: ./service/portal
+        target: /srv/service/portal
         type: bind
 
   traefik:

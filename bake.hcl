@@ -1,6 +1,6 @@
 group "default" {
   targets = [
-    "administration",
+    "portal",
     "assets",
     "authentication",
     "error",
@@ -10,10 +10,10 @@ group "default" {
   ]
 }
 
-target "administration" {
+target "portal" {
   dockerfile = "container/service/Dockerfile"
-  target = "administration"
-  tags = ["tw050x.net/administration:latest"]
+  target = "portal"
+  tags = ["tw050x.net/portal:latest"]
 }
 
 target "assets" {

@@ -15,7 +15,7 @@ RUN yarn
 
 ## Build the project
 RUN yarn workspaces foreach \
-  --from @tw050x.net.service/administration \
+  --from @tw050x.net.service/portal \
   --from @tw050x.net.service/authentication \
   --from @tw050x.net.service/error \
   --from @tw050x.net.service/marketing \
@@ -69,7 +69,7 @@ COPY --from=build /build/library/utility/artifact /srv/library/utility/artifact
 COPY --from=build /build/library/utility/package.json /srv/library/utility/package.json
 COPY --from=build /build/library/utility/tsconfig.json /srv/library/utility/tsconfig.json
 
-FROM node:23.11.1-alpine3.22 AS administration
+FROM node:23.11.1-alpine3.22 AS portal
 RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
@@ -79,11 +79,11 @@ COPY --from=middleware /srv/library/middleware /srv/library/middleware
 COPY --from=service /srv/library/service /srv/library/service
 COPY --from=uikit /srv/library/uikit /srv/library/uikit
 COPY --from=utility /srv/library/utility /srv/library/utility
-COPY --from=build /build/service/administration/artifact /srv/service/administration/artifact
-COPY --from=build /build/service/administration/package.json /srv/service/administration/package.json
-COPY --from=build /build/service/administration/tsconfig.json /srv/service/administration/tsconfig.json
-RUN yarn workspaces focus @tw050x.net.service/administration
-CMD [ "node", "service/administration/artifact/serve.js" ]
+COPY --from=build /build/service/portal/artifact /srv/service/portal/artifact
+COPY --from=build /build/service/portal/package.json /srv/service/portal/package.json
+COPY --from=build /build/service/portal/tsconfig.json /srv/service/portal/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.service/portal
+CMD [ "node", "service/portal/artifact/serve.js" ]
 
 FROM node:23.11.1-alpine3.22 AS assets
 RUN apk add --no-cache curl

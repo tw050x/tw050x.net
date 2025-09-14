@@ -4,11 +4,11 @@ import { ServiceContext } from "../define-service";
  * Extracts URL path parameters from an HTTP request URL by matching against a route pattern
  *
  * @param context - The service context object
- * @param pattern - The route pattern with parameter placeholders (e.g., "/admin/agent/:uuid")
+ * @param pattern - The route pattern with parameter placeholders (e.g., "/portal/agent/:uuid")
  * @returns A record containing all matched path parameters as key-value pairs
  *
  * @example
- * const params = getUrlParams(req, "/admin/agent/:uuid");
+ * const params = getUrlParams(req, "/portal/agent/:uuid");
  *
  * @example
  * const params = getUrlParams(req, "/users/:userId/posts/:postId");

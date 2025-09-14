@@ -53,7 +53,7 @@ export const useLoginStateCookieWriter = (options: UseLoginStateCookieWriterOpti
     cookies.set(cookieName, '', {
       domain: cookieDomain,
       httpOnly: false,
-      path: '/login',
+      path: '/',
       sameSite: 'strict',
       secure: true,
     });
@@ -73,7 +73,7 @@ export const useLoginStateCookieWriter = (options: UseLoginStateCookieWriterOpti
     cookies.set(cookieName, value, {
       domain: cookieDomain,
       httpOnly: false,
-      path: '/login',
+      path: '/',
       sameSite: 'strict',
       secure: true,
     });

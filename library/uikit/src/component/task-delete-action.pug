@@ -7,7 +7,7 @@ div
       name: 'delete',
       buttonText: 'Schedule Deletion',
       confirmText: 'Are you sure you want to schedule this task for deletion?',
-      endpoint: `/admin/tasks/${task.uuid}`,
+      endpoint: `/portal/tasks/${task.uuid}`,
     })
   else if task.scheduledForDeletionAt != undefined
     include /node_modules/@tw050x.net.library/uikit/component/button-field--action--destructive-pending
@@ -15,7 +15,7 @@ div
       forceId: 'force-delete-action',
       forceFormInputName: 'delete',
       forceText: 'Force Delete',
-      forceEndpoint: `/admin/tasks/${task.uuid}`,
+      forceEndpoint: `/portal/tasks/${task.uuid}`,
       forceConfirmText: 'Are you sure you want to forcefully delete this task?',
       id: 'force-delete-or-undo-delete-action',
       infoText: 'Scheduled for deletion',
@@ -23,7 +23,7 @@ div
       undoId: 'undo-delete-action',
       undoFormInputName: 'delete',
       undoText: 'Undo',
-      undoEndpoint: `/admin/tasks/${task.uuid}`,
+      undoEndpoint: `/portal/tasks/${task.uuid}`,
       undoConfirmText: 'Are you sure you want to undo the scheduled deletion of this task?',
     })
   else
@@ -34,5 +34,5 @@ div
       name: 'delete',
       buttonText: 'Schedule Deletion',
       confirmText: 'Are you sure you want to schedule this task for deletion?',
-      endpoint: `/admin/tasks/${task.uuid}`,
+      endpoint: `/portal/tasks/${task.uuid}`,
     })
