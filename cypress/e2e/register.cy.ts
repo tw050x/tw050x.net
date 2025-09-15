@@ -57,4 +57,10 @@ describe('As a user i want to register an account', () => {
     cy.get('button[type="submit"]').click();
     cy.get('.errors').should('be.visible');
   });
+
+  it('should navigate to the login page when the login link is clicked', () => {
+    cy.visit('/register');
+    cy.get('a[href="/login"]').click();
+    cy.url().should('eq', `${Cypress.config().baseUrl}/login`);
+  });
 });

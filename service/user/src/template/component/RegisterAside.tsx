@@ -55,7 +55,7 @@ const RegisterAside: Component<Props> = (props) => {
             </Header>
             {safeRegisterForm}
             <div>
-              <span class="text-gray-500">
+              <span class="text-gray-500" id="go-to-login-link">
                 Already have an account? <a class="underline" href="/login">Login</a>.
               </span>
             </div>
