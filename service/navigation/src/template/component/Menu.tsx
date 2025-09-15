@@ -24,7 +24,7 @@ const PortalMenu: Component<Props> = (props) => {
     <>
       <nav data-state={props.state}>
         <header class="flex flex-col">
-          <h1 class="text-white p-4 flex">
+          <h1 class="text-white font-bold p-4 flex">
             <span class="portal-menu-icon"><Portal /></span>
             <span class="portal-menu-text hidden-when-w-16">Portal</span>
           </h1>
@@ -38,7 +38,6 @@ const PortalMenu: Component<Props> = (props) => {
                   <a>{item.label}</a>
                 )
               }
-
               if ('href' in item) {
                 return (
                   <a class="text-white hover:no-underline p-4" href={item.href}>
@@ -47,7 +46,6 @@ const PortalMenu: Component<Props> = (props) => {
                   </a>
                 );
               }
-
               return null;
             })}
           </div>
