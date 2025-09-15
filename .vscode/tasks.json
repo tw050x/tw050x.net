@@ -1,10 +1,27 @@
 {
   "tasks": [
     {
+      "label": "tsc: clean build caches",
+      "type": "shell",
+      "command": "find",
+      "args": [".", "-name", "\"*.tsbuildinfo\"", "-delete"],
+      "group": "build",
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
       "label": "tsc: build database - authentication",
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.database/authentication", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -19,35 +36,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.database/authentication", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build service - portal",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/portal", "tsc", "--build"],
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch service - portal",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/portal", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -63,6 +52,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/authentication", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -77,6 +67,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/authentication", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -92,6 +83,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/error", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -106,6 +98,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/error", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -121,6 +114,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/marketing", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -135,6 +129,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/marketing", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -150,6 +145,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/navigation", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -164,6 +160,38 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/navigation", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
+      "group": "build",
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: build service - portal",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net.service/portal", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch service - portal",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net.service/portal", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -179,6 +207,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/user", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -193,6 +222,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.service/user", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -208,6 +238,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net/database", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -222,6 +253,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net/database", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -237,6 +269,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/logger", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -251,6 +284,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/logger", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -266,6 +300,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/middleware", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -280,6 +315,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/middleware", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -295,6 +331,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/service", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -309,6 +346,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/service", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -324,6 +362,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/uikit", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -338,6 +377,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/uikit", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -353,6 +393,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/utility", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
@@ -367,6 +408,7 @@
       "type": "shell",
       "command": "yarn",
       "args": ["workspace", "@tw050x.net.library/utility", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
