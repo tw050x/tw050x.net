@@ -48,6 +48,37 @@
       }
     },
     {
+      "label": "tsc: build database - user",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net.database/user", "tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
+      "group": "build",
+      "problemMatcher": ["$tsc"],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch database - user",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["workspace", "@tw050x.net.database/user", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "dependsOn": "tsc: clean build caches",
+      "group": "build",
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
       "label": "tsc: build service - authentication",
       "type": "shell",
       "command": "yarn",
@@ -423,15 +454,16 @@
       "label": "tsc: build - all",
       "dependsOn": [
         "tsc: build database - authentication",
+        "tsc: build database - user",
         "tsc: build library - database",
         "tsc: build library - logger",
         "tsc: build library - middleware",
         "tsc: build library - service",
         "tsc: build library - uikit",
-        "tsc: build service - portal",
         "tsc: build service - authentication",
         "tsc: build service - error",
         "tsc: build service - marketing",
+        "tsc: build service - portal",
         "tsc: build service - user",
       ],
       "group": "build",
