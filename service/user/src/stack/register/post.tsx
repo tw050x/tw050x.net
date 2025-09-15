@@ -104,12 +104,10 @@ export default defineServiceMiddleware([
     // return an error if the data is invalid
     let email;
     let password;
-    let confirmPassword;
     try {
       const result = postRegisterFormDataSchema.parse(body);
       email = result.email;
       password = result.password;
-      confirmPassword = result['password-confirmation'];
     }
     catch (error) {
       if (error instanceof ZodError) error.errors.forEach((issue) => logger.error('unable to parse incoming message body field', { issue }));

@@ -14,10 +14,12 @@
   "repository": "git@gitlab.com:tw050x.net/platform.git",
   "scripts": {
     "build:docker": "docker buildx bake --builder tw050x.net.builder --file bake.hcl --load",
+    "cy:open": "cypress open",
     "test:xss-scan": "xss-scan"
   },
   "version": "0.0.0",
   "workspaces": [
+    "cypress",
     "database/authentication",
     "database/user",
     "library/database",

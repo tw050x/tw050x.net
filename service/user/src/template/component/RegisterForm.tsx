@@ -20,7 +20,6 @@ export type Props = {
  * @returns {JSX.Element}
  */
 const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = [] }) => {
-
   let safeFormValidationErrors;
   formValidationErrorsGuard: {
     if (validationErrors.length === 0) break formValidationErrorsGuard;
@@ -34,37 +33,22 @@ const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = 
   }
 
   return (
-    <>
+    <div id="register-form">
       <form
         hx-ext="response-targets"
         hx-post="/register"
         hx-swap="outerHTML"
-        hx-target="this"
-        hx-target-400="this"
+        hx-target="#register-form"
+        hx-target-400="#register-form"
       >
         <div class="mb-6">
-          <EmailAddressField
-            autocomplete="off"
-            value={email}
-          />
+          <EmailAddressField autocomplete="off" value={email} />
         </div>
         <div class="mb-6">
-          <PasswordField
-            autocomplete="new-password"
-            id="password"
-            label="Password"
-            name="password"
-            onClickHandler="togglePasswordVisibility"
-          />
+          <PasswordField autocomplete="new-password" id="password" label="Password" name="password" onClickHandler="togglePasswordVisibility" />
         </div>
         <div class="mb-6">
-          <PasswordField
-            autocomplete="new-password"
-            id="password-confirmation"
-            label="Confirm Password"
-            name="password-confirmation"
-            onClickHandler="togglePasswordVisibility"
-          />
+          <PasswordField autocomplete="new-password" id="password-confirmation" label="Confirm Password" name="password-confirmation" onClickHandler="togglePasswordVisibility" />
         </div>
         <div>
           <Button type="submit" variant="contained">
@@ -73,6 +57,7 @@ const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = 
         </div>
         <input type="hidden" name="nonce" value={nonce} />
       </form>
+      {safeFormValidationErrors}
       <script>
         {`
           function togglePasswordVisibility() {
@@ -89,7 +74,6 @@ const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = 
               confirmPasswordInputIcon.querySelector('#eye-open-icon').classList.remove('hidden');
             }
             confirmPasswordInput.type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
-
             if (passwordInput.type === 'text') {
               passwordInputIcon.querySelector('#eye-closed-icon').classList.remove('hidden');
               passwordInputIcon.querySelector('#eye-open-icon').classList.add('hidden');
@@ -102,7 +86,7 @@ const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = 
           }
         `}
       </script>
-    </>
+    </div>
   );
 }
 export default RegisterForm;

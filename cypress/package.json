@@ -1,0 +1,10 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "cypress": "^15.2.0"
+  },
+  "name": "@tw050x.net.cypress/e2e",
+  "packageManager": "yarn@4.9.4",
+  "repository": "git@gitlab.com:tw050x.net.cypress/e2e.git"
+}

@@ -20,6 +20,7 @@
     ".yarn/",
     "container/",
     "coverage/",
+    "cypress/",
     "documentation/",
     "log/",
     "playground/",
@@ -27,6 +28,7 @@
   ],
   "files": [],
   "references": [
+    { "path": "./cypress" },
     { "path": "./database/authentication" },
     { "path": "./database/user" },
     { "path": "./library/database" },

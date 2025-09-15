@@ -1563,6 +1563,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tw050x.net.cypress/e2e@workspace:cypress":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.cypress/e2e@workspace:cypress"
+  dependencies:
+    "@types/node": "npm:^22.10.2"
+    cypress: "npm:^15.2.0"
+  languageName: unknown
+  linkType: soft
+
 "@tw050x.net.database/authentication@workspace:*, @tw050x.net.database/authentication@workspace:database/authentication":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.database/authentication@workspace:database/authentication"
