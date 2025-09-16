@@ -15,9 +15,10 @@ describe('As a user I want to register an account', () => {
     const timestamp = Date.now();
     const email = `test.user.${timestamp}@example.com`;
     const password = 'Password123!';
-    cy.task<string>('createEncryptedLoginCookieValue', {
+    const loginStateCookieContent = {
       returnUrl: `${Cypress.config().baseUrl}/portal/dashboard`
-    }).then((loginStateCookieValue) => {
+    }
+    cy.task<string>('createEncryptedLoginCookieValue', loginStateCookieContent).then((loginStateCookieValue) => {
       cy.setCookie('login.state', loginStateCookieValue, {
         domain: 'tw050x.dev',
         path: '/',
