@@ -1,4 +1,4 @@
-describe('As a user i want to register an account', () => {
+describe('As a user I want to register an account', () => {
   it('should allow a user to enter their details, register an account and be redirected to the home page', () => {
     const timestamp = Date.now();
     const email = `test.user.${timestamp}@example.com`;
@@ -9,6 +9,28 @@ describe('As a user i want to register an account', () => {
     cy.get('input[name="password-confirmation"]').type(password);
     cy.get('button[type="submit"]').click();
     cy.url().should('eq', `${Cypress.config().baseUrl}/`);
+  });
+
+  it('should allow a user to enter their details, register an account and be redirected to the page determined by login state cookie', () => {
+    const timestamp = Date.now();
+    const email = `test.user.${timestamp}@example.com`;
+    const password = 'Password123!';
+    cy.task<string>('createEncryptedLoginCookieValue', {
+      returnUrl: `${Cypress.config().baseUrl}/portal/dashboard`
+    }).then((loginStateCookieValue) => {
+      cy.setCookie('login.state', loginStateCookieValue, {
+        domain: 'tw050x.dev',
+        path: '/',
+        secure: true,
+        httpOnly: true,
+      });
+    });
+    cy.visit('/register');
+    cy.get('input[name="email"]').type(email);
+    cy.get('input[name="password"]').type(password);
+    cy.get('input[name="password-confirmation"]').type(password);
+    cy.get('button[type="submit"]').click();
+    cy.url().should('eq', `${Cypress.config().baseUrl}/portal/dashboard`);
   });
 
   it('should show validation errors if the form is submitted with no data', () => {

@@ -1567,8 +1567,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tw050x.net.cypress/e2e@workspace:cypress"
   dependencies:
+    "@aws-sdk/client-secrets-manager": "npm:^3.873.0"
+    "@aws-sdk/client-ssm": "npm:^3.873.0"
     "@types/node": "npm:^22.10.2"
+    bcryptjs: "npm:^3.0.2"
     cypress: "npm:^15.2.0"
+    mongodb: "npm:^6.12.0"
   languageName: unknown
   linkType: soft
 
@@ -1817,6 +1821,7 @@ __metadata:
     "@kitajs/ts-html-plugin": "npm:^4.1.2"
     "@yarnpkg/types": "npm:^4.0.0"
     cypress: "npm:^15.2.0"
+    dotenv: "npm:^17.2.2"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
@@ -2909,6 +2914,13 @@ __metadata:
   version: 2.0.4
   resolution: "detect-libc@npm:2.0.4"
   checksum: 10c0/c15541f836eba4b1f521e4eecc28eefefdbc10a94d3b8cb4c507689f332cc111babb95deda66f2de050b22122113189986d5190be97d51b5a2b23b938415e67c
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^17.2.2":
+  version: 17.2.2
+  resolution: "dotenv@npm:17.2.2"
+  checksum: 10c0/be66513504590aff6eccb14167625aed9bd42ce80547f4fe5d195860211971a7060949b57108dfaeaf90658f79e40edccd3f233f0a978bff507b5b1565ae162b
   languageName: node
   linkType: hard
 

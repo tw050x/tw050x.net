@@ -5,6 +5,8 @@
       "es6",
       "dom"
     ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "sourceMap": true,
     "types": [
       "cypress",

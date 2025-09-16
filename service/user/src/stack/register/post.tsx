@@ -48,6 +48,7 @@ export default defineServiceMiddleware([
     getConfiguration: async ({ configuration }) => ({
       allowedReturnUrlDomains: configuration.get('user.service.allowed-return-url-domains'),
       cookieName: configuration.get('cookie.login-state.name'),
+      stateCipherAlgorithm: configuration.get('cookie.login-state.cipher.algorithm'),
     }),
     getSecrets: async ({ secrets }) => ({
       encrypterSecretKey: secrets.get('encrypter.secret-key'),
@@ -188,9 +189,9 @@ export default defineServiceMiddleware([
       });
       await userDatabase.credentials.insertOne({
         createdAt: new Date(),
+        updatedAt: new Date(),
         email,
         passwordHash,
-        updatedAt: new Date(),
         uuid: userProfileUuid,
       });
       await userDatabaseSession.commitTransaction();
@@ -224,6 +225,7 @@ export default defineServiceMiddleware([
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();
+    console.log('context.incomingMessage.loginStateCookie', context.incomingMessage.loginStateCookie);
     const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${context.configuration.get('user.service.host')}/portal/dashboard`);
     return void sendSeeOtherRedirect(
       context,

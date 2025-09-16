@@ -14,6 +14,7 @@ defineService({
       service.configuration.use('cookie.access-token.domain'),
       service.configuration.use('cookie.login-state.name'),
       service.configuration.use('cookie.login-state.domain'),
+      service.configuration.use('cookie.login-state.cipher.algorithm'),
       service.configuration.use('cookie.refresh-token.name'),
       service.configuration.use('cookie.refresh-token.domain'),
       service.configuration.use('cookie.refreshable-token.name'),

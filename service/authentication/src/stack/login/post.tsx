@@ -130,7 +130,7 @@ export default defineServiceMiddleware([
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
     if (credentialDocument === null) {
-      logger.error('credential document not found', { email });
+      logger.debug('credential document not found', { email });
       return void sendBadRequestHTMLResponse(
         context,
         await <LoginForm

@@ -1,8 +1,12 @@
 {
   "author": "tw050x (Richard Kielty)",
   "devDependencies": {
+    "@aws-sdk/client-secrets-manager": "^3.873.0",
+    "@aws-sdk/client-ssm": "^3.873.0",
     "@types/node": "^22.10.2",
-    "cypress": "^15.2.0"
+    "bcryptjs": "^3.0.2",
+    "cypress": "^15.2.0",
+    "mongodb": "^6.12.0"
   },
   "name": "@tw050x.net.cypress/e2e",
   "packageManager": "yarn@4.9.4",
