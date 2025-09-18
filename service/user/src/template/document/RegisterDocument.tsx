@@ -31,7 +31,7 @@ const RegisterDocument: Component<Props> = ({ registerAsideProps }) => {
           <Stylesheet />
         </head>
         <body>
-          <main class="bg-sky-950 text-white w-screen min-h-screen"></main>
+          <main class="bg-gray-800 text-white w-screen min-h-screen"></main>
           <div class="asides">
             <aside>
               <RegisterAside {...registerAsideProps} />

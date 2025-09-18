@@ -78,7 +78,7 @@ export default defineServiceMiddleware([
     }),
   }),
 
-  // Render the login page in a disabled if it is not enabled
+  // Render the login page in a disabled state if it is not enabled
   async (context) => {
     const loginEnabled = context.configuration.get('authentication.service.login-enabled');
     if (loginEnabled === 'false') {

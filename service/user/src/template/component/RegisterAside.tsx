@@ -51,7 +51,7 @@ const RegisterAside: Component<Props> = (props) => {
         {safeDisabledRegisterMessage ?? (
           <>
             <Header classOverrides={headerClassOverrides} lead="Register" tier="h1">
-              Create an account
+              Enter your email address and password
             </Header>
             {safeRegisterForm}
             <div>

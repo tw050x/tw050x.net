@@ -10,7 +10,7 @@
         "cwd": "${workspaceFolder}"
       },
       "presentation": {
-        "reveal": "always",
+        "reveal": "silent",
         "panel": "dedicated",
         "showReuseMessage": true,
         "clear": false

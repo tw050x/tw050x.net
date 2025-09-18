@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@source not "./public/assets/stylesheet.css";
+@source not "**/artifact/";
+@source not "**/node_modules/";
+
 @layer utilities {
   .inset-shadow-xl {
     --tw-shadow: inset -12px 0 20px -12px rgb(0 0 0 / var(--tw-shadow-opacity, 0.5));
