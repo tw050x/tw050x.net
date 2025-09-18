@@ -10,17 +10,17 @@
         "cwd": "${workspaceFolder}"
       },
       "presentation": {
-        "reveal": "silent",
+        "reveal": "never",
         "panel": "dedicated",
         "showReuseMessage": true,
         "clear": false
       }
     },
     {
-      "label": "tsc: build database - authentication",
+      "label": "tsc: build",
       "type": "shell",
       "command": "yarn",
-      "args": ["workspace", "@tw050x.net.database/authentication", "tsc", "--build"],
+      "args": ["tsc", "--build"],
       "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
@@ -32,10 +32,10 @@
       }
     },
     {
-      "label": "tsc: watch database - authentication",
+      "label": "tsc: watch",
       "type": "shell",
       "command": "yarn",
-      "args": ["workspace", "@tw050x.net.database/authentication", "tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "args": ["tsc", "--build", "--preserveWatchOutput", "--watch"],
       "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
@@ -48,426 +48,19 @@
       }
     },
     {
-      "label": "tsc: build database - user",
+      "label": "tailwindcss: build assets",
       "type": "shell",
       "command": "yarn",
-      "args": ["workspace", "@tw050x.net.database/user", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch database - user",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.database/user", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build service - authentication",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/authentication", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch service - authentication",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/authentication", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build service - error",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/error", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch service - error",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/error", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build service - marketing",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/marketing", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch service - marketing",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/marketing", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build service - navigation",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/navigation", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch service - navigation",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/navigation", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build service - portal",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/portal", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch service - portal",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/portal", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build service - user",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/user", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch service - user",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.service/user", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build library - database",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net/database", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch library - database",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net/database", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build library - logger",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/logger", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch library - logger",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/logger", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build library - middleware",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/middleware", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch library - middleware",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/middleware", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build library - service",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/service", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch library - service",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/service", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build library - uikit",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/uikit", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch library - uikit",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/uikit", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build library - utility",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/utility", "tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc"],
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: watch library - utility",
-      "type": "shell",
-      "command": "yarn",
-      "args": ["workspace", "@tw050x.net.library/utility", "tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "dependsOn": "tsc: clean build caches",
-      "group": "build",
-      "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tsc: build - all",
-      "dependsOn": [
-        "tsc: build database - authentication",
-        "tsc: build database - user",
-        "tsc: build library - database",
-        "tsc: build library - logger",
-        "tsc: build library - middleware",
-        "tsc: build library - service",
-        "tsc: build library - uikit",
-        "tsc: build service - authentication",
-        "tsc: build service - error",
-        "tsc: build service - marketing",
-        "tsc: build service - portal",
-        "tsc: build service - user",
+      "args": [
+        "workspace", "@tw050x.net.service/assets", "@tailwindcss/cli",
+        "--cwd", "${workspaceFolder}",
+        "--input", "./service/assets/style.css",
+        "--output", "./service/assets/public/assets/stylesheet.css",
       ],
+      "options": {
+        "cwd": "${workspaceFolder}/service/assets"
+      },
       "group": "build",
-      "problemMatcher": ["$tsc"],
       "presentation": {
         "reveal": "always",
         "panel": "dedicated",
@@ -485,27 +78,6 @@
         "--input", "./service/assets/style.css",
         "--output", "./service/assets/public/assets/stylesheet.css",
         "--watch"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}/service/assets"
-      },
-      "group": "build",
-      "presentation": {
-        "reveal": "always",
-        "panel": "dedicated",
-        "showReuseMessage": true,
-        "clear": false
-      }
-    },
-    {
-      "label": "tailwindcss: build assets",
-      "type": "shell",
-      "command": "yarn",
-      "args": [
-        "workspace", "@tw050x.net.service/assets", "@tailwindcss/cli",
-        "--cwd", "${workspaceFolder}",
-        "--input", "./service/assets/style.css",
-        "--output", "./service/assets/public/assets/stylesheet.css",
       ],
       "options": {
         "cwd": "${workspaceFolder}/service/assets"
