@@ -26,9 +26,7 @@ export const useAccessTokenCookieWriter = (options: UseAccessTokenCookieWriterOp
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-
   let configuration;
-
   try {
     configuration = await options.getConfiguration({ configuration: context.configuration });
   }
@@ -37,10 +35,8 @@ export const useAccessTokenCookieWriter = (options: UseAccessTokenCookieWriterOp
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
-
   const cookieName = configuration.cookieName;
   const cookieDomain = configuration.cookieDomain;
-
   const clearAccessTokenCookie = () => {
     cookies.set(cookieName, '', {
       domain: cookieDomain,
@@ -50,7 +46,6 @@ export const useAccessTokenCookieWriter = (options: UseAccessTokenCookieWriterOp
       secure: true,
     });
   }
-
   const setAccessTokenCookie = (value: string) => {
     const currentDate = new Date();
     const expiryDate = addHours(currentDate, 3);
@@ -65,7 +60,6 @@ export const useAccessTokenCookieWriter = (options: UseAccessTokenCookieWriterOp
       secure: true,
     });
   }
-
   // initialize the cookies object on the incoming message
   context.serverResponse.accessTokenCookie = {
     clear: clearAccessTokenCookie,

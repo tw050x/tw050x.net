@@ -2,17 +2,18 @@ import { logger } from "@tw050x.net.library/logger";
 import { ServiceContext } from "@tw050x.net.library/service";
 import { default as Cookies } from "cookies";
 
-type RefreshableTokenCookie = {
+type UIUserTableToolsStateCookie = {
   raw?: string;
+  state: 'open' | 'collapsed';
 }
 
 declare module "node:http" {
   interface IncomingMessage {
-    refreshableTokenCookie: RefreshableTokenCookie
+    uiUserTableToolsStateCookie: UIUserTableToolsStateCookie
   }
 }
 
-type UseRefreshableTokenCookieReaderOptions = {
+type UseUIUserTableToolsStateCookieReaderOptions = {
   getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
     cookieName: string;
   }>;
@@ -21,7 +22,7 @@ type UseRefreshableTokenCookieReaderOptions = {
 /**
  * @returns void
  */
-export const useRefreshableTokenCookieReader = (options: UseRefreshableTokenCookieReaderOptions) => async (context: ServiceContext) => {
+export const useUIUserTableToolsStateCookieReader = (options: UseUIUserTableToolsStateCookieReaderOptions) => async (context: ServiceContext) => {
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
@@ -30,14 +31,18 @@ export const useRefreshableTokenCookieReader = (options: UseRefreshableTokenCook
     configuration = await options.getConfiguration({ configuration: context.configuration });
   }
   catch (error) {
-    logger.error('unable to read access token cookie', { error });
+    logger.error('unable to read UI user table tools cookie', { error });
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
   const cookieName = configuration.cookieName;
   const cookie = cookies.get(cookieName);
-  const refreshableTokenCookie: RefreshableTokenCookie = {
+  const refreshableTokenCookie: UIUserTableToolsStateCookie = {
     raw: cookie,
+    state: 'collapsed',
   }
-  context.incomingMessage.refreshableTokenCookie = refreshableTokenCookie
+  if (cookie === 'open') {
+    refreshableTokenCookie.state = 'open';
+  }
+  context.incomingMessage.uiUserTableToolsStateCookie = refreshableTokenCookie
 }

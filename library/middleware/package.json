@@ -25,7 +25,10 @@
     "./use-refresh-token-cookie-reader": "./artifact/use-refresh-token-cookie-reader.js",
     "./use-refresh-token-cookie-writer": "./artifact/use-refresh-token-cookie-writer.js",
     "./use-refreshable-token-cookie-reader": "./artifact/use-refreshable-token-cookie-reader.js",
-    "./use-refreshable-token-cookie-writer": "./artifact/use-refreshable-token-cookie-writer.js"
+    "./use-refreshable-token-cookie-writer": "./artifact/use-refreshable-token-cookie-writer.js",
+    "./use-ui-menu-state-cookie-reader": "./artifact/use-ui-menu-state-cookie-reader.js",
+    "./use-ui-user-table-tools-state-cookie-reader": "./artifact/use-ui-user-table-tools-state-cookie-reader.js",
+    "./use-ui-user-table-tools-state-cookie-writer": "./artifact/use-ui-user-table-tools-state-cookie-writer.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/middleware",

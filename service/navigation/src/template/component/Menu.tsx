@@ -66,7 +66,7 @@ const PortalMenu: Component<Props> = (props) => {
             const isCollapsed = $nav.getAttribute('data-state') === 'collapsed';
             if (isCollapsed) $nav.setAttribute('data-state', 'open');
             else $nav.setAttribute('data-state', 'collapsed');
-            document.cookie = "ui.menu.state=" + (isCollapsed ? 'open' : 'collapsed') + "; path=/navigation/; SameSite=Lax";
+            document.cookie = "ui.menu.state=" + (isCollapsed ? 'open' : 'collapsed') + "; path=/; SameSite=Lax";
           }
         `}
       </script>

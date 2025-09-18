@@ -1,12 +1,13 @@
 import { useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
 import { useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { useUIMenuStateCookieReader } from "@tw050x.net.library/middleware/use-ui-menu-state-cookie-reader";
+import { useUIUserTableToolsStateCookieReader } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie-reader";
+import { useUIUserTableToolsStateCookieWriter } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie-writer";
 import { useCors } from "@tw050x.net.library/middleware/use-cors";
 import { logger } from "@tw050x.net.library/logger";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendOKHTMLResponse} from "@tw050x.net.library/service/helper/response/send-ok-html-response";
-import { authGate } from "../../../middleware/auth-gate";
-import { default as Brands, Props as BrandsDocumentProps } from "../../../template/document/Brands";
+import { authGate } from "../../../../../middleware/auth-gate";
+import { default as UserTableTools, Props as UserTableToolsProps } from "../../../../../template/component/UserTableTools";
 
 export default defineServiceMiddleware([
   async (context) => {
@@ -39,17 +40,28 @@ export default defineServiceMiddleware([
     }),
   }),
   authGate(),
-  useUIMenuStateCookieReader({
+  useUIUserTableToolsStateCookieReader({
     getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.ui.menu.state.name'),
+      cookieName: configuration.get('cookie.ui.user-table-tools.state.name'),
+    }),
+  }),
+  useUIUserTableToolsStateCookieWriter({
+    getConfiguration: async ({ configuration }) => ({
+      cookieName: configuration.get('cookie.ui.user-table-tools.state.name'),
+      cookieDomain: configuration.get('cookie.ui.user-table-tools.state.domain'),
     }),
   }),
   async (context) => {
-    const brandsDocumentProps: BrandsDocumentProps = {
-      menuInitiatorProps: {
-        state: context.incomingMessage.uiMenuStateCookie.state,
-      },
+    const userTableToolsProps: UserTableToolsProps = {
+      state: 'open',
     }
-    return void sendOKHTMLResponse(context, await <Brands {...brandsDocumentProps} />);
+    if (context.incomingMessage.uiUserTableToolsStateCookie.state === 'open') {
+      context.serverResponse.uiUserTableToolsStateCookie.set('collapsed');
+      userTableToolsProps.state = 'collapsed';
+    }
+    else {
+      context.serverResponse.uiUserTableToolsStateCookie.set('open');
+    }
+    return void sendOKHTMLResponse(context, await <UserTableTools {...userTableToolsProps} />);
   }
 ])

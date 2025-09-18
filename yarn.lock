@@ -1770,6 +1770,7 @@ __metadata:
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
     "@types/node": "npm:^22.10.2"
+    cookies: "npm:^0.9.1"
     date-fns: "npm:^4.1.0"
     http-status-codes: "npm:^2.3.0"
     mongodb: "npm:^6.12.0"

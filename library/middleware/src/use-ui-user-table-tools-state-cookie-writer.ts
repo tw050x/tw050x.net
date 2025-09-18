@@ -5,14 +5,14 @@ import { addDays, differenceInSeconds } from "date-fns";
 
 declare module "node:http" {
   interface ServerResponse {
-    refreshableTokenCookie: {
+    uiUserTableToolsStateCookie: {
       clear: () => void;
       set: (value: string) => void;
     }
   }
 }
 
-type UseRefreshableTokenCookieWriterOptions = {
+type UseUIUserTableToolsStateCookieWriterOptions = {
   getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
     cookieName: string;
     cookieDomain: string;
@@ -22,7 +22,7 @@ type UseRefreshableTokenCookieWriterOptions = {
 /**
  * @returns void
  */
-export const useRefreshableTokenCookieWriter = (options: UseRefreshableTokenCookieWriterOptions) => async (context: ServiceContext) => {
+export const useUIUserTableToolsStateCookieWriter = (options: UseUIUserTableToolsStateCookieWriterOptions) => async (context: ServiceContext) => {
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
@@ -31,13 +31,13 @@ export const useRefreshableTokenCookieWriter = (options: UseRefreshableTokenCook
     configuration = await options.getConfiguration({ configuration: context.configuration });
   }
   catch (error) {
-    logger.error('unable to read access token cookie', { error });
+    logger.error('unable to read UI user table tools cookie', { error });
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
   const cookieName = configuration.cookieName;
   const cookieDomain = configuration.cookieDomain;
-  const clearRefreshableTokenCookie = () => {
+  const clearUIUserTableToolsStateCookie = () => {
     cookies.set(cookieName, '', {
       domain: cookieDomain,
       httpOnly: false,
@@ -46,7 +46,7 @@ export const useRefreshableTokenCookieWriter = (options: UseRefreshableTokenCook
       secure: true,
     });
   }
-  const setRefreshableTokenCookie = (value: string) => {
+  const setUIUserTableToolsStateCookie = (value: string) => {
     const currentDate = new Date();
     const expiryDate = addDays(currentDate, 7);
     const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
@@ -61,8 +61,8 @@ export const useRefreshableTokenCookieWriter = (options: UseRefreshableTokenCook
     });
   }
   // initialize the cookies object on the incoming message
-  context.serverResponse.refreshableTokenCookie = {
-    clear: clearRefreshableTokenCookie,
-    set: setRefreshableTokenCookie
+  context.serverResponse.uiUserTableToolsStateCookie = {
+    clear: clearUIUserTableToolsStateCookie,
+    set: setUIUserTableToolsStateCookie
   };
 }

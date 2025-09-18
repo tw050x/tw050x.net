@@ -1,11 +1,13 @@
 import { useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
 import { useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { useUIMenuStateCookieReader } from "@tw050x.net.library/middleware/use-ui-menu-state-cookie-reader";
+import { useUIUserTableToolsStateCookieReader } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie-reader";
 import { useCors } from "@tw050x.net.library/middleware/use-cors";
 import { logger } from "@tw050x.net.library/logger";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendOKHTMLResponse} from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { authGate } from "../../../middleware/auth-gate";
-import { default as Users } from "../../../template/document/Users";
+import { default as Users, Props as UsersDocumentProps } from "../../../template/document/Users";
 
 export default defineServiceMiddleware([
   async (context) => {
@@ -38,7 +40,26 @@ export default defineServiceMiddleware([
     }),
   }),
   authGate(),
+  useUIMenuStateCookieReader({
+    getConfiguration: async ({ configuration }) => ({
+      cookieName: configuration.get('cookie.ui.menu.state.name'),
+    }),
+  }),
+  useUIUserTableToolsStateCookieReader({
+    getConfiguration: async ({ configuration }) => ({
+      cookieName: configuration.get('cookie.ui.user-table-tools.state.name'),
+    }),
+  }),
   async (context) => {
-    return void sendOKHTMLResponse(context, await <Users />);
+    const usersDocumentProps: UsersDocumentProps = {
+      menuInitiatorProps: {
+        state: context.incomingMessage.uiMenuStateCookie.state,
+      },
+      userTableProps: {},
+      userTableToolsProps: {
+        state: context.incomingMessage.uiUserTableToolsStateCookie.state,
+      }
+    }
+    return void sendOKHTMLResponse(context, await <Users {...usersDocumentProps} />);
   }
 ])

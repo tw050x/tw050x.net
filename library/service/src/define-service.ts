@@ -73,8 +73,15 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
     normaliseUrlGuard: {
       if (urlPath === '/') break normaliseUrlGuard;
       if (urlPath.endsWith('/') === false) break normaliseUrlGuard;
+      let replacementURL = new URL(urlPath.slice(0, -1), `http://${incomingMessage.headers.host}`);
+      if (rawUrl.includes('?')) {
+        replacementURL.search = new URL(rawUrl, 'http://localhost').search;
+      }
+      if (rawUrl.includes('#')) {
+        replacementURL.hash = new URL(rawUrl, 'http://localhost').hash;
+      }
       serverResponse.writeHead(301, {
-        'Location': urlPath.slice(0, -1)
+        'Location': replacementURL.toString()
       });
       return void serverResponse.end();
     }
@@ -184,7 +191,7 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
       },
       use: async (key: string) => {
         const cachedValue = configuration.get(key);
-        if (cachedValue === null) {
+        if (cachedValue !== undefined) {
           return cachedValue
         }
         let readValue;
@@ -229,7 +236,7 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
       },
       use: async (key: string) => {
         const cachedValue = secrets.get(key);
-        if (cachedValue === null) {
+        if (cachedValue !== undefined) {
           return cachedValue
         }
         let readValue;

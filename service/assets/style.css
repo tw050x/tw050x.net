@@ -12,111 +12,12 @@
   }
 }
 
-.htmx-request .htmx-indicator-hide,
-.htmx-request.htmx-indicator-hide {
+.htmx-request .htmx-indicator-hide, .htmx-request.htmx-indicator-hide {
   visibility: hidden;
 }
 
-.asides aside {
-  @apply fixed top-0 right-0;
-  @apply h-screen w-screen;
-  @apply bg-white;
-
-  /* Medium Screen Size */
-  @apply sm:shadow-xl;
-  @apply sm:w-160;
-}
-
-.asides aside {
-  opacity: 1;
-  overflow-y: scroll;
-  transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.asides aside.htmx-added {
-  opacity: 0;
-}
-
-@media (min-width: 640px) {
-  .asides aside {
-    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-
-  .asides aside.htmx-added {
-    opacity: 1;
-    transform: translateX(100%);
-  }
-
-  .asides aside:nth-last-child(2):nth-child(n+2) {
-    @apply sm:w-154;
-  }
-
-  .asides aside:nth-last-child(1):nth-child(n+2) {
-    @apply sm:w-154;
-  }
-
-  .asides aside:nth-last-child(1):nth-child(n+3) {
-    @apply sm:w-148;
-  }
-}
-
-main {
-  @apply min-h-screen max-w-screen;
-  @apply transition-all duration-300 ease-in-out;
-}
-
-nav {
-  @apply absolute bottom-0 left-0 top-0;
-  @apply bg-gray-800;
-  @apply h-screen;
-  @apply flex flex-col;
-  @apply inset-shadow-black shadow-[inset_-16px_0_16px_-8px_rgba(0,0,0,0.9)];
-  @apply transition-all duration-300 ease-in-out;
-}
-
-nav[data-state="collapsed"] {
-  @apply w-16;
-}
-
-nav[data-state="collapsed"] span.hidden-when-w-16 {
-  @apply opacity-0 invisible;
-}
-
-nav[data-state="collapsed"] span.hidden-when-data-state-collapsed {
-  @apply hidden;
-}
-
-nav[data-state="collapsed"] ~ main {
-  @apply ml-16;
-}
-
-nav[data-state="open"] {
-  @apply w-64;
-}
-
-nav[data-state="open"] ~ main {
-  @apply ml-64;
-}
-
-nav[data-state="open"] span.hidden-when-data-state-open {
-  @apply hidden;
-}
-
-nav button, nav a {
-  @apply whitespace-nowrap;
-  @apply flex items-center;
-  @apply hover:bg-gray-700/50 transition-all duration-200;
-  @apply inline-block;
-}
-
-nav .portal-menu-icon {
-  @apply w-6 h-6 ml-0.5 mr-2;
-  @apply inline-block;
-  @apply align-middle;
-
-}
-
-nav .portal-menu-text {
-  @apply align-middle;
-  @apply leading-6;
-}
+@import "./stylesheet/asides.css";
+@import "./stylesheet/main.css";
+@import "./stylesheet/nav.css";
+@import "./stylesheet/nav~main>div[data-component=anchored-bar].css";
+@import "./stylesheet/user-table-tools.css";

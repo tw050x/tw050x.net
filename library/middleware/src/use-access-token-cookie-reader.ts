@@ -67,6 +67,7 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       break verifyCookieGuard;
     }
 
+    // verify the cookie
     let accessTokenPayload;
     try {
       accessTokenPayload = verify(cookie, jwtSecretKey);
@@ -77,12 +78,14 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       break verifyCookieGuard;
     }
 
+    // ensure payload is an object
     if (typeof accessTokenPayload === 'string') {
       logger.error('access token payload is a string');
       accessTokenCookie.errors.push(new Error('access token payload is not an object'));
       break verifyCookieGuard;
     }
 
+    // ensure payload has a "sub" property
     const sub = accessTokenPayload.sub;
     if (typeof sub !== 'string') {
       logger.error('access token payload sub is not a string');
@@ -90,6 +93,8 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       break verifyCookieGuard;
     }
 
+    // if no required permissions, user is authorised
+    //
     // TODO: check for user permissions in the databases
     let permissions: Array<string> = [];
     try {
@@ -100,7 +105,6 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       accessTokenCookie.errors.push(new Error('unable to fetch user permissions from database'));
       break verifyCookieGuard;
     }
-
     let hasAllPermissions = true;
     for (const requiredPermission of requiredPermissions) {
       // if (rol.includes(requiredPermission) === true) continue;
@@ -112,6 +116,5 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       sub,
     }
   }
-
   context.incomingMessage.accessTokenCookie = accessTokenCookie;
 }

@@ -24,7 +24,7 @@ const Notice: Component<Props> = ({ children, classOverrides }) => {
     "text-sm",
   ]
   return (
-    <div class={[...containerClasses, ...(classOverrides?.container ?? [])]}>
+    <div class={[...containerClasses, ...(classOverrides?.container ?? [])]} data-component="notice">
       <svg class="w-6 h-6 text-red-500 mt-0.5 flex-shrink-0" style="margin-right: .5rem;" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 2L22 20H2L12 2Z" fill="currentColor" rx="2" />
         <path d="M12 8V13M12 16H12.01" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />

@@ -39,7 +39,7 @@ const Button: Component<Props> = ({ children, type = 'button', variant = 'text' 
   }
 
   return (
-    <button class={classes} type={type}>
+    <button class={classes} data-component="button" type={type}>
       {children}
     </button>
   )

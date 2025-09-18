@@ -1,0 +1,6 @@
+main {
+  @apply min-h-screen max-w-screen;
+}
+main:has(div[data-component="anchored-bar"].top-0) {
+  padding-top: var(--anchored-bar-height--page-header);
+}

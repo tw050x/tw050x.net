@@ -25,7 +25,6 @@ const defaultAllowedOrigins = '*';
  */
 export const useCors = (options: UseCorsFactoryOptions) => async (context: ServiceContext) => {
   let configuration;
-
   try {
     configuration = await options.getConfiguration({ configuration: context.configuration });
   }
@@ -35,11 +34,11 @@ export const useCors = (options: UseCorsFactoryOptions) => async (context: Servi
     return void context.serverResponse.end();
   }
 
+  // Prepare headers to set on the response
+  const headers = [];
   const allowedHeaders = configuration.allowedHeaders || defaultAllowedHeaders;
   const allowedMethods = configuration.allowedMethods;
   const allowedOrigins = configuration.allowedOrigins || defaultAllowedOrigins;
-
-  const headers = [];
 
   // Set the allowed origins header
   // 1. If wildcard is allowed, set the header to '*'
@@ -52,7 +51,6 @@ export const useCors = (options: UseCorsFactoryOptions) => async (context: Servi
       });
       break allowedOriginsGuard;
     }
-
     if (
       isAllowedOrigin(
         context.incomingMessage.headers.origin,
@@ -79,7 +77,6 @@ export const useCors = (options: UseCorsFactoryOptions) => async (context: Servi
       });
       break allowedMethodsGuard;
     }
-
     if (
       isAllowedMethod(
         context.incomingMessage.method,
@@ -94,18 +91,16 @@ export const useCors = (options: UseCorsFactoryOptions) => async (context: Servi
     }
   }
 
-  const isPreflight = context.incomingMessage.method === 'OPTIONS' && context.incomingMessage.headers['access-control-request-method'] !== undefined;
-
   // Set allowed headers header
   // 1. If this is not a pre flight request, we can skip this header
   // 2. If a wildcard is allowed, we can set the header to '*'
   // 3. If specific headers are allowed, we can set the header to those headers
   // TODO: review implementation. do we need to check allowed headers to set the header?
+  const isPreflight = context.incomingMessage.method === 'OPTIONS' && context.incomingMessage.headers['access-control-request-method'] !== undefined;
   allowedHeadersGuard: {
     if (isPreflight === false) {
       break allowedHeadersGuard;
     }
-
     if (allowedHeaders === '*') {
       headers.push({
         key: 'Access-Control-Allow-Headers',
@@ -113,7 +108,6 @@ export const useCors = (options: UseCorsFactoryOptions) => async (context: Servi
       });
       break allowedHeadersGuard;
     }
-
     if (
       isAllowedHeaders(
         context.incomingMessage.headers['access-control-request-headers'],
@@ -127,6 +121,7 @@ export const useCors = (options: UseCorsFactoryOptions) => async (context: Servi
     }
   }
 
+  // Set the CORS headers on the response
   headers.forEach(
     ({ key, value }) => {
       context.serverResponse.setHeader(key, value);

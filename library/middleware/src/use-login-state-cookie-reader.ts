@@ -36,10 +36,8 @@ export const useLoginStateCookieReader = (options: UseLoginStateCookieReaderOpti
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-
   let configuration;
   let secrets;
-
   try {
     configuration = await options.getConfiguration({ configuration: context.configuration });
     secrets = await options.getSecrets({ secrets: context.secrets });
@@ -49,20 +47,16 @@ export const useLoginStateCookieReader = (options: UseLoginStateCookieReaderOpti
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
-
   const allowedReturnUrlDomainsString = configuration.allowedReturnUrlDomains;
   const cookieName = configuration.cookieName;
   const stateCipherAlgorithm = configuration.stateCipherAlgorithm || defaultStateCipherAlgorithm;
   const encrypterSecretKey = secrets.encrypterSecretKey;
-
   const cookie = cookies.get(cookieName)
-
   let loginStateCookiePayload: LoginStateCookiePayload | undefined
   payloadGuard: {
     if (cookie === undefined) {
       break payloadGuard;
     }
-
     let loginState
     try {
       const parsedCookie = JSON.parse(cookie);
@@ -75,7 +69,6 @@ export const useLoginStateCookieReader = (options: UseLoginStateCookieReaderOpti
       logger.error('unable to parse login state cookie', { error });
       break payloadGuard;
     }
-
     // ensure login state is an object with a returnUrl property
     if (loginState === undefined) {
       break payloadGuard;
@@ -89,31 +82,25 @@ export const useLoginStateCookieReader = (options: UseLoginStateCookieReaderOpti
     if ('returnUrl' in loginState === false) {
       break payloadGuard;
     }
-
     // fetch the allowed return url domains from config
     const listOfAllowedReturnUrlDomains = allowedReturnUrlDomainsString.split(',').map((domain) => domain.trim())
-
     // ensure that the "allowed_return_url_domains" setting exists
     // return an error if it does not
     if (Array.isArray(listOfAllowedReturnUrlDomains) === false) {
       break payloadGuard;
     }
-
     // check the return url domain against the allowed return url domains
     // return an error if the return url domain is not allowed
     if (isAllowedDomain(loginState.returnUrl, listOfAllowedReturnUrlDomains) === false) {
       break payloadGuard;
     }
-
     if (typeof loginState.returnUrl !== 'string') {
       break payloadGuard;
     }
-
     loginStateCookiePayload = {
       returnUrl: new URL(loginState.returnUrl)
     }
   }
-
   // initialize the cookies object on the incoming message
   context.incomingMessage.loginStateCookie = {
     payload: loginStateCookiePayload

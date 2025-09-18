@@ -11,6 +11,9 @@ defineService({
       service.configuration.use('cookie.access-token.name'),
       service.configuration.use('cookie.login-state.name'),
       service.configuration.use('cookie.login-state.domain'),
+      service.configuration.use('cookie.ui.menu.state.name'),
+      service.configuration.use('cookie.ui.user-table-tools.state.name'),
+      service.configuration.use('cookie.ui.user-table-tools.state.domain'),
       service.secrets.use('encrypter.secret-key'),
       service.secrets.use('jwt.secret-key'),
     ]);

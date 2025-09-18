@@ -63,11 +63,11 @@ const Header: Component<Props> = ({ children, classOverrides, follow, lead, tier
     if (lead === undefined) break leadGuard;
     if (lead === '') break leadGuard;
     LeadComponent = (
-      <div class="mb-2">
+      <header class="mb-2">
         <span class={[...leadClasses, ...(classOverrides?.lead ?? [])]} safe>
           {lead}
         </span>
-      </div>
+      </header>
     );
   }
 
@@ -85,7 +85,7 @@ const Header: Component<Props> = ({ children, classOverrides, follow, lead, tier
   }
 
   return (
-    <div class={[...(classOverrides?.container ?? [])]} >
+    <div class={[...(classOverrides?.container ?? [])]} data-component="header">
       {LeadComponent}
       {MainComponent}
       {FollowComponent}

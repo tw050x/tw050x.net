@@ -1,0 +1,3 @@
+div[data-component="user-table-tools"][data-state="collapsed"] {
+  @apply cursor-pointer;
+}

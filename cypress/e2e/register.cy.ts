@@ -40,7 +40,7 @@ describe('As a user I want to register an account', () => {
     cy.get('.errors').should('be.visible');
   });
 
-  it('should show validation errors if the form is submitted with email but no password fields', () => {
+  it('should show validation errors if the form is submitted with only the email field', () => {
     const email = 'test.user@example.com';
     cy.visit('/register');
     cy.get('input[name="email"]').type(email);
@@ -48,7 +48,7 @@ describe('As a user I want to register an account', () => {
     cy.get('.errors').should('be.visible');
   });
 
-  it('should show validation errors if the form is submitted with no email but both password fields', () => {
+  it('should show validation errors if the form is submitted with only the password fields', () => {
     const password = 'password';
     cy.visit('/register');
     cy.get('input[name="password"]').type(password);

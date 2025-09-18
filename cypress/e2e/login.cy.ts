@@ -40,7 +40,7 @@ describe('As a user I want to login to my account', () => {
     cy.get('.errors').should('be.visible');
   });
 
-  it('should show validation errors if the form is submitted with only the field', () => {
+  it('should show validation errors if the form is submitted with only email the field', () => {
     const email = 'test.user@example.com';
     cy.visit('/login');
     cy.get('input[name="email"]').type(email);

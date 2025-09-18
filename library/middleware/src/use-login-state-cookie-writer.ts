@@ -30,10 +30,8 @@ export const useLoginStateCookieWriter = (options: UseLoginStateCookieWriterOpti
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-
   let configuration;
   let secrets;
-
   try {
     configuration = await options.getConfiguration({ configuration: context.configuration });
     secrets = await options.getSecrets({ secrets: context.secrets });
@@ -43,12 +41,10 @@ export const useLoginStateCookieWriter = (options: UseLoginStateCookieWriterOpti
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
-
   const cookieName = configuration.cookieName;
   const cookieDomain = configuration.cookieDomain;
   const stateCipherAlgorithm = configuration.stateCipherAlgorithm || 'aes-256-cbc';
   const encrypterSecretKey = secrets.encrypterSecretKey;
-
   const clearLoginStateCookie = () => {
     cookies.set(cookieName, '', {
       domain: cookieDomain,
@@ -58,18 +54,15 @@ export const useLoginStateCookieWriter = (options: UseLoginStateCookieWriterOpti
       secure: true,
     });
   }
-
   const setLoginStateCookie = (state: string) => {
     const iv = randomBytes(16);
     const cipher = createCipheriv(stateCipherAlgorithm, Buffer.from(encrypterSecretKey, 'hex'), iv);
     let encrypted = cipher.update(state, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-
     const value = JSON.stringify({
       iv: iv.toString('hex'),
       content: encrypted
     })
-
     cookies.set(cookieName, value, {
       domain: cookieDomain,
       httpOnly: false,
@@ -78,7 +71,6 @@ export const useLoginStateCookieWriter = (options: UseLoginStateCookieWriterOpti
       secure: true,
     });
   }
-
   // initialize the cookies object on the incoming message
   context.serverResponse.loginStateCookie = {
     clear: clearLoginStateCookie,

@@ -2,6 +2,7 @@ import { default as Htmx } from "../component/Htmx";
 import { default as Stylesheet } from "../component/Stylesheet";
 
 /**
+ * The `<ForbiddenDocument />` component.
  *
  */
 export default function ForbiddenDocument() {
@@ -14,7 +15,6 @@ export default function ForbiddenDocument() {
           <meta charset="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <title>Forbidden</title>
-
           <Htmx />
           <Stylesheet />
         </head>

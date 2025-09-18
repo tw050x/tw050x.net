@@ -1,0 +1,8 @@
+nav[data-state="collapsed"] ~ main > div[data-component="anchored-bar"].top-0,
+nav[data-state="collapsed"] ~ main > div[data-component="anchored-bar"].bottom-0 {
+  @apply left-16;
+}
+nav[data-state="open"] ~ main > div[data-component="anchored-bar"].top-0,
+nav[data-state="open"] ~ main > div[data-component="anchored-bar"].bottom-0 {
+  @apply left-64;
+}

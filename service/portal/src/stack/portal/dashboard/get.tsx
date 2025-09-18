@@ -1,11 +1,12 @@
 import { useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
 import { useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { useUIMenuStateCookieReader } from "@tw050x.net.library/middleware/use-ui-menu-state-cookie-reader";
 import { useCors } from "@tw050x.net.library/middleware/use-cors";
 import { logger } from "@tw050x.net.library/logger";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { authGate } from "../../../middleware/auth-gate";
-import { default as DashboardDocument } from "../../../template/document/Dashboard";
+import { default as DashboardDocument, Props as DashboardDocumentProps } from "../../../template/document/Dashboard";
 
 export default defineServiceMiddleware([
   async (context) => {
@@ -38,7 +39,17 @@ export default defineServiceMiddleware([
     }),
   }),
   authGate(),
+  useUIMenuStateCookieReader({
+    getConfiguration: async ({ configuration }) => ({
+      cookieName: configuration.get('cookie.ui.menu.state.name'),
+    }),
+  }),
   async (context) => {
-    return void sendOKHTMLResponse(context, await <DashboardDocument />);
+    const dashboardDocumentProps: DashboardDocumentProps = {
+      menuInitiatorProps: {
+        state: context.incomingMessage.uiMenuStateCookie.state,
+      },
+    }
+    return void sendOKHTMLResponse(context, await <DashboardDocument {...dashboardDocumentProps} />);
   }
 ])

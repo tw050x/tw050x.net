@@ -16,6 +16,9 @@
     "src/use-refresh-token-cookie-writer.ts",
     "src/use-refreshable-token-cookie-reader.ts",
     "src/use-refreshable-token-cookie-writer.ts",
+    "src/use-ui-menu-state-cookie-reader.ts",
+    "src/use-ui-user-table-tools-state-cookie-reader.ts",
+    "src/use-ui-user-table-tools-state-cookie-writer.ts",
   ],
   "references": [
     { "path": "../logger" },

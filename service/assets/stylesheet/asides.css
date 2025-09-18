@@ -1,0 +1,39 @@
+.asides aside {
+  @apply fixed top-0 right-0;
+  @apply h-screen w-screen;
+  @apply bg-white;
+
+  /* Medium Screen Size */
+  @apply sm:shadow-xl;
+  @apply sm:w-160;
+}
+.asides aside {
+  opacity: 1;
+  overflow-y: scroll;
+  transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.asides aside.htmx-added {
+  opacity: 0;
+}
+@media (min-width: 640px) {
+  .asides aside {
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .asides aside.htmx-added {
+    opacity: 1;
+    transform: translateX(100%);
+  }
+
+  .asides aside:nth-last-child(2):nth-child(n+2) {
+    @apply sm:w-154;
+  }
+
+  .asides aside:nth-last-child(1):nth-child(n+2) {
+    @apply sm:w-154;
+  }
+
+  .asides aside:nth-last-child(1):nth-child(n+3) {
+    @apply sm:w-148;
+  }
+}
