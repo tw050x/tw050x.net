@@ -4,19 +4,13 @@
 @source not "**/artifact/";
 @source not "**/node_modules/";
 
-@layer utilities {
-  .inset-shadow-xl {
-    --tw-shadow: inset -12px 0 20px -12px rgb(0 0 0 / var(--tw-shadow-opacity, 0.5));
-    box-shadow: var(--tw-shadow);
-  }
-
-  .inset-shadow-l {
-    --tw-shadow: inset -8px 0 16px -8px rgb(0 0 0 / var(--tw-shadow-opacity, 0.4));
-    box-shadow: var(--tw-shadow);
-  }
+@theme {
+  --inset-shadow-md: inset 0 2px 3px rgba(0, 0, 0, 0.25);
+  --inset-shadow-xl: inset 0 0 20px -3px rgba(0, 0, 0, 0.25);
+  --inset-shadow-lg: inset 0 0 16px -8px rgba(0, 0, 0, 0.25);
 }
 
-.htmx-request .htmx-indicator-hide, .htmx-request.htmx-indicator-hide {
+.htmx-request.htmx-indicator-hide, .htmx-request .htmx-indicator-hide{
   visibility: hidden;
 }
 

@@ -21,8 +21,10 @@ const Button: Component<Props> = ({ children, type = 'button', variant = 'text' 
   switch (variant) {
     case 'contained':
       classes.push(...[
-        'bg-blue-500',
-        'text-white'
+        'bg-blue-700 active:bg-blue-800',
+        'active:scale-98',
+        'text-white',
+        'transition-transform duration-50'
       ]);
       break;
     case 'outlined':

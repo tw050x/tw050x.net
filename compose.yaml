@@ -40,6 +40,9 @@ services:
         condition: service_healthy
     env_file:
       - .env.authentication
+      - .env.aws
+      - .env.logs
+      - .env.mongo-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -84,7 +87,10 @@ services:
       traefik:
         condition: service_healthy
     env_file:
+      - .env.aws
       - .env.error
+      - .env.logs
+      - .env.mongo-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -142,7 +148,10 @@ services:
       traefik:
         condition: service_healthy
     env_file:
+      - .env.aws
+      - .env.logs
       - .env.marketing
+      - .env.mongo-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -236,6 +245,9 @@ services:
       traefik:
         condition: service_healthy
     env_file:
+      - .env.aws
+      - .env.logs
+      - .env.mongo-client
       - .env.navigation
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
@@ -282,6 +294,9 @@ services:
       traefik:
         condition: service_healthy
     env_file:
+      - .env.aws
+      - .env.logs
+      - .env.mongo-client
       - .env.portal
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
@@ -369,6 +384,9 @@ services:
       traefik:
         condition: service_healthy
     env_file:
+      - .env.aws
+      - .env.logs
+      - .env.mongo-client
       - .env.user
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
