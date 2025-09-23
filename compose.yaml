@@ -39,10 +39,12 @@ services:
       traefik:
         condition: service_healthy
     env_file:
-      - .env.authentication
+      - .env.database.authentication
+      - .env.database.user
       - .env.aws
       - .env.logs
       - .env.mongo-client
+      - .env.service.authentication
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -88,9 +90,9 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
-      - .env.error
       - .env.logs
       - .env.mongo-client
+      - .env.service.error
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -149,9 +151,10 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
+      - .env.database.user
       - .env.logs
-      - .env.marketing
       - .env.mongo-client
+      - .env.service.marketing
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -246,9 +249,10 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
+      - .env.database.user
       - .env.logs
       - .env.mongo-client
-      - .env.navigation
+      - .env.service.navigation
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -295,9 +299,10 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
+      - .env.database.user
       - .env.logs
       - .env.mongo-client
-      - .env.portal
+      - .env.service.portal
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -385,9 +390,10 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
+      - .env.database.user
       - .env.logs
       - .env.mongo-client
-      - .env.user
+      - .env.service.user
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s

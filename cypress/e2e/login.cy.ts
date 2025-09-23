@@ -37,7 +37,7 @@ describe('As a user I want to login to my account', () => {
   it('should show validation errors if the form is submitted with no data', () => {
     cy.visit('/login');
     cy.get('button[type="submit"]').click();
-    cy.get('.errors').should('be.visible');
+    cy.get('[data-component="notice"][data-component-type="error"]').should('be.visible');
   });
 
   it('should show validation errors if the form is submitted with only email the field', () => {
@@ -45,7 +45,7 @@ describe('As a user I want to login to my account', () => {
     cy.visit('/login');
     cy.get('input[name="email"]').type(email);
     cy.get('button[type="submit"]').click();
-    cy.get('.errors').should('be.visible');
+    cy.get('[data-component="notice"][data-component-type="error"]').should('be.visible');
   });
 
   it('should show validation errors if the form is submitted with only the password field', () => {
@@ -53,7 +53,7 @@ describe('As a user I want to login to my account', () => {
     cy.visit('/login');
     cy.get('input[name="password"]').type(password);
     cy.get('button[type="submit"]').click();
-    cy.get('.errors').should('be.visible');
+    cy.get('[data-component="notice"][data-component-type="error"]').should('be.visible');
   });
 
   it('should show validation errors if the form is submitted with invalid email', () => {
@@ -63,7 +63,7 @@ describe('As a user I want to login to my account', () => {
     cy.get('input[name="email"]').type(email);
     cy.get('input[name="password"]').type(password);
     cy.get('button[type="submit"]').click();
-    cy.get('.errors').should('be.visible');
+    cy.get('[data-component="notice"][data-component-type="error"]').should('be.visible');
     cy.get('input[name="email"]').should('have.value', email);
   });
 

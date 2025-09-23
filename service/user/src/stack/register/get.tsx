@@ -36,7 +36,7 @@ export default defineServiceMiddleware([
       nonce = await generateRegisterFormNonce();
     }
     catch (error) {
-      logger.error('unable to generate nonce', { error });
+      logger.error(error);
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
     const registerAsideProps = {

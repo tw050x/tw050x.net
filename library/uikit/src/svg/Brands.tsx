@@ -1,19 +1,15 @@
 import { Component } from '@kitajs/html'
 
 /**
- * The `<Products />` SVG component.
+ * The `<Brands />` SVG component.
  *
  * @returns
  */
-const Products: Component = () => {
+const Brands: Component = () => {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M12.5858 2.58579L21.4142 11.4142C22.1953 12.1953 22.1953 13.4587 21.4142 14.2398L14.2398 21.4142C13.4587 22.1953 12.1953 22.1953 11.4142 21.4142L2.58579 12.5858C2.21071 12.2107 2 11.7022 2 11.1716V4C2 2.89543 2.89543 2 4 2H11.1716C11.7022 2 12.2107 2.21071 12.5858 2.58579Z M7 5C8.10457 5 9 5.89543 9 7C9 8.10457 8.10457 9 7 9C5.89543 9 5 8.10457 5 7C5 5.89543 5.89543 5 7 5Z"
-        fill="currentColor"
-        fill-rule="evenodd"
-      />
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="currentColor">
+      <path d="M640-440v-80h160v80H640Zm48 280-128-96 48-64 128 96-48 64Zm-80-480-48-64 128-96 48 64-128 96ZM120-360v-240h160l200-200v640L280-360H120Zm280-246-86 86H200v80h114l86 86v-252ZM300-480Z" />
     </svg>
   )
 }
-export default Products;
+export default Brands;

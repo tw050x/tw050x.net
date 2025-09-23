@@ -205,7 +205,7 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
           );
         }
         catch (error) {
-          logger.error(`Error occurred while reading SSM parameter "${key}"`, { error });
+          logger.error(error);
           throw new Error('Failed to read SSM parameter');
         }
 
@@ -249,7 +249,7 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
           );
         }
         catch (error) {
-          logger.error(`Error occurred while reading secret value "${key}"`, { error });
+          logger.error(error);
           throw new Error('Failed to read secret value');
         }
 
@@ -266,7 +266,7 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
     await onPrepare?.(service);
   }
   catch (error) {
-    logger.error('Error occurred during service preparation', { error });
+    logger.error(error);
     logger.info('Exiting process');
     process.exit(1);
   }
@@ -275,7 +275,7 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
     await onReady?.(service);
   }
   catch (error) {
-    logger.error('Error occurred during service readiness', { error });
+    logger.error(error);
     logger.info('Exiting process');
     process.exit(1);
   }

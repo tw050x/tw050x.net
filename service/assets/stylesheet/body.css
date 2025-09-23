@@ -1,0 +1,4 @@
+html, body {
+  @apply max-w-screen;
+  @apply overflow-x-hidden;
+}

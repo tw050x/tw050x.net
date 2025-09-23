@@ -10,7 +10,7 @@
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net/platform",
-  "packageManager": "yarn@4.9.4",
+  "packageManager": "yarn@4.10.2",
   "private": true,
   "repository": "git@gitlab.com:tw050x.net/platform.git",
   "scripts": {
@@ -21,7 +21,9 @@
   "version": "0.0.0",
   "workspaces": [
     "cypress",
+    "database/account",
     "database/authentication",
+    "database/initiative",
     "database/user",
     "library/database",
     "library/logger",

@@ -5,13 +5,13 @@ import { mongoClient } from "./client";
  */
 export const database = {
   get nonces() {
-    const noncesCollectionName = process.env.SERVICE_AUTHENTICATION_DATABASE_NONCES_COLLECTION_NAME;
+    const noncesCollectionName = process.env.AUTHENTICATION_DATABASE_NONCES_COLLECTION_NAME;
     guard: {
       if (noncesCollectionName === undefined) break guard;
       if (noncesCollectionName === '') break guard;
-      return mongoClient.db(process.env.SERVICE_AUTHENTICATION_DATABASE_NAME).collection(noncesCollectionName);
+      return mongoClient.db(process.env.AUTHENTICATION_DATABASE_NAME).collection(noncesCollectionName);
     }
-    throw new Error(`Missing environment variable: SERVICE_AUTHENTICATION_DATABASE_NONCES_COLLECTION_NAME`);
+    throw new Error(`Missing environment variable: AUTHENTICATION_DATABASE_NONCES_COLLECTION_NAME`);
   },
 }
 

@@ -93,7 +93,7 @@ export default defineServiceMiddleware([
       nonce = await generateLoginFormNonce();
     }
     catch (error) {
-      logger.error('unable to generate nonce', { error });
+      logger.error(error);
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
 
@@ -107,8 +107,8 @@ export default defineServiceMiddleware([
       password = escape(trim(result.password));
     }
     catch (error) {
-      if (error instanceof ZodError) error.errors.forEach((issue) => logger.error('unable to parse incoming message body field', { issue }));
-      else logger.error('unable to parse incoming message body fields', { error });
+      if (error instanceof ZodError) error.errors.forEach((issue) => logger.error(issue));
+      else logger.error(error);
       return void sendBadRequestHTMLResponse(
         context,
         await <LoginForm
@@ -126,7 +126,7 @@ export default defineServiceMiddleware([
       credentialDocument = await userDatabase.credentials.findOne({ email });
     }
     catch (error) {
-      logger.error('error when finding database document', { error });
+      logger.error(error);
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
     if (credentialDocument === null) {

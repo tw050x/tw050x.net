@@ -40,7 +40,7 @@ export const useRefreshTokenCookieReader = (options: UseRefreshTokenCookieReader
     secrets = await options.getSecrets({ secrets: context.secrets });
   }
   catch (error) {
-    logger.error('unable to read access token cookie', { error });
+    logger.error(error);
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
@@ -60,7 +60,7 @@ export const useRefreshTokenCookieReader = (options: UseRefreshTokenCookieReader
       refreshTokenPayload = verify(cookie, jwtSecretKey);
     }
     catch (error) {
-      logger.error('unable to verify refresh token cookie', { error });
+      logger.error(error);
       refreshTokenCookie.errors.push(new Error('unable to verify refresh token cookie'));
       break verifyCookieGuard;
     }

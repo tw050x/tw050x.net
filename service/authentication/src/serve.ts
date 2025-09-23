@@ -47,7 +47,7 @@ defineService({
       onEndProcess();
     });
     process.on('uncaughtException', (error) => {
-      logger.error('Uncaught exception:', error);
+      logger.error(error);
       onEndProcess();
     });
 

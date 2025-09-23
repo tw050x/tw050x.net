@@ -29,7 +29,7 @@ export const useCors = (options: UseCorsFactoryOptions) => async (context: Servi
     configuration = await options.getConfiguration({ configuration: context.configuration });
   }
   catch (error) {
-    logger.error('unable to read useCors() configuration', { error });
+    logger.error(error);
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }

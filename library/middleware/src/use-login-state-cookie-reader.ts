@@ -43,7 +43,7 @@ export const useLoginStateCookieReader = (options: UseLoginStateCookieReaderOpti
     secrets = await options.getSecrets({ secrets: context.secrets });
   }
   catch (error) {
-    logger.error('unable to read access token cookie', { error });
+    logger.error(error);
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
@@ -66,7 +66,7 @@ export const useLoginStateCookieReader = (options: UseLoginStateCookieReaderOpti
       loginState = JSON.parse(decrypted);
     }
     catch (error) {
-      logger.error('unable to parse login state cookie', { error });
+      logger.error(error);
       break payloadGuard;
     }
     // ensure login state is an object with a returnUrl property

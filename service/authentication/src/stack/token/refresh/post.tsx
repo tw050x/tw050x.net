@@ -51,7 +51,7 @@ export default defineServiceMiddleware([
     // check for errors from token verification
     // if there are errors, log them and return a 400 Bad Request response
     if (context.incomingMessage.refreshTokenCookie.errors.length > 0) {
-      context.incomingMessage.refreshTokenCookie.errors.forEach((error) => logger.error('Bearer token error', { error }));
+      context.incomingMessage.refreshTokenCookie.errors.forEach((error) => logger.error(error));
       return void sendBadRequestJSONResponse(context);
     }
 

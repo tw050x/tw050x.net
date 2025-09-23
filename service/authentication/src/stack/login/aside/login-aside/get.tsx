@@ -33,7 +33,7 @@ export default defineServiceMiddleware([
       nonce = await generateLoginFormNonce();
     }
     catch (error) {
-      logger.error('unable to generate nonce', { error });
+      logger.error(error);
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
     return void sendOKHTMLResponse(context, await (

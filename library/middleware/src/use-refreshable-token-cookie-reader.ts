@@ -30,7 +30,7 @@ export const useRefreshableTokenCookieReader = (options: UseRefreshableTokenCook
     configuration = await options.getConfiguration({ configuration: context.configuration });
   }
   catch (error) {
-    logger.error('unable to read access token cookie', { error });
+    logger.error(error);
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }

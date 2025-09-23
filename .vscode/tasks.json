@@ -32,11 +32,26 @@
       }
     },
     {
-      "label": "tsc: watch",
+      "label": "tsc: clean and watch",
       "type": "shell",
       "command": "yarn",
       "args": ["tsc", "--build", "--preserveWatchOutput", "--watch"],
       "dependsOn": "tsc: clean build caches",
+      "group": "build",
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: watch",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["tsc", "--build", "--preserveWatchOutput", "--watch"],
       "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
@@ -54,11 +69,11 @@
       "args": [
         "workspace", "@tw050x.net.service/assets", "@tailwindcss/cli",
         "--cwd", "${workspaceFolder}",
-        "--input", "./service/assets/style.css",
-        "--output", "./service/assets/public/assets/stylesheet.css",
+        "--input", "${workspaceFolder}/service/assets/style.css",
+        "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css",
       ],
       "options": {
-        "cwd": "${workspaceFolder}/service/assets"
+        "cwd": "${workspaceFolder}"
       },
       "group": "build",
       "presentation": {
@@ -75,12 +90,12 @@
       "args": [
         "workspace", "@tw050x.net.service/assets", "@tailwindcss/cli",
         "--cwd", "${workspaceFolder}",
-        "--input", "./service/assets/style.css",
-        "--output", "./service/assets/public/assets/stylesheet.css",
+        "--input", "${workspaceFolder}/service/assets/style.css",
+        "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css",
         "--watch"
       ],
       "options": {
-        "cwd": "${workspaceFolder}/service/assets"
+        "cwd": "${workspaceFolder}"
       },
       "group": "build",
       "presentation": {

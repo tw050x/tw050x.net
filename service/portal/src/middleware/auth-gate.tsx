@@ -15,7 +15,7 @@ import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/docu
  */
 export const authGate = () => async (context: ServiceContext) => {
   if (context.incomingMessage.accessTokenCookie.errors.length > 0) {
-    context.incomingMessage.accessTokenCookie.errors.forEach((error) => logger.error('an error occurred during auth token verification', { error }));
+    context.incomingMessage.accessTokenCookie.errors.forEach((error) => logger.error(error));
     return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
   }
 

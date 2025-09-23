@@ -7,10 +7,15 @@ import { default as Portal } from "@tw050x.net.library/uikit/svg/Portal";
  * Props for the `<PortalMenu />` component.
  */
 export type Props = {
-  items:
-    | { label: string; href: string, IconComponent: Component }[]
-    | { label: string; src: string, IconComponent: Component }[];
-  state: 'open' | 'collapsed';
+  menuState: 'open' | 'collapsed';
+  serviceMenuItems: (
+    | { label: string; href: string, IconComponent: Component, disabled?: boolean }
+    | { label: string; src: string, IconComponent: Component, disabled?: boolean }
+  )[];
+  userMenuItems: (
+    | { label: string; href: string, IconComponent: Component, disabled?: boolean }
+    | { label: string; src: string, IconComponent: Component, disabled?: boolean }
+  )[];
 }
 
 /**
@@ -22,7 +27,7 @@ export type Props = {
 const PortalMenu: Component<Props> = (props) => {
   return (
     <>
-      <nav data-state={props.state}>
+      <nav data-state={props.menuState}>
         <header class="flex flex-col">
           <h1 class="text-white font-bold p-4 flex">
             <span class="portal-menu-icon"><Portal /></span>
@@ -32,15 +37,49 @@ const PortalMenu: Component<Props> = (props) => {
         <hr class="text-gray-600" />
         <div class="flex flex-col flex-1 border-b border-gray-600">
           <div class="flex flex-col divide-y divide-gray-600 border-t border-b border-gray-600">
-            {props.items.map((item) => {
+            {props.serviceMenuItems.map((item) => {
+              if ('src' in item) {
+                return <a>{item.label}</a>
+              }
+              if ('href' in item) {
+                const classes = [
+                  "text-white hover:no-underline p-4",
+                ]
+                if (item.disabled) {
+                  classes.push("opacity-50 cursor-not-allowed");
+                }
+                return (
+                  <a class={classes} href={item.href}>
+                    <span class="portal-menu-icon"><item.IconComponent /></span>
+                    <span class="hidden-when-w-16">{item.label}</span>
+                  </a>
+                );
+              }
+              return null;
+            })}
+          </div>
+        </div>
+        <hr class="text-gray-600" />
+        <div class="flex flex-col border-b border-gray-600">
+          <div class="flex flex-col divide-y divide-gray-600 border-t border-b border-gray-600">
+            {props.userMenuItems.map((item) => {
+              const classes = [
+                "text-white hover:no-underline p-4",
+              ]
+              if (item.disabled) {
+                classes.push("opacity-50 cursor-not-allowed");
+              }
               if ('src' in item) {
                 return (
-                  <a>{item.label}</a>
+                  <a class={classes}>
+                    <span class="portal-menu-icon"><item.IconComponent /></span>
+                    <span class="hidden-when-w-16">{item.label}</span>
+                  </a>
                 )
               }
               if ('href' in item) {
                 return (
-                  <a class="text-white hover:no-underline p-4" href={item.href}>
+                  <a class={classes} href={item.href}>
                     <span class="portal-menu-icon"><item.IconComponent /></span>
                     <span class="hidden-when-w-16">{item.label}</span>
                   </a>

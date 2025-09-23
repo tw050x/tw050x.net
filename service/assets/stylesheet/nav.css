@@ -16,17 +16,19 @@ nav[data-state="collapsed"] span.hidden-when-data-state-collapsed {
 }
 nav[data-state="collapsed"] ~ main {
   @apply ml-16;
+  @apply max-sm:w-[calc(100%-theme(spacing.16))];
 }
 nav[data-state="open"] {
   @apply w-64;
 }
 nav[data-state="open"] ~ main {
   @apply ml-64;
+  @apply max-sm:w-[calc(100%-theme(spacing.16))];
 }
 nav[data-state="open"] span.hidden-when-data-state-open {
   @apply hidden;
 }
-nav button, nav a {
+nav a, nav button {
   @apply whitespace-nowrap;
   @apply flex items-center;
   @apply hover:bg-gray-700/50 transition-all duration-200;
@@ -36,7 +38,6 @@ nav .portal-menu-icon {
   @apply w-6 h-6 ml-0.5 mr-2;
   @apply inline-block;
   @apply align-middle;
-
 }
 nav .portal-menu-text {
   @apply align-middle;

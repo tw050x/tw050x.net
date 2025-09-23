@@ -29,7 +29,9 @@
   "files": [],
   "references": [
     { "path": "./cypress" },
+    { "path": "./database/account" },
     { "path": "./database/authentication" },
+    { "path": "./database/initiative" },
     { "path": "./database/user" },
     { "path": "./library/database" },
     { "path": "./library/logger" },

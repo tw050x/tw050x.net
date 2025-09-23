@@ -45,7 +45,7 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
     secrets = await options.getSecrets({ secrets: context.secrets });
   }
   catch (error) {
-    logger.error('unable to read access token cookie', { error });
+    logger.error(error);
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
@@ -73,7 +73,7 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       accessTokenPayload = verify(cookie, jwtSecretKey);
     }
     catch (error) {
-      logger.error('unable to verify access token cookie', { error });
+      logger.error(error);
       accessTokenCookie.errors.push(new Error('unable to verify access token cookie'))
       break verifyCookieGuard;
     }
@@ -101,7 +101,7 @@ export const useAccessTokenCookieReader = (options: UseAccessTokenCookieReaderOp
       // permissions = await
     }
     catch (error) {
-      logger.error('unable to fetch user permissions from database', { error });
+      logger.error(error);
       accessTokenCookie.errors.push(new Error('unable to fetch user permissions from database'));
       break verifyCookieGuard;
     }

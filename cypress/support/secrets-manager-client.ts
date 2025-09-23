@@ -5,6 +5,7 @@ const configuration: SecretsManagerClientConfig = {
   region: process.env.AWS_REGION,
 }
 
+// Load AWS credentials from environment variables
 const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
@@ -20,6 +21,7 @@ credentialsGuard: {
   };
 }
 
+// Load custom endpoint from environment variables
 const endpoint = process.env.AWS_ENDPOINT;
 
 // Only assign endpoint if it exists

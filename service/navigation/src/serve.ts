@@ -6,7 +6,9 @@ defineService({
   getRoutesDirectory: () => join(__dirname, 'stack'),
   onPrepare: async (service) => {
     await Promise.all([
-      service.configuration.use('navigation.service.allowed-origins')
+      service.configuration.use('cookie.access-token.name'),
+      service.configuration.use('navigation.service.allowed-origins'),
+      service.secrets.use('jwt.secret-key'),
     ]);
   },
   onReady: async (service) => {
@@ -34,7 +36,7 @@ defineService({
       onEndProcess();
     });
     process.on('uncaughtException', (error) => {
-      logger.error('Uncaught exception:', error);
+      logger.error(error);
       onEndProcess();
     });
 

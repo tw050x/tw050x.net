@@ -1,4 +1,3 @@
-import { database as userDatabase } from '@tw050x.net.database/user';
 import { logger } from "@tw050x.net.library/logger";
 import { useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
 import { useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
@@ -121,7 +120,7 @@ export default defineServiceMiddleware([
         refreshTokenPayload = verify(refreshTokenCookie, context.configuration.get('jwt.secret-key'));
       }
       catch (error) {
-        logger.error('unable to verify refresh token', { error });
+        logger.error(error);
         context.serverResponse.refreshableTokenCookie.clear();
         context.serverResponse.refreshTokenCookie.clear();
         return void sendForbiddenHTMLResponse(context, await <ForbiddenDocument />);
@@ -149,7 +148,7 @@ export default defineServiceMiddleware([
       nonce = await generateLoginFormNonce();
     }
     catch (error) {
-      logger.error('unable to generate nonce', { error });
+      logger.error(error);
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
     const loginAsideProps = {

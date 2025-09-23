@@ -31,7 +31,7 @@ export const useUIUserTableToolsStateCookieReader = (options: UseUIUserTableTool
     configuration = await options.getConfiguration({ configuration: context.configuration });
   }
   catch (error) {
-    logger.error('unable to read UI user table tools cookie', { error });
+    logger.error(error);
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }

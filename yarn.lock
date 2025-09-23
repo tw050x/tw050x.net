@@ -1576,9 +1576,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@tw050x.net.database/account@workspace:database/account":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.database/account@workspace:database/account"
+  dependencies:
+    "@tw050x.net.library/logger": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    bson: "npm:^6.10.4"
+    mongodb: "npm:^6.12.0"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@tw050x.net.database/authentication@workspace:*, @tw050x.net.database/authentication@workspace:database/authentication":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.database/authentication@workspace:database/authentication"
+  dependencies:
+    "@tw050x.net.library/logger": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    bson: "npm:^6.10.4"
+    mongodb: "npm:^6.12.0"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@tw050x.net.database/initiative@workspace:database/initiative":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.database/initiative@workspace:database/initiative"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@types/node": "npm:^22.10.2"
@@ -1769,8 +1793,8 @@ __metadata:
     "@tw050x.net.library/middleware": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
+    "@tw050x.net.library/utility": "workspace:*"
     "@types/node": "npm:^22.10.2"
-    cookies: "npm:^0.9.1"
     date-fns: "npm:^4.1.0"
     http-status-codes: "npm:^2.3.0"
     mongodb: "npm:^6.12.0"

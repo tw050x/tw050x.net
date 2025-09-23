@@ -3,12 +3,17 @@ import { defineConfig } from 'cypress'
 import { default as dotenv } from "dotenv";
 
 // Load environment variables from .env file
-dotenv.config({ path: resolve(__dirname, './.env.authentication') });
-dotenv.config({ path: resolve(__dirname, './.env.error') });
-dotenv.config({ path: resolve(__dirname, './.env.marketing') });
-dotenv.config({ path: resolve(__dirname, './.env.navigation') });
-dotenv.config({ path: resolve(__dirname, './.env.portal') });
-dotenv.config({ path: resolve(__dirname, './.env.user') });
+dotenv.config({ path: resolve(__dirname, './.env.aws') });
+dotenv.config({ path: resolve(__dirname, './.env.database.authentication') });
+dotenv.config({ path: resolve(__dirname, './.env.database.user') });
+dotenv.config({ path: resolve(__dirname, './.env.logs') });
+dotenv.config({ path: resolve(__dirname, './.env.mongo-client') });
+dotenv.config({ path: resolve(__dirname, './.env.service.error') });
+dotenv.config({ path: resolve(__dirname, './.env.service.authentication') });
+dotenv.config({ path: resolve(__dirname, './.env.service.marketing') });
+dotenv.config({ path: resolve(__dirname, './.env.service.navigation') });
+dotenv.config({ path: resolve(__dirname, './.env.service.portal') });
+dotenv.config({ path: resolve(__dirname, './.env.service.user') });
 
 //
 export default defineConfig({

@@ -13,14 +13,14 @@ export const createUser = async (email: string, password: string): Promise<null>
   const updatedAt = new Date();
   const passwordHash = await hash(password, 10);
   const uuid = crypto.randomUUID();
-  await mongoClient.db(process.env.SERVICE_USER_DATABASE_NAME).collection(process.env.SERVICE_USER_DATABASE_CREDENTIALS_COLLECTION_NAME).insertOne({
+  await mongoClient.db(process.env.USER_DATABASE_NAME).collection(process.env.USER_DATABASE_CREDENTIALS_COLLECTION_NAME).insertOne({
     createdAt,
     updatedAt,
     email,
     passwordHash,
     uuid,
   });
-  await mongoClient.db(process.env.SERVICE_USER_DATABASE_NAME).collection(process.env.SERVICE_USER_DATABASE_PROFILE_COLLECTION_NAME).insertOne({
+  await mongoClient.db(process.env.USER_DATABASE_NAME).collection(process.env.USER_DATABASE_PROFILE_COLLECTION_NAME).insertOne({
     createdAt,
     updatedAt,
     uuid,

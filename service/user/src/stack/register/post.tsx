@@ -2,7 +2,6 @@ import { CredentialDocument, client as userDatabaseClient, database as userDatab
 import { logger } from "@tw050x.net.library/logger";
 import { useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
 import { useCors } from "@tw050x.net.library/middleware/use-cors"
-import { useLoginStateCookieReader } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
 import { useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
 import { useRefreshTokenCookieWriter } from "@tw050x.net.library/middleware/use-refresh-token-cookie-writer";
 import { useRefreshableTokenCookieWriter } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-writer";
@@ -42,16 +41,6 @@ export default defineServiceMiddleware([
     getConfiguration: async ({ configuration }) => ({
       cookieName: configuration.get('cookie.access-token.name'),
       cookieDomain: configuration.get('cookie.access-token.domain'),
-    }),
-  }),
-  useLoginStateCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      allowedReturnUrlDomains: configuration.get('user.service.allowed-return-url-domains'),
-      cookieName: configuration.get('cookie.login-state.name'),
-      stateCipherAlgorithm: configuration.get('cookie.login-state.cipher.algorithm'),
-    }),
-    getSecrets: async ({ secrets }) => ({
-      encrypterSecretKey: secrets.get('encrypter.secret-key'),
     }),
   }),
   useLoginStateCookieWriter({
@@ -97,7 +86,7 @@ export default defineServiceMiddleware([
       nonce = await generateRegisterFormNonce();
     }
     catch (error) {
-      logger.error('unable to generate nonce', { error });
+      logger.error(error);
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
 
@@ -111,8 +100,8 @@ export default defineServiceMiddleware([
       password = result.password;
     }
     catch (error) {
-      if (error instanceof ZodError) error.errors.forEach((issue) => logger.error('unable to parse incoming message body field', { issue }));
-      else logger.error('unable to parse incoming message body fields', { error });
+      if (error instanceof ZodError) error.errors.forEach((issue) => logger.error(issue));
+      else logger.error(error);
       return void sendOKHTMLResponse(
         context,
         await <RegisterForm
@@ -130,7 +119,7 @@ export default defineServiceMiddleware([
       credentialsDocument = await userDatabase.credentials.findOne({ email });
     }
     catch (error) {
-      logger.error('unable to query for existing credentials document', { error });
+      logger.error(error);
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
     if (credentialsDocument !== null) {
@@ -152,7 +141,7 @@ export default defineServiceMiddleware([
       passwordHash = await hash(password, 10);
     }
     catch (error) {
-      logger.error('unable to hash password', { error });
+      logger.error(error);
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
 
@@ -168,12 +157,10 @@ export default defineServiceMiddleware([
         });
       }
       catch (error) {
-        logger.error('unable to query for existing user document', { error });
+        logger.error(error);
         return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
       }
     } while (userProfileDocument !== null);
-
-    // TODO: add mongo replica set support in docker compose to enable the transactions feature
 
     // start the user database session
     let userDatabaseSession = userDatabaseClient.startSession();
@@ -198,10 +185,9 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       await userDatabaseSession.abortTransaction();
-      logger.error('unable to create user and credentials documents', { error });
+      logger.error(error);
       return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
     }
-
     // end the user database session
     userDatabaseSession.endSession();
 
@@ -225,8 +211,7 @@ export default defineServiceMiddleware([
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();
-    console.log('context.incomingMessage.loginStateCookie', context.incomingMessage.loginStateCookie);
-    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${context.configuration.get('user.service.host')}/portal/dashboard`);
+    const returnUrl = new URL('/portal/welcome', `https://${context.configuration.get('user.service.host')}`);
     return void sendSeeOtherRedirect(
       context,
       returnUrl

@@ -24,7 +24,7 @@ For local development you will also need to install Docker. Check the [getting s
 
 ## Environment files
 
-Each service directory defines an `.env.example` file that contains the environment variables required for that service. You should create a copy of this file named `.env.<service-name>` in the root directory and fill in the necessary values before running the development servers.
+See the [ENVIRONMENT.md](./ENVIRONMENT.md) file for details on the environment variables used in this project.
 
 ## Running the development servers
 
