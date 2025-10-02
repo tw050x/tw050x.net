@@ -1,12 +1,18 @@
+import { readParameter, useParameter } from "@tw050x.net.library/configuration";
+import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
 import { CredentialDocument, client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
+import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
-import { useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
-import { useCors } from "@tw050x.net.library/middleware/use-cors"
-import { useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { useRefreshTokenCookieWriter } from "@tw050x.net.library/middleware/use-refresh-token-cookie-writer";
-import { useRefreshableTokenCookieWriter } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-writer";
+import { UseAccessTokenCookieWriterOptions, useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers"
+import { useLogRequest } from "@tw050x.net.library/middleware";
+import { useSecret } from "@tw050x.net.library/secret";
+import { UseLoginStateCookieWriterOptions, useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { UseRefreshTokenCookieWriterOptions, useRefreshTokenCookieWriter } from "@tw050x.net.library/middleware/use-refresh-token-cookie-writer";
+import { UseRefreshableTokenCookieWriterOptions, useRefreshableTokenCookieWriter } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-writer";
+import { readSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { getFormDataBody } from "@tw050x.net.library/service/helper";
+import { useFormDataBody } from "@tw050x.net.library/service/helper";
 import { sendSeeOtherRedirect } from "@tw050x.net.library/service/helper/redirect/send-see-other-redirect";
 import { sendBadRequestHTMLResponse } from "@tw050x.net.library/service/helper/response/send-bad-request-html-response";
 import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
@@ -17,6 +23,9 @@ import { hash } from "bcryptjs";
 import { SignOptions, sign } from "jsonwebtoken";
 import { default as zod, ZodError } from "zod";
 import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce";
+import { generateRegistrationAssignmentTasks } from "../../helper/generate-registration-assignment-tasks";
+import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate";
+import { default as RegisterDocument } from "../../template/document/RegisterDocument";
 import { default as RegisterForm } from "../../template/component/RegisterForm";
 
 const postRegisterFormDataSchema = zod.object({
@@ -27,58 +36,55 @@ const postRegisterFormDataSchema = zod.object({
   message: 'Passwords do not match',
 })
 
-export default defineServiceMiddleware([
-  async (context) => {
-    logger.debug(`POST ${context.incomingMessage.url}`);
-  },
-  useCors({
-    getConfiguration: async ({ configuration }) => ({
-      allowedMethods: ['GET', 'OPTIONS', 'POST'],
-      allowedOrigins: configuration.get('user.service.allowed-origins')
-    })
-  }),
-  useAccessTokenCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.access-token.name'),
-      cookieDomain: configuration.get('cookie.access-token.domain'),
-    }),
-  }),
-  useLoginStateCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.login-state.name'),
-      cookieDomain: configuration.get('cookie.login-state.domain'),
-    }),
-    getSecrets: async ({ secrets }) => ({
-      encrypterSecretKey: secrets.get('encrypter.secret-key'),
-    }),
-  }),
-  useRefreshTokenCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.refresh-token.name'),
-      cookieDomain: configuration.get('cookie.refresh-token.domain'),
-    }),
-  }),
-  useRefreshableTokenCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.refreshable-token.name'),
-      cookieDomain: configuration.get('cookie.refreshable-token.domain'),
-    }),
-  }),
+const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
+  allowedMethods: ['GET', 'OPTIONS', 'POST'],
+  allowedOrigins: useParameter('user.service.allowed-origins')
+}
 
-  // Render the registration page in a disabled if it is not enabled
-  async (context) => {
-    const registrationEnabled = context.configuration.get('user.service.registration-enabled');
-    if (registrationEnabled === 'false') {
-      return void sendOKHTMLResponse(
-        context,
-        await <span>Registration is currently disabled</span>
-      );
-    }
-  },
+const useAccessTokenCookieWriterOptions: UseAccessTokenCookieWriterOptions = {
+  cookieName: useParameter('cookie.access-token.name'),
+  cookieDomain: useParameter('cookie.access-token.domain'),
+}
+
+const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+  cookieName: useParameter('cookie.login-state.name'),
+  cookieDomain: useParameter('cookie.login-state.domain'),
+  encrypterSecretKey: useSecret('encrypter.secret-key'),
+}
+
+const useRefreshTokenCookieWriterOptions: UseRefreshTokenCookieWriterOptions = {
+  cookieName: useParameter('cookie.refresh-token.name'),
+  cookieDomain: useParameter('cookie.refresh-token.domain'),
+}
+
+const useRefreshableTokenCookieWriterOptions: UseRefreshableTokenCookieWriterOptions = {
+  cookieName: useParameter('cookie.refreshable-token.name'),
+  cookieDomain: useParameter('cookie.refreshable-token.domain'),
+}
+
+const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {
+  getResponseHtml: async () => (
+    <RegisterDocument
+      registerAsideProps={{
+        disabled: true,
+        message: "Registration is currently disabled."
+      }}
+    />
+  )
+}
+
+export default defineServiceMiddleware([
+  useLogRequest(),
+  useCorsHeaders(useCorsHeadersOptions),
+  useAccessTokenCookieWriter(useAccessTokenCookieWriterOptions),
+  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
+  useRefreshTokenCookieWriter(useRefreshTokenCookieWriterOptions),
+  useRefreshableTokenCookieWriter(useRefreshableTokenCookieWriterOptions),
+  useRegistrationEnabledGate(useRegistrationEnabledGateOptions),
 
   // Handle the registration form submission
   async (context) => {
-    const body = await getFormDataBody(context);
+    const body = await useFormDataBody(context);
 
     // generate a nonce for the registration form
     let nonce;
@@ -116,7 +122,9 @@ export default defineServiceMiddleware([
     // if it doesnt exist then return an error
     let credentialsDocument: CredentialDocument | null = null;
     try {
-      credentialsDocument = await userDatabase.credentials.findOne({ email });
+      credentialsDocument = await userDatabase.credentials.findOne(
+        sanitizeMongoDBFilterOrPipeline({ email })
+      );
     }
     catch (error) {
       logger.error(error);
@@ -160,7 +168,20 @@ export default defineServiceMiddleware([
         logger.error(error);
         return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
       }
-    } while (userProfileDocument !== null);
+    }
+    while (userProfileDocument !== null);
+
+
+    // generate the initial registration tasks for the new user
+    // return an error if there is a problem
+    let registrationTasks;
+    try {
+      registrationTasks = await generateRegistrationAssignmentTasks({ userProfileUuid });
+    }
+    catch (error) {
+      logger.error(error);
+      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+    }
 
     // start the user database session
     let userDatabaseSession = userDatabaseClient.startSession();
@@ -181,6 +202,7 @@ export default defineServiceMiddleware([
         passwordHash,
         uuid: userProfileUuid,
       });
+      await assignmentDatabase.task.insertMany(registrationTasks);
       await userDatabaseSession.commitTransaction();
     }
     catch (error) {
@@ -191,8 +213,15 @@ export default defineServiceMiddleware([
     // end the user database session
     userDatabaseSession.endSession();
 
-    //
-    const jwtSecretKey = context.secrets.get('jwt.secret-key');
+    // read the JWT secret key
+    // return an error if there is a problem
+    const jwtSecretKey = await readSecret('jwt.secret-key');
+    if (jwtSecretKey === undefined) {
+      logger.error('JWT secret key is undefined');
+      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+    }
+
+    // generate JWT tokens and set cookies
     const refreshTokenOptions: SignOptions = {
       expiresIn: '4w',
     };
@@ -211,7 +240,7 @@ export default defineServiceMiddleware([
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();
-    const returnUrl = new URL('/portal/welcome', `https://${context.configuration.get('user.service.host')}`);
+    const returnUrl = new URL('/portal/assignment', `https://${await readParameter('user.service.host')}`);
     return void sendSeeOtherRedirect(
       context,
       returnUrl

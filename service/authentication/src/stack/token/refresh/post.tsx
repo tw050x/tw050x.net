@@ -1,51 +1,50 @@
-import { useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
-import { useCors } from "@tw050x.net.library/middleware/use-cors";
-import { useLoginStateCookieReader } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
-import { useRefreshTokenCookieReader } from "@tw050x.net.library/middleware/use-refresh-token-cookie-reader";
+import { readParameter, useParameter } from "@tw050x.net.library/configuration";
+import { UseAccessTokenCookieWriterOptions, useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
+import { UseLoginStateCookieReaderOptions, useLoginStateCookieReader } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
+import { UseRefreshTokenCookieReaderOptions, useRefreshTokenCookieReader } from "@tw050x.net.library/middleware/use-refresh-token-cookie-reader";
 import { logger } from "@tw050x.net.library/logger";
+import { readSecret, useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendSeeOtherRedirect } from "@tw050x.net.library/service/helper/redirect/send-see-other-redirect";
-import { sendUnauthorizedJSONResponse } from "@tw050x.net.library/service/helper/response/send-unauthorized-json-response";
 import { sendBadRequestJSONResponse } from "@tw050x.net.library/service/helper/response/send-bad-request-json-response";
+import { sendUnauthorizedJSONResponse } from "@tw050x.net.library/service/helper/response/send-unauthorized-json-response";
+import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
+import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { SignOptions, sign } from "jsonwebtoken";
+
+const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
+  allowedMethods: ['GET', 'OPTIONS', 'POST'],
+  allowedOrigins: useParameter('authentication.service.allowed-origins'),
+}
+
+const useAccessTokenCookieWriterOptions: UseAccessTokenCookieWriterOptions = {
+  cookieName: useParameter('cookie.access-token.name'),
+  cookieDomain: useParameter('cookie.access-token.domain'),
+}
+
+const useLoginStateCookieReaderOptions: UseLoginStateCookieReaderOptions = {
+  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
+  cookieName: useParameter('cookie.login-state.name'),
+  encrypterSecretKey: useSecret('encrypter.secret-key'),
+}
+
+const useRefreshTokenCookieReaderOptions: UseRefreshTokenCookieReaderOptions = {
+  cookieName: useParameter('cookie.refresh-token.name'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
+}
 
 /**
  * The stack for the POST request to generate a nonce
  * This is used for authentication purposes
  */
 export default defineServiceMiddleware([
-  async (context) => {
-    logger.debug(`POST ${context.incomingMessage.url}`);
-  },
-  useCors({
-    getConfiguration: async () => ({
-      allowedMethods: ['POST', 'OPTIONS'],
-      allowedOrigins: '*',
-    }),
-  }),
-  useAccessTokenCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.access-token.name'),
-      cookieDomain: configuration.get('cookie.access-token.domain'),
-    }),
-  }),
-  useLoginStateCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      allowedReturnUrlDomains: configuration.get('authentication.service.allowed-return-url-domains'),
-      cookieName: configuration.get('cookie.login-state.name'),
-    }),
-    getSecrets: async ({ secrets }) => ({
-      encrypterSecretKey: secrets.get('encrypter.secret-key'),
-    }),
-  }),
-  useRefreshTokenCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.refresh-token.name'),
-    }),
-    getSecrets: async ({ secrets }) => ({
-      jwtSecretKey: secrets.get('jwt.secret-key'),
-    }),
-  }),
+  useLogRequest(),
+  useCorsHeaders(useCorsHeadersOptions),
+  useAccessTokenCookieWriter(useAccessTokenCookieWriterOptions),
+  useLoginStateCookieReader(useLoginStateCookieReaderOptions),
+  useRefreshTokenCookieReader(useRefreshTokenCookieReaderOptions),
   async (context) => {
 
     // check for errors from token verification
@@ -66,8 +65,13 @@ export default defineServiceMiddleware([
       return void sendUnauthorizedJSONResponse(context);
     }
 
+    const jwtSecretKey = await readSecret('jwt.secret-key');
+    if (jwtSecretKey === undefined) {
+      logger.error('JWT secret key is undefined');
+      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+    }
+
     // generate a new access token
-    const jwtSecretKey = await context.secrets.get('jwt.secret-key');
     const accessTokenOptions: SignOptions = {
       expiresIn: '1d',
     };
@@ -76,7 +80,7 @@ export default defineServiceMiddleware([
     };
     const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
     context.serverResponse.accessTokenCookie.set(accessToken);
-    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${context.configuration.get('authentication.service.host')}`);
+    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
     return void sendSeeOtherRedirect(
       context,
       returnUrl,

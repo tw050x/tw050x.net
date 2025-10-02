@@ -4,29 +4,8 @@ import { join } from "node:path";
 
 defineService({
   getRoutesDirectory: () => join(__dirname, 'stack'),
-  onPrepare: async (service) => {
-    await Promise.all([
-      service.configuration.use('authentication.service.allowed-origins'),
-      service.configuration.use('authentication.service.allowed-return-url-domains'),
-      service.configuration.use('authentication.service.host'),
-      service.configuration.use('authentication.service.login-enabled'),
-      service.configuration.use('cookie.access-token.name'),
-      service.configuration.use('cookie.access-token.domain'),
-      service.configuration.use('cookie.login-state.name'),
-      service.configuration.use('cookie.login-state.domain'),
-      service.configuration.use('cookie.refresh-token.name'),
-      service.configuration.use('cookie.refresh-token.domain'),
-      service.configuration.use('cookie.refreshable-token.name'),
-      service.configuration.use('cookie.refreshable-token.domain'),
-      service.secrets.use('encrypter.secret-key'),
-      service.secrets.use('jwt.secret-key'),
-    ]);
-  },
   onReady: async (service) => {
     const onEndProcess = () => {
-      service.configuration.destroy();
-      service.database.destroy();
-      service.secrets.destroy();
       const forceCloseTimeout = setTimeout(() => {
         logger.info('Server forced shut down');
         process.exit(1);

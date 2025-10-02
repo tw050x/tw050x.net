@@ -5,19 +5,20 @@ To run a development environment you will need to create the necessary environme
 ## Files
 
 - .env.aws
+- .env.database.assignment
 - .env.database.authentication
 - .env.database.user
-- .env.localstack
-- .env.logs
-- .eng.mongo
-- .env.mongo-client
+- .env.mongo
 - .env.service.authentication
 - .env.service.error
+- .env.service.localstack
 - .env.service.marketing
 - .env.service.navigation
 - .env.service.portal
+- .env.service.traefik
 - .env.service.user
-- .env.traefik
+- .env.services.logs
+- .env.services.mongo-client
 
 > Environment files should not be tracked in versions control.
 
@@ -33,6 +34,13 @@ TODO: Add example contents for each file.
 | .env.aws | AWS_ACCESS_KEY_ID | Access key for AWS services, Can be set to a dummy value when using localstack |
 | .env.aws | AWS_SECRET_ACCESS_KEY | Secret key for AWS services, Can be set to a dummy value when using localstack |
 | .env.aws | AWS_REGION | AWS region to use |
+
+### .env.assignment
+
+| Filename | Key | Description |
+|---|---|--|
+| .env.assignment | ASSIGNMENT_DATABASE_NAME | Name of the assignment database |
+| .env.assignment | ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME | Name of the tasks collection in the assignment database |
 
 ### .env.authentication
 

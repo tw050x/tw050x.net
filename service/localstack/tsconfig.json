@@ -4,6 +4,7 @@
     "rootDir": ".",
   },
   "exclude": [
+    "../../types/env.service.localstack.d.ts",
     "data/",
   ],
   "extends": "../../tsconfig.json",

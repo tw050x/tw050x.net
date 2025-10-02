@@ -1,5 +1,7 @@
+import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { ServiceContext } from "@tw050x.net.library/service";
+import { Secret, isSecret, readSecret } from "@tw050x.net.library/secret";
+import { Middleware, ServiceContext } from "@tw050x.net.library/service";
 import { default as Cookies } from "cookies";
 import { verify } from "jsonwebtoken";
 
@@ -11,42 +13,82 @@ type RefreshTokenCookie = {
   raw?: string;
 }
 
-declare module "node:http" {
-  interface IncomingMessage {
+export type UseRefreshTokenCookieReaderOptions = {
+  cookieName: string | Parameter;
+  jwtSecretKey: string | Secret;
+}
+
+/**
+ *
+ */
+export type UseRefreshTokenCookieReaderResultingContext = ServiceContext & {
+  incomingMessage: ServiceContext['incomingMessage'] & {
     refreshTokenCookie: RefreshTokenCookie;
   }
 }
 
-type UseRefreshTokenCookieReaderOptions = {
-  getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
-    cookieName: string;
-  }>;
-  getSecrets: (context: { secrets: ServiceContext['secrets'] }) => Promise<{
-    jwtSecretKey: string;
-  }>;
-}
+/**
+ *
+ */
+type Factory = (options: UseRefreshTokenCookieReaderOptions) => Middleware<
+  ServiceContext,
+  UseRefreshTokenCookieReaderResultingContext
+>
 
 /**
  * @returns void
  */
-export const useRefreshTokenCookieReader = (options: UseRefreshTokenCookieReaderOptions) => async (context: ServiceContext) => {
-  const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
-    secure: true,
-  });
-  let configuration;
-  let secrets;
-  try {
-    configuration = await options.getConfiguration({ configuration: context.configuration });
-    secrets = await options.getSecrets({ secrets: context.secrets });
+export const useRefreshTokenCookieReader: Factory = (options) => async (context) => {
+
+  // retrieve the cookie name
+  let cookieName;
+  cookieNameGuard: {
+    if (isParameter(options.cookieName) === false) {
+      cookieName = options.cookieName;
+      break cookieNameGuard;
+    }
+    try {
+      cookieName = await readParameter(options.cookieName.key);
+    }
+    catch (error) {
+      logger.error(error);
+      context.serverResponse.statusCode = 500;
+      return void context.serverResponse.end();
+    }
   }
-  catch (error) {
-    logger.error(error);
+  if (cookieName === undefined || cookieName === '') {
+    logger.error('access token cookie name is undefined or empty');
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
-  const cookieName = configuration.cookieName;
-  const jwtSecretKey = secrets.jwtSecretKey;
+
+  // retrieve the JWT secret key
+  let jwtSecretKey;
+  jwtSecretKeyGuard: {
+    if (isSecret(options.jwtSecretKey) === false) {
+      jwtSecretKey = options.jwtSecretKey;
+      break jwtSecretKeyGuard;
+    }
+    try {
+      jwtSecretKey = await readSecret(options.jwtSecretKey.key);
+    }
+    catch (error) {
+      logger.error(error);
+      context.serverResponse.statusCode = 500;
+      return void context.serverResponse.end();
+    }
+  }
+  if (jwtSecretKey === undefined || jwtSecretKey === '') {
+    logger.error('encrypter secret key is undefined or empty');
+    context.serverResponse.statusCode = 500;
+    return void context.serverResponse.end();
+  }
+
+  const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
+    secure: true,
+  });
   const cookie = cookies.get(cookieName);
+
   const refreshTokenCookie: RefreshTokenCookie = {
     errors: [] as Array<Error>,
     raw: cookie,

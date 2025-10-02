@@ -9,9 +9,11 @@
     "src/index.ts",
     "src/use-access-token-cookie-reader.ts",
     "src/use-access-token-cookie-writer.ts",
-    "src/use-cors.ts",
+    "src/use-cors-headers.ts",
+    "src/use-log-request.ts",
     "src/use-login-state-cookie-reader.ts",
     "src/use-login-state-cookie-writer.ts",
+    "src/use-pagination-query-parameters.ts",
     "src/use-refresh-token-cookie-reader.ts",
     "src/use-refresh-token-cookie-writer.ts",
     "src/use-refreshable-token-cookie-reader.ts",
@@ -21,7 +23,9 @@
     "src/use-ui-user-table-tools-state-cookie-writer.ts",
   ],
   "references": [
+    { "path": "../configuration" },
     { "path": "../logger" },
+    { "path": "../secret" },
     { "path": "../service" },
     { "path": "../utility" },
   ]

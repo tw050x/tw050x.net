@@ -5,6 +5,8 @@ services:
     depends_on:
       traefik:
         condition: service_healthy
+    env_file:
+      - .env.service.assets
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/assets/healthcheck.txt || exit 1"]
       interval: 1m30s
@@ -42,9 +44,9 @@ services:
       - .env.database.authentication
       - .env.database.user
       - .env.aws
-      - .env.logs
-      - .env.mongo-client
       - .env.service.authentication
+      - .env.services.logs
+      - .env.services.mongo-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -90,9 +92,9 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
-      - .env.logs
-      - .env.mongo-client
       - .env.service.error
+      - .env.services.logs
+      - .env.services.mongo-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -123,7 +125,7 @@ services:
 
   localstack:
     env_file:
-      - .env.localstack
+      - .env.service.localstack
     # image: localstack/localstack
     image: gresau/localstack-persist:latest # don't trust this
     ports:
@@ -152,9 +154,9 @@ services:
     env_file:
       - .env.aws
       - .env.database.user
-      - .env.logs
-      - .env.mongo-client
       - .env.service.marketing
+      - .env.services.logs
+      - .env.services.mongo-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -192,7 +194,7 @@ services:
       mongo-secondary-a:
         condition: service_healthy
     env_file:
-      - .env.mongo
+      - .env.service.mongo
     healthcheck:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
       interval: 30s
@@ -215,7 +217,7 @@ services:
   mongo-secondary-a:
     command: --replSet rs0 --keyFile /etc/mongo-keyfile --bind_ip_all
     env_file:
-      - .env.mongo
+      - .env.service.mongo
     healthcheck:
       test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
       interval: 30s
@@ -249,10 +251,11 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
+      - .env.database.assignment
       - .env.database.user
-      - .env.logs
-      - .env.mongo-client
       - .env.service.navigation
+      - .env.services.logs
+      - .env.services.mongo-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -299,10 +302,11 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
+      - .env.database.assignment
       - .env.database.user
-      - .env.logs
-      - .env.mongo-client
       - .env.service.portal
+      - .env.services.logs
+      - .env.services.mongo-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -339,7 +343,7 @@ services:
       traefik-socket:
         condition: service_healthy
     env_file:
-      - .env.traefik
+      - .env.service.traefik
     healthcheck:
       test: ["CMD-SHELL", "traefik healthcheck --ping"]
       interval: 1m30s
@@ -364,7 +368,7 @@ services:
   traefik-socket:
     image: tecnativa/docker-socket-proxy:0.3.0
     env_file:
-      - .env.traefik
+      - .env.service.traefik
     healthcheck:
       test: ["CMD-SHELL", "wget --spider http://localhost:2375/version || exit 1"]
       interval: 30s
@@ -390,10 +394,11 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
+      - .env.database.assignment
       - .env.database.user
-      - .env.logs
-      - .env.mongo-client
       - .env.service.user
+      - .env.services.logs
+      - .env.services.mongo-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s

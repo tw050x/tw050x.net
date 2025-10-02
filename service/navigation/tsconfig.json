@@ -11,14 +11,18 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
+    "../../types/env.service.navigation.d.ts",
+    "src/middleware/use-auth-gate.tsx",
     "src/stack/navigation/portal/get.tsx",
     "src/stack/navigation/portal/options.ts",
     "src/template/component/Menu.tsx",
     "src/serve.ts",
   ],
   "references": [
+    { "path": "../../library/configuration" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
+    { "path": "../../library/secret" },
     { "path": "../../library/service" },
     { "path": "../../library/uikit" },
     { "path": "../../library/utility" },

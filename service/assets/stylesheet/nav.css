@@ -34,6 +34,29 @@ nav a, nav button {
   @apply hover:bg-gray-700/50 transition-all duration-200;
   @apply inline-block;
 }
+nav a.attention .portal-menu-icon {
+  animation: heartbeat 4s ease-in-out infinite;
+}
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.4);
+  }
+  15% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.4);
+  }
+  30% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 nav .portal-menu-icon {
   @apply w-6 h-6 ml-0.5 mr-2;
   @apply inline-block;

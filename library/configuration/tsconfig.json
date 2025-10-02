@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "outDir": "./artifact",
+    "rootDir": "./src",
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "src/cache.ts",
+    "src/index.ts",
+    "src/ssm-client.ts",
+    "src/ssm-read-parameter.ts",
+    "src/ssm-use-parameter.ts",
+    "src/ssm-is-parameter.ts",
+    "src/types.ts",
+  ],
+  "references": [
+    { "path": "../logger" },
+    { "path": "../service" },
+    { "path": "../utility" },
+  ]
+}

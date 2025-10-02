@@ -6,10 +6,10 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
-    "src/helper/get-form-data-body.ts",
-    "src/helper/get-json-body.ts",
-    "src/helper/get-url-params.ts",
-    "src/helper/get-url-query.ts",
+    "src/helper/use-form-data-body.ts",
+    "src/helper/use-json-body.ts",
+    "src/helper/use-url-params.ts",
+    "src/helper/use-url-query.ts",
     "src/helper/redirect/send-found-redirect.ts",
     "src/helper/redirect/send-moved-permanently-redirect.ts",
     "src/helper/redirect/send-moved-temporarily-redirect.ts",
@@ -33,13 +33,11 @@
     "src/define-service-middleware.ts",
     "src/helper.ts",
     "src/index.ts",
-    "src/mongo-client.ts",
     "src/routes.ts",
-    "src/secrets-manager-client.ts",
-    "src/ssm-client.ts",
   ],
   "references": [
     { "path": "../logger" },
+    { "path": "../types" },
     { "path": "../utility" },
   ]
 }

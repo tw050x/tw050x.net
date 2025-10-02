@@ -1,15 +1,14 @@
-import { logger } from "@tw050x.net.library/logger";
-import { useCors } from "@tw050x.net.library/middleware/use-cors";
+import { useParameter } from "@tw050x.net.library/configuration";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 
+const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
+  allowedMethods: ['GET', 'POST', 'OPTIONS'],
+  allowedOrigins: useParameter('authentication.service.allowed-origins'),
+}
+
 export default defineServiceMiddleware([
-  async (context) => {
-    logger.debug(`OPTIONS ${context.incomingMessage.url}`);
-  },
-  useCors({
-    getConfiguration: async ({ configuration }) => ({
-      allowedMethods: ['GET', 'POST', 'OPTIONS'],
-      allowedOrigins: configuration.get('authentication.service.allowed-origins'),
-    }),
-  }),
+  useLogRequest(),
+  useCorsHeaders(useCorsHeadersOptions),
 ])

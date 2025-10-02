@@ -1,33 +1,35 @@
+import { useParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { useCors } from "@tw050x.net.library/middleware/use-cors";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/middleware";
 import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { registrationEnabledGate } from "../../middleware/registration-enabled-gate";
+import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate";
 import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce"
 import { default as RegisterDocument } from "../../template/document/RegisterDocument";
 
+const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
+  allowedMethods: ['GET', 'OPTIONS', 'POST'],
+  allowedOrigins: useParameter('user.service.allowed-origins'),
+}
+
+const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {
+  getResponseHtml: async () => (
+    <RegisterDocument
+      registerAsideProps={{
+        disabled: true,
+        message: "Registration is currently disabled."
+      }}
+    />
+  )
+}
+
 export default defineServiceMiddleware([
-  async (context) => {
-    logger.debug(`GET ${context.incomingMessage.url}`);
-  },
-  useCors({
-    getConfiguration: async ({ configuration }) => ({
-      allowedMethods: ['GET', 'POST', 'OPTIONS'],
-      allowedOrigins: configuration.get('user.service.allowed-origins'),
-    }),
-  }),
-  registrationEnabledGate({
-    getResponseHtml: async () => (
-      <RegisterDocument
-        registerAsideProps={{
-          disabled: true,
-          message: "Registration is currently disabled."
-        }}
-      />
-    )
-  }),
+  useLogRequest(),
+  useCorsHeaders(useCorsHeadersOptions),
+  useRegistrationEnabledGate(useRegistrationEnabledGateOptions),
 
   // Render the register page
   async (context) => {

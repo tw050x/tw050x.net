@@ -6,14 +6,14 @@ import { default as dotenv } from "dotenv";
 dotenv.config({ path: resolve(__dirname, './.env.aws') });
 dotenv.config({ path: resolve(__dirname, './.env.database.authentication') });
 dotenv.config({ path: resolve(__dirname, './.env.database.user') });
-dotenv.config({ path: resolve(__dirname, './.env.logs') });
-dotenv.config({ path: resolve(__dirname, './.env.mongo-client') });
 dotenv.config({ path: resolve(__dirname, './.env.service.error') });
 dotenv.config({ path: resolve(__dirname, './.env.service.authentication') });
 dotenv.config({ path: resolve(__dirname, './.env.service.marketing') });
 dotenv.config({ path: resolve(__dirname, './.env.service.navigation') });
 dotenv.config({ path: resolve(__dirname, './.env.service.portal') });
 dotenv.config({ path: resolve(__dirname, './.env.service.user') });
+dotenv.config({ path: resolve(__dirname, './.env.services.logs') });
+dotenv.config({ path: resolve(__dirname, './.env.services.mongo-client') });
 
 //
 export default defineConfig({

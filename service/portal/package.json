@@ -2,8 +2,11 @@
   "author": "tw050x (Richard Kielty)",
   "description": "The Portal Service project for tw050x.net",
   "dependencies": {
+    "@tw050x.net.database/assignment": "workspace:*",
+    "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
     "@tw050x.net.library/middleware": "workspace:*",
+    "@tw050x.net.library/secret": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
     "@tw050x.net.library/uikit": "workspace:*",
     "@tw050x.net.library/utility": "workspace:*",

@@ -12,6 +12,7 @@ export type Props = {
 /**
  * The `<UserTableTools />` component.
  *
+ * @prop state - The current state of the user table tools, either 'collapsed' or 'open'.
  * @returns
  */
 const UserTableTools: Component<Props> = (props) => {

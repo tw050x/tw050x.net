@@ -1,0 +1,16 @@
+[
+  {
+    "label": "Enter your name",
+    "description": "Add your first and last name to your profile.",
+    "reason": "Your name helps us personalize your experience.",
+    "actions": ["profile.enter-first-name", "profile.enter-last-name"],
+    "uuid": "8c79f0b4-60ef-4971-824c-957d228d9d8b"
+  },
+  {
+    "label": "Verify email address",
+    "description": "Confirm your email address to secure your account.",
+    "reason": "Verifying your email ensures that you have access to your account and can recover it if needed.",
+    "actions": ["profile.verify-email"],
+    "uuid": "fd1a13de-1a7f-448e-8bc5-a4eb458ed850"
+  }
+]

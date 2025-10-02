@@ -1,6 +1,7 @@
 export { useAccessTokenCookieReader } from "./use-access-token-cookie-reader";
 export { useAccessTokenCookieWriter } from "./use-access-token-cookie-writer";
-export { useCors } from "./use-cors";
+export { useCorsHeaders } from "./use-cors-headers";
+export { useLogRequest } from "./use-log-request";
 export { useLoginStateCookieReader } from "./use-login-state-cookie-reader";
 export { useLoginStateCookieWriter } from "./use-login-state-cookie-writer";
 export { useRefreshTokenCookieReader } from "./use-refresh-token-cookie-reader";

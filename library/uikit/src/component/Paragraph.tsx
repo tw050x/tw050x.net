@@ -1,10 +1,9 @@
 import { Component } from "@kitajs/html";
 
-type Props = {
-  classOverrides?: {
-    container?: string | Array<string>;
-  };
-}
+/**
+ * Props for the `<Paragraph />` component.
+ */
+export type Props = {}
 
 /**
  * The `<Paragraph />` component.
@@ -12,9 +11,9 @@ type Props = {
  * @param props
  * @returns {JSX.Element}
  */
-const Paragraph: Component<Props> = ({ children, classOverrides }) => {
+const Paragraph: Component<Props> = ({ children }) => {
   return (
-    <p class={[...(classOverrides?.container ?? [])]} data-component="paragraph">
+    <p data-component="paragraph">
       {children}
     </p>
   );

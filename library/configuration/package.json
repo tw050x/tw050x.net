@@ -1,0 +1,24 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.873.0",
+    "@tw050x.net.library/logger": "workspace:*",
+    "lru-cache": "^11.1.0"
+  },
+  "description": "The @tw050x.net.library/configuration package project",
+  "devDependencies": {
+    "@tw050x.net.library/types": "workspace:*",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": "./artifact/index.js"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net.library/configuration",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "types": "artifact/index.d.ts",
+  "version": "1.0.0"
+}

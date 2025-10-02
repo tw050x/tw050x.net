@@ -4,13 +4,13 @@ import { Component } from "@kitajs/html";
  * Props for the `<Menu />` component.
  */
 export type Props = {
-  state: 'open' | 'collapsed';
+  state: 'collapsed' | 'open';
 }
 
 /**
  * The `<MenuInitiator />` component.
  *
- * @param props
+ * @prop state - The initial state of the menu, either 'collapsed' or 'open'.
  * @returns {JSX.Element}
  */
 const MenuInitiator: Component<Props> = (props) => {

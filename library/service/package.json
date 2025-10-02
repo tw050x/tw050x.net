@@ -1,8 +1,6 @@
 {
   "author": "tw050x (Richard Kielty)",
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.873.0",
-    "@aws-sdk/client-ssm": "^3.873.0",
     "@tw050x.net.library/logger": "workspace:*",
     "@tw050x.net.library/utility": "workspace:*",
     "lru-cache": "^11.1.0",
@@ -10,6 +8,7 @@
   },
   "description": "The @tw050x.net.library/service package project",
   "devDependencies": {
+    "@tw050x.net.library/types": "workspace:*",
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2"
   },
@@ -35,10 +34,10 @@
     "./helper/response/send-ok-text-response": "./artifact/helper/response/send-ok-text-response.js",
     "./helper/response/send-unauthorized-html-response": "./artifact/helper/response/send-unauthorized-html-response.js",
     "./helper/response/send-unauthorized-json-response": "./artifact/helper/response/send-unauthorized-json-response.js",
-    "./helper/get-form-data-body": "./artifact/helper/get-form-data-body.js",
-    "./helper/get-json-body": "./artifact/helper/get-json-body.js",
-    "./helper/get-url-params": "./artifact/helper/get-url-params.js",
-    "./helper/get-url-query": "./artifact/helper/get-url-query.js"
+    "./helper/use-form-data-body": "./artifact/helper/use-form-data-body.js",
+    "./helper/use-json-body": "./artifact/helper/use-json-body.js",
+    "./helper/use-url-params": "./artifact/helper/use-url-params.js",
+    "./helper/use-url-query": "./artifact/helper/use-url-query.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/service",

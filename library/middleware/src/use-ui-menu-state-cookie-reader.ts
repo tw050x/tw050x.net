@@ -1,42 +1,74 @@
+import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { ServiceContext } from "@tw050x.net.library/service";
+import { Middleware, ServiceContext } from "@tw050x.net.library/service";
 import { default as Cookies } from "cookies";
 
+/**
+ *
+ */
 type UIMenuStateCookie = {
   raw?: string;
   state: 'open' | 'collapsed';
 }
 
-declare module "node:http" {
-  interface IncomingMessage {
-    uiMenuStateCookie: UIMenuStateCookie
+/**
+ *
+ */
+export type UseUIMenuStateCookieReaderOptions = {
+  cookieName: string | Parameter;
+}
+
+/**
+ *
+ */
+export type UseUIMenuStateCookieResultingContext = ServiceContext & {
+  incomingMessage: ServiceContext['incomingMessage'] & {
+    uiMenuStateCookie: UIMenuStateCookie;
   }
 }
 
-type UseUIMenuStateCookieOptions = {
-  getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
-    cookieName: string;
-  }>;
-}
+/**
+ *
+ */
+type Factory = (options: UseUIMenuStateCookieReaderOptions) => Middleware<
+  ServiceContext,
+  UseUIMenuStateCookieResultingContext
+>
 
 /**
  * @returns void
  */
-export const useUIMenuStateCookieReader = (options: UseUIMenuStateCookieOptions) => async (context: ServiceContext) => {
-  const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
-    secure: true,
-  });
-  let configuration;
-  try {
-    configuration = await options.getConfiguration({ configuration: context.configuration });
+export const useUIMenuStateCookieReader: Factory = (options) => async (context) => {
+
+  // retrieve the cookie name
+  let cookieName;
+  cookieNameGuard: {
+    if (isParameter(options.cookieName) === false) {
+      cookieName = options.cookieName;
+      break cookieNameGuard;
+    }
+    try {
+      cookieName = await readParameter(options.cookieName.key);
+    }
+    catch (error) {
+      logger.error(error);
+      context.serverResponse.statusCode = 500;
+      return void context.serverResponse.end();
+    }
   }
-  catch (error) {
-    logger.error(error);
+  if (cookieName === undefined || cookieName === '') {
+    logger.error('access token cookie name is undefined or empty');
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
-  const cookieName = configuration.cookieName;
+
+  //
+  const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
+    secure: true,
+  });
   const cookie = cookies.get(cookieName);
+
+  //
   const refreshableTokenCookie: UIMenuStateCookie = {
     raw: cookie,
     state: 'collapsed',

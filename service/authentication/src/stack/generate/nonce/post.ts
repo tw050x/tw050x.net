@@ -1,25 +1,25 @@
 import { database as authenticationDatabase } from "@tw050x.net.database/authentication";
-import { logger } from "@tw050x.net.library/logger";
-import { useCors } from "@tw050x.net.library/middleware/use-cors";
+import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendOKTextResponse } from "@tw050x.net.library/service/helper";
 import { randomBytes } from "node:crypto";
 import { Document } from "mongodb";
 
+const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
+  allowedMethods: ['POST', 'OPTIONS'],
+  allowedOrigins: '*',
+};
+
 /**
  * The stack for the POST request to generate a nonce
  */
 export default defineServiceMiddleware([
-  async (context) => {
-    logger.debug(`POST ${context.incomingMessage.url}`);
-  },
-  useCors({
-    getConfiguration: async () => ({
-      allowedMethods: ['POST', 'OPTIONS'],
-      allowedOrigins: '*',
-    }),
-  }),
+  useLogRequest(),
+  useCorsHeaders(useCorsHeadersOptions),
+
   // TODO: add authentication middleware
+
   async (context) => {
 
     // generate a nonce until it is unique

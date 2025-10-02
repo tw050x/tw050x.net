@@ -1,0 +1,72 @@
+import { readParameter } from "@tw050x.net.library/configuration";
+import { logger } from "@tw050x.net.library/logger";
+import { AccessTokenCookie, UseAccessTokenCookieReaderResultingContext } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
+import { UseLoginStateCookieWriterOptionsResultingContext } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { Middleware, ServiceContext } from "@tw050x.net.library/service";
+import { sendMovedTemporarilyRedirect } from "@tw050x.net.library/service/helper/redirect/send-moved-temporarily-redirect";
+import { sendUnauthorizedHTMLResponse } from "@tw050x.net.library/service/helper/response/send-unauthorized-html-response";
+import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
+import { default as ForbiddenDocument } from "@tw050x.net.library/uikit/document/Forbidden";
+import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
+
+/**
+ * Resulting context after the auth gate middleware has run
+ */
+export type AuthGateResultingContext = ServiceContext & {
+  incomingMessage: ServiceContext['incomingMessage'] & {
+    accessTokenCookie: {
+      authorised: true;
+      errors: AccessTokenCookie['errors'];
+      payload: {
+        sub: string;
+        uid?: string;
+      };
+    }
+  }
+}
+
+/**
+ *
+ */
+type Factory = () => Middleware<
+  ServiceContext & UseAccessTokenCookieReaderResultingContext & UseLoginStateCookieWriterOptionsResultingContext,
+  AuthGateResultingContext
+>;
+
+/**
+ * Middleware to perform default authentication and authorization checks.
+ *
+ * @returns an unrecoverable error page if an error occurred during auth token verification
+ * @returns a forbidden page if the user is not authorized
+ * @redirects to the login page if the user is not authenticated
+ */
+export const useAuthGate: Factory = () => async (context) => {
+  if (context.incomingMessage.accessTokenCookie.errors.length > 0) {
+    context.incomingMessage.accessTokenCookie.errors.forEach((error) => logger.error(error));
+    return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+  }
+
+  // If the user is not authorized, return a forbidden response
+  if (context.incomingMessage.accessTokenCookie.authorised === false) {
+    return void sendUnauthorizedHTMLResponse(context, await <ForbiddenDocument />);
+  }
+
+  // If the user is not authorized, redirect to the login page
+  if (context.incomingMessage.accessTokenCookie.authorised === null) {
+    logger.debug('User is not authorized, redirecting to login page');
+
+    const portalServiceHost = await readParameter('portal.service.host');
+    if (!portalServiceHost) {
+      logger.error('No portal host configured, cannot redirect to login page');
+      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+    }
+
+    context.serverResponse.loginStateCookie.set(JSON.stringify({
+      returnUrl: new URL(context.incomingMessage.url || '/', `https://${portalServiceHost}`),
+    }))
+    return void sendMovedTemporarilyRedirect(
+      context,
+      new URL('/login', `https://${portalServiceHost}`),
+    );
+  }
+}

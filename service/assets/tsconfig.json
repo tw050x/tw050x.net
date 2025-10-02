@@ -5,5 +5,7 @@
   },
   "exclude": [],
   "extends": "../../tsconfig.json",
-  "files": []
+  "files": [
+    "../../types/env.service.assets.d.ts",
+  ]
 }

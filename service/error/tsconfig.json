@@ -9,12 +9,14 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
+    "../../types/env.service.error.d.ts",
     "src/stack/404/get.tsx",
     "src/stack/404/options.ts",
     "src/template/document/NotFound.tsx",
     "src/serve.ts",
   ],
   "references": [
+    { "path": "../../library/configuration" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
     { "path": "../../library/service" },

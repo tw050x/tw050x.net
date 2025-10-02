@@ -1,57 +1,155 @@
+import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { ServiceContext } from "@tw050x.net.library/service";
+import { Secret, isSecret, readSecret } from "@tw050x.net.library/secret";
+import { Middleware, ServiceContext } from "@tw050x.net.library/service";
 import { isAllowedDomain } from "@tw050x.net.library/utility/is-allowed-domain";
 import { createDecipheriv } from "node:crypto";
 import { default as Cookies } from "cookies";
 
+/**
+ *
+ */
 type LoginStateCookiePayload = {
   returnUrl: URL;
 }
 
-declare module "node:http" {
-  interface IncomingMessage {
+/**
+ *
+ */
+export type UseLoginStateCookieReaderOptions = {
+  allowedReturnUrlDomains: string | Parameter;
+  cookieName: string | Parameter;
+  encrypterSecretKey: string | Secret;
+  stateCipherAlgorithm?: string | Parameter;
+}
+
+/**
+ *
+ */
+const defaultStateCipherAlgorithm = 'aes-256-cbc';
+
+/**
+ *
+ */
+export type UseLoginStateCookieReaderResultingContext = ServiceContext & {
+  incomingMessage: ServiceContext['incomingMessage'] & {
     loginStateCookie: {
       payload: LoginStateCookiePayload | undefined;
     }
   }
 }
 
-type UseLoginStateCookieReaderOptions = {
-  getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
-    allowedReturnUrlDomains: string;
-    cookieName: string;
-    stateCipherAlgorithm?: string;
-  }>;
-  getSecrets: (context: { secrets: ServiceContext['secrets'] }) => Promise<{
-    encrypterSecretKey: string;
-  }>;
-}
-
-const defaultStateCipherAlgorithm = 'aes-256-cbc';
+/**
+ *
+ */
+type Factory = (options: UseLoginStateCookieReaderOptions) => Middleware<
+  ServiceContext,
+  UseLoginStateCookieReaderResultingContext
+>
 
 /**
  * @returns void
  */
-export const useLoginStateCookieReader = (options: UseLoginStateCookieReaderOptions) => async (context: ServiceContext) => {
-  const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
-    secure: true,
-  });
-  let configuration;
-  let secrets;
-  try {
-    configuration = await options.getConfiguration({ configuration: context.configuration });
-    secrets = await options.getSecrets({ secrets: context.secrets });
+export const useLoginStateCookieReader: Factory = (options) => async (context) => {
+
+  // retrieve the cookie name
+  let allowedReturnUrlDomains;
+  allowedReturnUrlDomainsGuard: {
+    if (isParameter(options.allowedReturnUrlDomains) === false) {
+      allowedReturnUrlDomains = options.allowedReturnUrlDomains;
+      break allowedReturnUrlDomainsGuard;
+    }
+    try {
+      allowedReturnUrlDomains = await readParameter(options.allowedReturnUrlDomains.key);
+    }
+    catch (error) {
+      logger.error(error);
+      context.serverResponse.statusCode = 500;
+      return void context.serverResponse.end();
+    }
   }
-  catch (error) {
-    logger.error(error);
+  if (allowedReturnUrlDomains === undefined || allowedReturnUrlDomains === '') {
+    logger.error('access token cookie name is undefined or empty');
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
-  const allowedReturnUrlDomainsString = configuration.allowedReturnUrlDomains;
-  const cookieName = configuration.cookieName;
-  const stateCipherAlgorithm = configuration.stateCipherAlgorithm || defaultStateCipherAlgorithm;
-  const encrypterSecretKey = secrets.encrypterSecretKey;
+
+  // retrieve the cookie name
+  let cookieName;
+  cookieNameGuard: {
+    if (isParameter(options.cookieName) === false) {
+      cookieName = options.cookieName;
+      break cookieNameGuard;
+    }
+    try {
+      cookieName = await readParameter(options.cookieName.key);
+    }
+    catch (error) {
+      logger.error(error);
+      context.serverResponse.statusCode = 500;
+      return void context.serverResponse.end();
+    }
+  }
+  if (cookieName === undefined || cookieName === '') {
+    logger.error('access token cookie name is undefined or empty');
+    context.serverResponse.statusCode = 500;
+    return void context.serverResponse.end();
+  }
+
+  let encrypterSecretKey;
+  encrypterSecretKeyGuard: {
+    if (isSecret(options.encrypterSecretKey) === false) {
+      encrypterSecretKey = options.encrypterSecretKey;
+      break encrypterSecretKeyGuard;
+    }
+    try {
+      encrypterSecretKey = await readSecret(options.encrypterSecretKey.key);
+    }
+    catch (error) {
+      logger.error(error);
+      context.serverResponse.statusCode = 500;
+      return void context.serverResponse.end();
+    }
+  }
+  if (encrypterSecretKey === undefined || encrypterSecretKey === '') {
+    logger.error('encrypter secret key is undefined or empty');
+    context.serverResponse.statusCode = 500;
+    return void context.serverResponse.end();
+  }
+
+  // retrieve the cookie name
+  let stateCipherAlgorithm;
+  stateCipherAlgorithmGuard: {
+    if (options.stateCipherAlgorithm === undefined) {
+      stateCipherAlgorithm = defaultStateCipherAlgorithm;
+      break stateCipherAlgorithmGuard;
+    }
+    if (isParameter(options.stateCipherAlgorithm) === false) {
+      stateCipherAlgorithm = options.stateCipherAlgorithm;
+      break stateCipherAlgorithmGuard;
+    }
+    try {
+      stateCipherAlgorithm = await readParameter(options.stateCipherAlgorithm.key);
+    }
+    catch (error) {
+      logger.error(error);
+      context.serverResponse.statusCode = 500;
+      return void context.serverResponse.end();
+    }
+  }
+  if (stateCipherAlgorithm === undefined || stateCipherAlgorithm === '') {
+    logger.error('access token cookie name is undefined or empty');
+    context.serverResponse.statusCode = 500;
+    return void context.serverResponse.end();
+  }
+
+  // read the cookie
+  const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
+    secure: true,
+  });
   const cookie = cookies.get(cookieName)
+
+  // parse the cookie
   let loginStateCookiePayload: LoginStateCookiePayload | undefined
   payloadGuard: {
     if (cookie === undefined) {
@@ -83,7 +181,7 @@ export const useLoginStateCookieReader = (options: UseLoginStateCookieReaderOpti
       break payloadGuard;
     }
     // fetch the allowed return url domains from config
-    const listOfAllowedReturnUrlDomains = allowedReturnUrlDomainsString.split(',').map((domain) => domain.trim())
+    const listOfAllowedReturnUrlDomains = allowedReturnUrlDomains.split(',').map((domain) => domain.trim())
     // ensure that the "allowed_return_url_domains" setting exists
     // return an error if it does not
     if (Array.isArray(listOfAllowedReturnUrlDomains) === false) {

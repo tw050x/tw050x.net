@@ -1,7 +1,9 @@
 {
   "author": "tw050x (Richard Kielty)",
   "dependencies": {
+    "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
+    "@tw050x.net.library/secret": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
     "@tw050x.net.library/utility": "workspace:*",
     "cookies": "^0.9.1",
@@ -19,9 +21,11 @@
     ".": "./artifact/index.js",
     "./use-access-token-cookie-reader": "./artifact/use-access-token-cookie-reader.js",
     "./use-access-token-cookie-writer": "./artifact/use-access-token-cookie-writer.js",
-    "./use-cors": "./artifact/use-cors.js",
+    "./use-cors-headers": "./artifact/use-cors-headers.js",
+    "./use-log-request": "./artifact/use-log-request.js",
     "./use-login-state-cookie-reader": "./artifact/use-login-state-cookie-reader.js",
     "./use-login-state-cookie-writer": "./artifact/use-login-state-cookie-writer.js",
+    "./use-pagination-query-parameters": "./artifact/use-pagination-query-parameters.js",
     "./use-refresh-token-cookie-reader": "./artifact/use-refresh-token-cookie-reader.js",
     "./use-refresh-token-cookie-writer": "./artifact/use-refresh-token-cookie-writer.js",
     "./use-refreshable-token-cookie-reader": "./artifact/use-refreshable-token-cookie-reader.js",

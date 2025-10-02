@@ -1,0 +1,18 @@
+{
+  "author": "tw050x (Richard Kielty)",
+  "description": "The @tw050x.net.library/types package project",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": "./artifact/index.js"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net.library/types",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "types": "artifact/index.d.ts",
+  "version": "1.0.0"
+}

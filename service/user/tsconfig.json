@@ -9,8 +9,10 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
-    "src/middleware/registration-enabled-gate.tsx",
+    "../../types/env.service.user.d.ts",
+    "src/middleware/use-registration-enabled-gate.tsx",
     "src/helper/generate-register-form-nonce.ts",
+    "src/helper/generate-registration-assignment-tasks.ts",
     "src/stack/register/aside/register-aside/get.tsx",
     "src/stack/register/aside/register-aside/options.ts",
     "src/stack/register/get.tsx",
@@ -24,9 +26,11 @@
   "references": [
     { "path": "../../database/authentication" },
     { "path": "../../database/user" },
+    { "path": "../../library/configuration" },
     { "path": "../../library/database" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
+    { "path": "../../library/secret" },
     { "path": "../../library/service" },
     { "path": "../../library/uikit" },
     { "path": "../../library/utility" },

@@ -4,16 +4,8 @@ import { join } from "node:path";
 
 defineService({
   getRoutesDirectory: () => join(__dirname, 'stack'),
-  onPrepare: async (service) => {
-    await Promise.all([
-      service.configuration.use('error.service.allowed-origins'),
-    ])
-  },
   onReady: async (service) => {
     const onEndProcess = () => {
-      service.configuration.destroy();
-      service.database.destroy();
-      service.secrets.destroy();
       const forceCloseTimeout = setTimeout(() => {
         logger.info('Server forced shut down');
         process.exit(1);

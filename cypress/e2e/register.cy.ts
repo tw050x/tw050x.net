@@ -1,5 +1,5 @@
 describe('As a user I want to register an account', () => {
-  it('should allow a user to enter their details, register an account and be redirected to the welcome page', () => {
+  it('should allow a user to enter their details, register an account and be redirected to the assignment page', () => {
     const timestamp = Date.now();
     const email = `test.user.${timestamp}@example.com`;
     const password = 'Password123!';
@@ -8,10 +8,10 @@ describe('As a user I want to register an account', () => {
     cy.get('input[name="password"]').type(password);
     cy.get('input[name="password-confirmation"]').type(password);
     cy.get('button[type="submit"]').click();
-    cy.url().should('eq', `${Cypress.config().baseUrl}/portal/welcome`);
+    cy.url().should('eq', `${Cypress.config().baseUrl}/portal/assignment`);
   });
 
-  it('should allow a user to enter their details, register an account and be redirected to the welcome page, ignoring the login state cookie', () => {
+  it('should allow a user to enter their details, register an account and be redirected to the assignment page, ignoring the login state cookie', () => {
     const timestamp = Date.now();
     const email = `test.user.${timestamp}@example.com`;
     const password = 'Password123!';
@@ -31,7 +31,7 @@ describe('As a user I want to register an account', () => {
     cy.get('input[name="password"]').type(password);
     cy.get('input[name="password-confirmation"]').type(password);
     cy.get('button[type="submit"]').click();
-    cy.url().should('eq', `${Cypress.config().baseUrl}/portal/welcome`);
+    cy.url().should('eq', `${Cypress.config().baseUrl}/portal/assignment`);
   });
 
   it('should show validation errors if the form is submitted with no data', () => {

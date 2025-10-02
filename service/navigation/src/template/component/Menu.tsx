@@ -9,8 +9,8 @@ import { default as Portal } from "@tw050x.net.library/uikit/svg/Portal";
 export type Props = {
   menuState: 'open' | 'collapsed';
   serviceMenuItems: (
-    | { label: string; href: string, IconComponent: Component, disabled?: boolean }
-    | { label: string; src: string, IconComponent: Component, disabled?: boolean }
+    | { label: string; href: string, IconComponent: Component, disabled?: boolean, classes?: string[] }
+    | { label: string; src: string, IconComponent: Component, disabled?: boolean, classes?: string[] }
   )[];
   userMenuItems: (
     | { label: string; href: string, IconComponent: Component, disabled?: boolean }
@@ -43,6 +43,7 @@ const PortalMenu: Component<Props> = (props) => {
               }
               if ('href' in item) {
                 const classes = [
+                  ...(item.classes ?? []),
                   "text-white hover:no-underline p-4",
                 ]
                 if (item.disabled) {

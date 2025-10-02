@@ -6,6 +6,7 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
+    "../../types/env.database.account.d.ts",
     "src/client.ts",
     "src/index.ts",
   ]

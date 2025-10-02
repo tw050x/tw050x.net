@@ -1,50 +1,83 @@
+import { useParameter } from "@tw050x.net.library/configuration";
+import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
+import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database"
 import { logger } from "@tw050x.net.library/logger";
-import { useCors } from "@tw050x.net.library/middleware/use-cors";
-import { useAccessTokenCookieReader } from "@tw050x.net.library/middleware";
+import { useAccessTokenCookieReader, UseAccessTokenCookieReaderOptions } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
+import { useLoginStateCookieWriter, UseLoginStateCookieWriterOptions } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
+import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper";
+import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
+import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
+import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Account } from "@tw050x.net.library/uikit/svg/Account";
 import { default as AccountSwitch } from "@tw050x.net.library/uikit/svg/AccountSwitch";
+import { default as Assignment } from "@tw050x.net.library/uikit/svg/Assignment";
 import { default as Brands } from "@tw050x.net.library/uikit/svg/Brands";
 import { default as Dashboard } from "@tw050x.net.library/uikit/svg/Dashboard";
 import { default as Products } from "@tw050x.net.library/uikit/svg/Products";
 import { default as Profile } from "@tw050x.net.library/uikit/svg/Profile";
 import { default as Users } from "@tw050x.net.library/uikit/svg/Users";
-import { default as Welcome } from "@tw050x.net.library/uikit/svg/Welcome";
 import { default as Cookies } from "cookies";
+import { useAuthGate } from "../../../middleware/use-auth-gate"
 import { default as Menu, Props as MenuProps } from "../../../template/component/Menu";
 
+const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
+  allowedMethods: ['GET', 'OPTIONS'],
+  allowedOrigins: useParameter('navigation.service.allowed-origins'),
+}
+
+const useAccessTokenCookieReaderOptions: UseAccessTokenCookieReaderOptions = {
+  cookieName: useParameter('cookie.access-token.name'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
+}
+
+const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+  cookieName: useParameter('cookie.login-state.name'),
+  cookieDomain: useParameter('cookie.login-state.domain'),
+  encrypterSecretKey: useSecret('encrypter.secret-key'),
+}
+
 export default defineServiceMiddleware([
-  async (context) => {
-    logger.debug(`GET ${context.incomingMessage.url}`);
-  },
-  useCors({
-    getConfiguration: async ({ configuration }) => ({
-      allowedMethods: ['GET', 'OPTIONS'],
-      allowedOrigins: configuration.get('navigation.service.allowed-origins'),
-    }),
-  }),
-  useAccessTokenCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.access-token.name'),
-      requiredPermissions: [],
-    }),
-    getSecrets: async ({ secrets }) => ({
-      jwtSecretKey: secrets.get('jwt.secret-key'),
-    }),
-  }),
+  useLogRequest(),
+  useCorsHeaders(useCorsHeadersOptions),
+  useAccessTokenCookieReader(useAccessTokenCookieReaderOptions),
+  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
+  useAuthGate(),
+
+  //
   async (context) => {
     const cookies = new Cookies(context.incomingMessage, context.serverResponse);
 
+    // Fetch assignments to determine if there are any pending ones
+    let incompleteAssignmentDocuments;
+    try {
+      incompleteAssignmentDocuments = await assignmentDatabase.task.countDocuments(
+        sanitizeMongoDBFilterOrPipeline({
+          userProfileUuid: context.incomingMessage.accessTokenCookie.payload.sub,
+          completed: false,
+        })
+      );
+    }
+    catch (error) {
+      logger.error(error);
+      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />)
+    }
+
     // Determine service menu items
-    const serviceMenuItems = [
-      { label: 'Welcome', href: '/portal/welcome', IconComponent: Welcome },
-      { label: 'Dashboard', href: '/portal/dashboard', IconComponent: Dashboard, disabled: true },
-      { label: 'Account', href: '/portal/account', IconComponent: Account },
-      { label: 'Brands', href: '/portal/brands', IconComponent: Brands, disabled: true },
-      { label: 'Products', href: '/portal/products', IconComponent: Products, disabled: true },
-      { label: 'Users', href: '/portal/users', IconComponent: Users, disabled: true },
-    ]
+    const serviceMenuItems = []
+
+    if (incompleteAssignmentDocuments > 0) {
+      serviceMenuItems.push({ label: 'Assignment', href: '/portal/assignment', IconComponent: Assignment, classes: ['attention'] });
+    }
+
+    // Add default menu items
+    serviceMenuItems.push({ label: 'Dashboard', href: '/portal/dashboard', IconComponent: Dashboard });
+    serviceMenuItems.push({ label: 'Brands', href: '/portal/brands', IconComponent: Brands });
+    serviceMenuItems.push({ label: 'Products', href: '/portal/products', IconComponent: Products });
+    serviceMenuItems.push({ label: 'Account', href: '/portal/account', IconComponent: Account });
+    serviceMenuItems.push({ label: 'Users', href: '/portal/users', IconComponent: Users });
 
     // Determine menu state from cookie
     const menuStateCookieValue = cookies.get('ui.menu.state');
@@ -61,8 +94,8 @@ export default defineServiceMiddleware([
 
     // Determine user menu items
     let userMenuItems = [
-      { label: 'Switch Account', src: `/portal/users/profile/${context.incomingMessage.accessTokenCookie.payload?.sub}`, IconComponent: AccountSwitch, disabled: true },
-      { label: 'Profile', href: `/portal/users/profile/${context.incomingMessage.accessTokenCookie.payload?.sub}`, IconComponent: Profile },
+      { label: 'Switch Account', src: `/portal/users/profile/${context.incomingMessage.accessTokenCookie.payload.sub}`, IconComponent: AccountSwitch },
+      { label: 'Profile', href: `/portal/users/profile/${context.incomingMessage.accessTokenCookie.payload.sub}`, IconComponent: Profile },
     ]
 
     //

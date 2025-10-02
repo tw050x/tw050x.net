@@ -9,6 +9,7 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
+    "../../types/env.service.authentication.d.ts",
     "src/helper/generate-login-form-nonce.ts",
     "src/stack/generate/nonce/options.ts",
     "src/stack/generate/nonce/post.ts",
@@ -27,9 +28,11 @@
   "references": [
     { "path": "../../database/authentication" },
     { "path": "../../database/user" },
+    { "path": "../../library/configuration" },
     { "path": "../../library/database" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
+    { "path": "../../library/secret" },
     { "path": "../../library/service" },
     { "path": "../../library/uikit" },
     { "path": "../../library/utility" },

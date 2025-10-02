@@ -1,46 +1,42 @@
-import { useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
-import { useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { useCors } from "@tw050x.net.library/middleware/use-cors";
-import { logger } from "@tw050x.net.library/logger";
+import { useParameter, readParameter } from "@tw050x.net.library/configuration";
+import { useAccessTokenCookieReader, UseAccessTokenCookieReaderOptions } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
+import { useLoginStateCookieWriter, UseLoginStateCookieWriterOptions } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/middleware";
+import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendMovedPermanentlyRedirect} from "@tw050x.net.library/service/helper/redirect/send-moved-permanently-redirect";
-import { authGate } from "../../middleware/auth-gate";
+import { useAuthGate } from "../../middleware/use-auth-gate";
+
+const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
+  allowedMethods: ['GET', 'OPTIONS'],
+  allowedOrigins: useParameter('portal.service.allowed-origins'),
+}
+
+const useAccessTokenCookieReaderOptions: UseAccessTokenCookieReaderOptions = {
+  cookieName: useParameter('cookie.access-token.name'),
+  requiredPermissions: [
+    'read:portal:users-page',
+  ],
+  jwtSecretKey: useSecret('jwt.secret-key'),
+}
+
+const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+  cookieName: useParameter('cookie.login-state.name'),
+  cookieDomain: useParameter('cookie.login-state.domain'),
+  encrypterSecretKey: useSecret('encrypter.secret-key'),
+}
 
 export default defineServiceMiddleware([
-  async (context) => {
-    logger.debug(`GET ${context.incomingMessage.url}`);
-  },
-  useCors({
-    getConfiguration: async ({ configuration }) => ({
-      allowedMethods: ['GET', 'OPTIONS'],
-      allowedOrigins: configuration.get('portal.service.allowed-origins'),
-    })
-  }),
-  useAccessTokenCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.access-token.name'),
-      requiredPermissions: [
-        'read:portal:users-page',
-      ]
-    }),
-    getSecrets: async ({ secrets }) => ({
-      jwtSecretKey: secrets.get('jwt.secret-key'),
-    }),
-  }),
-  useLoginStateCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.login-state.name'),
-      cookieDomain: configuration.get('cookie.login-state.domain'),
-    }),
-    getSecrets: async ({ secrets }) => ({
-      encrypterSecretKey: secrets.get('encrypter.secret-key'),
-    }),
-  }),
-  authGate(),
+  useLogRequest(),
+  useCorsHeaders(useCorsHeadersOptions),
+  useAccessTokenCookieReader(useAccessTokenCookieReaderOptions),
+  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
+  useAuthGate(),
   async (context) => {
     return void sendMovedPermanentlyRedirect(
       context,
-      new URL('/portal/dashboard', `https://${context.configuration.get('portal.service.host')}`)
+      new URL('/portal/dashboard', `https://${await readParameter('portal.service.host')}`)
     );
   }
 ])

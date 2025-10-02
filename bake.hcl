@@ -1,53 +1,53 @@
 group "default" {
   targets = [
-    "portal",
-    "assets",
-    "authentication",
-    "error",
-    "marketing",
-    "navigation",
-    "user"
+    "service-assets",
+    "service-authentication",
+    "service-error",
+    "service-marketing",
+    "service-navigation",
+    "service-portal",
+    "service-user"
   ]
 }
 
-target "portal" {
+target "service-portal" {
   dockerfile = "container/service/Dockerfile"
-  target = "portal"
+  target = "service-portal"
   tags = ["tw050x.net/portal:latest"]
 }
 
-target "assets" {
+target "service-assets" {
   dockerfile = "container/service/Dockerfile"
-  target = "assets"
+  target = "service-assets"
   tags = ["tw050x.net/assets:latest"]
 }
 
-target "authentication" {
+target "service-authentication" {
   dockerfile = "container/service/Dockerfile"
-  target = "authentication"
+  target = "service-authentication"
   tags = ["tw050x.net/authentication:latest"]
 }
 
-target "error" {
+target "service-error" {
   dockerfile = "container/service/Dockerfile"
-  target = "error"
+  target = "service-error"
   tags = ["tw050x.net/error:latest"]
 }
 
-target "marketing" {
+target "service-marketing" {
   dockerfile = "container/service/Dockerfile"
-  target = "marketing"
+  target = "service-marketing"
   tags = ["tw050x.net/marketing:latest"]
 }
 
-target "navigation" {
+target "service-navigation" {
   dockerfile = "container/service/Dockerfile"
-  target = "navigation"
+  target = "service-navigation"
   tags = ["tw050x.net/navigation:latest"]
 }
 
-target "user" {
+target "service-user" {
   dockerfile = "container/service/Dockerfile"
-  target = "user"
+  target = "service-user"
   tags = ["tw050x.net/user:latest"]
 }

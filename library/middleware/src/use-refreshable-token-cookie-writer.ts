@@ -1,10 +1,22 @@
+import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { ServiceContext } from "@tw050x.net.library/service";
+import { Middleware, ServiceContext } from "@tw050x.net.library/service";
 import { default as Cookies } from "cookies";
 import { addDays, differenceInSeconds } from "date-fns";
 
-declare module "node:http" {
-  interface ServerResponse {
+/**
+ *
+ */
+export type UseRefreshableTokenCookieWriterOptions = {
+  cookieName: string | Parameter;
+  cookieDomain: string | Parameter;
+}
+
+/**
+ *
+ */
+export type UseRefreshableTokenCookieWriterOptionsResultingContext = ServiceContext & {
+  serverResponse: ServiceContext['serverResponse'] & {
     refreshableTokenCookie: {
       clear: () => void;
       set: (value: string) => void;
@@ -12,31 +24,69 @@ declare module "node:http" {
   }
 }
 
-type UseRefreshableTokenCookieWriterOptions = {
-  getConfiguration: (context: { configuration: ServiceContext['configuration'] }) => Promise<{
-    cookieName: string;
-    cookieDomain: string;
-  }>;
-}
+/**
+ *
+ */
+type Factory = (options: UseRefreshableTokenCookieWriterOptions) => Middleware<
+  ServiceContext,
+  UseRefreshableTokenCookieWriterOptionsResultingContext
+>
 
 /**
  * @returns void
  */
-export const useRefreshableTokenCookieWriter = (options: UseRefreshableTokenCookieWriterOptions) => async (context: ServiceContext) => {
-  const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
-    secure: true,
-  });
-  let configuration;
-  try {
-    configuration = await options.getConfiguration({ configuration: context.configuration });
+export const useRefreshableTokenCookieWriter: Factory = (options) => async (context) => {
+
+  // retrieve the cookie name
+  let cookieName;
+  cookieNameGuard: {
+    if (isParameter(options.cookieName) === false) {
+      cookieName = options.cookieName;
+      break cookieNameGuard;
+    }
+    try {
+      cookieName = await readParameter(options.cookieName.key);
+    }
+    catch (error) {
+      logger.error(error);
+      context.serverResponse.statusCode = 500;
+      return void context.serverResponse.end();
+    }
   }
-  catch (error) {
-    logger.error(error);
+  if (cookieName === undefined || cookieName === '') {
+    logger.error('access token cookie name is undefined or empty');
     context.serverResponse.statusCode = 500;
     return void context.serverResponse.end();
   }
-  const cookieName = configuration.cookieName;
-  const cookieDomain = configuration.cookieDomain;
+
+  // retrieve the cookie name
+  let cookieDomain;
+  cookieDomainGuard: {
+    if (isParameter(options.cookieDomain) === false) {
+      cookieDomain = options.cookieDomain;
+      break cookieDomainGuard;
+    }
+    try {
+      cookieDomain = await readParameter(options.cookieDomain.key);
+    }
+    catch (error) {
+      logger.error(error);
+      context.serverResponse.statusCode = 500;
+      return void context.serverResponse.end();
+    }
+  }
+  if (cookieDomain === undefined || cookieDomain === '') {
+    logger.error('access token cookie name is undefined or empty');
+    context.serverResponse.statusCode = 500;
+    return void context.serverResponse.end();
+  }
+
+  //
+  const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
+    secure: true,
+  });
+
+  //
   const clearRefreshableTokenCookie = () => {
     cookies.set(cookieName, '', {
       domain: cookieDomain,
@@ -46,6 +96,8 @@ export const useRefreshableTokenCookieWriter = (options: UseRefreshableTokenCook
       secure: true,
     });
   }
+
+  //
   const setRefreshableTokenCookie = (value: string) => {
     const currentDate = new Date();
     const expiryDate = addDays(currentDate, 7);
@@ -60,6 +112,7 @@ export const useRefreshableTokenCookieWriter = (options: UseRefreshableTokenCook
       secure: true,
     });
   }
+
   // initialize the cookies object on the incoming message
   context.serverResponse.refreshableTokenCookie = {
     clear: clearRefreshableTokenCookie,

@@ -2,12 +2,12 @@ import { ServiceContext } from '../../define-service';
 
 
 /**
- * Sends a JSON response with the specified status code and data.
+ * Sends a redirection with the 303 status and to the given URL.
  *
  * @param context - The service context object.
  * @param url - The URL to redirect to.
  */
-export const sendSeeOtherRedirect = async (context: ServiceContext, url: URL) => {
+export const sendSeeOtherRedirect = (context: ServiceContext, url: URL) => {
   let redirectHeader = 'Location'
   if (context.incomingMessage.headers['hx-request'] === 'true') {
     redirectHeader = 'HX-Redirect';

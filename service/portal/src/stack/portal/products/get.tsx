@@ -1,49 +1,45 @@
-import { useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
-import { useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { useUIMenuStateCookieReader } from "@tw050x.net.library/middleware/use-ui-menu-state-cookie-reader";
-import { useCors } from "@tw050x.net.library/middleware/use-cors";
-import { logger } from "@tw050x.net.library/logger";
+import { useParameter } from "@tw050x.net.library/configuration";
+import { UseAccessTokenCookieReaderOptions, useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
+import { UseLoginStateCookieWriterOptions, useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { UseUIMenuStateCookieReaderOptions, useUIMenuStateCookieReader } from "@tw050x.net.library/middleware/use-ui-menu-state-cookie-reader";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/middleware";
+import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendOKHTMLResponse} from "@tw050x.net.library/service/helper/response/send-ok-html-response";
-import { authGate } from "../../../middleware/auth-gate";
+import { useAuthGate } from "../../../middleware/use-auth-gate";
 import { default as Products, Props as ProductsDocumentProps } from "../../../template/document/Products";
 
+const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
+  allowedMethods: ['GET', 'OPTIONS'],
+  allowedOrigins: useParameter('portal.service.allowed-origins'),
+}
+
+const useAccessTokenCookieReaderOptions: UseAccessTokenCookieReaderOptions = {
+  cookieName: useParameter('cookie.access-token.name'),
+  requiredPermissions: [
+    'read:portal:users-page',
+  ],
+  jwtSecretKey: useSecret('jwt.secret-key'),
+}
+
+const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+  cookieName: useParameter('cookie.login-state.name'),
+  cookieDomain: useParameter('cookie.login-state.domain'),
+  encrypterSecretKey: useSecret('encrypter.secret-key'),
+}
+
+const useUIMenuStateCookieReaderOptions: UseUIMenuStateCookieReaderOptions = {
+  cookieName: useParameter('cookie.ui.menu.state.name'),
+}
+
 export default defineServiceMiddleware([
-  async (context) => {
-    logger.debug(`GET ${context.incomingMessage.url}`);
-  },
-  useCors({
-    getConfiguration: async ({ configuration }) => ({
-      allowedMethods: ['GET', 'OPTIONS'],
-      allowedOrigins: configuration.get('portal.service.allowed-origins'),
-    })
-  }),
-  useAccessTokenCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.access-token.name'),
-      requiredPermissions: [
-        'read:portal:users-page',
-      ]
-    }),
-    getSecrets: async ({ secrets }) => ({
-      jwtSecretKey: secrets.get('jwt.secret-key'),
-    }),
-  }),
-  useLoginStateCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.login-state.name'),
-      cookieDomain: configuration.get('cookie.login-state.domain'),
-    }),
-    getSecrets: async ({ secrets }) => ({
-      encrypterSecretKey: secrets.get('encrypter.secret-key'),
-    }),
-  }),
-  authGate(),
-  useUIMenuStateCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.ui.menu.state.name'),
-    }),
-  }),
+  useLogRequest(),
+  useCorsHeaders(useCorsHeadersOptions),
+  useAccessTokenCookieReader(useAccessTokenCookieReaderOptions),
+  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
+  useAuthGate(),
+  useUIMenuStateCookieReader(useUIMenuStateCookieReaderOptions),
   async (context) => {
     const productsDocumentProps: ProductsDocumentProps = {
       menuInitiatorProps: {

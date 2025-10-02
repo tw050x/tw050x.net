@@ -1,7 +1,7 @@
-export { getFormDataBody } from "./helper/get-form-data-body";
-export { getJSONBody } from "./helper/get-json-body";
-export { getUrlParams } from "./helper/get-url-params";
-export { getUrlQuery } from "./helper/get-url-query";
+export { useFormDataBody } from "./helper/use-form-data-body";
+export { useJSONBody } from "./helper/use-json-body";
+export { useUrlParams } from "./helper/use-url-params";
+export { useUrlQuery } from "./helper/use-url-query";
 export { sendFoundRedirect } from "./helper/redirect/send-found-redirect";
 export { sendMovedPermanentlyRedirect } from "./helper/redirect/send-moved-permanently-redirect";
 export { sendMovedTemporarilyRedirect } from "./helper/redirect/send-moved-temporarily-redirect";

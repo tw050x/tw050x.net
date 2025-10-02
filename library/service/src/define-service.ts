@@ -1,28 +1,12 @@
-import { logger } from "../../logger/src"
-import { GetSecretValueCommand } from "@aws-sdk/client-secrets-manager"
-import { GetParameterCommand } from "@aws-sdk/client-ssm"
+import { logger } from "@tw050x.net.library/logger"
 import { EventEmitter } from "node:events";
 import { IncomingMessage, ServerResponse, createServer } from "node:http";
 import { default as discoverRoutes } from "./routes";
-import { ssmClient } from "./ssm-client";
-import { secretsManagerClient } from "./secrets-manager-client";
-import { mongoClient } from "./mongo-client";
 
 export type Service = {
   close: (callback?: () => void) => void;
-  configuration: {
-    destroy: () => Promise<void>;
-    use: (key: string) => void;
-  },
-  database: {
-    destroy: () => Promise<void>;
-  },
   listen: (port: number | string, callback?: () => void) => void;
   on: (event: string, listener: (...args: any[]) => void) => void;
-  secrets: {
-    destroy: () => Promise<void>;
-    use: (key: string) => void;
-  }
 }
 
 interface ServiceConfiguration {
@@ -32,13 +16,7 @@ interface ServiceConfiguration {
 }
 
 export type ServiceContext = {
-  configuration: {
-    get: (key: string) => string;
-  };
   incomingMessage: IncomingMessage;
-  secrets: {
-    get: (key: string) => string;
-  };
   serverResponse: ServerResponse;
 }
 
@@ -48,7 +26,7 @@ export type ServiceContext = {
 export default async function defineService({ getRoutesDirectory, onPrepare, onReady }: ServiceConfiguration) {
   const eventEmitter = new EventEmitter();
 
-  const configuration = new Map<string, string>();
+  // const configuration = new Map<string, string>();
   const secrets = new Map<string, string>();
 
   function requestHandler(incomingMessage: IncomingMessage, serverResponse: ServerResponse) {
@@ -141,25 +119,7 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
     // pass request and response to the handler
     if (matchedEventPattern) {
       const context: ServiceContext = {
-        configuration: {
-          get: (key: string) => {
-            const value = configuration.get(key);
-            if (value === undefined) {
-              throw new Error(`Configuration key (${key}) not found, did you forget to call service.configuration.use(${key}) in the service onPrepare() function?`);
-            }
-            return value;
-          }
-        },
         incomingMessage,
-        secrets: {
-          get: (key: string) => {
-            const value = secrets.get(key);
-            if (value === undefined) {
-              throw new Error(`Secret key (${key}) not found, did you forget to call service.secrets.use(${key}) in the service onPrepare() function?`);
-            }
-            return value;
-          }
-        },
         serverResponse,
       }
       return void eventEmitter.emit(matchedEventPattern, context);
@@ -185,80 +145,14 @@ export default async function defineService({ getRoutesDirectory, onPrepare, onR
   const server = createServer(requestHandler);
 
   const service: Service = {
-    configuration: {
-      destroy: async () => {
-        ssmClient.destroy();
-      },
-      use: async (key: string) => {
-        const cachedValue = configuration.get(key);
-        if (cachedValue !== undefined) {
-          return cachedValue
-        }
-        let readValue;
-
-        try {
-          readValue = await ssmClient.send(
-            new GetParameterCommand({
-              Name: key,
-              WithDecryption: false
-            })
-          );
-        }
-        catch (error) {
-          logger.error(error);
-          throw new Error('Failed to read SSM parameter');
-        }
-
-        let value = readValue.Parameter?.Value
-
-        if (value !== undefined) {
-          configuration.set(key, value);
-        }
-      }
-    },
     close: (callback) => {
       server.close(callback);
-    },
-    database: {
-      destroy: async () => {
-        await mongoClient.close();
-      }
     },
     listen: (port, callback) => {
       server.listen(port, callback);
     },
     on: (event, listener) => {
       eventEmitter.on(event, listener);
-    },
-    secrets: {
-      destroy: async () => {
-        secretsManagerClient.destroy();
-      },
-      use: async (key: string) => {
-        const cachedValue = secrets.get(key);
-        if (cachedValue !== undefined) {
-          return cachedValue
-        }
-        let readValue;
-
-        try {
-          readValue = await secretsManagerClient.send(
-            new GetSecretValueCommand({
-              SecretId: key
-            })
-          );
-        }
-        catch (error) {
-          logger.error(error);
-          throw new Error('Failed to read secret value');
-        }
-
-        let value = readValue.SecretString
-
-        if (value !== undefined) {
-          secrets.set(key, value);
-        }
-      },
     },
   }
 

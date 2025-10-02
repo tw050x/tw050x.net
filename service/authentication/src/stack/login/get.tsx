@@ -1,12 +1,16 @@
+import { useParameter, readParameter, isParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
-import { useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
-import { useCors } from "@tw050x.net.library/middleware/use-cors";
-import { useLoginStateCookieReader } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
-import { useRefreshTokenCookieReader } from "@tw050x.net.library/middleware/use-refresh-token-cookie-reader";
-import { useRefreshTokenCookieWriter } from "@tw050x.net.library/middleware/use-refresh-token-cookie-writer";
-import { useRefreshableTokenCookieReader } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-reader";
-import { useRefreshableTokenCookieWriter } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-writer";
+import { UseAccessTokenCookieReaderOptions, useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
+import { UseAccessTokenCookieWriterOptions, useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
+import { UseLoginStateCookieReaderOptions, useLoginStateCookieReader } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
+import { UseLoginStateCookieWriterOptions, useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { UseRefreshTokenCookieReaderOptions, useRefreshTokenCookieReader } from "@tw050x.net.library/middleware/use-refresh-token-cookie-reader";
+import { UseRefreshTokenCookieWriterOptions, useRefreshTokenCookieWriter } from "@tw050x.net.library/middleware/use-refresh-token-cookie-writer";
+import { UseRefreshableTokenCookieReaderOptions, useRefreshableTokenCookieReader } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-reader";
+import { UseRefreshableTokenCookieWriterOptions, useRefreshableTokenCookieWriter } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-writer";
+import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendFoundRedirect } from "@tw050x.net.library/service/helper/redirect/send-found-redirect";
 import { sendForbiddenHTMLResponse } from "@tw050x.net.library/service/helper/response/send-forbidden-html-response";
@@ -18,68 +22,59 @@ import { SignOptions, sign, verify } from "jsonwebtoken";
 import { generateLoginFormNonce } from '../../helper/generate-login-form-nonce';
 import { default as LoginDocument } from "../../template/document/LoginDocument";
 
+const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
+  allowedMethods: ['GET', 'POST', 'OPTIONS'],
+  allowedOrigins: useParameter('authentication.service.allowed-origins'),
+}
+
+const useAccessTokenCookieReaderOptions: UseAccessTokenCookieReaderOptions = {
+  cookieName: useParameter('cookie.access-token.name'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
+}
+
+const useAccessTokenCookieWriterOptions: UseAccessTokenCookieWriterOptions = {
+  cookieName: useParameter('cookie.access-token.name'),
+  cookieDomain: useParameter('cookie.access-token.domain'),
+}
+
+const useLoginStateCookieReaderOptions: UseLoginStateCookieReaderOptions = {
+  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
+  cookieName: useParameter('cookie.login-state.name'),
+  encrypterSecretKey: useSecret('encrypter.secret-key'),
+}
+
+const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+  cookieName: useParameter('cookie.login-state.name'),
+  cookieDomain: useParameter('cookie.login-state.domain'),
+  encrypterSecretKey: useSecret('encrypter.secret-key'),
+}
+
+const useRefreshTokenCookieReaderOptions: UseRefreshTokenCookieReaderOptions = {
+  cookieName: useParameter('cookie.refresh-token.name'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
+}
+
+const useRefreshTokenCookieWriterOptions: UseRefreshTokenCookieWriterOptions = {
+  cookieName: useParameter('cookie.refresh-token.name'),
+  cookieDomain: useParameter('cookie.refresh-token.domain'),
+}
+
+const useRefreshableTokenCookieReaderOptions: UseRefreshableTokenCookieReaderOptions = {
+  cookieName: useParameter('cookie.refreshable-token.name'),
+}
+
+const useRefreshableTokenCookieWriterOptions: UseRefreshableTokenCookieWriterOptions = {
+  cookieName: useParameter('cookie.refreshable-token.name'),
+  cookieDomain: useParameter('cookie.refreshable-token.domain'),
+}
+
 export default defineServiceMiddleware([
-  async (context) => {
-    logger.debug(`GET ${context.incomingMessage.url}`);
-  },
-  useCors({
-    getConfiguration: async ({ configuration }) => ({
-      allowedMethods: ['GET', 'POST', 'OPTIONS'],
-      allowedOrigins: configuration.get('authentication.service.allowed-origins'),
-    }),
-  }),
-  useAccessTokenCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.access-token.name'),
-    }),
-    getSecrets: async ({ secrets }) => ({
-      jwtSecretKey: secrets.get('jwt.secret-key'),
-    }),
-  }),
-  useAccessTokenCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.access-token.name'),
-      cookieDomain: configuration.get('cookie.access-token.domain'),
-    }),
-  }),
-  useLoginStateCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      allowedReturnUrlDomains: configuration.get('authentication.service.allowed-return-url-domains'),
-      cookieName: configuration.get('cookie.login-state.name'),
-    }),
-    getSecrets: async ({ secrets }) => ({
-      encrypterSecretKey: secrets.get('encrypter.secret-key'),
-    }),
-  }),
-  useRefreshTokenCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.refresh-token.name'),
-    }),
-    getSecrets: async ({ secrets }) => ({
-      jwtSecretKey: secrets.get('jwt.secret-key'),
-    }),
-  }),
-  useRefreshTokenCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.refresh-token.name'),
-      cookieDomain: configuration.get('cookie.refresh-token.domain'),
-    }),
-  }),
-  useRefreshableTokenCookieReader({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.refreshable-token.name'),
-    }),
-  }),
-  useRefreshableTokenCookieWriter({
-    getConfiguration: async ({ configuration }) => ({
-      cookieName: configuration.get('cookie.refreshable-token.name'),
-      cookieDomain: configuration.get('cookie.refreshable-token.domain'),
-    }),
-  }),
+  useLogRequest(),
+  useCorsHeaders(useCorsHeadersOptions),
 
   // Render the login page in a disabled state if it is not enabled
   async (context) => {
-    const loginEnabled = context.configuration.get('authentication.service.login-enabled');
+    const loginEnabled = await readParameter('authentication.service.login-enabled');
     if (loginEnabled === 'false') {
       const loginAsideProps = {
         disabled: true,
@@ -88,6 +83,16 @@ export default defineServiceMiddleware([
       return void sendOKHTMLResponse(context, await <LoginDocument loginAsideProps={loginAsideProps} />);
     }
   },
+
+  useAccessTokenCookieReader(useAccessTokenCookieReaderOptions),
+  useAccessTokenCookieWriter(useAccessTokenCookieWriterOptions),
+  useLoginStateCookieReader(useLoginStateCookieReaderOptions),
+  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
+  useRefreshTokenCookieReader(useRefreshTokenCookieReaderOptions),
+  useRefreshTokenCookieWriter(useRefreshTokenCookieWriterOptions),
+  useRefreshableTokenCookieReader(useRefreshableTokenCookieReaderOptions),
+  useRefreshableTokenCookieWriter(useRefreshableTokenCookieWriterOptions),
+
 
   // check if the user has a valid access token
   // async (context) => {
@@ -113,11 +118,18 @@ export default defineServiceMiddleware([
         break refreshAuthenticationGuard;
       }
 
+      // if JWT secret key is not set then return an internal server error
+      const jwtSecretKey = await readParameter('jwt.secret-key')
+      if (jwtSecretKey === undefined) {
+        logger.error('JWT secret key is not set');
+        return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      }
+
       // verify the refresh token
       // if it fails then clear the refreshable token cookie and return a forbidden error
       let refreshTokenPayload;
       try {
-        refreshTokenPayload = verify(refreshTokenCookie, context.configuration.get('jwt.secret-key'));
+        refreshTokenPayload = verify(refreshTokenCookie, jwtSecretKey);
       }
       catch (error) {
         logger.error(error);
@@ -133,8 +145,8 @@ export default defineServiceMiddleware([
       const accessTokenPayload = {
         sub: refreshTokenPayload.sub
       };
-      const accessToken = sign(accessTokenPayload, context.secrets.get('jwt.secret-key'), accessTokenOptions);
-      const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${context.configuration.get('authentication.service.host')}`);
+      const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
+      const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
       context.serverResponse.accessTokenCookie.set(accessToken);
       context.serverResponse.loginStateCookie.clear();
       return void sendFoundRedirect(context, returnUrl);

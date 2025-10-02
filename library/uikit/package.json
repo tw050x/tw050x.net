@@ -22,11 +22,13 @@
     "./component/Notice": "./artifact/component/Notice.js",
     "./component/Paragraph": "./artifact/component/Paragraph.js",
     "./component/Stylesheet": "./artifact/component/Stylesheet.js",
+    "./component/Table": "./artifact/component/Table.js",
     "./document/Forbidden": "./artifact/document/Forbidden.js",
     "./document/Unrecoverable": "./artifact/document/Unrecoverable.js",
     "./svg/Account": "./artifact/svg/Account.js",
     "./svg/AccountSwitch": "./artifact/svg/AccountSwitch.js",
     "./svg/ArrowCircleRight": "./artifact/svg/ArrowCircleRight.js",
+    "./svg/Assignment": "./artifact/svg/Assignment.js",
     "./svg/Brands": "./artifact/svg/Brands.js",
     "./svg/ButtonLoader": "./artifact/svg/ButtonLoader.js",
     "./svg/Check": "./artifact/svg/Check.js",
@@ -44,8 +46,7 @@
     "./svg/Profile": "./artifact/svg/Profile.js",
     "./svg/Thankful": "./artifact/svg/Thankful.js",
     "./svg/Users": "./artifact/svg/Users.js",
-    "./svg/Warning": "./artifact/svg/Warning.js",
-    "./svg/Welcome": "./artifact/svg/Welcome.js"
+    "./svg/Warning": "./artifact/svg/Warning.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/uikit",
