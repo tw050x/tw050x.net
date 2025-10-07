@@ -7,6 +7,13 @@ import { Parameter } from "./types";
  * @returns {Parameter}
  */
 export const useParameter = (key: string): Parameter => {
+
+  // return {
+  //   get value() {
+
+  //   }
+  // }
+
   return {
     key,
     source: 'ssm',

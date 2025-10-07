@@ -1,12 +1,11 @@
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { database as userDatabase } from "@tw050x.net.database/user";
-import { useAccessTokenCookieWriter, UseAccessTokenCookieWriterOptions } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
+import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/middleware/use-access-token-cookie";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { useLoginStateCookieReader, UseLoginStateCookieReaderOptions } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
-import { useLoginStateCookieWriter, UseLoginStateCookieWriterOptions } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { useRefreshTokenCookieWriter, UseRefreshTokenCookieWriterOptions } from "@tw050x.net.library/middleware/use-refresh-token-cookie-writer";
-import { useRefreshableTokenCookieWriter, UseRefreshableTokenCookieWriterOptions } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-writer";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
+import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/middleware/use-refresh-token-cookie";
+import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/middleware/use-refreshable-token-cookie";
 import { logger } from "@tw050x.net.library/logger";
 import { readSecret, useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
@@ -33,29 +32,26 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedOrigins: useParameter('authentication.service.allowed-origins'),
 }
 
-const useAccessTokenCookieWriterOptions: UseAccessTokenCookieWriterOptions = {
+const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
   cookieName: useParameter('cookie.access-token.name'),
   cookieDomain: useParameter('cookie.access-token.domain'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useLoginStateCookieReaderOptions: UseLoginStateCookieReaderOptions = {
+const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
   allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
-  cookieName: useParameter('cookie.login-state.name'),
-  encrypterSecretKey: useSecret('encrypter.secret-key'),
-}
-
-const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
 }
 
-const useRefreshTokenCookieWriterOptions: UseRefreshTokenCookieWriterOptions = {
+const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
   cookieName: useParameter('cookie.refresh-token.name'),
   cookieDomain: useParameter('cookie.refresh-token.domain'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useRefreshableTokenCookieWriterOptions: UseRefreshableTokenCookieWriterOptions ={
+const useRefreshableTokenCookieOptions: UseRefreshableTokenCookieOptions ={
   cookieName: useParameter('cookie.refreshable-token.name'),
   cookieDomain: useParameter('cookie.refreshable-token.domain'),
 }
@@ -63,11 +59,10 @@ const useRefreshableTokenCookieWriterOptions: UseRefreshableTokenCookieWriterOpt
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookieWriter(useAccessTokenCookieWriterOptions),
-  useLoginStateCookieReader(useLoginStateCookieReaderOptions),
-  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
-  useRefreshTokenCookieWriter(useRefreshTokenCookieWriterOptions),
-  useRefreshableTokenCookieWriter(useRefreshableTokenCookieWriterOptions),
+  useAccessTokenCookie(useAccessTokenCookieOptions),
+  useLoginStateCookie(useLoginStateCookieOptions),
+  useRefreshTokenCookie(useRefreshTokenCookieOptions),
+  useRefreshableTokenCookie(useRefreshableTokenCookieOptions),
 
   // Render the login page in a disabled if it is not enabled
   async (context) => {

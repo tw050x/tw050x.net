@@ -1,8 +1,8 @@
 import { readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { AccessTokenCookie, UseAccessTokenCookieReaderResultingContext } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
-import { UseLoginStateCookieWriterOptionsResultingContext } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { Middleware, ServiceContext } from "@tw050x.net.library/service";
+import { AccessTokenCookie, UseAccessTokenCookieResultingContext } from "@tw050x.net.library/middleware/use-access-token-cookie";
+import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/middleware/use-login-state-cookie";
+import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { sendMovedTemporarilyRedirect } from "@tw050x.net.library/service/helper/redirect/send-moved-temporarily-redirect";
 import { sendUnauthorizedHTMLResponse } from "@tw050x.net.library/service/helper/response/send-unauthorized-html-response";
 import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
@@ -12,8 +12,8 @@ import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/docu
 /**
  * Resulting context after the auth gate middleware has run
  */
-export type AuthGateResultingContext = ServiceContext & {
-  incomingMessage: ServiceContext['incomingMessage'] & {
+export type AuthGateResultingContext = ServiceRequestContext & {
+  incomingMessage: ServiceRequestContext['incomingMessage'] & {
     accessTokenCookie: {
       authorised: true;
       errors: AccessTokenCookie['errors'];
@@ -29,7 +29,7 @@ export type AuthGateResultingContext = ServiceContext & {
  *
  */
 type Factory = () => Middleware<
-  ServiceContext & UseAccessTokenCookieReaderResultingContext & UseLoginStateCookieWriterOptionsResultingContext,
+  ServiceRequestContext & UseAccessTokenCookieResultingContext & UseLoginStateCookieResultingContext,
   AuthGateResultingContext
 >;
 

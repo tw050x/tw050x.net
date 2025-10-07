@@ -18,7 +18,7 @@ export type Props = {
 const AssignmentTaskTable: Component<Props> = (props) => {
   return (
     <>
-      <Table></Table>
+      <Table>{props.tasks.length}</Table>
     </>
   );
 }

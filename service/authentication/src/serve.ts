@@ -1,37 +1,32 @@
 import { logger } from "@tw050x.net.library/logger";
-import { defineService } from "@tw050x.net.library/service";
-import { join } from "node:path";
+import { createServer } from "@tw050x.net.library/service";
+import { resolve } from 'node:path';
 
-defineService({
-  getRoutesDirectory: () => join(__dirname, 'stack'),
-  onReady: async (service) => {
-    const onEndProcess = () => {
-      const forceCloseTimeout = setTimeout(() => {
-        logger.info('Server forced shut down');
-        process.exit(1);
-      }, 30_000);
-      service.close(() => {
-        clearTimeout(forceCloseTimeout);
-        logger.info('Server shut down gracefully');
-        process.exit(0);
-      });
-    }
+const server = createServer({
+  routesDirectory: resolve(__dirname, 'stack'),
+  port: 3000,
+});
 
-    process.on('SIGINT', () => {
-      logger.info('End process signal received, shutting down server...');
-      onEndProcess();
-    });
-    process.on('SIGTERM', () => {
-      logger.info('End process signal received, shutting down server...');
-      onEndProcess();
-    });
-    process.on('uncaughtException', (error) => {
-      logger.error(error);
-      onEndProcess();
-    });
+server.listen(() => {
+  logger.info('Server is listening on port 3000');
+});
 
-    service.listen(3000, () => {
-      logger.info(`Service is running on port 3000`);
-    });
-  }
+process.on('SIGINT', () => {
+  logger.info('Received SIGINT, shutting down gracefully...');
+  server.close();
+});
+
+process.on('SIGTERM', () => {
+  logger.info('Received SIGTERM, shutting down gracefully...');
+  server.close();
+});
+
+process.on('uncaughtException', (error) => {
+  logger.error('Uncaught Exception:', error);
+  server.close();
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  server.close();
 });

@@ -1,5 +1,5 @@
 import { readParameter } from "@tw050x.net.library/configuration";
-import { Middleware, ServiceContext } from "@tw050x.net.library/service";
+import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 
 /**
@@ -12,13 +12,13 @@ export type RegistrationEnabledGateOptions = {
 /**
  *
  */
-type UserRegistrationEnabledGateResultingContext = ServiceContext & {};
+type UserRegistrationEnabledGateResultingContext = ServiceRequestContext & {};
 
 /**
  *
  */
 type Factory = (options: RegistrationEnabledGateOptions) => Middleware<
-  ServiceContext,
+  ServiceRequestContext,
   UserRegistrationEnabledGateResultingContext
 >;
 

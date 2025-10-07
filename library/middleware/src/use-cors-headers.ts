@@ -1,6 +1,6 @@
 import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { Middleware, ServiceContext } from "@tw050x.net.library/service";
+import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { isAllowedHeaders } from "@tw050x.net.library/utility/is-allowed-headers";
 import { HttpMethod, isAllowedMethod, isHttpMethod } from "@tw050x.net.library/utility/is-allowed-method";
 import { isAllowedOrigin } from "@tw050x.net.library/utility/is-allowed-origin";
@@ -17,7 +17,7 @@ export type UseCorsHeadersFactoryOptions = {
 /**
  *
  */
-type Factory = (options: UseCorsHeadersFactoryOptions) => Middleware<ServiceContext>;
+type Factory = (options: UseCorsHeadersFactoryOptions) => Middleware<ServiceRequestContext>;
 
 /**
  * CORS headers middleware factory
@@ -63,8 +63,7 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
     }
   }
   if (allowedMethods === undefined || allowedMethods === '') {
-    context.serverResponse.statusCode = 500;
-    return void context.serverResponse.end();
+    allowedMethods = '*';
   }
   if (allowedMethods !== '*') {
     allowedMethods = allowedMethods.
@@ -94,22 +93,8 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
     allowedOrigins = allowedOrigins.split(',').map((origin) => origin.trim())
   }
 
-
-  // let configuration;
-  // try {
-  //   configuration = await options.getConfiguration({ configuration: context.configuration });
-  // }
-  // catch (error) {
-  //   logger.error(error);
-  //   context.serverResponse.statusCode = 500;
-  //   return void context.serverResponse.end();
-  // }
-
   // Prepare headers to set on the response
   const headers = [];
-  // const allowedHeaders = configuration.allowedHeaders || defaultAllowedHeaders;
-  // const allowedMethods = configuration.allowedMethods;
-  // const allowedOrigins = configuration.allowedOrigins || defaultAllowedOrigins;
 
   // Set the allowed origins header
   // 1. If wildcard is allowed, set the header to '*'

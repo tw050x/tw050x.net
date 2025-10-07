@@ -57,6 +57,12 @@ COPY --from=build /build/database/user/artifact /srv/database/user/artifact
 COPY --from=build /build/database/user/package.json /srv/database/user/package.json
 COPY --from=build /build/database/user/tsconfig.json /srv/database/user/tsconfig.json
 
+FROM node:23.11.1-alpine3.22 AS library-configuration
+WORKDIR /srv
+COPY --from=build /build/library/configuration/artifact /srv/library/configuration/artifact
+COPY --from=build /build/library/configuration/package.json /srv/library/configuration/package.json
+COPY --from=build /build/library/configuration/tsconfig.json /srv/library/configuration/tsconfig.json
+
 FROM node:23.11.1-alpine3.22 AS library-database
 WORKDIR /srv
 COPY --from=build /build/library/database/artifact /srv/library/database/artifact
@@ -74,6 +80,12 @@ WORKDIR /srv
 COPY --from=build /build/library/middleware/artifact /srv/library/middleware/artifact
 COPY --from=build /build/library/middleware/package.json /srv/library/middleware/package.json
 COPY --from=build /build/library/middleware/tsconfig.json /srv/library/middleware/tsconfig.json
+
+FROM node:23.11.1-alpine3.22 AS library-secret
+WORKDIR /srv
+COPY --from=build /build/library/secret/artifact /srv/library/secret/artifact
+COPY --from=build /build/library/secret/package.json /srv/library/secret/package.json
+COPY --from=build /build/library/secret/tsconfig.json /srv/library/secret/tsconfig.json
 
 FROM node:23.11.1-alpine3.22 AS library-service
 WORKDIR /srv
@@ -118,9 +130,11 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-account /srv/database/account /srv/database/account
 COPY --from=database-user /srv/database/user /srv/database/user
+COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
@@ -137,8 +151,10 @@ FROM node:23.11.1-alpine3.22 AS service-error
 RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
+COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
@@ -153,9 +169,11 @@ FROM node:23.11.1-alpine3.22 AS service-marketing
 RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
+COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
@@ -171,9 +189,11 @@ RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
+COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
@@ -189,9 +209,11 @@ RUN apk add --no-cache curl
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
+COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
@@ -209,9 +231,11 @@ COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
 COPY --from=database-authentication /srv/database/authentication /srv/database/authentication
 COPY --from=database-user /srv/database/user /srv/database/user
+COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit

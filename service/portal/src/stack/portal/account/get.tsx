@@ -1,8 +1,8 @@
 import { useParameter } from "@tw050x.net.library/configuration";
-import { UseAccessTokenCookieReaderOptions, useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
-import { UseLoginStateCookieWriterOptions, useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { UseUIMenuStateCookieReaderOptions, useUIMenuStateCookieReader } from "@tw050x.net.library/middleware/use-ui-menu-state-cookie-reader";
-import { UseUIUserTableToolsStateCookieReaderOptions, useUIUserTableToolsStateCookieReader } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie-reader";
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/middleware/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
+import { UseUIMenuStateCookieOptions, useUIMenuStateCookie } from "@tw050x.net.library/middleware/use-ui-menu-state-cookie";
+import { UseUIUserTableToolsStateCookieOptions, useUIUserTableToolsStateCookie } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
@@ -16,36 +16,41 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedOrigins: useParameter('portal.service.allowed-origins'),
 }
 
-const useAccessTokenCookieReaderOptions: UseAccessTokenCookieReaderOptions = {
+const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
   cookieName: useParameter('cookie.access-token.name'),
+  cookieDomain: useParameter('cookie.access-token.domain'),
   requiredPermissions: [
     'read:portal:users-page',
   ],
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
+  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
 }
 
-const useUIMenuStateCookieReaderOptions: UseUIMenuStateCookieReaderOptions = {
+const useUIMenuStateCookieOptions: UseUIMenuStateCookieOptions = {
   cookieName: useParameter('cookie.ui.menu.state.name'),
 }
 
-const useUIUserTableToolsStateCookieReaderOptions: UseUIUserTableToolsStateCookieReaderOptions = {
+const useUIUserTableToolsStateCookieOptions: UseUIUserTableToolsStateCookieOptions = {
   cookieName: useParameter('cookie.ui.user-table-tools.state.name'),
+  cookieDomain: useParameter('cookie.ui.user-table-tools.state.domain'),
 }
 
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookieReader(useAccessTokenCookieReaderOptions),
-  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
+  useAccessTokenCookie(useAccessTokenCookieOptions),
+  useLoginStateCookie(useLoginStateCookieOptions),
   useAuthGate(),
-  useUIMenuStateCookieReader(useUIMenuStateCookieReaderOptions),
-  useUIUserTableToolsStateCookieReader(useUIUserTableToolsStateCookieReaderOptions),
+  useUIMenuStateCookie(useUIMenuStateCookieOptions),
+  useUIUserTableToolsStateCookie(useUIUserTableToolsStateCookieOptions),
+
+  //
   async (context) => {
     const accountDocumentProps: AccountDocumentProps = {
       menuInitiatorProps: {

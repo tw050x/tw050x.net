@@ -1,13 +1,22 @@
 import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
+import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
+import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Cookies } from "cookies";
 import { addDays, differenceInSeconds } from "date-fns";
 
 /**
  *
  */
-export type UseRefreshableTokenCookieWriterOptions = {
+type RefreshableTokenCookie = {
+  raw?: string;
+}
+
+/**
+ *
+ */
+export type UseRefreshableTokenCookieOptions = {
   cookieName: string | Parameter;
   cookieDomain: string | Parameter;
 }
@@ -15,7 +24,10 @@ export type UseRefreshableTokenCookieWriterOptions = {
 /**
  *
  */
-export type UseRefreshableTokenCookieWriterOptionsResultingContext = ServiceRequestContext & {
+export type UseRefreshableTokenCookieOptionsResultingContext = ServiceRequestContext & {
+  incomingMessage: ServiceRequestContext['incomingMessage'] & {
+    refreshableTokenCookie: RefreshableTokenCookie;
+  }
   serverResponse: ServiceRequestContext['serverResponse'] & {
     refreshableTokenCookie: {
       clear: () => void;
@@ -27,15 +39,15 @@ export type UseRefreshableTokenCookieWriterOptionsResultingContext = ServiceRequ
 /**
  *
  */
-type Factory = (options: UseRefreshableTokenCookieWriterOptions) => Middleware<
+type Factory = (options: UseRefreshableTokenCookieOptions) => Middleware<
   ServiceRequestContext,
-  UseRefreshableTokenCookieWriterOptionsResultingContext
->
+  UseRefreshableTokenCookieOptionsResultingContext
+>;
 
 /**
  * @returns void
  */
-export const useRefreshableTokenCookieWriter: Factory = (options) => async (context) => {
+export const useRefreshableTokenCookie: Factory = (options) => async (context) => {
 
   // retrieve the cookie name
   let cookieName;
@@ -49,14 +61,12 @@ export const useRefreshableTokenCookieWriter: Factory = (options) => async (cont
     }
     catch (error) {
       logger.error(error);
-      context.serverResponse.statusCode = 500;
-      return void context.serverResponse.end();
+      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
     }
-  }
-  if (cookieName === undefined || cookieName === '') {
-    logger.error('access token cookie name is undefined or empty');
-    context.serverResponse.statusCode = 500;
-    return void context.serverResponse.end();
+    if (cookieName === '') {
+      logger.error('access token cookie name is undefined or empty');
+      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    }
   }
 
   // retrieve the cookie name
@@ -71,20 +81,24 @@ export const useRefreshableTokenCookieWriter: Factory = (options) => async (cont
     }
     catch (error) {
       logger.error(error);
-      context.serverResponse.statusCode = 500;
-      return void context.serverResponse.end();
+      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
     }
-  }
-  if (cookieDomain === undefined || cookieDomain === '') {
-    logger.error('access token cookie name is undefined or empty');
-    context.serverResponse.statusCode = 500;
-    return void context.serverResponse.end();
+    if (cookieDomain === '') {
+      logger.error('access token cookie name is undefined or empty');
+      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    }
   }
 
   //
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
+  const cookie = cookies.get(cookieName);
+
+  //
+  context.incomingMessage.refreshableTokenCookie = {
+    raw: cookie,
+  };
 
   //
   const clearRefreshableTokenCookie = () => {
@@ -95,7 +109,7 @@ export const useRefreshableTokenCookieWriter: Factory = (options) => async (cont
       sameSite: 'lax',
       secure: true,
     });
-  }
+  };
 
   //
   const setRefreshableTokenCookie = (value: string) => {
@@ -111,7 +125,7 @@ export const useRefreshableTokenCookieWriter: Factory = (options) => async (cont
       sameSite: 'lax',
       secure: true,
     });
-  }
+  };
 
   // initialize the cookies object on the incoming message
   context.serverResponse.refreshableTokenCookie = {

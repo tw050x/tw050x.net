@@ -1,5 +1,4 @@
 import { GetParameterCommand } from "@aws-sdk/client-ssm";
-import { logger } from "@tw050x.net.library/logger";
 import { cache } from "./cache";
 import { ssmClient } from "./ssm-client";
 
@@ -23,18 +22,11 @@ export const readParameter = async (key: string, withDecryption: boolean = false
     WithDecryption: withDecryption
   })
 
-  let response;
-  try {
-    response = await ssmClient.send(command);
-  }
-  catch (error) {
-    return void logger.error(error);
-  }
-
+  const response = await ssmClient.send(command);
   const value = response.Parameter?.Value;
 
   if (value === undefined) {
-    return void logger.warn(`Configuration value for key "${key}" not found in SSM Parameter Store.`);
+    throw new Error(`Configuration value for key "${key}" not found in SSM Parameter Store.`);
   }
 
   cache.set(key, value);

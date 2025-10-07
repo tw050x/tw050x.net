@@ -1,4 +1,4 @@
-import { ServiceContext } from "../define-service";
+import { ServiceRequestContext } from "../types";
 
 /**
  * Extracts the query parameters from the incoming HTTP request
@@ -8,7 +8,7 @@ import { ServiceContext } from "../define-service";
  * @returns An object containing the query parameters as key-value pairs with decoded values
  * @throws Will throw an error if the URL is malformed or if query parameters cannot be parsed
  */
-export const useUrlQuery = async (context: ServiceContext): Promise<Record<string, string>> => {
+export const useUrlQuery = async (context: ServiceRequestContext): Promise<Record<string, string>> => {
   const url = new URL(context.incomingMessage.url || '', `http://${context.incomingMessage.headers.host}`);
   const query: Record<string, string> = {};
   url.searchParams.forEach((value, key) => {

@@ -1,15 +1,11 @@
-import { useParameter, readParameter, isParameter } from "@tw050x.net.library/configuration";
+import { useParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { UseAccessTokenCookieReaderOptions, useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
-import { UseAccessTokenCookieWriterOptions, useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/middleware/use-access-token-cookie";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { UseLoginStateCookieReaderOptions, useLoginStateCookieReader } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
-import { UseLoginStateCookieWriterOptions, useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { UseRefreshTokenCookieReaderOptions, useRefreshTokenCookieReader } from "@tw050x.net.library/middleware/use-refresh-token-cookie-reader";
-import { UseRefreshTokenCookieWriterOptions, useRefreshTokenCookieWriter } from "@tw050x.net.library/middleware/use-refresh-token-cookie-writer";
-import { UseRefreshableTokenCookieReaderOptions, useRefreshableTokenCookieReader } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-reader";
-import { UseRefreshableTokenCookieWriterOptions, useRefreshableTokenCookieWriter } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-writer";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
+import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/middleware/use-refresh-token-cookie";
+import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/middleware/use-refreshable-token-cookie";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { sendFoundRedirect } from "@tw050x.net.library/service/helper/redirect/send-found-redirect";
@@ -27,43 +23,26 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedOrigins: useParameter('authentication.service.allowed-origins'),
 }
 
-const useAccessTokenCookieReaderOptions: UseAccessTokenCookieReaderOptions = {
+const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
   cookieName: useParameter('cookie.access-token.name'),
+  cookieDomain: useParameter('cookie.access-token.domain'),
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useAccessTokenCookieWriterOptions: UseAccessTokenCookieWriterOptions = {
-  cookieName: useParameter('cookie.access-token.name'),
-  cookieDomain: useParameter('cookie.access-token.domain'),
-}
-
-const useLoginStateCookieReaderOptions: UseLoginStateCookieReaderOptions = {
+const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
   allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
-  cookieName: useParameter('cookie.login-state.name'),
-  encrypterSecretKey: useSecret('encrypter.secret-key'),
-}
-
-const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
 }
 
-const useRefreshTokenCookieReaderOptions: UseRefreshTokenCookieReaderOptions = {
+const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
   cookieName: useParameter('cookie.refresh-token.name'),
+  cookieDomain: useParameter('cookie.refresh-token.domain'),
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useRefreshTokenCookieWriterOptions: UseRefreshTokenCookieWriterOptions = {
-  cookieName: useParameter('cookie.refresh-token.name'),
-  cookieDomain: useParameter('cookie.refresh-token.domain'),
-}
-
-const useRefreshableTokenCookieReaderOptions: UseRefreshableTokenCookieReaderOptions = {
-  cookieName: useParameter('cookie.refreshable-token.name'),
-}
-
-const useRefreshableTokenCookieWriterOptions: UseRefreshableTokenCookieWriterOptions = {
+const useRefreshableTokenCookieOptions: UseRefreshableTokenCookieOptions = {
   cookieName: useParameter('cookie.refreshable-token.name'),
   cookieDomain: useParameter('cookie.refreshable-token.domain'),
 }
@@ -84,14 +63,10 @@ export default defineServiceMiddleware([
     }
   },
 
-  useAccessTokenCookieReader(useAccessTokenCookieReaderOptions),
-  useAccessTokenCookieWriter(useAccessTokenCookieWriterOptions),
-  useLoginStateCookieReader(useLoginStateCookieReaderOptions),
-  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
-  useRefreshTokenCookieReader(useRefreshTokenCookieReaderOptions),
-  useRefreshTokenCookieWriter(useRefreshTokenCookieWriterOptions),
-  useRefreshableTokenCookieReader(useRefreshableTokenCookieReaderOptions),
-  useRefreshableTokenCookieWriter(useRefreshableTokenCookieWriterOptions),
+  useAccessTokenCookie(useAccessTokenCookieOptions),
+  useLoginStateCookie(useLoginStateCookieOptions),
+  useRefreshTokenCookie(useRefreshTokenCookieOptions),
+  useRefreshableTokenCookie(useRefreshableTokenCookieOptions),
 
 
   // check if the user has a valid access token

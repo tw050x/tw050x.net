@@ -1,4 +1,4 @@
-import { ServiceContext } from "../define-service";
+import { ServiceRequestContext } from "../types";
 
 /**
  * Extracts URL path parameters from an HTTP request URL by matching against a route pattern
@@ -13,7 +13,7 @@ import { ServiceContext } from "../define-service";
  * @example
  * const params = useUrlParams(req, "/users/:userId/posts/:postId");
  */
-export const useUrlParams = async (context: ServiceContext, pattern: string): Promise<Record<string, string>> => {
+export const useUrlParams = async (context: ServiceRequestContext, pattern: string): Promise<Record<string, string>> => {
   // Extract the URL path from the incoming message
   // Handle case where url might be undefined
   if (!context.incomingMessage.url) {

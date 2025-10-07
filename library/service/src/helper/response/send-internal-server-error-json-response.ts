@@ -1,11 +1,11 @@
-import { ServiceContext } from '../../define-service';
+import { ServiceRequestContext } from '../../types';
 
 /**
  * Sends a JSON response with the specified status code and data.
  *
  * @param context - The service context object.
  */
-export const sendInternalServerErrorJSONResponse = (context: ServiceContext) => {
+export const sendInternalServerErrorJSONResponse = (context: ServiceRequestContext) => {
   context.serverResponse.statusCode = 500;
   context.serverResponse.setHeader('Content-Type', 'application/json');
   context.serverResponse.end(JSON.stringify({

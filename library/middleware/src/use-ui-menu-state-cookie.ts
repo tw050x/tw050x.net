@@ -1,43 +1,44 @@
 import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { Middleware, ServiceContext } from "@tw050x.net.library/service";
+import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as Cookies } from "cookies";
 
 /**
  *
  */
-type RefreshableTokenCookie = {
+type UIMenuStateCookie = {
   raw?: string;
+  state: 'open' | 'collapsed';
 }
 
 /**
  *
  */
-export type UseRefreshableTokenCookieReaderOptions = {
+export type UseUIMenuStateCookieOptions = {
   cookieName: string | Parameter;
 }
 
 /**
  *
  */
-export type UseRefreshableTokenCookieReaderOptionsResultingContext = ServiceContext & {
-  incomingMessage: ServiceContext['incomingMessage'] & {
-    refreshableTokenCookie: RefreshableTokenCookie;
+export type UseUIMenuStateCookieResultingContext = ServiceRequestContext & {
+  incomingMessage: ServiceRequestContext['incomingMessage'] & {
+    uiMenuStateCookie: UIMenuStateCookie;
   }
 }
 
 /**
  *
  */
-type Factory = (options: UseRefreshableTokenCookieReaderOptions) => Middleware<
-  ServiceContext,
-  UseRefreshableTokenCookieReaderOptionsResultingContext
->;
+type Factory = (options: UseUIMenuStateCookieOptions) => Middleware<
+  ServiceRequestContext,
+  UseUIMenuStateCookieResultingContext
+>
 
 /**
  * @returns void
  */
-export const useRefreshableTokenCookieReader: Factory = (options) => async (context) => {
+export const useUIMenuStateCookie: Factory = (options) => async (context) => {
 
   // retrieve the cookie name
   let cookieName;
@@ -68,8 +69,12 @@ export const useRefreshableTokenCookieReader: Factory = (options) => async (cont
   const cookie = cookies.get(cookieName);
 
   //
-  const refreshableTokenCookie: RefreshableTokenCookie = {
+  const refreshableTokenCookie: UIMenuStateCookie = {
     raw: cookie,
+    state: 'collapsed',
   }
-  context.incomingMessage.refreshableTokenCookie = refreshableTokenCookie
+  if (cookie === 'open') {
+    refreshableTokenCookie.state = 'open';
+  }
+  context.incomingMessage.uiMenuStateCookie = refreshableTokenCookie
 }

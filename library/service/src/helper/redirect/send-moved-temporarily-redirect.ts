@@ -1,4 +1,4 @@
-import { ServiceContext } from '../../define-service';
+import { ServiceRequestContext } from '../../types';
 
 /**
  * Sends an HTML response with the specified status code and html
@@ -6,7 +6,7 @@ import { ServiceContext } from '../../define-service';
  * @param context - The service context object.
  * @param url - The text content to send in the response.
  */
-export const sendMovedTemporarilyRedirect = (context: ServiceContext, url: URL) => {
+export const sendMovedTemporarilyRedirect = (context: ServiceRequestContext, url: URL) => {
   let redirectHeader = 'Location'
   if (context.incomingMessage.headers['hx-request'] === 'true') {
     redirectHeader = 'HX-Redirect';

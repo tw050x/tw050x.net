@@ -29,11 +29,12 @@
     "src/helper/response/send-ok-text-response.ts",
     "src/helper/response/send-unauthorized-html-response.ts",
     "src/helper/response/send-unauthorized-json-response.ts",
-    "src/define-service.ts",
     "src/define-service-middleware.ts",
     "src/helper.ts",
     "src/index.ts",
     "src/routes.ts",
+    "src/server.ts",
+    "src/types.ts",
   ],
   "references": [
     { "path": "../logger" },

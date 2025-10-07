@@ -1,5 +1,4 @@
 import { GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
-import { logger } from "@tw050x.net.library/logger";
 import { cache } from "./cache";
 import { secretsManagerClient } from "./secrets-manager-client";
 
@@ -21,18 +20,11 @@ export const readSecret = async (key: string) => {
     SecretId: key
   })
 
-  let response;
-  try {
-    response = await secretsManagerClient.send(command);
-  }
-  catch (error) {
-    return void logger.error(error);
-  }
-
+  const response = await secretsManagerClient.send(command);
   const value = response.SecretString;
 
   if (value === undefined) {
-    return void logger.warn(`Configuration value for key "${key}" not found in SSM Parameter Store.`);
+    throw new Error(`Configuration value for key "${key}" not found in SSM Parameter Store.`);
   }
 
   cache.set(key, value);

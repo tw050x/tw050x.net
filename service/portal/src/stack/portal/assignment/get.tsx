@@ -1,16 +1,15 @@
 import { TaskDocument, database as assignmentDatabase } from "@tw050x.net.database/assignment";
 import { useParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { UseAccessTokenCookieReaderOptions, useAccessTokenCookieReader } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/middleware/use-access-token-cookie";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { UseLoginStateCookieWriterOptions, useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
 import { UsePaginationQueryParametersOptions, usePaginationQueryParameters } from "@tw050x.net.library/middleware/use-pagination-query-parameters";
-import { UseUIMenuStateCookieReaderOptions, useUIMenuStateCookieReader } from "@tw050x.net.library/middleware/use-ui-menu-state-cookie-reader";
-import { UseUIUserTableToolsStateCookieReaderOptions, useUIUserTableToolsStateCookieReader } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie-reader";
+import { UseUIMenuStateCookieOptions, useUIMenuStateCookie } from "@tw050x.net.library/middleware/use-ui-menu-state-cookie";
+import { UseUIUserTableToolsStateCookieOptions, useUIUserTableToolsStateCookie } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendSeeOtherRedirect } from "@tw050x.net.library/service/helper/redirect/send-see-other-redirect";
 import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
 import { sendMovedTemporarilyRedirect } from "@tw050x.net.library/service/helper/redirect/send-moved-temporarily-redirect";
 import { sendOKHTMLResponse} from "@tw050x.net.library/service/helper/response/send-ok-html-response";
@@ -35,43 +34,46 @@ const usePaginationQueryParametersOptions: UsePaginationQueryParametersOptions =
   defaultPageSize: useParameter('portal.service.assignment-query-parameters.default-page-size'),
 }
 
-const useAccessTokenCookieReaderOptions: UseAccessTokenCookieReaderOptions = {
+const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
   cookieName: useParameter('cookie.access-token.name'),
+  cookieDomain: useParameter('cookie.access-token.domain'),
   requiredPermissions: [
     'read:portal:users-page',
   ],
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
+  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
 }
 
-const useUIMenuStateCookieReaderOptions: UseUIMenuStateCookieReaderOptions = {
+const useUIMenuStateCookieOptions: UseUIMenuStateCookieOptions = {
   cookieName: useParameter('cookie.ui.menu.state.name'),
 }
 
-const useUIUserTableToolsStateCookieReaderOptions: UseUIUserTableToolsStateCookieReaderOptions = {
+const useUIUserTableToolsStateCookieOptions: UseUIUserTableToolsStateCookieOptions = {
   cookieName: useParameter('cookie.ui.user-table-tools.state.name'),
+  cookieDomain: useParameter('cookie.ui.user-table-tools.state.domain'),
 }
 
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookieReader(useAccessTokenCookieReaderOptions),
-  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
+  useAccessTokenCookie(useAccessTokenCookieOptions),
+  useLoginStateCookie(useLoginStateCookieOptions),
   useAuthGate(),
   usePaginationQueryParameters(usePaginationQueryParametersOptions),
-  useUIMenuStateCookieReader(useUIMenuStateCookieReaderOptions),
-  useUIUserTableToolsStateCookieReader(useUIUserTableToolsStateCookieReaderOptions),
+  useUIMenuStateCookie(useUIMenuStateCookieOptions),
+  useUIUserTableToolsStateCookie(useUIUserTableToolsStateCookieOptions),
 
   // parse and validate query parameters
   // redirect to sane defaults if invalid
   async (context) => {
 
-    context.incomingMessage.queryParameters;
+    // context.incomingMessage.queryParameters;
 
     let pageIndex: number;
     let pageSize: number;
@@ -97,25 +99,13 @@ export default defineServiceMiddleware([
   async (context) => {
     let assignmentTasks;
     try {
-      assignmentTasks = await assignmentDatabase.task.find({
-        userProfileUuid: context.incomingMessage.accessTokenCookie.payload.sub,
-        completed: false,
-      })
-    }
-    catch (error) {
-      logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
-    }
-
-    // redirect to the dashboard if there are no pending assignments
-    // return an error page if the check itself fails
-    try {
-      if (await assignmentTasks.hasNext() === false) {
-        return void sendSeeOtherRedirect(
-          context,
-          new URL('/portal/dashboard', `https://${context.incomingMessage.headers.host}`)
-        );
-      }
+      assignmentTasks = await assignmentDatabase.task.
+        find({
+          userProfileUuid: context.incomingMessage.accessTokenCookie.payload.sub,
+          completed: false,
+        }).
+        limit(context.incomingMessage.query.parameters.pageSize).
+        skip(context.incomingMessage.query.parameters.pageIndex * context.incomingMessage.query.parameters.pageSize)
     }
     catch (error) {
       logger.error(error);
@@ -125,10 +115,7 @@ export default defineServiceMiddleware([
     //
     let tasks: Array<TaskDocument> = [];
     try {
-      // TODO: add limit to tasks
-      while (await assignmentTasks.hasNext()) {
-        await assignmentTasks.next().then((task) => task && tasks.push(task));
-      }
+      tasks = await assignmentTasks.toArray();
     }
     catch (error) {
       logger.error(error);

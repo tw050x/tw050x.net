@@ -3,13 +3,13 @@ import { database as assignmentDatabase } from "@tw050x.net.database/assignment"
 import { CredentialDocument, client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
-import { UseAccessTokenCookieWriterOptions, useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/middleware/use-access-token-cookie";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers"
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
-import { UseLoginStateCookieWriterOptions, useLoginStateCookieWriter } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { UseRefreshTokenCookieWriterOptions, useRefreshTokenCookieWriter } from "@tw050x.net.library/middleware/use-refresh-token-cookie-writer";
-import { UseRefreshableTokenCookieWriterOptions, useRefreshableTokenCookieWriter } from "@tw050x.net.library/middleware/use-refreshable-token-cookie-writer";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
+import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/middleware/use-refresh-token-cookie";
+import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/middleware/use-refreshable-token-cookie";
 import { readSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { useFormDataBody } from "@tw050x.net.library/service/helper";
@@ -41,23 +41,26 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedOrigins: useParameter('user.service.allowed-origins')
 }
 
-const useAccessTokenCookieWriterOptions: UseAccessTokenCookieWriterOptions = {
+const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
   cookieName: useParameter('cookie.access-token.name'),
   cookieDomain: useParameter('cookie.access-token.domain'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
+  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
 }
 
-const useRefreshTokenCookieWriterOptions: UseRefreshTokenCookieWriterOptions = {
+const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
   cookieName: useParameter('cookie.refresh-token.name'),
   cookieDomain: useParameter('cookie.refresh-token.domain'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useRefreshableTokenCookieWriterOptions: UseRefreshableTokenCookieWriterOptions = {
+const useRefreshableTokenCookieOptions: UseRefreshableTokenCookieOptions = {
   cookieName: useParameter('cookie.refreshable-token.name'),
   cookieDomain: useParameter('cookie.refreshable-token.domain'),
 }
@@ -76,10 +79,10 @@ const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookieWriter(useAccessTokenCookieWriterOptions),
-  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
-  useRefreshTokenCookieWriter(useRefreshTokenCookieWriterOptions),
-  useRefreshableTokenCookieWriter(useRefreshableTokenCookieWriterOptions),
+  useAccessTokenCookie(useAccessTokenCookieOptions),
+  useLoginStateCookie(useLoginStateCookieOptions),
+  useRefreshTokenCookie(useRefreshTokenCookieOptions),
+  useRefreshableTokenCookie(useRefreshableTokenCookieOptions),
   useRegistrationEnabledGate(useRegistrationEnabledGateOptions),
 
   // Handle the registration form submission

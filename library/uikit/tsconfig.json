@@ -5,8 +5,8 @@
     "outDir": "./artifact",
     "rootDir": "./src",
     "types": [
+      "@kitajs/html/htmx.d.ts",
       "@types/node",
-      "@kitajs/html/htmx.d.ts"
     ],
   },
   "exclude": [],

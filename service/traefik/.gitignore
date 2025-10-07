@@ -2,3 +2,6 @@
 # Directories
 certificate-authorities/
 certificates/
+
+# Files
+*.zip

@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/package",
   "author": "tw050x (Richard Kielty)",
   "description": "The Navigation Service project for tw050x.net",
   "dependencies": {

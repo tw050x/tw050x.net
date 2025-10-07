@@ -1,4 +1,4 @@
-import { ServiceContext } from "../define-service";
+import { ServiceRequestContext } from "../types";
 
 /**
  * Extracts form data from an HTTP request body.
@@ -9,7 +9,7 @@ import { ServiceContext } from "../define-service";
  * const formData = await useFormDataBody(context);
  * // Returns: { name: "John", email: "john@example.com" }
  */
-export const useFormDataBody = async (context: ServiceContext): Promise<Record<string, string> | null> => {
+export const useFormDataBody = async (context: ServiceRequestContext): Promise<Record<string, string> | null> => {
   let body = '';
 
   // Handle errors during data collection

@@ -1,8 +1,7 @@
-import { useParameter, readParameter } from "@tw050x.net.library/configuration";
-import { useAccessTokenCookieReader, UseAccessTokenCookieReaderOptions } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
-import { useLoginStateCookieWriter, UseLoginStateCookieWriterOptions } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
-import { useUIUserTableToolsStateCookieReader, UseUIUserTableToolsStateCookieReaderOptions } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie-reader";
-import { useUIUserTableToolsStateCookieWriter, UseUIUserTableToolsStateCookieWriterOptions } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie-writer";
+import { useParameter } from "@tw050x.net.library/configuration";
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/middleware/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
+import { UseUIUserTableToolsStateCookieOptions, useUIUserTableToolsStateCookie } from "@tw050x.net.library/middleware/use-ui-user-table-tools-state-cookie";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
@@ -16,25 +15,23 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedOrigins: useParameter('portal.service.allowed-origins'),
 }
 
-const useAccessTokenCookieReaderOptions: UseAccessTokenCookieReaderOptions = {
+const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
   cookieName: useParameter('cookie.access-token.name'),
+  cookieDomain: useParameter('cookie.access-token.domain'),
   requiredPermissions: [
     'read:portal:users-page',
   ],
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
+  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
 }
 
-const useUIUserTableToolsStateCookieReaderOptions: UseUIUserTableToolsStateCookieReaderOptions = {
-  cookieName: useParameter('cookie.ui.user-table-tools.state.name'),
-}
-
-const useUIUserTableToolsStateCookieWriterOptions: UseUIUserTableToolsStateCookieWriterOptions = {
+const useUIUserTableToolsStateCookieOptions: UseUIUserTableToolsStateCookieOptions = {
   cookieName: useParameter('cookie.ui.user-table-tools.state.name'),
   cookieDomain: useParameter('cookie.ui.user-table-tools.state.domain'),
 }
@@ -42,11 +39,12 @@ const useUIUserTableToolsStateCookieWriterOptions: UseUIUserTableToolsStateCooki
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookieReader(useAccessTokenCookieReaderOptions),
-  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
+  useAccessTokenCookie(useAccessTokenCookieOptions),
+  useLoginStateCookie(useLoginStateCookieOptions),
   useAuthGate(),
-  useUIUserTableToolsStateCookieReader(useUIUserTableToolsStateCookieReaderOptions),
-  useUIUserTableToolsStateCookieWriter(useUIUserTableToolsStateCookieWriterOptions),
+  useUIUserTableToolsStateCookie(useUIUserTableToolsStateCookieOptions),
+
+  //
   async (context) => {
     const userTableToolsProps: UserTableToolsProps = {
       state: 'open',

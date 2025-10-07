@@ -1,9 +1,11 @@
 import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Secret, isSecret, readSecret } from "@tw050x.net.library/secret";
-import { Middleware, ServiceContext } from "@tw050x.net.library/service";
+import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
+import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
+import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { isAllowedDomain } from "@tw050x.net.library/utility/is-allowed-domain";
-import { createDecipheriv } from "node:crypto";
+import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
 import { default as Cookies } from "cookies";
 
 /**
@@ -16,9 +18,10 @@ type LoginStateCookiePayload = {
 /**
  *
  */
-export type UseLoginStateCookieReaderOptions = {
+export type UseLoginStateCookieOptions = {
   allowedReturnUrlDomains: string | Parameter;
   cookieName: string | Parameter;
+  cookieDomain: string | Parameter;
   encrypterSecretKey: string | Secret;
   stateCipherAlgorithm?: string | Parameter;
 }
@@ -31,10 +34,16 @@ const defaultStateCipherAlgorithm = 'aes-256-cbc';
 /**
  *
  */
-export type UseLoginStateCookieReaderResultingContext = ServiceContext & {
-  incomingMessage: ServiceContext['incomingMessage'] & {
+export type UseLoginStateCookieResultingContext = ServiceRequestContext & {
+  incomingMessage: ServiceRequestContext['incomingMessage'] & {
     loginStateCookie: {
       payload: LoginStateCookiePayload | undefined;
+    }
+  }
+  serverResponse: ServiceRequestContext['serverResponse'] & {
+    loginStateCookie: {
+      clear: () => void;
+      set: (value: string) => void;
     }
   }
 }
@@ -42,15 +51,15 @@ export type UseLoginStateCookieReaderResultingContext = ServiceContext & {
 /**
  *
  */
-type Factory = (options: UseLoginStateCookieReaderOptions) => Middleware<
-  ServiceContext,
-  UseLoginStateCookieReaderResultingContext
+type Factory = (options: UseLoginStateCookieOptions) => Middleware<
+  ServiceRequestContext,
+  UseLoginStateCookieResultingContext
 >
 
 /**
  * @returns void
  */
-export const useLoginStateCookieReader: Factory = (options) => async (context) => {
+export const useLoginStateCookie: Factory = (options) => async (context) => {
 
   // retrieve the cookie name
   let allowedReturnUrlDomains;
@@ -64,14 +73,12 @@ export const useLoginStateCookieReader: Factory = (options) => async (context) =
     }
     catch (error) {
       logger.error(error);
-      context.serverResponse.statusCode = 500;
-      return void context.serverResponse.end();
+      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
     }
   }
-  if (allowedReturnUrlDomains === undefined || allowedReturnUrlDomains === '') {
-    logger.error('access token cookie name is undefined or empty');
-    context.serverResponse.statusCode = 500;
-    return void context.serverResponse.end();
+  if (allowedReturnUrlDomains === '') {
+    logger.error(new Error('access token cookie name is undefined or empty'));
+    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
   }
 
   // retrieve the cookie name
@@ -86,14 +93,32 @@ export const useLoginStateCookieReader: Factory = (options) => async (context) =
     }
     catch (error) {
       logger.error(error);
-      context.serverResponse.statusCode = 500;
-      return void context.serverResponse.end();
+      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
     }
   }
-  if (cookieName === undefined || cookieName === '') {
-    logger.error('access token cookie name is undefined or empty');
-    context.serverResponse.statusCode = 500;
-    return void context.serverResponse.end();
+  if (cookieName === '') {
+    logger.error(new Error('access token cookie name is undefined or empty'));
+    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+  }
+
+  // retrieve the cookie domain
+  let cookieDomain;
+  cookieDomainGuard: {
+    if (isParameter(options.cookieDomain) === false) {
+      cookieDomain = options.cookieDomain;
+      break cookieDomainGuard;
+    }
+    try {
+      cookieDomain = await readParameter(options.cookieDomain.key);
+    }
+    catch (error) {
+      logger.error(error);
+      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    }
+  }
+  if (cookieDomain === '') {
+    logger.error(new Error('access token cookie name is undefined or empty'));
+    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
   }
 
   let encrypterSecretKey;
@@ -107,14 +132,12 @@ export const useLoginStateCookieReader: Factory = (options) => async (context) =
     }
     catch (error) {
       logger.error(error);
-      context.serverResponse.statusCode = 500;
-      return void context.serverResponse.end();
+      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
     }
   }
-  if (encrypterSecretKey === undefined || encrypterSecretKey === '') {
-    logger.error('encrypter secret key is undefined or empty');
-    context.serverResponse.statusCode = 500;
-    return void context.serverResponse.end();
+  if (encrypterSecretKey === '') {
+    logger.error(new Error('encrypter secret key is undefined or empty'));
+    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
   }
 
   // retrieve the cookie name
@@ -133,14 +156,12 @@ export const useLoginStateCookieReader: Factory = (options) => async (context) =
     }
     catch (error) {
       logger.error(error);
-      context.serverResponse.statusCode = 500;
-      return void context.serverResponse.end();
+      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
     }
   }
-  if (stateCipherAlgorithm === undefined || stateCipherAlgorithm === '') {
-    logger.error('access token cookie name is undefined or empty');
-    context.serverResponse.statusCode = 500;
-    return void context.serverResponse.end();
+  if (stateCipherAlgorithm === '') {
+    logger.error(new Error('access token cookie name is undefined or empty'));
+    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
   }
 
   // read the cookie
@@ -203,4 +224,40 @@ export const useLoginStateCookieReader: Factory = (options) => async (context) =
   context.incomingMessage.loginStateCookie = {
     payload: loginStateCookiePayload
   }
+
+  // define the clear function
+  const clearLoginStateCookie = () => {
+    cookies.set(cookieName, '', {
+      domain: cookieDomain,
+      httpOnly: false,
+      path: '/',
+      sameSite: 'strict',
+      secure: true,
+    });
+  }
+
+  // define the set function
+  const setLoginStateCookie = (state: string) => {
+    const iv = randomBytes(16);
+    const cipher = createCipheriv(stateCipherAlgorithm, Buffer.from(encrypterSecretKey, 'hex'), iv);
+    let encrypted = cipher.update(state, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    const value = JSON.stringify({
+      iv: iv.toString('hex'),
+      content: encrypted
+    })
+    cookies.set(cookieName, value, {
+      domain: cookieDomain,
+      httpOnly: false,
+      path: '/',
+      sameSite: 'strict',
+      secure: true,
+    });
+  }
+
+  // initialize the cookies object on the incoming message
+  context.serverResponse.loginStateCookie = {
+    clear: clearLoginStateCookie,
+    set: setLoginStateCookie
+  };
 }

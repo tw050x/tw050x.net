@@ -1,9 +1,9 @@
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
-import { UseAccessTokenCookieWriterOptions, useAccessTokenCookieWriter } from "@tw050x.net.library/middleware/use-access-token-cookie-writer";
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/middleware/use-access-token-cookie";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { UseLoginStateCookieReaderOptions, useLoginStateCookieReader } from "@tw050x.net.library/middleware/use-login-state-cookie-reader";
-import { UseRefreshTokenCookieReaderOptions, useRefreshTokenCookieReader } from "@tw050x.net.library/middleware/use-refresh-token-cookie-reader";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
+import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/middleware/use-refresh-token-cookie";
 import { logger } from "@tw050x.net.library/logger";
 import { readSecret, useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
@@ -19,19 +19,22 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedOrigins: useParameter('authentication.service.allowed-origins'),
 }
 
-const useAccessTokenCookieWriterOptions: UseAccessTokenCookieWriterOptions = {
+const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
   cookieName: useParameter('cookie.access-token.name'),
   cookieDomain: useParameter('cookie.access-token.domain'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useLoginStateCookieReaderOptions: UseLoginStateCookieReaderOptions = {
+const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
   allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
+  cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
 }
 
-const useRefreshTokenCookieReaderOptions: UseRefreshTokenCookieReaderOptions = {
+const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
   cookieName: useParameter('cookie.refresh-token.name'),
+  cookieDomain: useParameter('cookie.refresh-token.domain'),
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
@@ -42,9 +45,9 @@ const useRefreshTokenCookieReaderOptions: UseRefreshTokenCookieReaderOptions = {
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookieWriter(useAccessTokenCookieWriterOptions),
-  useLoginStateCookieReader(useLoginStateCookieReaderOptions),
-  useRefreshTokenCookieReader(useRefreshTokenCookieReaderOptions),
+  useAccessTokenCookie(useAccessTokenCookieOptions),
+  useLoginStateCookie(useLoginStateCookieOptions),
+  useRefreshTokenCookie(useRefreshTokenCookieOptions),
   async (context) => {
 
     // check for errors from token verification

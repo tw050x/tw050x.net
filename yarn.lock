@@ -1662,10 +1662,12 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tw050x.net.library/middleware@workspace:library/middleware"
   dependencies:
+    "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/configuration": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/secret": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/uikit": "workspace:*"
     "@tw050x.net.library/utility": "workspace:*"
     "@types/cookies": "npm:^0.9.0"
     "@types/jsonwebtoken": "npm:^9"
@@ -1699,8 +1701,9 @@ __metadata:
     "@tw050x.net.library/utility": "workspace:*"
     "@types/node": "npm:^22.10.2"
     lru-cache: "npm:^11.1.0"
-    mongodb: "npm:^6.12.0"
     typescript: "npm:^5.7.2"
+  bin:
+    service: artifact/bin/service.js
   languageName: unknown
   linkType: soft
 

@@ -24,7 +24,7 @@
     "documentation/",
     "log/",
     "playground/",
-    "tmp/"
+    "tmp/",
   ],
   "files": [],
   "references": [

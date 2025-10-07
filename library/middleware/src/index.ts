@@ -1,10 +1,6 @@
-export { useAccessTokenCookieReader } from "./use-access-token-cookie-reader";
-export { useAccessTokenCookieWriter } from "./use-access-token-cookie-writer";
+export { useAccessTokenCookie } from "./use-access-token-cookie";
 export { useCorsHeaders } from "./use-cors-headers";
 export { useLogRequest } from "./use-log-request";
-export { useLoginStateCookieReader } from "./use-login-state-cookie-reader";
-export { useLoginStateCookieWriter } from "./use-login-state-cookie-writer";
-export { useRefreshTokenCookieReader } from "./use-refresh-token-cookie-reader";
-export { useRefreshTokenCookieWriter } from "./use-refresh-token-cookie-writer";
-export { useRefreshableTokenCookieReader } from "./use-refreshable-token-cookie-reader";
-export { useRefreshableTokenCookieWriter } from "./use-refreshable-token-cookie-writer";
+export { useLoginStateCookie } from "./use-login-state-cookie";
+export { useRefreshTokenCookie } from "./use-refresh-token-cookie";
+export { useRefreshableTokenCookie } from "./use-refreshable-token-cookie";

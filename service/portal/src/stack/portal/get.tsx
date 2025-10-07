@@ -1,6 +1,6 @@
 import { useParameter, readParameter } from "@tw050x.net.library/configuration";
-import { useAccessTokenCookieReader, UseAccessTokenCookieReaderOptions } from "@tw050x.net.library/middleware/use-access-token-cookie-reader";
-import { useLoginStateCookieWriter, UseLoginStateCookieWriterOptions } from "@tw050x.net.library/middleware/use-login-state-cookie-writer";
+import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/middleware/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
@@ -13,15 +13,17 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedOrigins: useParameter('portal.service.allowed-origins'),
 }
 
-const useAccessTokenCookieReaderOptions: UseAccessTokenCookieReaderOptions = {
+const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
   cookieName: useParameter('cookie.access-token.name'),
+  cookieDomain: useParameter('cookie.access-token.domain'),
   requiredPermissions: [
     'read:portal:users-page',
   ],
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
+const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
+  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
@@ -30,8 +32,8 @@ const useLoginStateCookieWriterOptions: UseLoginStateCookieWriterOptions = {
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookieReader(useAccessTokenCookieReaderOptions),
-  useLoginStateCookieWriter(useLoginStateCookieWriterOptions),
+  useAccessTokenCookie(useAccessTokenCookieOptions),
+  useLoginStateCookie(useLoginStateCookieOptions),
   useAuthGate(),
   async (context) => {
     return void sendMovedPermanentlyRedirect(

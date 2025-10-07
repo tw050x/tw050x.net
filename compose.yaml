@@ -34,6 +34,8 @@ services:
     depends_on:
       assets:
         condition: service_healthy
+      error:
+        condition: service_healthy
       localstack:
         condition: service_healthy
       mongo-primary:
@@ -145,6 +147,8 @@ services:
     depends_on:
       assets:
         condition: service_healthy
+      error:
+        condition: service_healthy
       localstack:
         condition: service_healthy
       mongo-primary:
@@ -243,6 +247,8 @@ services:
     depends_on:
       assets:
         condition: service_healthy
+      error:
+        condition: service_healthy
       localstack:
         condition: service_healthy
       mongo-primary:
@@ -293,6 +299,8 @@ services:
       assets:
         condition: service_healthy
       authentication:
+        condition: service_healthy
+      error:
         condition: service_healthy
       localstack:
         condition: service_healthy
@@ -385,6 +393,8 @@ services:
     # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/user/serve.ts" ]
     depends_on:
       assets:
+        condition: service_healthy
+      error:
         condition: service_healthy
       localstack:
         condition: service_healthy

@@ -1,4 +1,4 @@
-import { ServiceContext } from '../../define-service';
+import { ServiceRequestContext } from '../../types';
 
 /**
  * Sends a JSON response with the specified status code and data.
@@ -6,7 +6,7 @@ import { ServiceContext } from '../../define-service';
  * @param context - The service context object.
  * @param json - The JSON content to send in the response.
  */
-export const sendNotFoundJSONResponse = (context: ServiceContext) => {
+export const sendNotFoundJSONResponse = (context: ServiceRequestContext) => {
   context.serverResponse.statusCode = 404;
   context.serverResponse.setHeader('Content-Type', 'application/json');
   context.serverResponse.end(JSON.stringify({

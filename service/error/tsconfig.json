@@ -4,7 +4,10 @@
     "jsxImportSource": "@kitajs/html",
     "outDir": "./artifact",
     "rootDir": "./src",
-    "types": ["@kitajs/html/htmx.d.ts"],
+    "types": [
+      "@kitajs/html/htmx.d.ts",
+      "@types/node",
+    ],
   },
   "exclude": [],
   "extends": "../../tsconfig.json",
