@@ -1696,6 +1696,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tw050x.net.library/service@workspace:library/service"
   dependencies:
+    "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/types": "workspace:*"
     "@tw050x.net.library/utility": "workspace:*"
@@ -1762,6 +1763,7 @@ __metadata:
     "@tw050x.net.library/secret": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
+    "@tw050x.net.library/utility": "workspace:*"
     "@types/bcrypt": "npm:^5"
     "@types/jsonwebtoken": "npm:^9"
     "@types/node": "npm:^22.10.2"
@@ -1839,6 +1841,7 @@ __metadata:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.database/assignment": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
+    "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
     "@tw050x.net.library/secret": "workspace:*"

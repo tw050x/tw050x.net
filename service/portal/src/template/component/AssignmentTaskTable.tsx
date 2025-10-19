@@ -1,12 +1,19 @@
 import { Component } from "@kitajs/html";
-import { TaskDocument } from "@tw050x.net.database/assignment";
-import { default as Table } from "@tw050x.net.library/uikit/component/Table";
+import { default as Table, Column, Row } from "@tw050x.net.library/uikit/component/Table";
+
+export type AssignmentTaskWithTemplate = {
+  template: {
+    label: string;
+    description: string;
+  };
+  assignedBy: string;
+}
 
 /**
  * Props for the `<AssignmentTaskTable />` component.
  */
 export type Props = {
-  tasks: Array<TaskDocument>;
+  tasks: Array<AssignmentTaskWithTemplate>;
 };
 
 /**
@@ -16,10 +23,33 @@ export type Props = {
  * @returns {JSX.Element}
  */
 const AssignmentTaskTable: Component<Props> = (props) => {
+  const columns: Array<Column> = [
+    {
+      label: 'Label',
+      sortable: false,
+    },
+    {
+      label: 'Description',
+      sortable: false,
+    },
+    {
+      label: 'Assigned By',
+      sortable: false,
+    },
+  ]
+
+  const mapTaskToRow = (task: AssignmentTaskWithTemplate): Row => {
+    return {
+      type: 'text',
+    }
+  }
+
   return (
-    <>
-      <Table>{props.tasks.length}</Table>
-    </>
+    <Table
+      gridColsClass="grid-cols-[200px_minmax(0,_1fr)_100px]"
+      columns={columns}
+      rows={props.tasks.map(mapTaskToRow)}
+    />
   );
 }
 export default AssignmentTaskTable;

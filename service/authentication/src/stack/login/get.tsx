@@ -8,14 +8,11 @@ import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net
 import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/middleware/use-refreshable-token-cookie";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendFoundRedirect } from "@tw050x.net.library/service/helper/redirect/send-found-redirect";
-import { sendForbiddenHTMLResponse } from "@tw050x.net.library/service/helper/response/send-forbidden-html-response";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
-import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { default as ForbiddenDocument } from "@tw050x.net.library/uikit/document/Forbidden";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { SignOptions, sign, verify } from "jsonwebtoken";
 import { generateLoginFormNonce } from '../../helper/generate-login-form-nonce';
+import { UseLoginStateGateOptions, useLoginStateGate } from "../../middleware/use-login-state-gate";
 import { default as LoginDocument } from "../../template/document/LoginDocument";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
@@ -30,7 +27,6 @@ const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
@@ -47,6 +43,10 @@ const useRefreshableTokenCookieOptions: UseRefreshableTokenCookieOptions = {
   cookieDomain: useParameter('cookie.refreshable-token.domain'),
 }
 
+const useLoginStateGateOptions: UseLoginStateGateOptions = {
+  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
+}
+
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
@@ -59,7 +59,7 @@ export default defineServiceMiddleware([
         disabled: true,
         message: 'Login is currently disabled.',
       } as const;
-      return void sendOKHTMLResponse(context, await <LoginDocument loginAsideProps={loginAsideProps} />);
+      return void context.serverResponse.sendOKHTMLResponse(<LoginDocument loginAsideProps={loginAsideProps} />);
     }
   },
 
@@ -67,7 +67,7 @@ export default defineServiceMiddleware([
   useLoginStateCookie(useLoginStateCookieOptions),
   useRefreshTokenCookie(useRefreshTokenCookieOptions),
   useRefreshableTokenCookie(useRefreshableTokenCookieOptions),
-
+  useLoginStateGate(useLoginStateGateOptions),
 
   // check if the user has a valid access token
   // async (context) => {
@@ -79,16 +79,16 @@ export default defineServiceMiddleware([
     const refreshableTokenCookie = context.incomingMessage.refreshableTokenCookie.raw;
     refreshAuthenticationGuard: {
       if (typeof refreshableTokenCookie !== 'string' || refreshableTokenCookie !== 'true') {
-        logger.debug('user is not authenticated');
+        logger.debug('User is not authenticated');
         break refreshAuthenticationGuard;
       }
-      logger.debug('user is already authenticated');
+      logger.debug('User is already authenticated');
 
       // if refresh token cookie is not set
       // then clear the refreshable token cookie and break out of the guard
       const refreshTokenCookie = context.incomingMessage.refreshTokenCookie.raw;
       if (typeof refreshTokenCookie !== 'string') {
-        logger.debug('refresh token cookie is not set');
+        logger.debug('Refresh token cookie is not set');
         context.serverResponse.refreshableTokenCookie.clear();
         break refreshAuthenticationGuard;
       }
@@ -97,7 +97,7 @@ export default defineServiceMiddleware([
       const jwtSecretKey = await readParameter('jwt.secret-key')
       if (jwtSecretKey === undefined) {
         logger.error('JWT secret key is not set');
-        return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
       }
 
       // verify the refresh token
@@ -110,7 +110,7 @@ export default defineServiceMiddleware([
         logger.error(error);
         context.serverResponse.refreshableTokenCookie.clear();
         context.serverResponse.refreshTokenCookie.clear();
-        return void sendForbiddenHTMLResponse(context, await <ForbiddenDocument />);
+        return void context.serverResponse.sendForbiddenHTMLResponse(<ForbiddenDocument />);
       }
 
       // create the access token cookie
@@ -124,19 +124,21 @@ export default defineServiceMiddleware([
       const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
       context.serverResponse.accessTokenCookie.set(accessToken);
       context.serverResponse.loginStateCookie.clear();
-      return void sendFoundRedirect(context, returnUrl);
+      logger.debug('User authentication refreshed, redirecting to return URL');
+      return void context.serverResponse.sendFoundRedirect(returnUrl);
     }
   },
 
   // user is not authenticated and does not have a valid refresh token
   async (context) => {
+    logger.debug('Creating nonce for login form');
     let nonce;
     try {
       nonce = await generateLoginFormNonce();
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
     const loginAsideProps = {
       loginFormProps: {
@@ -147,6 +149,7 @@ export default defineServiceMiddleware([
     }
 
     // return the login page
-    return void sendOKHTMLResponse(context, await <LoginDocument loginAsideProps={loginAsideProps} />);
+    logger.debug('Rendering login page');
+    return void context.serverResponse.sendOKHTMLResponse(<LoginDocument loginAsideProps={loginAsideProps} />);
   }
 ])

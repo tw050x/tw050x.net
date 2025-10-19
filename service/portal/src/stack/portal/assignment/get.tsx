@@ -1,5 +1,6 @@
-import { TaskDocument, database as assignmentDatabase } from "@tw050x.net.database/assignment";
-import { useParameter, readParameter } from "@tw050x.net.library/configuration";
+import { collectionMeta as assignmentCollectionMeta, database as assignmentDatabase } from "@tw050x.net.database/assignment";
+import { useParameter } from "@tw050x.net.library/configuration";
+import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
 import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/middleware/use-access-token-cookie";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
@@ -10,14 +11,11 @@ import { UseUIUserTableToolsStateCookieOptions, useUIUserTableToolsStateCookie }
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
-import { sendMovedTemporarilyRedirect } from "@tw050x.net.library/service/helper/redirect/send-moved-temporarily-redirect";
-import { sendOKHTMLResponse} from "@tw050x.net.library/service/helper/response/send-ok-html-response";
-import { useUrlQuery } from "@tw050x.net.library/service/helper/use-url-query";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { z } from "zod";
 import { useAuthGate } from "../../../middleware/use-auth-gate";
 import { default as Assignment, Props as AssignmentDocumentProps } from "../../../template/document/Assignment";
+import { AssignmentTaskWithTemplate } from "../../../template/component/AssignmentTaskTable";
 
 const getQuerySchema = z.object({
   pi: z.preprocess((value) => parseInt(value as string, 10), z.number().int().nonnegative()),
@@ -44,7 +42,6 @@ const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
@@ -69,57 +66,54 @@ export default defineServiceMiddleware([
   useUIMenuStateCookie(useUIMenuStateCookieOptions),
   useUIUserTableToolsStateCookie(useUIUserTableToolsStateCookieOptions),
 
-  // parse and validate query parameters
-  // redirect to sane defaults if invalid
-  async (context) => {
-
-    // context.incomingMessage.queryParameters;
-
-    let pageIndex: number;
-    let pageSize: number;
-    try {
-      const result = getQuerySchema.parse(
-        await useUrlQuery(context)
-      );
-      pageIndex = result.pi;
-      pageSize = result.ps;
-    }
-    catch (error) {
-      if (error instanceof z.ZodError) {
-        return void sendMovedTemporarilyRedirect(
-          context,
-          new URL(`/portal/assignment?pi=0&ps=10`, `https://${await readParameter('portal.service.host')}`),
-        );
-      }
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
-    }
-  },
-
   // handle request
   async (context) => {
-    let assignmentTasks;
+    let assignmentTasksTemplate;
     try {
-      assignmentTasks = await assignmentDatabase.task.
-        find({
-          userProfileUuid: context.incomingMessage.accessTokenCookie.payload.sub,
-          completed: false,
-        }).
-        limit(context.incomingMessage.query.parameters.pageSize).
-        skip(context.incomingMessage.query.parameters.pageIndex * context.incomingMessage.query.parameters.pageSize)
+      assignmentTasksTemplate = await assignmentDatabase.task.aggregate<AssignmentTaskWithTemplate>(
+        sanitizeMongoDBFilterOrPipeline([
+          {
+            $match: {
+              userProfileUuid: context.incomingMessage.accessTokenCookie.payload.sub,
+              completed: false,
+            }
+          },
+          {
+            $limit: context.incomingMessage.query.parameters.pageSize,
+          },
+          {
+            $skip: context.incomingMessage.query.parameters.pageIndex * context.incomingMessage.query.parameters.pageSize,
+          },
+          {
+            $lookup: {
+              from: assignmentCollectionMeta.taskTemplate.name,
+              localField: 'assignmentTaskTemplateUuid',
+              foreignField: 'uuid',
+              as: 'template'
+            }
+          },
+          {
+            $unwind: {
+              path: '$template',
+              preserveNullAndEmptyArrays: true
+            }
+          }
+        ])
+      )
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
     //
-    let tasks: Array<TaskDocument> = [];
+    let tasks: Array<AssignmentTaskWithTemplate> = [];
     try {
-      tasks = await assignmentTasks.toArray();
+      tasks = await assignmentTasksTemplate.toArray();
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
     // render the assignment page with tasks
@@ -131,6 +125,6 @@ export default defineServiceMiddleware([
         state: context.incomingMessage.uiMenuStateCookie.state,
       }
     }
-    return void sendOKHTMLResponse(context, await <Assignment {...assignmentDocumentProps} />);
+    return void context.serverResponse.sendOKHTMLResponse(<Assignment {...assignmentDocumentProps} />);
   }
 ]);

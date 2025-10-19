@@ -3,8 +3,6 @@ import { logger } from "@tw050x.net.library/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
-import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../../../middleware/use-registration-enabled-gate";
 import { generateRegisterFormNonce } from '../../../../helper/generate-register-form-nonce';
@@ -37,9 +35,9 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
-    return void sendOKHTMLResponse(context, await (
+    return void context.serverResponse.sendOKHTMLResponse(
       <aside>
         <RegisterAside
           registerFormProps={{
@@ -49,6 +47,6 @@ export default defineServiceMiddleware([
           }}
         />
       </aside>
-    ));
+    );
   }
 ]);

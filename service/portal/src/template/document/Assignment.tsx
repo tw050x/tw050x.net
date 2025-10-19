@@ -21,7 +21,6 @@ export type Props = {
  * @returns {JSX.Element}
  */
 const Assignment: Component<Props> = (props) => {
-
   return (
     <>
       {'<!doctype html>'}

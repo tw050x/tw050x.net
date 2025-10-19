@@ -5,7 +5,6 @@ import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendMovedPermanentlyRedirect} from "@tw050x.net.library/service/helper/redirect/send-moved-permanently-redirect";
 import { useAuthGate } from "../../middleware/use-auth-gate";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
@@ -23,7 +22,6 @@ const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
@@ -36,8 +34,7 @@ export default defineServiceMiddleware([
   useLoginStateCookie(useLoginStateCookieOptions),
   useAuthGate(),
   async (context) => {
-    return void sendMovedPermanentlyRedirect(
-      context,
+    return void context.serverResponse.sendMovedPermanentlyRedirect(
       new URL('/portal/dashboard', `https://${await readParameter('portal.service.host')}`)
     );
   }

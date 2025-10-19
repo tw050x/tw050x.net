@@ -1,12 +1,13 @@
-import { IncomingMessage, ServerResponse } from "node:http";
+import { default as ContextualServerResponse } from "./contextual-server-response";
+import { default as ContextualIncomingMessage } from "./contextual-incoming-message";
 
 export type Service = {
   close: (callback?: () => void) => void;
 }
 
 export type ServiceRequestContext = {
-  incomingMessage: IncomingMessage;
-  serverResponse: ServerResponse;
+  incomingMessage: ContextualIncomingMessage;
+  serverResponse: ContextualServerResponse;
 }
 
 export type CreateRequestHandlerOptions = {

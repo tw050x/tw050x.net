@@ -1,26 +1,26 @@
 import { DatabaseDocument } from "@tw050x.net.library/types"
 import { mongoClient } from "./client";
 
-interface TaskDocumentBase extends DatabaseDocument {
+interface AssignmentTaskDocumentBase extends DatabaseDocument {
   assignment: string;
   assignedBy: string;
-  taskTemplateUuid: string;
+  assignmentTaskTemplateUuid: string;
   userProfileUuid: string;
 }
 
 //
-interface CompleteTaskDocument extends TaskDocumentBase {
+interface AssignmentCompleteTaskDocument extends AssignmentTaskDocumentBase {
   completedAt: Date;
   completed: true;
 }
 
-interface IncompleteTaskDocument extends TaskDocumentBase {
+interface AssignmentIncompleteTaskDocument extends AssignmentTaskDocumentBase {
   completed: false;
 }
 
-export type TaskDocument = CompleteTaskDocument | IncompleteTaskDocument;
+export type AssignmentTaskDocument = AssignmentCompleteTaskDocument | AssignmentIncompleteTaskDocument;
 
-export type TaskTemplateDocument = {
+export type AssignmentTaskTemplateDocument = {
   label: string;
   reason: string;
   assignment: string;
@@ -30,22 +30,38 @@ export type TaskTemplateDocument = {
 }
 
 /**
+ *
+ */
+export const collectionMeta = {
+  get task() {
+    return {
+      name: process.env.ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME
+    };
+  },
+  get taskTemplate() {
+    return {
+      name: process.env.ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME
+    };
+  }
+}
+
+/**
  * Database object
  */
 export const database = {
   get task() {
-    const taskCollectionName = process.env.ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME;
+    const taskCollectionName = collectionMeta.task.name;
     guard: {
       if (taskCollectionName === '') break guard;
-      return mongoClient.db(process.env.ASSIGNMENT_DATABASE_NAME).collection<TaskDocument>(taskCollectionName);
+      return mongoClient.db(process.env.ASSIGNMENT_DATABASE_NAME).collection<AssignmentTaskDocument>(taskCollectionName);
     }
     throw new Error(`Missing environment variable: ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME`);
   },
   get taskTemplate() {
-    const taskTemplateCollectionName = process.env.ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME;
+    const taskTemplateCollectionName = collectionMeta.taskTemplate.name;
     guard: {
       if (taskTemplateCollectionName === '') break guard;
-      return mongoClient.db(process.env.ASSIGNMENT_DATABASE_NAME).collection<TaskDocument>(taskTemplateCollectionName);
+      return mongoClient.db(process.env.ASSIGNMENT_DATABASE_NAME).collection<AssignmentTaskTemplateDocument>(taskTemplateCollectionName);
     }
     throw new Error(`Missing environment variable: ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME`);
   }

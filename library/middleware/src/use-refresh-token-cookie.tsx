@@ -2,7 +2,6 @@ import { Parameter, isParameter, readParameter } from "@tw050x.net.library/confi
 import { logger } from "@tw050x.net.library/logger";
 import { Secret, isSecret, readSecret } from "@tw050x.net.library/secret";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Cookies } from "cookies";
 import { addDays, differenceInSeconds } from "date-fns";
@@ -62,11 +61,11 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
     if (cookieName === '') {
       logger.error('access token cookie name is undefined or empty');
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
   }
 
@@ -82,11 +81,11 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
     if (cookieDomain === '') {
       logger.error('access token cookie name is undefined or empty');
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
   }
 
@@ -102,11 +101,11 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
     if (jwtSecretKey === '') {
       logger.error(new Error('encrypter secret key is undefined or empty'));
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
   }
 

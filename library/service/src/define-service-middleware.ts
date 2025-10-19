@@ -345,7 +345,7 @@ export default function defineServiceMiddleware(
     for (const middleware of middlewares) {
       // Check if response has already been sent
       // Stop executing remaining middleware if response is complete
-      if (context.serverResponse.headersSent || context.serverResponse.writableEnded) {
+      if (context.serverResponse.sendingOrSent === true) {
         break;
       }
       await middleware(context);

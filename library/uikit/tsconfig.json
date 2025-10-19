@@ -14,8 +14,6 @@
   "files": [
     "src/component/Form/EmailAddressField.tsx",
     "src/component/Form/PasswordField.tsx",
-    "src/component/Table/FooterRow.tsx",
-    "src/component/Table/HeaderRow.tsx",
     "src/component/AnchoredBar.tsx",
     "src/component/Button.tsx",
     "src/component/Header.tsx",
@@ -25,6 +23,7 @@
     "src/component/Paragraph.tsx",
     "src/component/Stylesheet.tsx",
     "src/component/Table.tsx",
+    "src/document/BadRequest.tsx",
     "src/document/Forbidden.tsx",
     "src/document/NotFound.tsx",
     "src/document/Unrecoverable.tsx",

@@ -1,4 +1,4 @@
-import { TaskDocument } from "@tw050x.net.database/assignment";
+import { AssignmentTaskDocument } from "@tw050x.net.database/assignment";
 
 /**
  *
@@ -12,8 +12,8 @@ type GenerateRegistrationAssignmentTasksProperties = {
  *
  * @return {Array<Task>} An array of tasks for the new user.
  */
-export const generateRegistrationAssignmentTasks = async ({ userProfileUuid }: GenerateRegistrationAssignmentTasksProperties): Promise<Array<TaskDocument>> => {
-  const tasks: Array<TaskDocument> = []
+export const generateRegistrationAssignmentTasks = async ({ userProfileUuid }: GenerateRegistrationAssignmentTasksProperties): Promise<Array<AssignmentTaskDocument>> => {
+  const tasks: Array<AssignmentTaskDocument> = []
 
   const assignment = 'complete-registration';
   const date = new Date();
@@ -24,7 +24,7 @@ export const generateRegistrationAssignmentTasks = async ({ userProfileUuid }: G
     assignment,
     assignedBy: 'system',
     completed: false,
-    taskTemplateUuid: process.env.ENTER_YOUR_NAME_TASK_TEMPLATE_UUID,
+    assignmentTaskTemplateUuid: process.env.ENTER_YOUR_NAME_TASK_TEMPLATE_UUID,
     userProfileUuid
   });
 
@@ -34,7 +34,7 @@ export const generateRegistrationAssignmentTasks = async ({ userProfileUuid }: G
     assignment,
     completed: false,
     assignedBy: 'system',
-    taskTemplateUuid: process.env.VERIFY_EMAIL_TASK_TEMPLATE_UUID,
+    assignmentTaskTemplateUuid: process.env.VERIFY_EMAIL_TASK_TEMPLATE_UUID,
     userProfileUuid
   });
 

@@ -25,6 +25,7 @@
     "./component/Paragraph": "./artifact/component/Paragraph.js",
     "./component/Stylesheet": "./artifact/component/Stylesheet.js",
     "./component/Table": "./artifact/component/Table.js",
+    "./document/BadRequest": "./artifact/document/BadRequest.js",
     "./document/Forbidden": "./artifact/document/Forbidden.js",
     "./document/NotFound": "./artifact/document/NotFound.js",
     "./document/Unrecoverable": "./artifact/document/Unrecoverable.js",

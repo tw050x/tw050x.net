@@ -2,7 +2,6 @@ import { Parameter, isParameter, readParameter } from "@tw050x.net.library/confi
 import { logger } from "@tw050x.net.library/logger";
 import { isSecret, readSecret, Secret } from "@tw050x.net.library/secret";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Cookies } from "cookies";
 import { addHours, differenceInSeconds } from "date-fns";
@@ -71,13 +70,13 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
     if (cookieName !== '') {
       break cookieNameGuard;
     }
     logger.error(new Error('access token cookie name is undefined or empty'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />)
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
   }
 
   // retrieve the cookie domain
@@ -92,31 +91,31 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
     if (cookieDomain !== '') {
       break cookieDomainGuard;
     }
     logger.error(new Error('access token cookie domain is empty'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />)
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
   }
 
   // retrieve the jwt secret key
   let jwtSecretKey;
   if (isSecret(options.jwtSecretKey) === false) {
     logger.error(new Error('jwt secret key is not a secret'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
   try {
     jwtSecretKey = await readSecret(options.jwtSecretKey.key);
   }
   catch (error) {
     logger.error(error);
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
   if (jwtSecretKey === '') {
     logger.error(new Error('jwt secret key is empty'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
 
   // retrieve the required permissions
@@ -166,6 +165,9 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
       accessTokenCookieErrors = [new Error('access token payload sub is not a string')];
       break verifyCookieGuard;
     }
+
+    // assign the local payload variable to the upper scope variable
+    accessTokenCookiePayload = accessTokenPayload
 
     // if no required permissions, user is authorised
     // TODO: check for user permissions in the databases

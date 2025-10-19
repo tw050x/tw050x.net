@@ -12,6 +12,7 @@
     "../../types/env.service.authentication.d.ts",
     "src/helper/generate-login-form-nonce.ts",
     "src/stack/generate/nonce/options.ts",
+    "src/middleware/use-login-state-gate.tsx",
     "src/stack/generate/nonce/post.ts",
     "src/stack/login/aside/login-aside/get.tsx",
     "src/stack/login/aside/login-aside/options.ts",

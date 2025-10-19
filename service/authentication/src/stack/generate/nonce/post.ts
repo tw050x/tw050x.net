@@ -2,7 +2,6 @@ import { database as authenticationDatabase } from "@tw050x.net.database/authent
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendOKTextResponse } from "@tw050x.net.library/service/helper";
 import { randomBytes } from "node:crypto";
 import { Document } from "mongodb";
 
@@ -34,6 +33,6 @@ export default defineServiceMiddleware([
     await authenticationDatabase.nonces.insertOne({ createdAt: new Date(), value: nonce });
 
     // return the nonce
-    return void sendOKTextResponse(context, nonce);
+    return void context.serverResponse.sendOKTextResponse(nonce);
   }
 ])

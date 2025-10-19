@@ -6,7 +6,6 @@ import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendOKHTMLResponse} from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { useAuthGate } from "../../../../../middleware/use-auth-gate";
 import { default as UserTableTools, Props as UserTableToolsProps } from "../../../../../template/component/UserTableTools";
 
@@ -25,7 +24,6 @@ const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
@@ -56,6 +54,6 @@ export default defineServiceMiddleware([
     else {
       context.serverResponse.uiUserTableToolsStateCookie.set('open');
     }
-    return void sendOKHTMLResponse(context, await <UserTableTools {...userTableToolsProps} />);
+    return void context.serverResponse.sendOKHTMLResponse(<UserTableTools {...userTableToolsProps} />);
   }
 ])

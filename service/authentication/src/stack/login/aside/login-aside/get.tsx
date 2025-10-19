@@ -3,8 +3,6 @@ import { logger } from "@tw050x.net.library/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
-import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { generateLoginFormNonce } from '../../../../helper/generate-login-form-nonce';
 import { default as LoginAside } from "../../../../template/component/LoginAside";
@@ -22,7 +20,7 @@ export default defineServiceMiddleware([
   async (context) => {
     const loginEnabled = await readParameter('authentication.service.login-enabled');
     if (loginEnabled === 'false') {
-      return void sendOKHTMLResponse(context, await <LoginAside disabled={true} message="Login is currently disabled." />);
+      return void context.serverResponse.sendOKHTMLResponse(<LoginAside disabled={true} message="Login is currently disabled." />);
     }
   },
 
@@ -34,9 +32,9 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
-    return void sendOKHTMLResponse(context, await (
+    return void context.serverResponse.sendOKHTMLResponse(
       <aside>
         <LoginAside
           loginFormProps={{
@@ -46,6 +44,6 @@ export default defineServiceMiddleware([
           }}
         />
       </aside>
-    ));
+    );
   }
 ]);

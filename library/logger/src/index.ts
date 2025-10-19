@@ -22,6 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
         format.errors({ stack: true }),
         format.simple(),
       ),
+      level: 'debug',
     })
   );
 }

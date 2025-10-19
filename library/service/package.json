@@ -3,6 +3,7 @@
   "author": "tw050x (Richard Kielty)",
   "bin": "artifact/bin/service.js",
   "dependencies": {
+    "@kitajs/html": "^4.2.9",
     "@tw050x.net.library/logger": "workspace:*",
     "@tw050x.net.library/utility": "workspace:*",
     "lru-cache": "^11.1.0"
@@ -14,31 +15,7 @@
     "typescript": "^5.7.2"
   },
   "exports": {
-    ".": "./artifact/index.js",
-    "./helper": "./artifact/helper.js",
-    "./helper/redirect/send-found-redirect": "./artifact/helper/redirect/send-found-redirect.js",
-    "./helper/redirect/send-moved-permanently-redirect": "./artifact/helper/redirect/send-moved-permanently-redirect.js",
-    "./helper/redirect/send-moved-temporarily-redirect": "./artifact/helper/redirect/send-moved-temporarily-redirect.js",
-    "./helper/redirect/send-see-other-redirect": "./artifact/helper/redirect/send-see-other-redirect.js",
-    "./helper/response/send-accepted-json-response": "./artifact/helper/response/send-accepted-json-response.js",
-    "./helper/response/send-bad-request-html-response": "./artifact/helper/response/send-bad-request-html-response.js",
-    "./helper/response/send-bad-request-json-response": "./artifact/helper/response/send-bad-request-json-response.js",
-    "./helper/response/send-created-json-response": "./artifact/helper/response/send-created-json-response.js",
-    "./helper/response/send-forbidden-html-response": "./artifact/helper/response/send-forbidden-html-response.js",
-    "./helper/response/send-internal-server-error-html-response": "./artifact/helper/response/send-internal-server-error-html-response.js",
-    "./helper/response/send-internal-server-error-json-response": "./artifact/helper/response/send-internal-server-error-json-response.js",
-    "./helper/response/send-not-found-html-response": "./artifact/helper/response/send-not-found-html-response.js",
-    "./helper/response/send-not-found-json-response": "./artifact/helper/response/send-not-found-json-response.js",
-    "./helper/response/send-not-implemented-text-response": "./artifact/helper/response/send-not-implemented-text-response.js",
-    "./helper/response/send-ok-html-response": "./artifact/helper/response/send-ok-html-response.js",
-    "./helper/response/send-ok-json-response": "./artifact/helper/response/send-ok-json-response.js",
-    "./helper/response/send-ok-text-response": "./artifact/helper/response/send-ok-text-response.js",
-    "./helper/response/send-unauthorized-html-response": "./artifact/helper/response/send-unauthorized-html-response.js",
-    "./helper/response/send-unauthorized-json-response": "./artifact/helper/response/send-unauthorized-json-response.js",
-    "./helper/use-form-data-body": "./artifact/helper/use-form-data-body.js",
-    "./helper/use-json-body": "./artifact/helper/use-json-body.js",
-    "./helper/use-url-params": "./artifact/helper/use-url-params.js",
-    "./helper/use-url-query": "./artifact/helper/use-url-query.js"
+    ".": "./artifact/index.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/service",

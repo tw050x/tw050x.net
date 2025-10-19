@@ -1,5 +1,7 @@
 import { logger } from "@tw050x.net.library/logger";
-import { createServer as createHttpServer, IncomingMessage, ServerResponse } from "node:http";
+import { createServer as createHttpServer } from "node:http";
+import { default as ContextualIncomingMessage } from "./contextual-incoming-message";
+import { default as ContextualServerResponse } from "./contextual-server-response";
 import { default as discoverRoutes } from "./routes";
 import { CreateRequestHandlerOptions, CreateServerOptions, ServiceRequestContext } from "./types";
 
@@ -29,13 +31,15 @@ export default function createServer(options: CreateServerOptions) {
     return void context.serverResponse.end('Healthy');
   });
 
-  const server = createHttpServer();
+  const server = createHttpServer({
+    IncomingMessage: ContextualIncomingMessage,
+    ServerResponse: ContextualServerResponse,
+  });
 
   server.on('request', createRequestHandler({ routes }));
 
-  // Close the server
   const close = () => {
-    routes.clear();
+    routes.clear(); // this is probably not needed, but just in case
     server.close();
   }
 
@@ -64,7 +68,7 @@ export default function createServer(options: CreateServerOptions) {
  * @param options - The options containing the routes map.
  * @returns
  */
-export const createRequestHandler = (options: CreateRequestHandlerOptions) => (incomingMessage: IncomingMessage, serverResponse: ServerResponse): void => {
+export const createRequestHandler = (options: CreateRequestHandlerOptions) => (incomingMessage: ContextualIncomingMessage, serverResponse: ContextualServerResponse): void => {
 
   // normalise the method and url
   // remove search params from url for route matching

@@ -2,24 +2,21 @@ import { Parameter, isParameter, readParameter } from "@tw050x.net.library/confi
 import { logger } from "@tw050x.net.library/logger";
 import { Secret, isSecret, readSecret } from "@tw050x.net.library/secret";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { isAllowedDomain } from "@tw050x.net.library/utility/is-allowed-domain";
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
 import { default as Cookies } from "cookies";
 
 /**
  *
  */
-type LoginStateCookiePayload = {
-  returnUrl: URL;
+export type LoginStateCookiePayload = {
+  returnUrl?: URL;
 }
 
 /**
  *
  */
 export type UseLoginStateCookieOptions = {
-  allowedReturnUrlDomains: string | Parameter;
   cookieName: string | Parameter;
   cookieDomain: string | Parameter;
   encrypterSecretKey: string | Secret;
@@ -37,7 +34,7 @@ const defaultStateCipherAlgorithm = 'aes-256-cbc';
 export type UseLoginStateCookieResultingContext = ServiceRequestContext & {
   incomingMessage: ServiceRequestContext['incomingMessage'] & {
     loginStateCookie: {
-      payload: LoginStateCookiePayload | undefined;
+      payload?: LoginStateCookiePayload;
     }
   }
   serverResponse: ServiceRequestContext['serverResponse'] & {
@@ -62,26 +59,6 @@ type Factory = (options: UseLoginStateCookieOptions) => Middleware<
 export const useLoginStateCookie: Factory = (options) => async (context) => {
 
   // retrieve the cookie name
-  let allowedReturnUrlDomains;
-  allowedReturnUrlDomainsGuard: {
-    if (isParameter(options.allowedReturnUrlDomains) === false) {
-      allowedReturnUrlDomains = options.allowedReturnUrlDomains;
-      break allowedReturnUrlDomainsGuard;
-    }
-    try {
-      allowedReturnUrlDomains = await readParameter(options.allowedReturnUrlDomains.key);
-    }
-    catch (error) {
-      logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
-    }
-  }
-  if (allowedReturnUrlDomains === '') {
-    logger.error(new Error('access token cookie name is undefined or empty'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
-  }
-
-  // retrieve the cookie name
   let cookieName;
   cookieNameGuard: {
     if (isParameter(options.cookieName) === false) {
@@ -93,13 +70,14 @@ export const useLoginStateCookie: Factory = (options) => async (context) => {
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
   }
   if (cookieName === '') {
     logger.error(new Error('access token cookie name is undefined or empty'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
+  logger.debug(`Login state cookie name: ${cookieName}`);
 
   // retrieve the cookie domain
   let cookieDomain;
@@ -113,13 +91,14 @@ export const useLoginStateCookie: Factory = (options) => async (context) => {
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
   }
   if (cookieDomain === '') {
     logger.error(new Error('access token cookie name is undefined or empty'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
+  logger.debug(`Login state cookie domain: ${cookieDomain}`);
 
   let encrypterSecretKey;
   encrypterSecretKeyGuard: {
@@ -132,13 +111,14 @@ export const useLoginStateCookie: Factory = (options) => async (context) => {
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
   }
   if (encrypterSecretKey === '') {
     logger.error(new Error('encrypter secret key is undefined or empty'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
+  logger.debug('Encrypter secret key retrieved');
 
   // retrieve the cookie name
   let stateCipherAlgorithm;
@@ -156,13 +136,14 @@ export const useLoginStateCookie: Factory = (options) => async (context) => {
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
   }
   if (stateCipherAlgorithm === '') {
     logger.error(new Error('access token cookie name is undefined or empty'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />);
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
+  logger.debug(`State cipher algorithm: ${stateCipherAlgorithm}`);
 
   // read the cookie
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
@@ -176,48 +157,33 @@ export const useLoginStateCookie: Factory = (options) => async (context) => {
     if (cookie === undefined) {
       break payloadGuard;
     }
-    let loginState
     try {
       const parsedCookie = JSON.parse(cookie);
       const decipher = createDecipheriv(stateCipherAlgorithm, Buffer.from(encrypterSecretKey, 'hex'), Buffer.from(parsedCookie.iv, 'hex'));
       let decrypted = decipher.update(parsedCookie.content, 'hex', 'utf8');
       decrypted += decipher.final('utf8');
-      loginState = JSON.parse(decrypted);
+      loginStateCookiePayload = JSON.parse(decrypted);
     }
     catch (error) {
       logger.error(error);
       break payloadGuard;
     }
     // ensure login state is an object with a returnUrl property
-    if (loginState === undefined) {
+    if (loginStateCookiePayload === undefined) {
+      logger.debug('Login state cookie payload is undefined');
       break payloadGuard;
     }
-    if (loginState === null) {
+    if (loginStateCookiePayload === null) {
+      logger.debug('Login state cookie payload is null');
       break payloadGuard;
     }
-    if (typeof loginState !== 'object') {
+    if (typeof loginStateCookiePayload !== 'object') {
+      logger.debug('Login state cookie payload is not an object');
       break payloadGuard;
     }
-    if ('returnUrl' in loginState === false) {
+    if ('returnUrl' in loginStateCookiePayload === false) {
+      logger.debug('Login state cookie payload does not have a returnUrl property');
       break payloadGuard;
-    }
-    // fetch the allowed return url domains from config
-    const listOfAllowedReturnUrlDomains = allowedReturnUrlDomains.split(',').map((domain) => domain.trim())
-    // ensure that the "allowed_return_url_domains" setting exists
-    // return an error if it does not
-    if (Array.isArray(listOfAllowedReturnUrlDomains) === false) {
-      break payloadGuard;
-    }
-    // check the return url domain against the allowed return url domains
-    // return an error if the return url domain is not allowed
-    if (isAllowedDomain(loginState.returnUrl, listOfAllowedReturnUrlDomains) === false) {
-      break payloadGuard;
-    }
-    if (typeof loginState.returnUrl !== 'string') {
-      break payloadGuard;
-    }
-    loginStateCookiePayload = {
-      returnUrl: new URL(loginState.returnUrl)
     }
   }
   // initialize the cookies object on the incoming message
@@ -260,4 +226,5 @@ export const useLoginStateCookie: Factory = (options) => async (context) => {
     clear: clearLoginStateCookie,
     set: setLoginStateCookie
   };
+  logger.debug('Login state cookie middleware initialized');
 }

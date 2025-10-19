@@ -41,6 +41,7 @@
   ],
   "references": [
     { "path": "../../library/configuration" },
+    { "path": "../../library/database" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
     { "path": "../../library/secret" },

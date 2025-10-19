@@ -7,10 +7,6 @@ import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net
 import { logger } from "@tw050x.net.library/logger";
 import { readSecret, useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendSeeOtherRedirect } from "@tw050x.net.library/service/helper/redirect/send-see-other-redirect";
-import { sendBadRequestJSONResponse } from "@tw050x.net.library/service/helper/response/send-bad-request-json-response";
-import { sendUnauthorizedJSONResponse } from "@tw050x.net.library/service/helper/response/send-unauthorized-json-response";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { SignOptions, sign } from "jsonwebtoken";
 
@@ -26,7 +22,6 @@ const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
@@ -54,24 +49,24 @@ export default defineServiceMiddleware([
     // if there are errors, log them and return a 400 Bad Request response
     if (context.incomingMessage.refreshTokenCookie.errors.length > 0) {
       context.incomingMessage.refreshTokenCookie.errors.forEach((error) => logger.error(error));
-      return void sendBadRequestJSONResponse(context);
+      return void context.serverResponse.sendBadRequestJSONResponse();
     }
 
     // If the bearer token is not authorised or payload is null,
     // return an error
     if (context.incomingMessage.refreshTokenCookie.payload === undefined) {
       logger.error('Bearer token payload is null');
-      return void sendUnauthorizedJSONResponse(context);
+      return void context.serverResponse.sendUnauthorizedJSONResponse();
     }
     if (context.incomingMessage.refreshTokenCookie.payload.sub === undefined) {
       logger.error('Bearer token payload sub is undefined');
-      return void sendUnauthorizedJSONResponse(context);
+      return void context.serverResponse.sendUnauthorizedJSONResponse();
     }
 
     const jwtSecretKey = await readSecret('jwt.secret-key');
     if (jwtSecretKey === undefined) {
       logger.error('JWT secret key is undefined');
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
     // generate a new access token
@@ -83,10 +78,8 @@ export default defineServiceMiddleware([
     };
     const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
     context.serverResponse.accessTokenCookie.set(accessToken);
-    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
-    return void sendSeeOtherRedirect(
-      context,
-      returnUrl,
+    return void context.serverResponse.sendSeeOtherRedirect(
+      context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`),
     )
   }
 ])

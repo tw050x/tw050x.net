@@ -8,8 +8,6 @@ import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
-import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Account } from "@tw050x.net.library/uikit/svg/Account";
 import { default as AccountSwitch } from "@tw050x.net.library/uikit/svg/AccountSwitch";
@@ -35,7 +33,6 @@ const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
@@ -64,14 +61,14 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />)
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />)
     }
 
     // Determine service menu items
     const serviceMenuItems = []
 
     if (incompleteAssignmentDocuments > 0) {
-      serviceMenuItems.push({ label: 'Assignment', href: '/portal/assignment', IconComponent: Assignment, classes: ['attention'] });
+      serviceMenuItems.push({ label: 'Assignments', href: '/portal/assignment', IconComponent: Assignment, classes: ['attention'] });
     }
 
     // Add default menu items
@@ -106,6 +103,6 @@ export default defineServiceMiddleware([
       serviceMenuItems,
       userMenuItems,
     }
-    return void sendOKHTMLResponse(context, await <Menu {...portalMenuProps} />);
+    return void context.serverResponse.sendOKHTMLResponse(<Menu {...portalMenuProps} />);
   }
 ])

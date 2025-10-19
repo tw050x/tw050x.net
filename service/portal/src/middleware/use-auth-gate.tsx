@@ -3,9 +3,6 @@ import { logger } from "@tw050x.net.library/logger";
 import { AccessTokenCookie, UseAccessTokenCookieResultingContext } from "@tw050x.net.library/middleware/use-access-token-cookie";
 import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/middleware/use-login-state-cookie";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { sendMovedTemporarilyRedirect } from "@tw050x.net.library/service/helper/redirect/send-moved-temporarily-redirect";
-import { sendUnauthorizedHTMLResponse } from "@tw050x.net.library/service/helper/response/send-unauthorized-html-response";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
 import { default as ForbiddenDocument } from "@tw050x.net.library/uikit/document/Forbidden";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 
@@ -43,12 +40,12 @@ type Factory = () => Middleware<
 export const useAuthGate: Factory = () => async (context) => {
   if (context.incomingMessage.accessTokenCookie.errors.length > 0) {
     context.incomingMessage.accessTokenCookie.errors.forEach((error) => logger.error(error));
-    return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
   }
 
   // If the user is not authorized, return a forbidden response
   if (context.incomingMessage.accessTokenCookie.authorised === false) {
-    return void sendUnauthorizedHTMLResponse(context, await <ForbiddenDocument />);
+    return void context.serverResponse.sendUnauthorizedHTMLResponse(<ForbiddenDocument />);
   }
 
   // If the user is not authorized, redirect to the login page
@@ -58,14 +55,13 @@ export const useAuthGate: Factory = () => async (context) => {
     const portalServiceHost = await readParameter('portal.service.host');
     if (!portalServiceHost) {
       logger.error('No portal host configured, cannot redirect to login page');
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
     context.serverResponse.loginStateCookie.set(JSON.stringify({
       returnUrl: new URL(context.incomingMessage.url || '/', `https://${portalServiceHost}`),
     }))
-    return void sendMovedTemporarilyRedirect(
-      context,
+    return void context.serverResponse.sendMovedTemporarilyRedirect(
       new URL('/login', `https://${portalServiceHost}`),
     );
   }

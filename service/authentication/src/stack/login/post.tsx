@@ -9,11 +9,6 @@ import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw
 import { logger } from "@tw050x.net.library/logger";
 import { readSecret, useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useFormDataBody } from "@tw050x.net.library/service/helper/use-form-data-body";
-import { sendSeeOtherRedirect } from "@tw050x.net.library/service/helper/redirect/send-see-other-redirect";
-import { sendBadRequestHTMLResponse } from "@tw050x.net.library/service/helper/response/send-bad-request-html-response";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
-import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { compare } from "bcryptjs";
 import { SignOptions, sign } from "jsonwebtoken";
@@ -39,7 +34,6 @@ const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
@@ -68,16 +62,15 @@ export default defineServiceMiddleware([
   async (context) => {
     const loginEnabled = await readParameter('authentication.service.login-enabled');
     if (loginEnabled === 'false') {
-      return void sendOKHTMLResponse(
-        context,
-        await <span>Login is currently disabled</span>
+      return void context.serverResponse.sendOKHTMLResponse(
+        <span>Login is currently disabled</span>
       );
     }
   },
 
   // Handle the login form submission
   async (context) => {
-    const body = await useFormDataBody(context);
+    const body = await context.incomingMessage.useFormDataBody();
 
     // generate a nonce for the login form
     let nonce;
@@ -86,7 +79,7 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
     // validate the email and password fields
@@ -101,9 +94,8 @@ export default defineServiceMiddleware([
     catch (error) {
       if (error instanceof ZodError) error.errors.forEach((issue) => logger.error(issue));
       else logger.error(error);
-      return void sendBadRequestHTMLResponse(
-        context,
-        await <LoginForm
+      return void context.serverResponse.sendBadRequestHTMLResponse(
+        <LoginForm
           email={body?.email}
           nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
@@ -119,13 +111,12 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
     if (credentialDocument === null) {
       logger.debug('credential document not found', { email });
-      return void sendBadRequestHTMLResponse(
-        context,
-        await <LoginForm
+      return void context.serverResponse.sendBadRequestHTMLResponse(
+        <LoginForm
           email={body?.email}
           nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
@@ -138,9 +129,8 @@ export default defineServiceMiddleware([
     const passwordMatch = await compare(password, credentialDocument.passwordHash);
     if (passwordMatch === false) {
       logger.error('password does not match', { email });
-      return void sendBadRequestHTMLResponse(
-        context,
-        await <LoginForm
+      return void context.serverResponse.sendBadRequestHTMLResponse(
+        <LoginForm
           email={email}
           nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
@@ -151,7 +141,7 @@ export default defineServiceMiddleware([
     const jwtSecretKey = await readSecret('jwt.secret-key');
     if (jwtSecretKey === undefined) {
       logger.error('JWT secret key is undefined');
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
     // create authentication cookies and set them on the response
@@ -169,14 +159,16 @@ export default defineServiceMiddleware([
     };
     const refreshToken = sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
     const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
+
+    // set the cookies on the response and clear the login state cookie
     context.serverResponse.refreshableTokenCookie.set('true');
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();
-    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
-    return void sendSeeOtherRedirect(
-      context,
-      returnUrl
+
+    // redirect to the return url or the home page;
+    return void context.serverResponse.sendSeeOtherRedirect(
+      context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`)
     )
   },
 ])

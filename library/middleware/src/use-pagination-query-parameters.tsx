@@ -1,7 +1,6 @@
 import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 
 /**
@@ -52,7 +51,7 @@ export const usePaginationQueryParameters: Factory = (options) => async (context
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />)
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
     }
   }
   else {
@@ -65,7 +64,7 @@ export const usePaginationQueryParameters: Factory = (options) => async (context
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />)
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
     }
   }
   else {
@@ -74,17 +73,17 @@ export const usePaginationQueryParameters: Factory = (options) => async (context
 
   if (isNaN(defaultPageIndex) || defaultPageIndex < 0) {
     logger.error(new Error('The default page index must be a non-negative number'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />)
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
   }
 
   if (isNaN(defaultPageSize) || defaultPageSize <= 0) {
     logger.error(new Error('The default page size must be a positive number'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />)
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
   }
 
   if (context.incomingMessage.url === undefined) {
     logger.error(new Error('The incoming request URL is undefined'));
-    return void sendInternalServerErrorHTMLResponse(context, await <Unrecoverable />)
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
   }
 
   const urlQuery = new URLSearchParams(context.incomingMessage.url.split('?')[1]);

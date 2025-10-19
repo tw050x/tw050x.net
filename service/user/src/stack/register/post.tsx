@@ -12,11 +12,6 @@ import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net
 import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/middleware/use-refreshable-token-cookie";
 import { readSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useFormDataBody } from "@tw050x.net.library/service/helper";
-import { sendSeeOtherRedirect } from "@tw050x.net.library/service/helper/redirect/send-see-other-redirect";
-import { sendBadRequestHTMLResponse } from "@tw050x.net.library/service/helper/response/send-bad-request-html-response";
-import { sendInternalServerErrorHTMLResponse } from "@tw050x.net.library/service/helper/response/send-internal-server-error-html-response";
-import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { randomUUID } from "node:crypto"
 import { hash } from "bcryptjs";
@@ -48,7 +43,6 @@ const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
   cookieName: useParameter('cookie.login-state.name'),
   cookieDomain: useParameter('cookie.login-state.domain'),
   encrypterSecretKey: useSecret('encrypter.secret-key'),
@@ -87,73 +81,92 @@ export default defineServiceMiddleware([
 
   // Handle the registration form submission
   async (context) => {
-    const body = await useFormDataBody(context);
+    const body = await context.incomingMessage.useFormDataBody();
 
-    // generate a nonce for the registration form
-    let nonce;
-    try {
-      nonce = await generateRegisterFormNonce();
-    }
-    catch (error) {
-      logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+    let credentialsDocument: CredentialDocument | null = null;
+    let emailFieldValue: string | undefined;
+    let passwordFieldValue: string | undefined;
+    dataGuard: {
+      // validate the incoming form data
+      // return an error if the data is invalid
+      try {
+        const result = postRegisterFormDataSchema.parse(body);
+        emailFieldValue = result.email;
+        passwordFieldValue = result.password;
+      }
+      catch (error) {
+        if (error instanceof ZodError) error.errors.forEach((issue) => logger.error(issue));
+        else logger.error(error);
+        break dataGuard;
+      }
+
+      // fetch the credentials document from the database
+      // if it doesnt exist then return an error
+      try {
+        credentialsDocument = await userDatabase.credentials.findOne(
+          sanitizeMongoDBFilterOrPipeline({ email: emailFieldValue })
+        );
+      }
+      catch (error) {
+        logger.error(error);
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      }
+      if (credentialsDocument !== null) {
+        logger.error('credentials document found, cannot register as a new user', { email: emailFieldValue });
+        break dataGuard;
+      }
     }
 
-    // validate the incoming form data
-    // return an error if the data is invalid
-    let email;
-    let password;
-    try {
-      const result = postRegisterFormDataSchema.parse(body);
-      email = result.email;
-      password = result.password;
-    }
-    catch (error) {
-      if (error instanceof ZodError) error.errors.forEach((issue) => logger.error(issue));
-      else logger.error(error);
-      return void sendOKHTMLResponse(
-        context,
-        await <RegisterForm
+    // if there was a problem with the data, re-render the registration form with a generic error message
+    // to avoid disclosing which field was incorrect
+    if (emailFieldValue === undefined || passwordFieldValue === undefined) {
+      let nonce;
+      try {
+        nonce = await generateRegisterFormNonce();
+      }
+      catch (error) {
+        logger.error(error);
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      }
+
+      return void context.serverResponse.sendOKHTMLResponse(
+        <RegisterForm
           email={body?.email ?? ''}
           nonce={nonce}
-          validationErrors={[{ message: 'There was a problem with your email address or password, please try again.' }]}
+          validationErrors={[{ message: 'There was a problem with your email address or password, please try again' }]}
         />
       );
     }
 
-    // fetch the credentials document from the database
-    // if it doesnt exist then return an error
-    let credentialsDocument: CredentialDocument | null = null;
-    try {
-      credentialsDocument = await userDatabase.credentials.findOne(
-        sanitizeMongoDBFilterOrPipeline({ email })
-      );
-    }
-    catch (error) {
-      logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
-    }
-    if (credentialsDocument !== null) {
-      logger.error('credentials document found, cannot register as a new user', { email });
-      return void sendBadRequestHTMLResponse(
-        context,
-        await <RegisterForm
-          email={body?.email}
+    // if the credentials document already exists, re-render the registration form with a generic error message
+    if (credentialsDocument === null) {
+      let nonce;
+      try {
+        nonce = await generateRegisterFormNonce();
+      }
+      catch (error) {
+        logger.error(error);
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      }
+
+      return void context.serverResponse.sendOKHTMLResponse(
+        <RegisterForm
+          email={body?.email ?? ''}
           nonce={nonce}
-          validationErrors={[{ message: 'Email already in use' }]}
+          validationErrors={[{ message: 'This email address is already registered' }]}
         />
-      )
+      );
     }
 
     // hash the password
     // return an error if there is a problem
     let passwordHash;
     try {
-      passwordHash = await hash(password, 10);
+      passwordHash = await hash(passwordFieldValue, 10);
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
     // generate a unique (unused) UUID for the user
@@ -169,11 +182,10 @@ export default defineServiceMiddleware([
       }
       catch (error) {
         logger.error(error);
-        return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
       }
     }
     while (userProfileDocument !== null);
-
 
     // generate the initial registration tasks for the new user
     // return an error if there is a problem
@@ -183,7 +195,7 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
     // start the user database session
@@ -201,27 +213,27 @@ export default defineServiceMiddleware([
       await userDatabase.credentials.insertOne({
         createdAt: new Date(),
         updatedAt: new Date(),
-        email,
+        email: emailFieldValue,
         passwordHash,
         uuid: userProfileUuid,
       });
-      await assignmentDatabase.task.insertMany(registrationTasks);
+      await assignmentDatabase.task.insertMany(registrationTasks); // TODO: replace with SQS event that ultimately triggers task creation
       await userDatabaseSession.commitTransaction();
     }
     catch (error) {
       await userDatabaseSession.abortTransaction();
       logger.error(error);
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
     // end the user database session
-    userDatabaseSession.endSession();
+    await userDatabaseSession.endSession();
 
     // read the JWT secret key
     // return an error if there is a problem
     const jwtSecretKey = await readSecret('jwt.secret-key');
     if (jwtSecretKey === undefined) {
       logger.error('JWT secret key is undefined');
-      return void sendInternalServerErrorHTMLResponse(context, await <UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
     // generate JWT tokens and set cookies
@@ -242,11 +254,9 @@ export default defineServiceMiddleware([
     context.serverResponse.refreshableTokenCookie.set('true');
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
-    context.serverResponse.loginStateCookie.clear();
-    const returnUrl = new URL('/portal/assignment', `https://${await readParameter('user.service.host')}`);
-    return void sendSeeOtherRedirect(
-      context,
-      returnUrl
+    context.serverResponse.loginStateCookie.clear();;
+    return void context.serverResponse.sendSeeOtherRedirect(
+      new URL('/portal/assignment', `https://${await readParameter('user.service.host')}`)
     )
   }
 ])

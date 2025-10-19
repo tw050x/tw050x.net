@@ -1,6 +1,5 @@
 import { readParameter } from "@tw050x.net.library/configuration";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { sendOKHTMLResponse } from "@tw050x.net.library/service/helper/response/send-ok-html-response";
 
 /**
  * Options for the useRegistrationEnabledGate middleware.
@@ -36,6 +35,6 @@ export const useRegistrationEnabledGate: Factory = ({ getResponseHtml }) => asyn
   }
 
   if (registrationEnabled === 'false') {
-    return void sendOKHTMLResponse(context, await getResponseHtml());
+    return void context.serverResponse.sendOKHTMLResponse(await getResponseHtml());
   }
 }
