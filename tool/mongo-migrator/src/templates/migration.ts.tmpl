@@ -1,0 +1,11 @@
+import type { MigrationFn } from "@tw050x.net.tool/mongo-migrator";
+
+export const up: MigrationFn = async ({ db }) => {
+  // Add changes here, e.g.:
+  // await db.collection("users").createIndex({ email: 1 }, { unique: true });
+};
+
+export const down: MigrationFn = async ({ db }) => {
+  // Revert changes here, e.g.:
+  // await db.collection("users").dropIndex("email_1");
+};

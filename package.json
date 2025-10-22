@@ -42,6 +42,7 @@
     "service/marketing",
     "service/navigation",
     "service/traefik",
-    "service/user"
+    "service/user",
+    "tool/mongo-migrator"
   ]
 }

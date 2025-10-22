@@ -1,1 +1,15 @@
-{}
+{
+  "compilerOptions": {
+    "outDir": "./artifact",
+    "rootDir": "./src",
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "src/bin/mongo-migrator.ts",
+    "src/index.ts",
+    "src/migrator.ts",
+    "src/templates/migration.template.ts",
+    "src/types.ts",
+  ]
+}

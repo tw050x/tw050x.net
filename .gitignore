@@ -16,12 +16,13 @@ tmp/*
 !.env.example
 
 # Terraform
-**/.terraform/
-**/*.override.tf
-**/*.tfstate
-**/*.tfstate.backup
-**/*.tfvars
-**/.env
+infrastructure/**/.terraform/
+infrastructure/**/*.override.tf
+infrastructure/**/*.tfstate
+infrastructure/**/*.tfstate.backup
+infrastructure/**/*.tfvars
+infrastructure/**/.env
+infrastructure/**/.terraform.tfstate.lock.info
 
 # Typescript
 tsconfig.tsbuildinfo

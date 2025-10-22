@@ -48,6 +48,7 @@
     { "path": "./service/error" },
     { "path": "./service/marketing" },
     { "path": "./service/navigation" },
-    { "path": "./service/user" }
+    { "path": "./service/user" },
+    { "path": "./tool/mongo-migrator" }
   ]
 }
