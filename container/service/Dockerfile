@@ -81,6 +81,12 @@ COPY --from=build /build/library/middleware/artifact /srv/library/middleware/art
 COPY --from=build /build/library/middleware/package.json /srv/library/middleware/package.json
 COPY --from=build /build/library/middleware/tsconfig.json /srv/library/middleware/tsconfig.json
 
+FROM node:23.11.1-alpine3.22 AS library-queue
+WORKDIR /srv
+COPY --from=build /build/library/queue/artifact /srv/library/queue/artifact
+COPY --from=build /build/library/queue/package.json /srv/library/queue/package.json
+COPY --from=build /build/library/queue/tsconfig.json /srv/library/queue/tsconfig.json
+
 FROM node:23.11.1-alpine3.22 AS library-secret
 WORKDIR /srv
 COPY --from=build /build/library/secret/artifact /srv/library/secret/artifact
@@ -135,6 +141,7 @@ COPY --from=library-configuration /srv/library/configuration /srv/library/config
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
@@ -156,6 +163,7 @@ COPY --from=dependencies /srv /srv
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
@@ -176,6 +184,7 @@ COPY --from=library-configuration /srv/library/configuration /srv/library/config
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
@@ -197,6 +206,7 @@ COPY --from=library-configuration /srv/library/configuration /srv/library/config
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
@@ -218,6 +228,7 @@ COPY --from=library-configuration /srv/library/configuration /srv/library/config
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
@@ -241,6 +252,7 @@ COPY --from=library-configuration /srv/library/configuration /srv/library/config
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types

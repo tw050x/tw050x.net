@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./artifact",
+    "rootDir": "./src",
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "src/index.ts",
+    "src/sqs-client.ts",
+    "src/sqs-send-message.ts",
+    "src/types.ts",
+  ],
+  "references": [
+    { "path": "../logger" },
+    { "path": "../service" },
+    { "path": "../utility" },
+  ]
+}
