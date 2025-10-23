@@ -3,6 +3,7 @@
   "author": "tw050x (Richard Kielty)",
   "description": "The Error Service project for tw050x.net",
   "dependencies": {
+    "@kitajs/html": "^4.2.9",
     "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
     "@tw050x.net.library/middleware": "workspace:*",
@@ -10,9 +11,7 @@
     "@tw050x.net.library/uikit": "workspace:*"
   },
   "devDependencies": {
-    "@kitajs/html": "^4.2.9",
     "@types/node": "^22.10.2",
-    "nodemon": "^3.1.10",
     "typescript": "^5.7.2"
   },
   "license": "UNLICENSED",

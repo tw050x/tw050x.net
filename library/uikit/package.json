@@ -7,7 +7,6 @@
   },
   "description": "The @tw050x.net.library/uikit package project",
   "devDependencies": {
-    "@kitajs/html": "^4.2.9",
     "@types/node": "^22.10.2",
     "htmx-ext-response-targets": "^2.0.1",
     "htmx.org": "^2.0.4",

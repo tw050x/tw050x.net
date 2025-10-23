@@ -1,9 +1,32 @@
+
+/**
+ * Check if the given value is an array of headers (strings).
+ *
+ * @param value The value to check.
+ * @returns True if the value is a readonly array of strings, false otherwise.
+ */
+export const isArrayOfHeaders = (value: unknown): value is readonly string[] => {
+  if (Array.isArray(value) === false) {
+    return false;
+  }
+  for (const item of value) {
+    if (typeof item !== 'string') {
+      return false;
+    }
+  }
+  return true;
+}
+
+
 /**
  * Check if all requested headers are included in the allowed headers array
  * Parses comma-separated header string from Access-Control-Request-Headers
- * Returns true if all headers are defined and exist in the allowedHeaders array
+ *
+ * @param headers
+ * @param allowedHeaders
+ * @returns true if all headers are defined and exist in the allowedHeaders array
  */
-export const isAllowedHeaders = (headers: string | undefined, allowedHeaders: readonly string[]): headers is string => {
+export const isAllowedHeader = (headers: string | undefined, allowedHeaders: readonly string[]): headers is string => {
   if (headers === undefined) {
     return false;
   }

@@ -11,9 +11,7 @@
     "@tw050x.net.library/uikit": "workspace:*"
   },
   "devDependencies": {
-    "@kitajs/html": "^4.2.9",
     "@types/node": "^22.10.2",
-    "nodemon": "^3.1.10",
     "typescript": "^5.7.2"
   },
   "license": "UNLICENSED",

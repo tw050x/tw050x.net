@@ -14,7 +14,7 @@
   "files": [
     "src/index.ts",
     "src/use-access-token-cookie.tsx",
-    "src/use-cors-headers.ts",
+    "src/use-cors-headers.tsx",
     "src/use-log-request.ts",
     "src/use-login-state-cookie.tsx",
     "src/use-pagination-query-parameters.tsx",

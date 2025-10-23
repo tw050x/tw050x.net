@@ -3,6 +3,7 @@
   "author": "tw050x (Richard Kielty)",
   "description": "The Authentication Service project for tw050x.net",
   "dependencies": {
+    "@kitajs/html": "^4.2.9",
     "@tw050x.net.database/authentication": "workspace:*",
     "@tw050x.net.database/user": "workspace:*",
     "@tw050x.net.library/configuration": "workspace:*",
@@ -19,12 +20,10 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@kitajs/html": "^4.2.9",
     "@types/bcrypt": "^5",
     "@types/jsonwebtoken": "^9",
     "@types/node": "^22.10.2",
     "@types/validator": "^13.12.2",
-    "nodemon": "^3.1.10",
     "typescript": "^5.7.2"
   },
   "license": "UNLICENSED",

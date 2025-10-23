@@ -120,12 +120,13 @@ COPY --from=build /build/service/assets/public /srv/service/assets/public
 COPY --from=build /build/service/assets/package.json /srv/service/assets/package.json
 COPY --from=build /build/service/assets/tsconfig.json /srv/service/assets/tsconfig.json
 COPY --from=build /build/service/assets/serve.json /srv/service/assets/serve.json
-RUN yarn workspaces focus --production @tw050x.net.service/assets
+RUN yarn workspaces focus --production @tw050x.net.service/assets --production
 ENTRYPOINT [ "sh", "-c" ]
 CMD [ "yarn workspace @tw050x.net.service/assets serve --config /srv/service/assets/serve.json --listen tcp://0.0.0.0:3000" ]
 
 FROM node:23.11.1-alpine3.22 AS service-authentication
 RUN apk add --no-cache curl
+RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-account /srv/database/account /srv/database/account
@@ -144,11 +145,12 @@ COPY --from=build /build/database/user /srv/database/user
 COPY --from=build /build/service/authentication/artifact /srv/service/authentication/artifact
 COPY --from=build /build/service/authentication/package.json /srv/service/authentication/package.json
 COPY --from=build /build/service/authentication/tsconfig.json /srv/service/authentication/tsconfig.json
-RUN yarn workspaces focus @tw050x.net.service/authentication
+RUN yarn workspaces focus @tw050x.net.service/authentication --production
 CMD [ "node", "service/authentication/artifact/serve.js" ]
 
 FROM node:23.11.1-alpine3.22 AS service-error
 RUN apk add --no-cache curl
+RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
@@ -162,11 +164,12 @@ COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/service/error/artifact /srv/service/error/artifact
 COPY --from=build /build/service/error/package.json /srv/service/error/package.json
 COPY --from=build /build/service/error/tsconfig.json /srv/service/error/tsconfig.json
-RUN yarn workspaces focus @tw050x.net.service/error
+RUN yarn workspaces focus @tw050x.net.service/error --production
 CMD [ "node", "service/error/artifact/serve.js" ]
 
 FROM node:23.11.1-alpine3.22 AS service-marketing
 RUN apk add --no-cache curl
+RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
@@ -181,11 +184,12 @@ COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/service/marketing/artifact /srv/service/marketing/artifact
 COPY --from=build /build/service/marketing/package.json /srv/service/marketing/package.json
 COPY --from=build /build/service/marketing/tsconfig.json /srv/service/marketing/tsconfig.json
-RUN yarn workspaces focus @tw050x.net.service/marketing
+RUN yarn workspaces focus @tw050x.net.service/marketing --production
 CMD [ "node", "service/marketing/artifact/serve.js" ]
 
 FROM node:23.11.1-alpine3.22 AS service-navigation
 RUN apk add --no-cache curl
+RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
@@ -201,11 +205,12 @@ COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/service/navigation/artifact /srv/service/navigation/artifact
 COPY --from=build /build/service/navigation/package.json /srv/service/navigation/package.json
 COPY --from=build /build/service/navigation/tsconfig.json /srv/service/navigation/tsconfig.json
-RUN yarn workspaces focus @tw050x.net.service/navigation
+RUN yarn workspaces focus @tw050x.net.service/navigation --production
 CMD [ "node", "service/navigation/artifact/serve.js" ]
 
 FROM node:23.11.1-alpine3.22 AS service-portal
 RUN apk add --no-cache curl
+RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
@@ -221,11 +226,12 @@ COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/service/portal/artifact /srv/service/portal/artifact
 COPY --from=build /build/service/portal/package.json /srv/service/portal/package.json
 COPY --from=build /build/service/portal/tsconfig.json /srv/service/portal/tsconfig.json
-RUN yarn workspaces focus @tw050x.net.service/portal
+RUN yarn workspaces focus @tw050x.net.service/portal --production
 CMD [ "node", "service/portal/artifact/serve.js" ]
 
 FROM node:23.11.1-alpine3.22 AS service-user
 RUN apk add --no-cache curl
+RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
@@ -245,5 +251,5 @@ COPY --from=build /build/database/user /srv/database/user
 COPY --from=build /build/service/user/artifact /srv/service/user/artifact
 COPY --from=build /build/service/user/package.json /srv/service/user/package.json
 COPY --from=build /build/service/user/tsconfig.json /srv/service/user/tsconfig.json
-RUN yarn workspaces focus @tw050x.net.service/user
+RUN yarn workspaces focus @tw050x.net.service/user --production
 CMD [ "node", "service/user/artifact/serve.js" ]

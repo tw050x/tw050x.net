@@ -3,6 +3,13 @@ import { default as EmailAddressField } from "@tw050x.net.library/uikit/componen
 import { default as PasswordField } from "@tw050x.net.library/uikit/component/Form/PasswordField";
 import { default as Button } from "@tw050x.net.library/uikit/component/Button";
 import { default as Notice } from "@tw050x.net.library/uikit/component/Notice";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { minify_sync } from "terser";
+
+// Read the external JavaScript file for toggling password visibility
+// and minify its contents.
+const togglePasswordVisibilityScript = minify_sync(readFileSync(resolve(__dirname, 'toggle-password-visibility.js'), 'utf8')).code;
 
 /**
  * Props for the `<RegisterForm />` component.
@@ -59,32 +66,7 @@ const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = 
       </form>
       {safeFormValidationErrors}
       <script>
-        {`
-          function togglePasswordVisibility() {
-            const confirmPasswordInput = document.getElementById('password-confirmation').getElementsByTagName('input')[0];
-            const confirmPasswordInputIcon = confirmPasswordInput.nextElementSibling;
-            const passwordInput = document.getElementById('password').getElementsByTagName('input')[0];
-            const passwordInputIcon = passwordInput.nextElementSibling;
-            if (confirmPasswordInput.type === 'text') {
-              confirmPasswordInputIcon.querySelector('#eye-closed-icon').classList.remove('hidden');
-              confirmPasswordInputIcon.querySelector('#eye-open-icon').classList.add('hidden');
-            }
-            else {
-              confirmPasswordInputIcon.querySelector('#eye-closed-icon').classList.add('hidden');
-              confirmPasswordInputIcon.querySelector('#eye-open-icon').classList.remove('hidden');
-            }
-            confirmPasswordInput.type = confirmPasswordInput.type === 'password' ? 'text' : 'password';
-            if (passwordInput.type === 'text') {
-              passwordInputIcon.querySelector('#eye-closed-icon').classList.remove('hidden');
-              passwordInputIcon.querySelector('#eye-open-icon').classList.add('hidden');
-            }
-            else {
-              passwordInputIcon.querySelector('#eye-closed-icon').classList.add('hidden');
-              passwordInputIcon.querySelector('#eye-open-icon').classList.remove('hidden');
-            }
-            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-          }
-        `}
+        {togglePasswordVisibilityScript}
       </script>
     </div>
   );
