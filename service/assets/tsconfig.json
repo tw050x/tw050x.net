@@ -3,7 +3,9 @@
     "outDir": "../../artifact/service/assets",
     "rootDir": ".",
   },
-  "exclude": [],
+  "exclude": [
+    "artifact"
+  ],
   "extends": "../../tsconfig.json",
   "files": [
     "../../types/env.service.assets.d.ts",

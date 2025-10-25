@@ -1,6 +1,6 @@
 import { useParameter } from "@tw050x.net.library/configuration";
 import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
-import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database"
+import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
 import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/middleware/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
@@ -18,8 +18,8 @@ import { default as Products } from "@tw050x.net.library/uikit/svg/Products";
 import { default as Profile } from "@tw050x.net.library/uikit/svg/Profile";
 import { default as Users } from "@tw050x.net.library/uikit/svg/Users";
 import { default as Cookies } from "cookies";
-import { useAuthGate } from "../../../middleware/use-auth-gate"
-import { default as Menu, Props as MenuProps } from "../../../template/component/Menu";
+import { useAuthGate } from "../../../middleware/use-auth-gate.js";
+import { default as Menu, Props as MenuProps } from "../../../template/component/Menu.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS'],

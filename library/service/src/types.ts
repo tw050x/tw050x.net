@@ -1,5 +1,5 @@
-import { default as ContextualServerResponse } from "./contextual-server-response";
-import { default as ContextualIncomingMessage } from "./contextual-incoming-message";
+import { default as ContextualServerResponse } from "./contextual-server-response.js";
+import { default as ContextualIncomingMessage } from "./contextual-incoming-message.js";
 
 export type Service = {
   close: (callback?: () => void) => void;

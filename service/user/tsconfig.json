@@ -6,7 +6,9 @@
     "rootDir": "./src",
     "types": ["@kitajs/html/htmx.d.ts"],
   },
-  "exclude": [],
+  "exclude": [
+    "artifact"
+  ],
   "extends": "../../tsconfig.json",
   "files": [
     "../../types/env.service.user.d.ts",

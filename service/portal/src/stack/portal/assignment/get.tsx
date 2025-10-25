@@ -13,9 +13,9 @@ import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { z } from "zod";
-import { useAuthGate } from "../../../middleware/use-auth-gate";
-import { default as Assignment, Props as AssignmentDocumentProps } from "../../../template/document/Assignment";
-import { AssignmentTaskWithTemplate } from "../../../template/component/AssignmentTaskTable";
+import { useAuthGate } from "../../../middleware/use-auth-gate.js";
+import { default as Assignment, Props as AssignmentDocumentProps } from "../../../template/document/Assignment.js";
+import { AssignmentTaskWithTemplate } from "../../../template/component/AssignmentTaskTable.js";
 
 const getQuerySchema = z.object({
   pi: z.preprocess((value) => parseInt(value as string, 10), z.number().int().nonnegative()),
@@ -69,6 +69,9 @@ export default defineServiceMiddleware([
   // handle request
   async (context) => {
     let assignmentTasksTemplate;
+
+    // console.log('context.incomingMessage.query', context.incomingMessage.query)
+
     try {
       assignmentTasksTemplate = await assignmentDatabase.task.aggregate<AssignmentTaskWithTemplate>(
         sanitizeMongoDBFilterOrPipeline([

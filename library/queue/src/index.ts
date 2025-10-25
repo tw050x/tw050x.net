@@ -1,2 +1,2 @@
-export { sendMessage } from './sqs-send-message';
-export { Secret } from './types';
+export { sendMessage } from './sqs-send-message.js';
+export { Secret } from './types.js';

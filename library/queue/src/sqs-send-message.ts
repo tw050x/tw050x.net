@@ -1,5 +1,5 @@
 import { SendMessageCommand } from "@aws-sdk/client-sqs";
-import { sqsClient } from "./sqs-client";
+import { sqsClient } from "./sqs-client.js";
 
 /**
  * Sends a message to an SQS queue.

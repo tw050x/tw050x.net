@@ -6,8 +6,8 @@ import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useAuthGate } from "../../../middleware/use-auth-gate";
-import { default as DashboardDocument, Props as DashboardDocumentProps } from "../../../template/document/Dashboard";
+import { useAuthGate } from "../../../middleware/use-auth-gate.js";
+import { default as DashboardDocument, Props as DashboardDocumentProps } from "../../../template/document/Dashboard.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS'],
@@ -46,6 +46,7 @@ export default defineServiceMiddleware([
         state: context.incomingMessage.uiMenuStateCookie.state,
       },
     }
+    console.log('Rendering dashboard page for user ID:', context.incomingMessage.accessTokenCookie.payload.sub);
     return void context.serverResponse.sendOKHTMLResponse(<DashboardDocument {...dashboardDocumentProps} />);
   }
 ])

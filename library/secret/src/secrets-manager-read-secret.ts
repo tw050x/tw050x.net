@@ -1,6 +1,6 @@
 import { GetSecretValueCommand } from "@aws-sdk/client-secrets-manager";
-import { cache } from "./cache";
-import { secretsManagerClient } from "./secrets-manager-client";
+import { cache } from "./cache.js";
+import { secretsManagerClient } from "./secrets-manager-client.js";
 
 /**
  * Reads a secret value from AWS Secrets Manager. Uses a caches value if it exists and refetches the

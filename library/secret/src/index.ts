@@ -1,4 +1,4 @@
-export { isSecret } from './secrets-manager-is-secret';
-export { readSecret } from './secrets-manager-read-secret';
-export { useSecret } from './secrets-manager-use-secret';
-export { Secret } from './types';
+export { isSecret } from './secrets-manager-is-secret.js';
+export { readSecret } from './secrets-manager-read-secret.js';
+export { useSecret } from './secrets-manager-use-secret.js';
+export { Secret } from './types.js';

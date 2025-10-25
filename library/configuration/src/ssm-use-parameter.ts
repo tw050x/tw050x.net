@@ -1,4 +1,4 @@
-import { Parameter } from "./types";
+import { Parameter } from "./types.js";
 
 /**
  * Define a configuration parameter stored in AWS Systems Manager Parameter Store

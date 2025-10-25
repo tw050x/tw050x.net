@@ -1,4 +1,4 @@
-import { Secret } from "./types";
+import { Secret } from "./types.js";
 
 /**
  * Define a secret stored in AWS Secrets Manager

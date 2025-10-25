@@ -4,6 +4,7 @@
   "description": "The User Service project for tw050x.net",
   "dependencies": {
     "@kitajs/html": "^4.2.9",
+    "@tw050x.net.database/assignment": "workspace:*",
     "@tw050x.net.database/authentication": "workspace:*",
     "@tw050x.net.database/user": "workspace:*",
     "@tw050x.net.library/configuration": "workspace:*",
@@ -35,5 +36,6 @@
     "nodemon": "nodemon",
     "tsc": "tsc"
   },
+  "type": "module",
   "version": "1.0.0"
 }

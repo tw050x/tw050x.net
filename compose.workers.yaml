@@ -1,0 +1,41 @@
+
+services:
+
+  create-user-registration-assignment-tasks:
+    command: [ "yarn", "workspace", "@tw050x.net.worker/create-user-registration-assignment-tasks", "run", "nodemon", "--watch", "/srv", "artifact/run.js" ]
+    depends_on:
+      localstack:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+    env_file:
+      - .env.database.assignment
+      - .env.database.user
+      - .env.aws
+      - .env.services.logs
+      - .env.services.mongo-client
+    # healthcheck:
+    #   test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+    #   interval: 1m30s
+    #   timeout: 30s
+    #   retries: 5
+    #   start_period: 30s
+    image: tw050x.net.worker/create-user-registration-assignment-tasks:latest
+    mem_limit: 200mb
+    pull_policy: never
+    volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+      - source: ./database
+        target: /srv/database
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/worker/create-user-registration-assignment-tasks
+        target: /log
+        type: bind
+      - source: ./worker/create-user-registration-assignment-tasks
+        target: /srv/worker/create-user-registration-assignment-tasks
+        type: bind

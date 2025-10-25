@@ -1,6 +1,6 @@
 import { renderToStream } from "@kitajs/html/suspense";
 import { ServerResponse } from "node:http";
-import { default as ContextualIncomingMessage } from "./contextual-incoming-message";
+import { default as ContextualIncomingMessage } from "./contextual-incoming-message.js";
 
 /**
  *
@@ -13,6 +13,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
    */
   constructor(request: ContextualIncomingMessage) {
     super(request);
+    // TODO: consider only storing specific headers like the 'hx-request' header
     this._incomingMessageHeaders = request.headers;
   }
 

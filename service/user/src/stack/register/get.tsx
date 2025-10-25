@@ -4,9 +4,9 @@ import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate";
-import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce"
-import { default as RegisterDocument } from "../../template/document/RegisterDocument";
+import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate.js";
+import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce.js"
+import { default as RegisterDocument } from "../../template/document/RegisterDocument.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS', 'POST'],

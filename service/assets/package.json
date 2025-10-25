@@ -17,5 +17,6 @@
   "scripts": {
     "@tailwindcss/cli": "tailwindcss"
   },
+  "type" : "module",
   "version": "1.0.0"
 }

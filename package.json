@@ -46,6 +46,7 @@
     "service/navigation",
     "service/traefik",
     "service/user",
+    "worker/create-user-registration-assignment-tasks",
     "tool/mongo-migrator"
   ]
 }

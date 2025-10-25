@@ -1,4 +1,4 @@
-import { Parameter } from './types';
+import { Parameter } from './types.js';
 
 /**
  * Type guard to check if a value is an Parameter

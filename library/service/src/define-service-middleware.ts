@@ -1,6 +1,6 @@
 import { logger } from "@tw050x.net.library/logger";
 import { NewPropertiesOnly } from "@tw050x.net.library/types";
-import { ServiceRequestContext } from "./types";
+import { ServiceRequestContext } from "./types.js";
 
 /**
  * Middleware function type that processes requests

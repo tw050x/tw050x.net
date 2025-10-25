@@ -3,9 +3,9 @@ import { default as AnchoredBar } from "@tw050x.net.library/uikit/component/Anch
 import { default as Header } from "@tw050x.net.library/uikit/component/Header";
 import { default as Htmx } from "@tw050x.net.library/uikit/component/Htmx";
 import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Stylesheet";
-import { default as MenuInitiator, Props as MenuInitiatorProps } from "../component/MenuInitiator";
-import { default as UserTable, Props as UserTableProps } from "../component/UserTable";
-import { default as UserTableTools, Props as UserTableToolsProps } from "../component/UserTableTools";
+import { default as MenuInitiator, Props as MenuInitiatorProps } from "../component/MenuInitiator.js";
+import { default as UserTable, Props as UserTableProps } from "../component/UserTable.js";
+import { default as UserTableTools, Props as UserTableToolsProps } from "../component/UserTableTools.js";
 
 /**
  * Props for the `<Users />` component.

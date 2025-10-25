@@ -5,7 +5,7 @@ import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Cookies } from "cookies";
 import { addHours, differenceInSeconds } from "date-fns";
-import { verify } from "jsonwebtoken";
+import { default as jwt } from "jsonwebtoken";
 
 /**
  *
@@ -143,7 +143,7 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
     // verify the cookie
     let accessTokenPayload;
     try {
-      accessTokenPayload = verify(cookie, jwtSecretKey);
+      accessTokenPayload = jwt.verify(cookie, jwtSecretKey);
     }
     catch (error) {
       logger.error(error);

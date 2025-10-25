@@ -19,7 +19,9 @@ export type UseLoginStateGateOptions = {
 export type LoginStateGateResultingContext = ServiceRequestContext & {
   incomingMessage: ServiceRequestContext['incomingMessage'] & {
     loginStateCookie: {
-      returnUrl: URL;
+      payload: {
+        returnUrl: URL;
+      }
     }
   }
 }

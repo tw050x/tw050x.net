@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "outDir": "./artifact",
+    "rootDir": "./src",
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "../../types/env.worker.create-user-registration-assignment-tasks.d.ts",
+    "src/run.ts"
+  ],
+  "references": [
+    { "path": "../../database/authentication" },
+    { "path": "../../database/user" },
+    { "path": "../../library/configuration" },
+    { "path": "../../library/database" },
+    { "path": "../../library/logger" },
+    { "path": "../../library/queue" },
+    { "path": "../../library/secret" },
+  ]
+}

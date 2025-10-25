@@ -1,6 +1,6 @@
 import { Component, escapeHtml } from "@kitajs/html";
 import { default as Header } from "@tw050x.net.library/uikit/component/Header";
-import { default as RegisterForm, Props as RegisterFormProps } from "./RegisterForm";
+import { default as RegisterForm, Props as RegisterFormProps } from "./RegisterForm.js";
 
 /**
  * Props for the `<RegisterAside />` component.

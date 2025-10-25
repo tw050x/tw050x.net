@@ -34,5 +34,6 @@
     "nodemon": "nodemon",
     "tsc": "tsc"
   },
+  "type" : "module",
   "version": "1.0.0"
 }

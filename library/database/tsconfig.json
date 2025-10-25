@@ -3,7 +3,9 @@
     "outDir": "./artifact",
     "rootDir": "./src",
   },
-  "exclude": [],
+  "exclude": [
+    "artifact"
+  ],
   "extends": "../../tsconfig.json",
   "files": [
     "src/helper/sanitize-mongodb-filter-or-pipeline.ts",

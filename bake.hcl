@@ -6,48 +6,55 @@ group "default" {
     "service-marketing",
     "service-navigation",
     "service-portal",
-    "service-user"
+    "service-user",
+    "worker-create-user-registration-assignment-tasks",
   ]
 }
 
-target "service-portal" {
-  dockerfile = "container/service/Dockerfile"
-  target = "service-portal"
-  tags = ["tw050x.net/portal:latest"]
-}
-
 target "service-assets" {
-  dockerfile = "container/service/Dockerfile"
+  dockerfile = "container/Dockerfile"
   target = "service-assets"
-  tags = ["tw050x.net/assets:latest"]
+  tags = ["tw050x.net.service/assets:latest"]
 }
 
 target "service-authentication" {
-  dockerfile = "container/service/Dockerfile"
+  dockerfile = "container/Dockerfile"
   target = "service-authentication"
-  tags = ["tw050x.net/authentication:latest"]
+  tags = ["tw050x.net.service/authentication:latest"]
 }
 
 target "service-error" {
-  dockerfile = "container/service/Dockerfile"
+  dockerfile = "container/Dockerfile"
   target = "service-error"
-  tags = ["tw050x.net/error:latest"]
+  tags = ["tw050x.net.service/error:latest"]
 }
 
 target "service-marketing" {
-  dockerfile = "container/service/Dockerfile"
+  dockerfile = "container/Dockerfile"
   target = "service-marketing"
-  tags = ["tw050x.net/marketing:latest"]
+  tags = ["tw050x.net.service/marketing:latest"]
 }
 
 target "service-navigation" {
-  dockerfile = "container/service/Dockerfile"
+  dockerfile = "container/Dockerfile"
   target = "service-navigation"
-  tags = ["tw050x.net/navigation:latest"]
+  tags = ["tw050x.net.service/navigation:latest"]
+}
+
+target "service-portal" {
+  dockerfile = "container/Dockerfile"
+  target = "service-portal"
+  tags = ["tw050x.net.service/portal:latest"]
 }
 
 target "service-user" {
-  dockerfile = "container/service/Dockerfile"
+  dockerfile = "container/Dockerfile"
   target = "service-user"
-  tags = ["tw050x.net/user:latest"]
+  tags = ["tw050x.net.service/user:latest"]
+}
+
+target "worker-create-user-registration-assignment-tasks" {
+  dockerfile = "container/Dockerfile"
+  target = "worker-create-user-registration-assignment-tasks"
+  tags = ["tw050x.net.worker/create-user-registration-assignment-tasks:latest"]
 }

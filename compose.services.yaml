@@ -1,0 +1,335 @@
+
+services:
+
+  assets:
+    depends_on:
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.service.assets
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/assets/healthcheck.txt || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/assets:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.assets.entrypoints=websecure
+      - traefik.http.routers.assets.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.assets.rule=Host(`tw050x.dev`) && PathPrefix(`/assets/`)
+      - traefik.http.routers.assets.tls=true
+      - traefik.http.services.assets.loadbalancer.server.port=3000
+    mem_limit: 200mb
+    pull_policy: never
+    volumes:
+      - source: ./service/assets/public
+        target: /srv/service/assets/public
+        type: bind
+
+  authentication:
+    command: [ "yarn", "workspace", "@tw050x.net.service/authentication", "run", "nodemon", "--watch", "/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/authentication/serve.ts" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      error:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.database.authentication
+      - .env.database.user
+      - .env.aws
+      - .env.service.authentication
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/authentication:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.authentication.entrypoints=websecure
+      - traefik.http.routers.authentication.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.authentication.rule=Host(`tw050x.dev`) && PathPrefix(`/login`)
+      - traefik.http.routers.authentication.tls=true
+      - traefik.http.services.authentication.loadbalancer.server.port=3000
+    mem_limit: 200mb
+    pull_policy: never
+    volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+      - source: ./database
+        target: /srv/database
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/authentication
+        target: /log
+        type: bind
+      - source: ./service/authentication
+        target: /srv/service/authentication
+        type: bind
+
+  error:
+    command: [ "yarn", "workspace", "@tw050x.net.service/error", "run", "nodemon", "--watch", "/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/error/serve.ts" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.aws
+      - .env.service.error
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/error:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.error.entrypoints=websecure
+      - traefik.http.routers.error.tls=true
+      - traefik.http.services.error.loadbalancer.server.port=3000
+    mem_limit: 200mb
+    pull_policy: never
+    volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/error
+        target: /log
+        type: bind
+      - source: ./service/error
+        target: /srv/service/error
+        type: bind
+
+  marketing:
+    command: [ "yarn", "workspace", "@tw050x.net.service/marketing", "run", "nodemon", "--watch", "/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/marketing/serve.ts" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      error:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.aws
+      - .env.database.user
+      - .env.service.marketing
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/marketing:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.marketing.entrypoints=websecure
+      - traefik.http.routers.marketing.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.marketing.rule=Host(`tw050x.dev`) && PathPrefix(`/`)
+      - traefik.http.routers.marketing.priority=1
+      - traefik.http.routers.marketing.tls=true
+      - traefik.http.services.marketing.loadbalancer.server.port=3000
+    mem_limit: 200mb
+    pull_policy: never
+    volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/marketing
+        target: /log
+        type: bind
+      - source: ./service/marketing
+        target: /srv/service/marketing
+        type: bind
+
+  navigation:
+    command: [ "yarn", "workspace", "@tw050x.net.service/navigation", "run", "nodemon", "--watch", "/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/navigation/serve.ts" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      error:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.aws
+      - .env.database.assignment
+      - .env.database.user
+      - .env.service.navigation
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/navigation:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.navigation.entrypoints=websecure
+      - traefik.http.routers.navigation.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.navigation.rule=Host(`tw050x.dev`) && PathPrefix(`/navigation/`)
+      - traefik.http.routers.navigation.tls=true
+      - traefik.http.services.navigation.loadbalancer.server.port=3000
+    mem_limit: 200mb
+    pull_policy: never
+    volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/navigation
+        target: /log
+        type: bind
+      - source: ./service/navigation
+        target: /srv/service/navigation
+        type: bind
+
+  portal:
+    command: [ "yarn", "workspace", "@tw050x.net.service/portal", "run", "nodemon", "--watch", "/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/portal/serve.ts" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      authentication:
+        condition: service_healthy
+      error:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.aws
+      - .env.database.assignment
+      - .env.database.user
+      - .env.service.portal
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/portal:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.portal.entrypoints=websecure
+      - traefik.http.routers.portal.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.portal.rule=Host(`tw050x.dev`) && PathPrefix(`/portal`)
+      - traefik.http.routers.portal.tls=true
+      - traefik.http.services.portal.loadbalancer.server.port=3000
+    mem_limit: 200mb
+    pull_policy: never
+    volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/portal
+        target: /log
+        type: bind
+      - source: ./service/portal
+        target: /srv/service/portal
+        type: bind
+
+  user:
+    command: [ "yarn", "workspace", "@tw050x.net.service/user", "run", "nodemon", "--watch", "/srv", "artifact/serve.js" ]
+    # command: [ "tsx", "--inspect=0.0.0.0:9229", "--watch-path=/srv", "service/user/serve.ts" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      error:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.aws
+      - .env.database.assignment
+      - .env.database.user
+      - .env.service.user
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/user:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.user.entrypoints=websecure
+      - traefik.http.routers.user.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.user.rule=Host(`tw050x.dev`) && PathPrefix(`/register`)
+      - traefik.http.routers.user.tls=true
+      - traefik.http.services.user.loadbalancer.server.port=3000
+    mem_limit: 200mb
+    pull_policy: never
+    volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+      - source: ./database
+        target: /srv/database
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/user
+        target: /log
+        type: bind
+      - source: ./service/user
+        target: /srv/service/user
+        type: bind

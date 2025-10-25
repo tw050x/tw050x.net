@@ -1,4 +1,4 @@
-import { Secret } from './types';
+import { Secret } from "./types.js";
 
 /**
  * Type guard to check if a value is an Secret

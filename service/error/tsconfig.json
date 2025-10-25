@@ -9,7 +9,9 @@
       "@types/node",
     ],
   },
-  "exclude": [],
+  "exclude": [
+    "artifact"
+  ],
   "extends": "../../tsconfig.json",
   "files": [
     "../../types/env.service.error.d.ts",

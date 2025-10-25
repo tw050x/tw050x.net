@@ -15,13 +15,13 @@ import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { randomUUID } from "node:crypto"
 import { hash } from "bcryptjs";
-import { SignOptions, sign } from "jsonwebtoken";
+import { default as jwt, SignOptions } from "jsonwebtoken";
 import { default as zod, ZodError } from "zod";
-import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce";
-import { generateRegistrationAssignmentTasks } from "../../helper/generate-registration-assignment-tasks";
-import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate";
-import { default as RegisterDocument } from "../../template/document/RegisterDocument";
-import { default as RegisterForm } from "../../template/component/RegisterForm";
+import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce.js";
+import { generateRegistrationAssignmentTasks } from "../../helper/generate-registration-assignment-tasks.js";
+import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate.js";
+import { default as RegisterDocument } from "../../template/document/RegisterDocument.js";
+import { default as RegisterForm } from "../../template/component/RegisterForm.js";
 
 const postRegisterFormDataSchema = zod.object({
   email: zod.string().email('An email address is required'),
@@ -257,8 +257,8 @@ export default defineServiceMiddleware([
     const accessTokenPayload = {
       sub: userProfileUuid
     };
-    const refreshToken = sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
-    const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
+    const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
+    const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
     context.serverResponse.refreshableTokenCookie.set('true');
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);

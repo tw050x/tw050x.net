@@ -10,10 +10,9 @@ import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as ForbiddenDocument } from "@tw050x.net.library/uikit/document/Forbidden";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { SignOptions, sign, verify } from "jsonwebtoken";
-import { generateLoginFormNonce } from '../../helper/generate-login-form-nonce';
-import { UseLoginStateGateOptions, useLoginStateGate } from "../../middleware/use-login-state-gate";
-import { default as LoginDocument } from "../../template/document/LoginDocument";
+import { default as jwt, SignOptions } from "jsonwebtoken";
+import { generateLoginFormNonce } from '../../helper/generate-login-form-nonce.js';
+import { default as LoginDocument } from "../../template/document/LoginDocument.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST', 'OPTIONS'],
@@ -43,10 +42,6 @@ const useRefreshableTokenCookieOptions: UseRefreshableTokenCookieOptions = {
   cookieDomain: useParameter('cookie.refreshable-token.domain'),
 }
 
-const useLoginStateGateOptions: UseLoginStateGateOptions = {
-  allowedReturnUrlDomains: useParameter('authentication.service.allowed-return-url-domains'),
-}
-
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
@@ -67,7 +62,6 @@ export default defineServiceMiddleware([
   useLoginStateCookie(useLoginStateCookieOptions),
   useRefreshTokenCookie(useRefreshTokenCookieOptions),
   useRefreshableTokenCookie(useRefreshableTokenCookieOptions),
-  useLoginStateGate(useLoginStateGateOptions),
 
   // check if the user has a valid access token
   // async (context) => {
@@ -104,7 +98,7 @@ export default defineServiceMiddleware([
       // if it fails then clear the refreshable token cookie and return a forbidden error
       let refreshTokenPayload;
       try {
-        refreshTokenPayload = verify(refreshTokenCookie, jwtSecretKey);
+        refreshTokenPayload = jwt.verify(refreshTokenCookie, jwtSecretKey);
       }
       catch (error) {
         logger.error(error);
@@ -120,7 +114,7 @@ export default defineServiceMiddleware([
       const accessTokenPayload = {
         sub: refreshTokenPayload.sub
       };
-      const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
+      const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
       const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
       context.serverResponse.accessTokenCookie.set(accessToken);
       context.serverResponse.loginStateCookie.clear();
@@ -150,6 +144,10 @@ export default defineServiceMiddleware([
 
     // return the login page
     logger.debug('Rendering login page');
+    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
+    context.serverResponse.loginStateCookie.set(JSON.stringify({
+      returnUrl: returnUrl.toString()
+    }));
     return void context.serverResponse.sendOKHTMLResponse(<LoginDocument loginAsideProps={loginAsideProps} />);
   }
 ])

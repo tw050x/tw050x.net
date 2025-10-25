@@ -13,7 +13,7 @@
       { "name": "@kitajs/ts-html-plugin" }
     ],
     "strict": true,
-    "target": "es2024",
+    "target": "ES2024",
   },
   "exclude": [
     ".vscode/",
@@ -50,6 +50,7 @@
     { "path": "./service/marketing" },
     { "path": "./service/navigation" },
     { "path": "./service/user" },
+    { "path": "./worker/create-user-registration-assignment-tasks" },
     { "path": "./tool/mongo-migrator" }
   ]
 }

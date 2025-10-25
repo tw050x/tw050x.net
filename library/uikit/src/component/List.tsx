@@ -1,7 +1,7 @@
 import { Component } from "@kitajs/html";
-import { default as CheckCircle } from "../svg/CheckCircle";
-import { default as CheckCircleSelected } from "../svg/CheckCircleSelected";
-import { default as ArrowCircleRight } from "../svg/ArrowCircleRight";
+import { default as CheckCircle } from "../svg/CheckCircle.js";
+import { default as CheckCircleSelected } from "../svg/CheckCircleSelected.js";
+import { default as ArrowCircleRight } from "../svg/ArrowCircleRight.js";
 
 type TaskListItem = {
   completed: boolean;

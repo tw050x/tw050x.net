@@ -1,6 +1,6 @@
 import { Component, escapeHtml } from "@kitajs/html";
 import { default as Header } from "@tw050x.net.library/uikit/component/Header";
-import { default as LoginForm, Props as LoginFormProps } from "./LoginForm";
+import { default as LoginForm, Props as LoginFormProps } from "./LoginForm.js";
 
 /**
  * Props for the `<LoginAside />` component.

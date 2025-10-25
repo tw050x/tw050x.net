@@ -1,7 +1,7 @@
 import { Component } from "@kitajs/html";
 import { default as Htmx } from "@tw050x.net.library/uikit/component/Htmx";
 import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Stylesheet";
-import { default as MenuInitiator, Props as MenuInitiatorProps } from "../component/MenuInitiator";
+import { default as MenuInitiator, Props as MenuInitiatorProps } from "../component/MenuInitiator.js";
 
 /**
  * Props for the `<Dashboard />` component.

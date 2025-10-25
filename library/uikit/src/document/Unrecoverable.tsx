@@ -1,5 +1,5 @@
-import { default as Htmx } from "../component/Htmx";
-import { default as Stylesheet } from "../component/Stylesheet";
+import { default as Htmx } from "../component/Htmx.js";
+import { default as Stylesheet } from "../component/Stylesheet.js";
 
 /**
  * The `<UnrecoverableDocument />` component.

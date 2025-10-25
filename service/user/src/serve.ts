@@ -1,6 +1,10 @@
 import { logger } from "@tw050x.net.library/logger";
 import { createServer } from "@tw050x.net.library/service";
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const server = createServer({
   routesDirectory: resolve(__dirname, 'stack'),

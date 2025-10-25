@@ -11,11 +11,11 @@ import { readSecret, useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { compare } from "bcryptjs";
-import { SignOptions, sign } from "jsonwebtoken";
-import { escape, trim } from "validator";
+import { default as jwt, SignOptions } from "jsonwebtoken";
+import { default as validator } from "validator";
 import { default as zod, ZodError } from "zod";
-import { generateLoginFormNonce } from "../../helper/generate-login-form-nonce";
-import { default as LoginForm } from "../../template/component/LoginForm";
+import { generateLoginFormNonce } from "../../helper/generate-login-form-nonce.js";
+import { default as LoginForm } from "../../template/component/LoginForm.js";
 
 const postLoginFormDataSchema = zod.object({
   email: zod.string().email('An email address is required'),
@@ -88,8 +88,8 @@ export default defineServiceMiddleware([
     let password;
     try {
       const result = postLoginFormDataSchema.parse(body);
-      email = escape(trim(result.email));
-      password = escape(trim(result.password));
+      email = validator.escape(validator.trim(result.email));
+      password = validator.escape(validator.trim(result.password));
     }
     catch (error) {
       if (error instanceof ZodError) error.errors.forEach((issue) => logger.error(issue));
@@ -157,8 +157,8 @@ export default defineServiceMiddleware([
     const accessTokenPayload = {
       sub: credentialDocument.uuid
     };
-    const refreshToken = sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
-    const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
+    const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
+    const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
 
     // set the cookies on the response and clear the login state cookie
     context.serverResponse.refreshableTokenCookie.set('true');

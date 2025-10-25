@@ -26,7 +26,9 @@
   "name": "@tw050x.net.service/navigation",
   "private": true,
   "scripts": {
+    "nodemon": "nodemon",
     "tsc": "tsc"
   },
+  "type": "module",
   "version": "1.0.0"
 }

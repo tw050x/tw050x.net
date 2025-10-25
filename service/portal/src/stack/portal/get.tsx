@@ -5,7 +5,7 @@ import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useAuthGate } from "../../middleware/use-auth-gate";
+import { useAuthGate } from "../../middleware/use-auth-gate.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS'],

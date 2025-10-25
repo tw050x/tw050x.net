@@ -1,9 +1,9 @@
 import { logger } from "@tw050x.net.library/logger";
 import { createServer as createHttpServer } from "node:http";
-import { default as ContextualIncomingMessage } from "./contextual-incoming-message";
-import { default as ContextualServerResponse } from "./contextual-server-response";
-import { default as discoverRoutes } from "./routes";
-import { CreateRequestHandlerOptions, CreateServerOptions, ServiceRequestContext } from "./types";
+import { default as ContextualIncomingMessage } from "./contextual-incoming-message.js";
+import { default as ContextualServerResponse } from "./contextual-server-response.js";
+import { default as discoverRoutes } from "./routes.js";
+import { CreateRequestHandlerOptions, CreateServerOptions, ServiceRequestContext } from "./types.js";
 
 /**
  * Creates and configures an HTTP server with the specified options.

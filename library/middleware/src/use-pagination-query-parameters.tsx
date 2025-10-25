@@ -99,10 +99,7 @@ export const usePaginationQueryParameters: Factory = (options) => async (context
     if (pageSizeUrlQueryValue === null) {
       replacementURL.searchParams.set('ps', String(defaultPageSize));
     }
-    context.serverResponse.writeHead(301, {
-      'Location': replacementURL.toString()
-    });
-    return void context.serverResponse.end();
+    return void context.serverResponse.sendMovedPermanentlyRedirect(replacementURL);
   }
 
   context.incomingMessage.query = {

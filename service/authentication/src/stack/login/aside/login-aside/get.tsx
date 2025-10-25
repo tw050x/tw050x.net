@@ -4,8 +4,8 @@ import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { generateLoginFormNonce } from '../../../../helper/generate-login-form-nonce';
-import { default as LoginAside } from "../../../../template/component/LoginAside";
+import { generateLoginFormNonce } from '../../../../helper/generate-login-form-nonce.js';
+import { default as LoginAside } from "../../../../template/component/LoginAside.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST'],

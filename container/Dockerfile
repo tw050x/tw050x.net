@@ -15,12 +15,13 @@ RUN yarn
 
 ## Build the project
 RUN yarn workspaces foreach \
-  --from @tw050x.net.service/portal \
   --from @tw050x.net.service/authentication \
   --from @tw050x.net.service/error \
   --from @tw050x.net.service/marketing \
   --from @tw050x.net.service/navigation \
+  --from @tw050x.net.service/portal \
   --from @tw050x.net.service/user \
+  --from @tw050x.net.worker/create-user-registration-assignment-tasks \
   --recursive \
   --topological \
   run tsc
@@ -265,3 +266,18 @@ COPY --from=build /build/service/user/package.json /srv/service/user/package.jso
 COPY --from=build /build/service/user/tsconfig.json /srv/service/user/tsconfig.json
 RUN yarn workspaces focus @tw050x.net.service/user --production
 CMD [ "node", "service/user/artifact/serve.js" ]
+
+FROM node:23.11.1-alpine3.22 AS worker-create-user-registration-assignment-tasks
+RUN apk add --no-cache curl
+RUN npm install -g nodemon --production --no-optional && npm cache clean --force
+WORKDIR /srv
+COPY --from=dependencies /srv /srv
+COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
+COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
+COPY --from=library-database /srv/library/database /srv/library/database
+COPY --from=library-logger /srv/library/logger /srv/library/logger
+COPY --from=library-queue /srv/library/queue /srv/library/queue
+COPY --from=library-secret /srv/library/secret /srv/library/secret
+COPY --from=library-types /srv/library/types /srv/library/types
+COPY --from=build /build/worker/create-user-registration-assignment-tasks/tsconfig.json /srv/worker/create-user-registration-assignment-tasks/tsconfig.json
+CMD [ "node", "worker/create-user-registration-assignment-tasks/artifact/run.js" ]

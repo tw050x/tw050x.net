@@ -3,8 +3,8 @@ import { default as AnchoredBar } from "@tw050x.net.library/uikit/component/Anch
 import { default as Header } from "@tw050x.net.library/uikit/component/Header";
 import { default as Htmx } from "@tw050x.net.library/uikit/component/Htmx";
 import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Stylesheet";
-import { default as MenuInitiator, Props as MenuInitiatorProps } from "../component/MenuInitiator";
-import { default as AssignmentTaskTable, Props as AssignmentTaskTableProps } from "../component/AssignmentTaskTable";
+import { default as MenuInitiator, Props as MenuInitiatorProps } from "../component/MenuInitiator.js";
+import { default as AssignmentTaskTable, Props as AssignmentTaskTableProps } from "../component/AssignmentTaskTable.js";
 
 /**
  * Props for the `<Assignment />` component.

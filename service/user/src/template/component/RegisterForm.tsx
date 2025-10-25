@@ -4,8 +4,12 @@ import { default as PasswordField } from "@tw050x.net.library/uikit/component/Fo
 import { default as Button } from "@tw050x.net.library/uikit/component/Button";
 import { default as Notice } from "@tw050x.net.library/uikit/component/Notice";
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from 'node:url';
 import { minify_sync } from "terser";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Read the external JavaScript file for toggling password visibility
 // and minify its contents.

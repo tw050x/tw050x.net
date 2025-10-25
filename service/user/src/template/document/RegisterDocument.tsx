@@ -1,7 +1,7 @@
 import { Component } from "@kitajs/html";
 import { default as Htmx } from "@tw050x.net.library/uikit/component/Htmx";
 import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Stylesheet";
-import { default as RegisterAside, Props as RegisterAsideProps } from "../component/RegisterAside";
+import { default as RegisterAside, Props as RegisterAsideProps } from "../component/RegisterAside.js";
 
 /**
  * Props for the `<RegisterDocument />` component.

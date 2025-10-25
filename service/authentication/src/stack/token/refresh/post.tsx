@@ -8,7 +8,7 @@ import { logger } from "@tw050x.net.library/logger";
 import { readSecret, useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { SignOptions, sign } from "jsonwebtoken";
+import { default as jwt, SignOptions } from "jsonwebtoken";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS', 'POST'],
@@ -76,7 +76,7 @@ export default defineServiceMiddleware([
     const accessTokenPayload = {
       sub: context.incomingMessage.refreshTokenCookie.payload.sub
     };
-    const accessToken = sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
+    const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
     context.serverResponse.accessTokenCookie.set(accessToken);
     return void context.serverResponse.sendSeeOtherRedirect(
       context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`),

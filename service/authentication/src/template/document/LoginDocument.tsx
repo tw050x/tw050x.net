@@ -1,7 +1,7 @@
 import { Component } from "@kitajs/html";
 import { default as Htmx } from "@tw050x.net.library/uikit/component/Htmx";
 import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Stylesheet";
-import { default as LoginAside, Props as LoginAsideProps } from "../component/LoginAside";
+import { default as LoginAside, Props as LoginAsideProps } from "../component/LoginAside.js";
 
 /**
  * Props for the `<LoginDocument />` component.

@@ -1,8 +1,8 @@
 import { Component } from "@kitajs/html";
 import { assertUnreachable } from "@tw050x.net.library/utility/assert-unreachable";
-import { default as InfoIcon } from "../svg/Info";
-import { default as ThankfulIcon } from "../svg/Thankful";
-import { default as WarningIcon } from "../svg/Warning";
+import { default as InfoIcon } from "../svg/Info.js";
+import { default as ThankfulIcon } from "../svg/Thankful.js";
+import { default as WarningIcon } from "../svg/Warning.js";
 
 type Props = {
   classOverrides?: {

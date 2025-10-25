@@ -6,8 +6,8 @@ import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useAuthGate } from "../../../middleware/use-auth-gate";
-import { default as Brands, Props as BrandsDocumentProps } from "../../../template/document/Brands";
+import { useAuthGate } from "../../../middleware/use-auth-gate.js";
+import { default as Brands, Props as BrandsDocumentProps } from "../../../template/document/Brands.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS'],
