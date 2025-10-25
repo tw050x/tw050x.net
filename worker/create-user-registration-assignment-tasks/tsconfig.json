@@ -10,7 +10,6 @@
     "src/run.ts"
   ],
   "references": [
-    { "path": "../../database/authentication" },
     { "path": "../../database/user" },
     { "path": "../../library/configuration" },
     { "path": "../../library/database" },

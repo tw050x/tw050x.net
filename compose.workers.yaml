@@ -14,6 +14,7 @@ services:
       - .env.aws
       - .env.services.logs
       - .env.services.mongo-client
+      - .env.worker.create-user-registration-assignment-tasks
     # healthcheck:
     #   test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
     #   interval: 1m30s

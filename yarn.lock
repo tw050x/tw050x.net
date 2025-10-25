@@ -2861,12 +2861,8 @@ __metadata:
     "@tw050x.net.library/secret": "workspace:*"
     "@types/node": "npm:^22.10.2"
     bcryptjs: "npm:^3.0.2"
-    jsonwebtoken: "npm:^9.0.2"
     mongodb: "npm:^6.12.0"
-    terser: "npm:^5.44.0"
     typescript: "npm:^5.7.2"
-    validator: "npm:^13.12.0"
-    zod: "npm:^3.24.2"
   languageName: unknown
   linkType: soft
 

@@ -10,6 +10,7 @@
   "files": [
     "src/index.ts",
     "src/sqs-client.ts",
+    "src/sqs-receive-messages.ts",
     "src/sqs-send-message.ts",
     "src/types.ts",
   ],

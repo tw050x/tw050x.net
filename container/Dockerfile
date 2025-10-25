@@ -273,11 +273,15 @@ RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
+COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-types /srv/library/types /srv/library/types
+COPY --from=build /build/worker/create-user-registration-assignment-tasks/artifact /srv/worker/create-user-registration-assignment-tasks/artifact
+COPY --from=build /build/worker/create-user-registration-assignment-tasks/package.json /srv/worker/create-user-registration-assignment-tasks/package.json
 COPY --from=build /build/worker/create-user-registration-assignment-tasks/tsconfig.json /srv/worker/create-user-registration-assignment-tasks/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.worker/create-user-registration-assignment-tasks --production
 CMD [ "node", "worker/create-user-registration-assignment-tasks/artifact/run.js" ]
