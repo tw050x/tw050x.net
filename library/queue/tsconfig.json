@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "lib": [
+      "ESNext.Disposable"
+    ],
     "outDir": "./artifact",
     "rootDir": "./src",
   },
@@ -8,6 +11,7 @@
   ],
   "extends": "../../tsconfig.json",
   "files": [
+    "src/disposable-message.ts",
     "src/index.ts",
     "src/sqs-client.ts",
     "src/sqs-receive-messages.ts",

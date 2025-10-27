@@ -21,7 +21,7 @@ RUN yarn workspaces foreach \
   --from @tw050x.net.service/navigation \
   --from @tw050x.net.service/portal \
   --from @tw050x.net.service/user \
-  --from @tw050x.net.worker/create-user-registration-assignment-tasks \
+  --from @tw050x.net.worker/user-service-queue \
   --recursive \
   --topological \
   run tsc
@@ -267,7 +267,7 @@ COPY --from=build /build/service/user/tsconfig.json /srv/service/user/tsconfig.j
 RUN yarn workspaces focus @tw050x.net.service/user --production
 CMD [ "node", "service/user/artifact/serve.js" ]
 
-FROM node:23.11.1-alpine3.22 AS worker-create-user-registration-assignment-tasks
+FROM node:23.11.1-alpine3.22 AS worker-user-service-queue
 RUN apk add --no-cache curl
 RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
@@ -280,8 +280,8 @@ COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-types /srv/library/types /srv/library/types
-COPY --from=build /build/worker/create-user-registration-assignment-tasks/artifact /srv/worker/create-user-registration-assignment-tasks/artifact
-COPY --from=build /build/worker/create-user-registration-assignment-tasks/package.json /srv/worker/create-user-registration-assignment-tasks/package.json
-COPY --from=build /build/worker/create-user-registration-assignment-tasks/tsconfig.json /srv/worker/create-user-registration-assignment-tasks/tsconfig.json
-RUN yarn workspaces focus @tw050x.net.worker/create-user-registration-assignment-tasks --production
-CMD [ "node", "worker/create-user-registration-assignment-tasks/artifact/run.js" ]
+COPY --from=build /build/worker/user-service-queue/artifact /srv/worker/user-service-queue/artifact
+COPY --from=build /build/worker/user-service-queue/package.json /srv/worker/user-service-queue/package.json
+COPY --from=build /build/worker/user-service-queue/tsconfig.json /srv/worker/user-service-queue/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.worker/user-service-queue --production
+CMD [ "node", "worker/user-service-queue/artifact/run.js" ]

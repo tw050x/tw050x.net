@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "author": "tw050x (Richard Kielty)",
-  "description": "The Create User Registration Assignment Tasks Worker project for tw050x.net",
+  "description": "The User Service Events Worker project for tw050x.net",
   "dependencies": {
     "@tw050x.net.database/user": "workspace:*",
     "@tw050x.net.library/configuration": "workspace:*",
@@ -17,7 +17,7 @@
     "typescript": "^5.7.2"
   },
   "license": "UNLICENSED",
-  "name": "@tw050x.net.worker/create-user-registration-assignment-tasks",
+  "name": "@tw050x.net.worker/user-service-queue",
   "private": true,
   "scripts": {
     "nodemon": "nodemon",

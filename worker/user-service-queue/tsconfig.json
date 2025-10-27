@@ -6,7 +6,7 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
-    "../../types/env.worker.create-user-registration-assignment-tasks.d.ts",
+    "../../types/env.worker.user-service-queue.d.ts",
     "src/run.ts"
   ],
   "references": [

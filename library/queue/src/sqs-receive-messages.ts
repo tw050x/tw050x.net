@@ -1,4 +1,5 @@
-import { ReceiveMessageCommand } from "@aws-sdk/client-sqs";
+import { ReceiveMessageCommand, ReceiveMessageCommandInput } from "@aws-sdk/client-sqs";
+import { default as DisposableMessage } from "./disposable-message.js";
 import { sqsClient } from "./sqs-client.js";
 
 /**
@@ -6,9 +7,10 @@ import { sqsClient } from "./sqs-client.js";
  */
 export async function* receiveMessages(url: string, maxNumberOfMessages = 10) {
   while (true) {
-    const params = {
+    const params: ReceiveMessageCommandInput = {
       QueueUrl: url,
       MaxNumberOfMessages: maxNumberOfMessages,
+      MessageAttributeNames: ['All'],
       WaitTimeSeconds: 20,
     };
 
@@ -17,7 +19,7 @@ export async function* receiveMessages(url: string, maxNumberOfMessages = 10) {
 
     if (response.Messages && response.Messages.length > 0) {
       for (const message of response.Messages) {
-        yield message;
+        yield new DisposableMessage(message, url);
       }
     }
   }

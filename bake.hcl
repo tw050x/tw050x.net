@@ -7,7 +7,7 @@ group "default" {
     "service-navigation",
     "service-portal",
     "service-user",
-    "worker-create-user-registration-assignment-tasks",
+    "worker-user-service-queue",
   ]
 }
 
@@ -53,8 +53,8 @@ target "service-user" {
   tags = ["tw050x.net.service/user:latest"]
 }
 
-target "worker-create-user-registration-assignment-tasks" {
+target "worker-user-service-queue" {
   dockerfile = "container/Dockerfile"
-  target = "worker-create-user-registration-assignment-tasks"
-  tags = ["tw050x.net.worker/create-user-registration-assignment-tasks:latest"]
+  target = "worker-user-service-queue"
+  tags = ["tw050x.net.worker/user-service-queue:latest"]
 }

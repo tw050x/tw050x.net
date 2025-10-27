@@ -1,8 +1,8 @@
 
 services:
 
-  create-user-registration-assignment-tasks:
-    command: [ "yarn", "workspace", "@tw050x.net.worker/create-user-registration-assignment-tasks", "run", "nodemon", "--watch", "/srv", "artifact/run.js" ]
+  user-service-queue:
+    command: [ "yarn", "workspace", "@tw050x.net.worker/user-service-queue", "run", "nodemon", "--watch", "/srv", "artifact/run.js" ]
     depends_on:
       localstack:
         condition: service_healthy
@@ -14,14 +14,14 @@ services:
       - .env.aws
       - .env.services.logs
       - .env.services.mongo-client
-      - .env.worker.create-user-registration-assignment-tasks
+      - .env.worker.user-service-queue
     # healthcheck:
     #   test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
     #   interval: 1m30s
     #   timeout: 30s
     #   retries: 5
     #   start_period: 30s
-    image: tw050x.net.worker/create-user-registration-assignment-tasks:latest
+    image: tw050x.net.worker/user-service-queue:latest
     mem_limit: 200mb
     pull_policy: never
     volumes:
@@ -34,9 +34,9 @@ services:
       - source: ./library
         target: /srv/library
         type: bind
-      - source: ./log/worker/create-user-registration-assignment-tasks
+      - source: ./log/worker/user-service-queue
         target: /log
         type: bind
-      - source: ./worker/create-user-registration-assignment-tasks
-        target: /srv/worker/create-user-registration-assignment-tasks
+      - source: ./worker/user-service-queue
+        target: /srv/worker/user-service-queue
         type: bind
