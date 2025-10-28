@@ -226,10 +226,11 @@ export default defineServiceMiddleware([
     // log any errors but do not fail the registration
     try {
       const eventQueueUrl = await readParameter('user.service.event-queue-url');
-      await sendMessage(eventQueueUrl, {
-        eventType: 'UserRegistered',
-        userProfileUuid,
-      });
+      await sendMessage(
+        eventQueueUrl,
+        { eventType: 'UserRegistered', userProfileUuid },
+        { MessageType: { DataType: 'String', StringValue: 'UserRegistered' } }
+      );
     }
     catch (error) {
       // We can survive a failure to send the message, so just log it

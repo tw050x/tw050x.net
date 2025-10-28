@@ -14,12 +14,20 @@ process.on('SIGINT', cleanup);
 process.on('SIGTERM', cleanup);
 
 try {
-  for await (using message of receiveMessages(eventQueueUrl)) {
+  for await (await using message of receiveMessages(eventQueueUrl)) {
+    logger.debug('Received message:', message);
     if (receivedExitSignal) {
+      logger.debug('Exiting after receiving exit signal.');
       break;
     }
 
-    logger.debug('Received message:', message.Body);
+    switch (message.MessageAttributes?.MessageType?.StringValue) {
+      case 'UserRegistered':
+        logger.debug('Processing UserRegistered event:', message.Body);
+        break;
+      default:
+        logger.warn('Unknown message type:', message.MessageAttributes?.MessageType);
+    }
   }
 
   // TODO: add handling of provided event types
