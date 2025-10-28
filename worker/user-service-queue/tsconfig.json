@@ -7,6 +7,7 @@
   "extends": "../../tsconfig.json",
   "files": [
     "../../types/env.worker.user-service-queue.d.ts",
+    "src/event-handler/user-registered.ts",
     "src/run.ts"
   ],
   "references": [

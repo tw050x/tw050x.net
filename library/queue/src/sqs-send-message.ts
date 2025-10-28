@@ -2,18 +2,23 @@ import { MessageAttributeValue, SendMessageCommand, SendMessageCommandInput } fr
 import { sqsClient } from "./sqs-client.js";
 
 /**
+ * Body of the message being sent.
+ */
+interface SendMessageMessageBody extends Record<string, unknown> {}
+
+/**
  * Attributes for the message being sent.
  */
-interface SendMessageAttributes extends Record<string, MessageAttributeValue> {
+interface SendMessageMessageAttributes extends Record<string, MessageAttributeValue> {
   MessageType: { DataType: 'String'; StringValue: string };
 }
 
 /**
  * Sends a message to an SQS queue.
  */
-export const sendMessage = async (url: string, messageBody: Record<string, unknown>, messageAttributes: SendMessageAttributes) => {
+export const sendMessage = async (url: URL, messageBody: SendMessageMessageBody, messageAttributes: SendMessageMessageAttributes) => {
   const params: SendMessageCommandInput = {
-    QueueUrl: url,
+    QueueUrl: url.toString(),
     MessageBody: JSON.stringify(messageBody),
     MessageAttributes: messageAttributes,
   };

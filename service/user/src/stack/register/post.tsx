@@ -227,7 +227,7 @@ export default defineServiceMiddleware([
     try {
       const eventQueueUrl = await readParameter('user.service.event-queue-url');
       await sendMessage(
-        eventQueueUrl,
+        new URL(eventQueueUrl),
         { eventType: 'UserRegistered', userProfileUuid },
         { MessageType: { DataType: 'String', StringValue: 'UserRegistered' } }
       );
