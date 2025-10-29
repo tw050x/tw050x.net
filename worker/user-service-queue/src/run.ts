@@ -9,6 +9,7 @@ let receivedExitSignal = false;
 
 const cleanup =  () => {
   logger.info('Received SIGINT, shutting down gracefully...');
+  receivedExitSignal = true;
 }
 
 process.on('SIGINT', cleanup);

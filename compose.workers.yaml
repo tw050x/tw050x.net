@@ -12,9 +12,9 @@ services:
       - .env.database.assignment
       - .env.database.user
       - .env.aws
-      - .env.services.logs
-      - .env.services.mongo-client
       - .env.worker.user-service-queue
+      - .env.workers.logs
+      - .env.workers.mongo-client
     # healthcheck:
     #   test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
     #   interval: 1m30s
