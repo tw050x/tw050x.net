@@ -18,7 +18,6 @@ import { hash } from "bcryptjs";
 import { default as jwt, SignOptions } from "jsonwebtoken";
 import { default as zod, ZodError } from "zod";
 import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce.js";
-import { generateRegistrationAssignmentTasks } from "../../helper/generate-registration-assignment-tasks.js";
 import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate.js";
 import { default as RegisterDocument } from "../../template/document/RegisterDocument.js";
 import { default as RegisterForm } from "../../template/component/RegisterForm.js";
@@ -181,17 +180,6 @@ export default defineServiceMiddleware([
     }
     while (userProfileDocument !== null);
 
-    // generate the initial registration tasks for the new user
-    // return an error if there is a problem
-    let registrationTasks;
-    try {
-      registrationTasks = await generateRegistrationAssignmentTasks({ userProfileUuid });
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
-    }
-
     // start the user database session
     let userDatabaseSession = userDatabaseClient.startSession();
 
@@ -211,7 +199,6 @@ export default defineServiceMiddleware([
         passwordHash,
         uuid: userProfileUuid,
       });
-      // await assignmentDatabase.task.insertMany(registrationTasks); // TODO: replace with SQS event that ultimately triggers task creation
       await userDatabaseSession.commitTransaction();
     }
     catch (error) {

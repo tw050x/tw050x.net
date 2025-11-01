@@ -3,6 +3,7 @@
   "author": "tw050x (Richard Kielty)",
   "description": "The User Service Events Worker project for tw050x.net",
   "dependencies": {
+    "@tw050x.net.database/assignment": "workspace:*",
     "@tw050x.net.database/user": "workspace:*",
     "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/database": "workspace:*",

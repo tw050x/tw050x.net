@@ -40,7 +40,24 @@ async function main() {
     process.exit(1);
   }
 
-  const uri = readFlag("uri") ?? process.env.MONGODB_URI ?? "mongodb://127.0.0.1:27017";
+  const username = readFlag("username") ?? process.env.MONGODB_USERNAME;
+  const password = readFlag("password") ?? process.env.MONGODB_PASSWORD;
+  const host = readFlag("host") ?? process.env.MONGODB_HOST ?? "127.0.0.1:27017";
+  const uriFlag = readFlag("uri");
+
+  let uri: string;
+  if (uriFlag) {
+    uri = uriFlag;
+  } else if (process.env.MONGODB_URI) {
+    uri = process.env.MONGODB_URI;
+  } else if (username && password) {
+    uri = `mongodb://${encodeURIComponent(username)}:${encodeURIComponent(password)}@${host}`;
+  } else {
+    uri = `mongodb://${host}`;
+  }
+
+  console.log('Connecting to MongoDB URI:', uri);
+
   const dbName = readFlag("db") ?? process.env.MONGODB_DB ?? "app";
   const baseCwd = getInvocationCwd();
   const dirFlag = readFlag("dir");
@@ -59,7 +76,7 @@ async function main() {
     const now = new Date();
     const pad = (n: number) => n.toString().padStart(2, "0");
     const id = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}-${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}-${slug}`;
-    const filename = `${id}.ts`;
+    const filename = `${id}.js`;
     const fullPath = join(migrationsDir, filename);
 
     await mkdir(migrationsDir, { recursive: true });

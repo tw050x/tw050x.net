@@ -14,15 +14,19 @@ function dedent(strings: TemplateStringsArray, ...values: unknown[]): string {
 }
 
 export const migrationTemplate = dedent`
-  import type { MigrationFn } from "@tw050x.net.tool/mongo-migrator";
-
-  export const up: MigrationFn = async ({ db }) => {
+  /**
+   * @param {{ client: import("mongodb").MongoClient, db: import("mongodb").Db }} context
+   */
+  export async function up({ db }) {
     // Add changes here, e.g.:
     // await db.collection("users").createIndex({ email: 1 }, { unique: true });
-  };
+  }
 
-  export const down: MigrationFn = async ({ db }) => {
+  /**
+   * @param {{ client: import("mongodb").MongoClient, db: import("mongodb").Db }} context
+   */
+  export async function down({ db }) {
     // Revert changes here, e.g.:
     // await db.collection("users").dropIndex("email_1");
-  };
+  }
 `;

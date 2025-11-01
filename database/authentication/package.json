@@ -21,6 +21,7 @@
     "mongo-migrator": "mongo-migrator",
     "tsc": "tsc"
   },
+  "type": "module",
   "types": "artifact/index.d.ts",
   "version": "1.0.0"
 }

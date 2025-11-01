@@ -2851,6 +2851,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tw050x.net.worker/user-service-queue@workspace:worker/user-service-queue"
   dependencies:
+    "@tw050x.net.database/assignment": "workspace:*"
     "@tw050x.net.database/user": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"

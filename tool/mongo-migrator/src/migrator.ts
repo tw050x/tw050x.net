@@ -43,10 +43,10 @@ export class Migrator {
 
   async listMigrationFiles(): Promise<MigrationFile[]> {
     const files: string[] = await readdir(this.options.migrationsDir).catch(() => [] as string[]);
-    const tsOrJs: string[] = files.filter((f: string) => f.endsWith(".ts") || f.endsWith(".js"));
-    const sorted: string[] = tsOrJs.sort();
+    const jsFiles: string[] = files.filter((f: string) => f.endsWith(".js"));
+    const sorted: string[] = jsFiles.sort();
     return sorted.map((filename: string) => ({
-      id: filename.replace(/\.(ts|js)$/i, ""),
+      id: filename.replace(/\.js$/i, ""),
       filename,
       fullPath: path.join(this.options.migrationsDir, filename),
     }));

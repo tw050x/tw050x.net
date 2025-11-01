@@ -19,8 +19,8 @@ export async function* receiveMessages(url: string, maxNumberOfMessages = 10) {
 
     if (response.Messages && response.Messages.length > 0) {
       for (const message of response.Messages) {
-        const deleteMessage = async () => {
-          if (message.ReceiptHandle) {
+        const deleteMessage = async (): Promise<void> => {
+          if (message.ReceiptHandle === undefined) {
             return void logger.error(`No ReceiptHandle found for message with id ${message.MessageId}, cannot delete.`);
           }
           const debugCommand = new DeleteMessageCommand({

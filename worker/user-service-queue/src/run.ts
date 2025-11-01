@@ -23,10 +23,26 @@ try {
       break;
     }
 
+    if (message.Body === undefined) {
+      logger.warn(`Message body is undefined for message ID: ${message.MessageId}`);
+      continue;
+    }
+    logger.debug('Processing UserRegistered event:', message.Body);
+
+    let messageBody;
+    try {
+      messageBody = JSON.parse(message.Body) as Record<string, unknown>;
+    }
+    catch (error) {
+      logger.debug(`Failed to parse message body for message ID: ${message.MessageId}`);
+      logger.error(error);
+      continue;
+    }
+
+    logger.debug('MessageType:', message.MessageAttributes?.MessageType?.StringValue);
     switch (message.MessageAttributes?.MessageType?.StringValue) {
       case 'UserRegistered':
-        logger.debug('Processing UserRegistered event:', message.Body);
-        await handleUserRegisteredEvent(message);
+        await handleUserRegisteredEvent(messageBody);
         await deleteMessage();
         break;
       default:
@@ -35,5 +51,6 @@ try {
   }
 }
 catch (error) {
-  logger.error('Error processing messages:', error);
+  logger.debug('Error in main processing loop');
+  logger.error(error);
 }
