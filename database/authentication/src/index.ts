@@ -1,4 +1,4 @@
-import { mongoClient } from "./client";
+import { mongoClient } from "./client.js";
 
 /**
  * Database object

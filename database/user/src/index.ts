@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { mongoClient } from "./client";
+import { mongoClient } from "./client.js";
 
 //
 interface CredentialDocumentBase {

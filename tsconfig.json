@@ -50,7 +50,7 @@
     { "path": "./service/marketing" },
     { "path": "./service/navigation" },
     { "path": "./service/user" },
+    { "path": "./tool/migrate" },
     { "path": "./worker/user-service-queue" },
-    { "path": "./tool/mongo-migrator" }
   ]
 }

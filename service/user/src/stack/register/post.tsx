@@ -165,8 +165,8 @@ export default defineServiceMiddleware([
     // generate a unique (unused) UUID for the user
     // return an error if there is a problem
     let userProfileDocument;
-    let userProfileUuid;
     let userProfileId;
+    let userProfileUuid;
     do {
       userProfileUuid = randomUUID();
       try {

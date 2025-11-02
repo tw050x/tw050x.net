@@ -14,6 +14,9 @@ function dedent(strings: TemplateStringsArray, ...values: unknown[]): string {
 }
 
 export const migrationTemplate = dedent`
+  // Specify the database this migration should run against
+  export const database = "app";
+
   /**
    * @param {{ client: import("mongodb").MongoClient, db: import("mongodb").Db }} context
    */

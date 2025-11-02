@@ -29,5 +29,5 @@ export type NewPropertiesOnly<InputContext, OutputContext> = {
 
 export interface DatabaseDocument {
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
 }

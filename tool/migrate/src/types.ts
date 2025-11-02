@@ -3,6 +3,7 @@ import type { Db, MongoClient } from "mongodb";
 export type MigrationFn = (ctx: { client: MongoClient; db: Db }) => Promise<void>;
 
 export type MigrationModule = {
+  database: string; // required database name export
   up: MigrationFn;
   down: MigrationFn;
 };

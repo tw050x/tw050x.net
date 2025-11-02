@@ -6,7 +6,6 @@ import type { MigrationFile, MigrationModule } from "./types.js";
 
 export type MigratorOptions = {
   uri: string;
-  dbName: string;
   migrationsDir: string;
   collectionName?: string; // defaults to "_migrations"
 };
@@ -18,8 +17,6 @@ export type MigrationDoc = {
 
 export class Migrator {
   private client!: MongoClient;
-  private db!: Db;
-  private collection!: Collection<MigrationDoc>;
   private readonly options: Required<MigratorOptions>;
 
   constructor(opts: MigratorOptions) {
@@ -32,9 +29,6 @@ export class Migrator {
   async connect() {
     this.client = new MongoClient(this.options.uri);
     await this.client.connect();
-    this.db = this.client.db(this.options.dbName);
-    this.collection = this.db.collection<MigrationDoc>(this.options.collectionName);
-    await this.collection.createIndex({ id: 1 }, { unique: true });
   }
 
   async close() {
@@ -57,12 +51,29 @@ export class Migrator {
     if (!("up" in mod) || !("down" in mod)) {
       throw new Error(`Migration must export 'up' and 'down': ${fullPath}`);
     }
+    if (!("database" in mod)) {
+      throw new Error(`Migration must export 'database': ${fullPath}`);
+    }
     return mod as MigrationModule;
   }
 
   async appliedIds(): Promise<Set<string>> {
-    const docs = await this.collection.find({}, { projection: { id: 1 } }).toArray();
-    return new Set(docs.map((d) => d.id));
+    const files = await this.listMigrationFiles();
+    const allAppliedIds = new Set<string>();
+
+    // Check each migration's target database for applied migrations
+    for (const file of files) {
+      const mod = await this.loadModule(file.fullPath);
+      const db = this.client.db(mod.database!);
+      const collection = db.collection<MigrationDoc>(this.options.collectionName);
+
+      const doc = await collection.findOne({ id: file.id });
+      if (doc) {
+        allAppliedIds.add(file.id);
+      }
+    }
+
+    return allAppliedIds;
   }
 
   async status() {
@@ -87,9 +98,13 @@ export class Migrator {
 
     for (const f of runList) {
       const mod = await this.loadModule(f.fullPath);
-      await mod.up({ client: this.client, db: this.db });
-      await this.collection.insertOne({ id: f.id, appliedAt: new Date() });
-      console.log(`↑ up: ${f.id}`);
+      const targetDb = this.client.db(mod.database!);
+      await mod.up({ client: this.client, db: targetDb });
+
+      const collection = targetDb.collection<MigrationDoc>(this.options.collectionName);
+      await collection.createIndex({ id: 1 }, { unique: true });
+      await collection.insertOne({ id: f.id, appliedAt: new Date() });
+      console.log(`↑ up: ${f.id} (database: ${mod.database})`);
     }
   }
 
@@ -107,9 +122,12 @@ export class Migrator {
 
     for (const f of runList) {
       const mod = await this.loadModule(f.fullPath);
-      await mod.down({ client: this.client, db: this.db });
-      await this.collection.deleteOne({ id: f.id });
-      console.log(`↓ down: ${f.id}`);
+      const targetDb = this.client.db(mod.database!);
+      await mod.down({ client: this.client, db: targetDb });
+
+      const collection = targetDb.collection<MigrationDoc>(this.options.collectionName);
+      await collection.deleteOne({ id: f.id });
+      console.log(`↓ down: ${f.id} (database: ${mod.database})`);
     }
   }
 }

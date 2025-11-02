@@ -10,37 +10,58 @@ import { isObjectId } from "@tw050x.net.library/utility/is-object-id";
 export default async function handleUserRegisteredEvent(messageBody: Record<string, unknown>): Promise<void> {
   logger.debug('Handling UserRegistered message body:', messageBody);
 
-  if ('userProfileId' in messageBody === false) {
+  if (('userProfileId' in messageBody) === false) {
     return void logger.error(new Error('userProfileId is missing in UserRegistered event message body'));
   }
+
   if (isObjectId(messageBody.userProfileId) === false) {
     return void logger.error(new Error('userProfileId is not a valid ObjectId in UserRegistered event message body'));
   }
 
-  let tasks: Array<AssignmentTaskDocument> = [];
-
   const assignment = 'complete-registration';
+
+  // Fetch the latest task templates for the assignment
+  let taskTemplates;
+  try {
+    taskTemplates = await assignmentDatabase.taskTemplate.find({
+      assignment,
+      replaces: null
+    }).toArray();
+  }
+  catch (error) {
+    logger.debug('Error fetching task templates for assignment');
+    return void logger.error(error);
+  }
+  logger.debug(`Fetched ${taskTemplates.length} task templates for assignment: ${assignment}`);
+
   const date = new Date();
+  const tasks: Array<AssignmentTaskDocument> = [];
 
-  tasks.push({
-    createdAt: date,
-    updatedAt: date,
-    assignment,
-    assignedBy: 'system',
-    completed: false,
-    assignmentTaskTemplateUuid: process.env.ENTER_YOUR_NAME_TASK_TEMPLATE_UUID,
-    userProfileId: messageBody.userProfileId
-  });
+  for (const template of taskTemplates) {
+    tasks.push({
+      assignment,
+      assignedBy: 'system',
+      actions: template.actions,
+      completed: false,
+      createdAt: date,
+      description: template.description,
+      label: template.label,
+      reason: template.reason,
+      userProfileId: messageBody.userProfileId,
+    })
+  }
 
-  tasks.push({
-    createdAt: date,
-    updatedAt: date,
-    assignment,
-    completed: false,
-    assignedBy: 'system',
-    assignmentTaskTemplateUuid: process.env.VERIFY_EMAIL_TASK_TEMPLATE_UUID,
-    userProfileId: messageBody.userProfileId
-  });
+  if (tasks.length === 0) {
+    return void logger.debug(`No task templates found for assignment: ${assignment}, skipping task creation`);
+  }
 
-  await assignmentDatabase.task.insertMany(tasks);
+  try {
+    await assignmentDatabase.task.insertMany(tasks);
+  }
+  catch (error) {
+    logger.debug('Error inserting assignment tasks for user');
+    return void logger.error(error);
+  }
+
+  logger.debug(`Created ${tasks.length} assignment tasks for userProfileId: ${messageBody.userProfileId}`);
 }

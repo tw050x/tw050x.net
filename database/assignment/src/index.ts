@@ -1,11 +1,14 @@
 import { DatabaseDocument } from "@tw050x.net.library/types"
 import { ObjectId } from "mongodb";
-import { mongoClient } from "./client";
+import { mongoClient } from "./client.js";
 
 interface AssignmentTaskDocumentBase extends DatabaseDocument {
+  actions: Array<string>;
   assignment: string;
   assignedBy: string;
-  assignmentTaskTemplateUuid: string;
+  description: string;
+  label: string;
+  reason: string;
   userProfileId: ObjectId;
 }
 
@@ -22,12 +25,11 @@ interface AssignmentIncompleteTaskDocument extends AssignmentTaskDocumentBase {
 export type AssignmentTaskDocument = AssignmentCompleteTaskDocument | AssignmentIncompleteTaskDocument;
 
 export type AssignmentTaskTemplateDocument = {
-  label: string;
-  reason: string;
+  actions: string[];
   assignment: string;
   description: string;
-  actions: string[];
-  uuid: string;
+  label: string;
+  reason: string;
 }
 
 /**

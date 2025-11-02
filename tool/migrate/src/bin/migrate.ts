@@ -5,10 +5,10 @@ import { Migrator } from "../migrator.js";
 import { migrationTemplate } from "../templates/migration.template.js";
 
 // Usage:
-//   mongo-migrator up [--limit=1] [--to=migration-id]
-//   mongo-migrator down [--limit=1] [--to=migration-id]
-//   mongo-migrator status
-//   mongo-migrator create --name="description" [--dir=...] [--db=...] [--uri=...] [--collection=_migrations]
+//   migrate up [--limit=1] [--to=migration-id]
+//   migrate down [--limit=1] [--to=migration-id]
+//   migrate status
+//   migrate create --name="description" [--dir=...] [--uri=...] [--collection=_migrations]
 
 const args = process.argv.slice(2);
 
@@ -33,10 +33,10 @@ async function main() {
 
   if (!command || ["up", "down", "status", "create"].includes(command) === false) {
     console.log("Usage:");
-    console.log("  mongo-migrator up [--limit=1] [--to=migration-id]");
-    console.log("  mongo-migrator down [--limit=1] [--to=migration-id]");
-    console.log("  mongo-migrator status");
-    console.log("  mongo-migrator create --name='add-users-index'");
+    console.log("  migrate up [--limit=1] [--to=migration-id]");
+    console.log("  migrate down [--limit=1] [--to=migration-id]");
+    console.log("  migrate status");
+    console.log("  migrate create --name='add-users-index'");
     process.exit(1);
   }
 
@@ -58,7 +58,6 @@ async function main() {
 
   console.log('Connecting to MongoDB URI:', uri);
 
-  const dbName = readFlag("db") ?? process.env.MONGODB_DB ?? "app";
   const baseCwd = getInvocationCwd();
   const dirFlag = readFlag("dir");
   const migrationsDir = dirFlag
@@ -84,7 +83,7 @@ async function main() {
     return void console.log(`Created: ${fullPath}`);
   }
 
-  const migrator = new Migrator({ uri, dbName, migrationsDir, collectionName });
+  const migrator = new Migrator({ uri, migrationsDir, collectionName });
   await migrator.connect();
 
   try {

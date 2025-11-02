@@ -2514,7 +2514,6 @@ __metadata:
   resolution: "@tw050x.net.database/account@workspace:database/account"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
-    "@tw050x.net.tool/mongo-migrator": "workspace:*"
     "@types/node": "npm:^22.10.2"
     bson: "npm:^6.10.4"
     mongodb: "npm:^6.12.0"
@@ -2528,7 +2527,6 @@ __metadata:
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/types": "workspace:*"
-    "@tw050x.net.tool/mongo-migrator": "workspace:*"
     "@types/node": "npm:^22.10.2"
     bson: "npm:^6.10.4"
     mongodb: "npm:^6.12.0"
@@ -2541,7 +2539,6 @@ __metadata:
   resolution: "@tw050x.net.database/authentication@workspace:database/authentication"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
-    "@tw050x.net.tool/mongo-migrator": "workspace:*"
     "@types/node": "npm:^22.10.2"
     bson: "npm:^6.10.4"
     mongodb: "npm:^6.12.0"
@@ -2554,7 +2551,6 @@ __metadata:
   resolution: "@tw050x.net.database/user@workspace:database/user"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
-    "@tw050x.net.tool/mongo-migrator": "workspace:*"
     "@types/node": "npm:^22.10.2"
     bson: "npm:^6.10.4"
     mongodb: "npm:^6.12.0"
@@ -2840,15 +2836,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.tool/mongo-migrator@workspace:*, @tw050x.net.tool/mongo-migrator@workspace:tool/mongo-migrator":
+"@tw050x.net.tool/migrate@workspace:*, @tw050x.net.tool/migrate@workspace:tool/migrate":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.tool/mongo-migrator@workspace:tool/mongo-migrator"
+  resolution: "@tw050x.net.tool/migrate@workspace:tool/migrate"
   dependencies:
     "@types/node": "npm:^22.10.2"
     mongodb: "npm:^6.12.0"
     typescript: "npm:^5.7.2"
   bin:
-    mongo-migrator: ./artifact/bin/mongo-migrator.js
+    migrate: ./artifact/bin/migrate.js
   languageName: unknown
   linkType: soft
 
@@ -2877,9 +2873,11 @@ __metadata:
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@kitajs/ts-html-plugin": "npm:^4.1.2"
+    "@tw050x.net.tool/migrate": "workspace:*"
     "@yarnpkg/types": "npm:^4.0.0"
     cypress: "npm:^15.2.0"
     dotenv: "npm:^17.2.2"
+    mongodb: "npm:^6.12.0"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft

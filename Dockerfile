@@ -280,6 +280,7 @@ COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secret /srv/library/secret /srv/library/secret
 COPY --from=library-types /srv/library/types /srv/library/types
+COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/worker/user-service-queue/artifact /srv/worker/user-service-queue/artifact
 COPY --from=build /build/worker/user-service-queue/package.json /srv/worker/user-service-queue/package.json
 COPY --from=build /build/worker/user-service-queue/tsconfig.json /srv/worker/user-service-queue/tsconfig.json
