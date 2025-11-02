@@ -1,13 +1,20 @@
+import { ObjectId } from "mongodb";
 import { mongoClient } from "./client";
 
 //
-export type CredentialDocument = {
+interface CredentialDocumentBase {
   createdAt: Date;
-  email: string;
-  passwordHash: string;
   updatedAt: Date;
-  uuid: string;
+  userProfileId: ObjectId;
 }
+
+//
+export interface PasswordCredentialsDocument extends CredentialDocumentBase {
+  passwordHash: string;
+  type: 'password';
+}
+
+export type CredentialDocument = PasswordCredentialsDocument;
 
 //
 export type NonceDocument = {
@@ -22,13 +29,15 @@ export type PermissionsDocument = {
   updatedAt: Date;
   enabled: boolean;
   key: string;
-  uuid: string;
 }
 
 //
 export type ProfileDocument = {
   createdAt: Date;
   updatedAt: Date;
+  email: string;
+  phone?: string;
+  displayName?: string;
   uuid: string;
 }
 

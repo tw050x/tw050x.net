@@ -14,5 +14,6 @@
     "src/is-allowed-headers.ts",
     "src/is-allowed-method.ts",
     "src/is-allowed-origin.ts",
+    "src/is-object-id.ts",
   ]
 }

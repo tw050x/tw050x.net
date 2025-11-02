@@ -3,4 +3,5 @@ artifact/
 
 # Files
 *.js
+!migrations/*.js
 tsconfig.tsbuildinfo

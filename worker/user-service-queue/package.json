@@ -10,6 +10,7 @@
     "@tw050x.net.library/logger": "workspace:*",
     "@tw050x.net.library/queue": "workspace:*",
     "@tw050x.net.library/secret": "workspace:*",
+    "@tw050x.net.library/utility": "workspace:*",
     "bcryptjs": "^3.0.2",
     "mongodb": "^6.12.0"
   },

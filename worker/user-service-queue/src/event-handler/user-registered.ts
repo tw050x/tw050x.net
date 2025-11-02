@@ -1,5 +1,6 @@
 import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.database/assignment";
-import { logger } from "@tw050x.net.library/logger"
+import { logger } from "@tw050x.net.library/logger";
+import { isObjectId } from "@tw050x.net.library/utility/is-object-id";
 
 /**
  * Handles a UserRegistered event message.
@@ -9,11 +10,11 @@ import { logger } from "@tw050x.net.library/logger"
 export default async function handleUserRegisteredEvent(messageBody: Record<string, unknown>): Promise<void> {
   logger.debug('Handling UserRegistered message body:', messageBody);
 
-  if ('userProfileUuid' in messageBody === false) {
-    return void logger.error(new Error('userProfileUuid is missing in UserRegistered event message body'));
+  if ('userProfileId' in messageBody === false) {
+    return void logger.error(new Error('userProfileId is missing in UserRegistered event message body'));
   }
-  if (typeof messageBody.userProfileUuid !== 'string') {
-    return void logger.error(new Error('userProfileUuid is not a string in UserRegistered event message body'));
+  if (isObjectId(messageBody.userProfileId) === false) {
+    return void logger.error(new Error('userProfileId is not a valid ObjectId in UserRegistered event message body'));
   }
 
   let tasks: Array<AssignmentTaskDocument> = [];
@@ -28,7 +29,7 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
     assignedBy: 'system',
     completed: false,
     assignmentTaskTemplateUuid: process.env.ENTER_YOUR_NAME_TASK_TEMPLATE_UUID,
-    userProfileUuid: messageBody.userProfileUuid
+    userProfileId: messageBody.userProfileId
   });
 
   tasks.push({
@@ -38,7 +39,7 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
     completed: false,
     assignedBy: 'system',
     assignmentTaskTemplateUuid: process.env.VERIFY_EMAIL_TASK_TEMPLATE_UUID,
-    userProfileUuid: messageBody.userProfileUuid
+    userProfileId: messageBody.userProfileId
   });
 
   await assignmentDatabase.task.insertMany(tasks);

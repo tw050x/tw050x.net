@@ -105,11 +105,36 @@ export default defineServiceMiddleware([
 
     // fetch the credentials document from the database
     // if it doesnt exist then return an error
-    let credentialDocument;
+    let userProfileDocument;
     try {
-      credentialDocument = await userDatabase.credentials.findOne({ email });
+      userProfileDocument = await userDatabase.profile.findOne({ email });
     }
     catch (error) {
+      logger.error(error);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+    }
+    if (userProfileDocument === null) {
+      logger.debug('credential document not found', { email });
+      return void context.serverResponse.sendBadRequestHTMLResponse(
+        <LoginForm
+          email={body?.email}
+          nonce={nonce}
+          validationErrors={[{ message: 'Invalid email or password' }]}
+        />
+      );
+    }
+
+    // fetch the credential document from the database
+    // if it doesnt exist then return an error
+    let credentialDocument;
+    try {
+      credentialDocument = await userDatabase.credentials.findOne({
+        userProfileId: userProfileDocument._id,
+        type: 'password',
+      });
+    }
+    catch (error) {
+      logger.debug('credential document fetch error', { email });
       logger.error(error);
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
@@ -117,7 +142,7 @@ export default defineServiceMiddleware([
       logger.debug('credential document not found', { email });
       return void context.serverResponse.sendBadRequestHTMLResponse(
         <LoginForm
-          email={body?.email}
+          email={email}
           nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
         />
@@ -149,13 +174,13 @@ export default defineServiceMiddleware([
       expiresIn: '4w',
     };
     const refreshTokenPayload = {
-      sub: credentialDocument.uuid
+      sub: userProfileDocument.uuid
     };
     const accessTokenOptions: SignOptions = {
       expiresIn: '1d',
     };
     const accessTokenPayload = {
-      sub: credentialDocument.uuid
+      sub: userProfileDocument.uuid
     };
     const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
     const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);

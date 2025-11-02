@@ -166,6 +166,7 @@ export default defineServiceMiddleware([
     // return an error if there is a problem
     let userProfileDocument;
     let userProfileUuid;
+    let userProfileId;
     do {
       userProfileUuid = randomUUID();
       try {
@@ -187,19 +188,21 @@ export default defineServiceMiddleware([
     // return an error if there is a problem
     userDatabaseSession.startTransaction();
     try {
-      await userDatabase.profile.insertOne({
+      const profile = await userDatabase.profile.insertOne({
         createdAt: new Date(),
         updatedAt: new Date(),
+        email: emailFieldValue,
         uuid: userProfileUuid,
       });
       await userDatabase.credentials.insertOne({
         createdAt: new Date(),
         updatedAt: new Date(),
-        email: emailFieldValue,
         passwordHash,
-        uuid: userProfileUuid,
+        type: 'password',
+        userProfileId: profile.insertedId,
       });
       await userDatabaseSession.commitTransaction();
+      userProfileId = profile.insertedId;
     }
     catch (error) {
       await userDatabaseSession.abortTransaction();
@@ -215,7 +218,7 @@ export default defineServiceMiddleware([
       const eventQueueUrl = await readParameter('user.service.event-queue-url');
       await sendMessage(
         new URL(eventQueueUrl),
-        { eventType: 'UserRegistered', userProfileUuid },
+        { eventType: 'UserRegistered', userProfileId },
         { MessageType: { DataType: 'String', StringValue: 'UserRegistered' } }
       );
     }

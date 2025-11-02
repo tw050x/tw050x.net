@@ -17,5 +17,6 @@
     { "path": "../../library/logger" },
     { "path": "../../library/queue" },
     { "path": "../../library/secret" },
+    { "path": "../../library/utility" },
   ]
 }

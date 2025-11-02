@@ -1,11 +1,12 @@
 import { DatabaseDocument } from "@tw050x.net.library/types"
+import { ObjectId } from "mongodb";
 import { mongoClient } from "./client";
 
 interface AssignmentTaskDocumentBase extends DatabaseDocument {
   assignment: string;
   assignedBy: string;
   assignmentTaskTemplateUuid: string;
-  userProfileUuid: string;
+  userProfileId: ObjectId;
 }
 
 //

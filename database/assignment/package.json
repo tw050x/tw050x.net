@@ -9,6 +9,7 @@
   },
   "description": "The @tw050x.net.database/assignment package project",
   "devDependencies": {
+    "@tw050x.net.tool/mongo-migrator": "workspace:*",
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2"
   },
