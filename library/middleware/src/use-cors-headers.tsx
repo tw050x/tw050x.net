@@ -1,8 +1,11 @@
 import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { isAllowedHeader, isArrayOfHeaders } from "@tw050x.net.library/utility/is-allowed-headers";
-import { HttpMethod, isAllowedMethod, isArrayOfHttpMethods, isHttpMethod } from "@tw050x.net.library/utility/is-allowed-method";
+import { isAllowedHeaders } from "@tw050x.net.library/utility/is-allowed-headers";
+import { isAllowedMethod } from "@tw050x.net.library/utility/is-allowed-method";
+import { HttpMethod, isHttpMethod } from "@tw050x.net.library/utility/is-http-method";
+import { isArrayOfHeaders } from "@tw050x.net.library/utility/is-array-of-headers";
+import { isArrayOfHttpMethods } from "@tw050x.net.library/utility/is-array-of-http-methods";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { isAllowedOrigin } from "@tw050x.net.library/utility/is-allowed-origin";
 
@@ -212,7 +215,7 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
       break allowedHeadersGuard;
     }
     if (
-      isAllowedHeader(
+      isAllowedHeaders(
         context.incomingMessage.headers['access-control-request-headers'],
         allowedHeaders
       )
