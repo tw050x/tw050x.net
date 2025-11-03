@@ -1,6 +1,7 @@
 import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.database/assignment";
 import { logger } from "@tw050x.net.library/logger";
 import { isObjectId } from "@tw050x.net.library/utility/is-object-id";
+import { ObjectId } from "mongodb";
 
 /**
  * Handles a UserRegistered event message.
@@ -47,7 +48,7 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
       description: template.description,
       label: template.label,
       reason: template.reason,
-      userProfileId: messageBody.userProfileId,
+      userProfileId: new ObjectId(messageBody.userProfileId),
     })
   }
 

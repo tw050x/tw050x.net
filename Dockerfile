@@ -202,6 +202,7 @@ RUN apk add --no-cache curl
 RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
+COPY --from=database-account /srv/database/account /srv/database/account
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database

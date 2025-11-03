@@ -46,15 +46,6 @@ export type AcccountTenantDocument = {
  * Database object
  */
 export const database = {
-  get account() {
-    const accountCollectionName = process.env.ACCOUNT_DATABASE_ACCOUNT_COLLECTION_NAME;
-    guard: {
-      if (accountCollectionName === undefined) break guard;
-      if (accountCollectionName === '') break guard;
-      return mongoClient.db(process.env.ACCOUNT_DATABASE_NAME).collection<AccountDocument>(accountCollectionName);
-    }
-    throw new Error(`Missing environment variable: ACCOUNT_DATABASE_ACCOUNT_COLLECTION_NAME`);
-  },
   get billing() {
     const billingCollectionName = process.env.ACCOUNT_DATABASE_BILLING_COLLECTION_NAME;
     guard: {
@@ -90,15 +81,6 @@ export const database = {
       return mongoClient.db(process.env.ACCOUNT_DATABASE_NAME).collection<AccountProfileDocument>(profileCollectionName);
     }
     throw new Error(`Missing environment variable: ACCOUNT_DATABASE_PROFILE_COLLECTION_NAME`);
-  },
-  get tenant() {
-    const tenantCollectionName = process.env.ACCOUNT_DATABASE_TENANT_COLLECTION_NAME;
-    guard: {
-      if (tenantCollectionName === undefined) break guard;
-      if (tenantCollectionName === '') break guard;
-      return mongoClient.db(process.env.ACCOUNT_DATABASE_NAME).collection<AcccountTenantDocument>(tenantCollectionName);
-    }
-    throw new Error(`Missing environment variable: ACCOUNT_DATABASE_TENANT_COLLECTION_NAME`);
   },
 }
 

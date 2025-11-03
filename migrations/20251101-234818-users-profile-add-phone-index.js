@@ -5,7 +5,15 @@ export const database = "users";
  * @param context
  */
 export async function up({ db }) {
-  await db.collection('profiles').createIndex('phone', { unique: true });
+  await db.collection('profiles').createIndex(
+    { phone: 1 },
+    {
+      unique: true,
+      partialFilterExpression: {
+        phone: { $type: "string" }
+      }
+    }
+  );
 }
 
 /**

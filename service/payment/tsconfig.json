@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "outDir": "./artifact",
+    "rootDir": "./src",
+    "types": ["@kitajs/html/htmx.d.ts"],
+  },
+  "exclude": [
+    "artifact"
+  ],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "../../types/env.service.payment.d.ts",
+    "src/serve.ts",
+  ],
+  "references": [
+    { "path": "../../library/service" },
+  ]
+}

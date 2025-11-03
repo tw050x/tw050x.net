@@ -192,6 +192,7 @@ services:
         condition: service_healthy
     env_file:
       - .env.aws
+      - .env.database.account
       - .env.database.assignment
       - .env.database.user
       - .env.service.navigation

@@ -4,6 +4,7 @@
   "description": "The Navigation Service project for tw050x.net",
   "dependencies": {
     "@kitajs/html": "^4.2.9",
+    "@tw050x.net.database/account": "workspace:*",
     "@tw050x.net.database/assignment": "workspace:*",
     "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/database": "workspace:*",

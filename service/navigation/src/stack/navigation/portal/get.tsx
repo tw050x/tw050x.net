@@ -1,4 +1,5 @@
 import { useParameter } from "@tw050x.net.library/configuration";
+import { database as accountDatabase } from "@tw050x.net.database/account";
 import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
@@ -64,19 +65,62 @@ export default defineServiceMiddleware([
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />)
     }
 
+    let hasActiveBillingAccount = false;
+    try {
+      hasActiveBillingAccount = (
+        await accountDatabase.billing.countDocuments(
+          sanitizeMongoDBFilterOrPipeline({
+            userProfileId: context.incomingMessage.accessTokenCookie.payload.sub,
+            expiresAt: { $gt: new Date() },
+          })
+        )
+      ) > 0;
+    }
+    catch (error) {
+      logger.debug("Error checking billing account existence");
+      logger.error(error);
+    }
+    logger.debug(`hasActiveBillingAccount: ${hasActiveBillingAccount}`);
+
     // Determine service menu items
     const serviceMenuItems = []
 
-    if (incompleteAssignmentDocuments > 0) {
-      serviceMenuItems.push({ label: 'Assignments', href: '/portal/assignment', IconComponent: Assignment, classes: ['attention'] });
-    }
-
     // Add default menu items
-    serviceMenuItems.push({ label: 'Dashboard', href: '/portal/dashboard', IconComponent: Dashboard });
-    serviceMenuItems.push({ label: 'Brands', href: '/portal/brands', IconComponent: Brands });
-    serviceMenuItems.push({ label: 'Products', href: '/portal/products', IconComponent: Products });
-    serviceMenuItems.push({ label: 'Account', href: '/portal/account', IconComponent: Account });
-    serviceMenuItems.push({ label: 'Users', href: '/portal/users', IconComponent: Users });
+    serviceMenuItems.push({
+      href: '/portal/assignment',
+      label: 'Assignments',
+      IconComponent: Assignment,
+      classes: [
+        incompleteAssignmentDocuments > 0 ? 'attention' : ''
+      ]
+    });
+    serviceMenuItems.push({
+      IconComponent: Dashboard,
+      href: '/portal/dashboard',
+      label: 'Dashboard',
+    });
+    serviceMenuItems.push({
+      IconComponent: Brands,
+      href: '/portal/brands',
+      label: 'Brands',
+      disabled: hasActiveBillingAccount === false,
+    });
+    serviceMenuItems.push({
+      IconComponent: Products,
+      href: '/portal/products',
+      label: 'Products',
+      disabled: hasActiveBillingAccount === false,
+    });
+    serviceMenuItems.push({
+      IconComponent: Account,
+      href: '/portal/account',
+      label: 'Account',
+    });
+    serviceMenuItems.push({
+      IconComponent: Users,
+      href: '/portal/users',
+      label: 'Users',
+    });
 
     // Determine menu state from cookie
     const menuStateCookieValue = cookies.get('ui.menu.state');

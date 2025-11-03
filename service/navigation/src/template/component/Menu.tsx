@@ -50,7 +50,7 @@ const PortalMenu: Component<Props> = (props) => {
                   classes.push("opacity-50 cursor-not-allowed");
                 }
                 return (
-                  <a class={classes} href={item.href}>
+                  <a class={classes} href={item.disabled ? undefined : item.href}>
                     <span class="portal-menu-icon"><item.IconComponent /></span>
                     <span class="hidden-when-w-16">{item.label}</span>
                   </a>

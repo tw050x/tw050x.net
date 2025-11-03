@@ -118,13 +118,12 @@ export default defineServiceMiddleware([
         />
       );
     }
-    logger.debug('Register form data is valid', { emailFieldValue, passwordFieldValue });
+    logger.debug('Register form data is valid');
 
-    // fetch the credentials document from the database
-    // if the credentials document already exists, re-render the registration form with a generic error message
-    let credentialsDocument: CredentialDocument | null = null;
+    //
+    let userProfileDocument;
     try {
-      credentialsDocument = await userDatabase.credentials.findOne(
+      userProfileDocument = await userDatabase.profile.findOne(
         sanitizeMongoDBFilterOrPipeline({ email: emailFieldValue })
       );
     }
@@ -132,7 +131,8 @@ export default defineServiceMiddleware([
       logger.error(error);
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
-    if (credentialsDocument !== null) {
+    logger.debug('Checked for existing user profile document', { userProfileDocument });
+    if (userProfileDocument !== null) {
       let nonce;
       try {
         nonce = await generateRegisterFormNonce();
@@ -164,7 +164,6 @@ export default defineServiceMiddleware([
 
     // generate a unique (unused) UUID for the user
     // return an error if there is a problem
-    let userProfileDocument;
     let userProfileId;
     let userProfileUuid;
     do {

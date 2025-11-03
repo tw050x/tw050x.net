@@ -25,6 +25,10 @@ function readIntFlag(name: string) {
   return v ? parseInt(v, 10) : undefined;
 }
 
+function readBooleanFlag(name: string) {
+  return args.includes(`--${name}`);
+}
+
 function getInvocationCwd(): string {
   return process.env.INIT_CWD || process.env.PROJECT_CWD || process.cwd();
 }
@@ -34,7 +38,7 @@ async function main() {
   if (!command || ["up", "down", "status", "create"].includes(command) === false) {
     console.log("Usage:");
     console.log("  migrate up [--limit=1] [--to=migration-id]");
-    console.log("  migrate down [--limit=1] [--to=migration-id]");
+    console.log("  migrate down [--limit=1] [--to=migration-id] [--all]");
     console.log("  migrate status");
     console.log("  migrate create --name='add-users-index'");
     process.exit(1);
@@ -44,6 +48,28 @@ async function main() {
   const password = readFlag("password") ?? process.env.MONGODB_PASSWORD;
   const host = readFlag("host") ?? process.env.MONGODB_HOST ?? "127.0.0.1:27017";
   const uriFlag = readFlag("uri");
+
+  // Validate connection parameters for commands that need database access
+  if (command !== "create") {
+    const hasUri = uriFlag || process.env.MONGODB_URI;
+    const hasCredentials = username && password;
+    const hasHost = host;
+
+    if (!hasUri && !hasCredentials) {
+      console.error("Error: Missing MongoDB connection parameters");
+      console.error("");
+      console.error("You must provide either:");
+      console.error("  1. A full connection URI:");
+      console.error("     --uri=mongodb://username:password@host:port/database");
+      console.error("     OR set MONGODB_URI environment variable");
+      console.error("");
+      console.error("  2. Username and password (with optional host):");
+      console.error("     --username=myuser --password=mypass [--host=localhost:27017]");
+      console.error("     OR set MONGODB_USERNAME and MONGODB_PASSWORD environment variables");
+      console.error("");
+      process.exit(1);
+    }
+  }
 
   let uri: string;
   if (uriFlag) {
@@ -103,7 +129,8 @@ async function main() {
         break;
       }
       case "down": {
-        const limit = readIntFlag("limit") ?? 1;
+        const allFlag = readBooleanFlag("all");
+        const limit = allFlag ? Infinity : (readIntFlag("limit") ?? 1);
         const to = readFlag("to");
         await migrator.down(limit, to);
         break;
