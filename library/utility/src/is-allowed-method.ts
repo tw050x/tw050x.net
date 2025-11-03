@@ -1,35 +1,4 @@
-
-const httpMethods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS', 'TRACE', 'CONNECT'];
-
-export type HttpMethod = typeof httpMethods[number];
-
-/**
- * Check if value exists and is a valid HTTP method
- *
- * @param value
- * @returns true if value is defined and exists in the httpMethods array
- */
-export const isHttpMethod = (value: string): value is HttpMethod => {
-  return httpMethods.includes(value);
-}
-
-/**
- * Check if value is an array of valid HTTP methods
- *
- * @param value
- * @returns true if value is an array and all items are valid HTTP methods
- */
-export const isArrayOfHttpMethods = (value: unknown): value is readonly HttpMethod[] => {
-  if (Array.isArray(value) === false) {
-    return false;
-  }
-  for (const item of value) {
-    if (isHttpMethod(item) === false) {
-      return false;
-    }
-  }
-  return true;
-}
+import { HttpMethod } from './is-http-method.js';
 
 /**
  * Check if value exists and is included in allowed HTTP methods array

@@ -36,6 +36,7 @@ export type ProfileDocument = {
   createdAt: Date;
   updatedAt: Date;
   email: string;
+  emailNormalised: string;
   phone?: string;
   displayName?: string;
   uuid: string;

@@ -1,6 +1,10 @@
 export { assertUnreachable } from "./assert-unreachable.js";
 export { isAllowedDomain } from './is-allowed-domain.js';
-export { isAllowedHeader as isAllowedHeaders } from './is-allowed-headers.js';
-export { isAllowedMethod, HttpMethod } from './is-allowed-method.js';
+export { isAllowedHeaders } from './is-allowed-headers.js';
+export { isAllowedMethod } from './is-allowed-method.js';
 export { isAllowedOrigin } from './is-allowed-origin.js';
+export { isArrayOfHeaders } from './is-array-of-headers.js';
+export { isArrayOfHttpMethods } from './is-array-of-http-methods.js';
+export { isHttpMethod } from './is-http-method.js';
 export { isObjectId } from './is-object-id.js';
+export { normaliseEmailAddress } from './normalise-email-address.js';

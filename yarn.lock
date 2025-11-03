@@ -2847,6 +2847,7 @@ __metadata:
     "@tw050x.net.library/secret": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
+    "@tw050x.net.library/utility": "workspace:*"
     "@types/bcrypt": "npm:^5"
     "@types/jsonwebtoken": "npm:^9"
     "@types/node": "npm:^22.10.2"

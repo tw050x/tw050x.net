@@ -1,5 +1,5 @@
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
-import { CredentialDocument, client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
+import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
 import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/middleware/use-access-token-cookie";
@@ -13,6 +13,7 @@ import { sendMessage } from "@tw050x.net.library/queue";
 import { readSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { normaliseEmailAddress } from "@tw050x.net.library/utility/normalise-email-address";
 import { randomUUID } from "node:crypto"
 import { hash } from "bcryptjs";
 import { default as jwt, SignOptions } from "jsonwebtoken";
@@ -21,6 +22,7 @@ import { generateRegisterFormNonce } from "../../helper/generate-register-form-n
 import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate.js";
 import { default as RegisterDocument } from "../../template/document/RegisterDocument.js";
 import { default as RegisterForm } from "../../template/component/RegisterForm.js";
+import { MongoLoggableComponent } from "mongodb";
 
 const postRegisterFormDataSchema = zod.object({
   email: zod.string().email('An email address is required'),
@@ -121,10 +123,20 @@ export default defineServiceMiddleware([
     logger.debug('Register form data is valid');
 
     //
+    let normalisedEmailAddress;
+    try {
+      normalisedEmailAddress = normaliseEmailAddress(emailFieldValue);
+    }
+    catch (error) {
+      logger.error(error);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+    }
+
+    //
     let userProfileDocument;
     try {
       userProfileDocument = await userDatabase.profile.findOne(
-        sanitizeMongoDBFilterOrPipeline({ email: emailFieldValue })
+        sanitizeMongoDBFilterOrPipeline({ emailNormalised: normalisedEmailAddress })
       );
     }
     catch (error) {
@@ -191,6 +203,7 @@ export default defineServiceMiddleware([
         createdAt: new Date(),
         updatedAt: new Date(),
         email: emailFieldValue,
+        emailNormalised: normalisedEmailAddress,
         uuid: userProfileUuid,
       });
       await userDatabase.credentials.insertOne({

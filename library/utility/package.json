@@ -15,7 +15,11 @@
     "./is-allowed-headers": "./artifact/is-allowed-headers.js",
     "./is-allowed-method": "./artifact/is-allowed-method.js",
     "./is-allowed-origin": "./artifact/is-allowed-origin.js",
-    "./is-object-id": "./artifact/is-object-id.js"
+    "./is-array-of-headers": "./artifact/is-array-of-headers.js",
+    "./is-array-of-http-methods": "./artifact/is-array-of-http-methods.js",
+    "./is-http-method": "./artifact/is-http-method.js",
+    "./is-object-id": "./artifact/is-object-id.js",
+    "./normalise-email-address": "./artifact/normalise-email-address.js"
   },
   "installConfig": {
     "hoistingLimits": "workspaces"

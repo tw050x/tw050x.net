@@ -14,6 +14,10 @@
     "src/is-allowed-headers.ts",
     "src/is-allowed-method.ts",
     "src/is-allowed-origin.ts",
+    "src/is-array-of-headers.ts",
+    "src/is-array-of-http-methods.ts",
+    "src/is-http-method.ts",
     "src/is-object-id.ts",
+    "src/normalise-email-address.ts",
   ]
 }

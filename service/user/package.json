@@ -15,6 +15,7 @@
     "@tw050x.net.library/secret": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
     "@tw050x.net.library/uikit": "workspace:*",
+    "@tw050x.net.library/utility": "workspace:*",
     "bcryptjs": "^3.0.2",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.12.0",
