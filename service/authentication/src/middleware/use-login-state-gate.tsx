@@ -1,6 +1,6 @@
+import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/authentication/use-login-state-cookie";
 import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/middleware/use-login-state-cookie";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as BadRequest } from "@tw050x.net.library/uikit/document/BadRequest";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";

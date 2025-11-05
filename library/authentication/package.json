@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "@kitajs/html": "^4.2.9",
+    "@tw050x.net.library/configuration": "workspace:*",
+    "@tw050x.net.library/logger": "workspace:*",
+    "@tw050x.net.library/secret": "workspace:*",
+    "@tw050x.net.library/service": "workspace:*",
+    "@tw050x.net.library/uikit": "workspace:*",
+    "cookies": "^0.9.1",
+    "date-fns": "^4.1.0",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "description": "The @tw050x.net.library/authentication package project",
+  "devDependencies": {
+    "@types/cookies": "^0.9.0",
+    "@types/jsonwebtoken": "^9",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": "./artifact/index.js",
+    "./use-access-token-cookie": "./artifact/middleware/use-access-token-cookie.js",
+    "./use-login-state-cookie": "./artifact/middleware/use-login-state-cookie.js",
+    "./use-refresh-token-cookie": "./artifact/middleware/use-refresh-token-cookie.js",
+    "./use-refreshable-token-cookie": "./artifact/middleware/use-refreshable-token-cookie.js"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net.library/authentication",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "type": "module",
+  "types": "./artifact/index.d.ts",
+  "version": "1.0.0"
+}

@@ -15,13 +15,9 @@
   "extends": "../../tsconfig.json",
   "files": [
     "src/index.ts",
-    "src/use-access-token-cookie.tsx",
     "src/use-cors-headers.tsx",
     "src/use-log-request.ts",
-    "src/use-login-state-cookie.tsx",
     "src/use-pagination-query-parameters.tsx",
-    "src/use-refresh-token-cookie.tsx",
-    "src/use-refreshable-token-cookie.tsx",
     "src/use-ui-menu-state-cookie.ts",
     "src/use-ui-user-table-tools-state-cookie.tsx",
   ],

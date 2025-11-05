@@ -5,7 +5,6 @@
     "@kitajs/html": "^4.2.9",
     "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
-    "@tw050x.net.library/secret": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
     "@tw050x.net.library/uikit": "workspace:*",
     "@tw050x.net.library/utility": "workspace:*",
@@ -22,13 +21,9 @@
   },
   "exports": {
     ".": "./artifact/index.js",
-    "./use-access-token-cookie": "./artifact/use-access-token-cookie.js",
     "./use-cors-headers": "./artifact/use-cors-headers.js",
     "./use-log-request": "./artifact/use-log-request.js",
-    "./use-login-state-cookie": "./artifact/use-login-state-cookie.js",
     "./use-pagination-query-parameters": "./artifact/use-pagination-query-parameters.js",
-    "./use-refresh-token-cookie": "./artifact/use-refresh-token-cookie.js",
-    "./use-refreshable-token-cookie": "./artifact/use-refreshable-token-cookie.js",
     "./use-ui-menu-state-cookie": "./artifact/use-ui-menu-state-cookie.js",
     "./use-ui-user-table-tools-state-cookie": "./artifact/use-ui-user-table-tools-state-cookie.js"
   },

@@ -7,6 +7,7 @@
     "@tw050x.net.database/assignment": "workspace:*",
     "@tw050x.net.database/authentication": "workspace:*",
     "@tw050x.net.database/user": "workspace:*",
+    "@tw050x.net.library/authentication": "workspace:*",
     "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/database": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",

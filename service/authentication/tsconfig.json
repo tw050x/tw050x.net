@@ -21,6 +21,10 @@
     "src/stack/login/get.tsx",
     "src/stack/login/options.ts",
     "src/stack/login/post.tsx",
+    "src/stack/oauth2/:provider/get.tsx",
+    "src/stack/oauth2/:provider/options.ts",
+    "src/stack/oauth2/callback/get.tsx",
+    "src/stack/oauth2/callback/options.ts",
     "src/stack/token/refresh/options.ts",
     "src/stack/token/refresh/post.tsx",
     "src/template/component/LoginAside.tsx",
@@ -31,6 +35,7 @@
   "references": [
     { "path": "../../database/authentication" },
     { "path": "../../database/user" },
+    { "path": "../../library/authentication" },
     { "path": "../../library/configuration" },
     { "path": "../../library/database" },
     { "path": "../../library/logger" },

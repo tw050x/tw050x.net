@@ -33,6 +33,7 @@
     "database/authentication",
     "database/payment",
     "database/user",
+    "library/authentication",
     "library/configuration",
     "library/database",
     "library/logger",

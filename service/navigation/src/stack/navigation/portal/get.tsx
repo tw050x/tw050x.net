@@ -1,10 +1,10 @@
 import { useParameter } from "@tw050x.net.library/configuration";
 import { database as accountDatabase } from "@tw050x.net.database/account";
 import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
+import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
-import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/middleware/use-access-token-cookie";
-import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { useSecret } from "@tw050x.net.library/secret";

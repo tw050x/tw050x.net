@@ -1,14 +1,14 @@
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
+import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/use-refresh-token-cookie";
+import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/authentication/use-refreshable-token-cookie";
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
-import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/middleware/use-access-token-cookie";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers"
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
-import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/middleware/use-login-state-cookie";
-import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/middleware/use-refresh-token-cookie";
-import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/middleware/use-refreshable-token-cookie";
 import { sendMessage } from "@tw050x.net.library/queue";
 import { readSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
@@ -22,7 +22,6 @@ import { generateRegisterFormNonce } from "../../helper/generate-register-form-n
 import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate.js";
 import { default as RegisterDocument } from "../../template/document/RegisterDocument.js";
 import { default as RegisterForm } from "../../template/component/RegisterForm.js";
-import { MongoLoggableComponent } from "mongodb";
 
 const postRegisterFormDataSchema = zod.object({
   email: zod.string().email('An email address is required'),

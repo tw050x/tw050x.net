@@ -2570,6 +2570,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@tw050x.net.library/authentication@workspace:*, @tw050x.net.library/authentication@workspace:library/authentication":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.library/authentication@workspace:library/authentication"
+  dependencies:
+    "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.library/configuration": "workspace:*"
+    "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/secret": "workspace:*"
+    "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/uikit": "workspace:*"
+    "@types/cookies": "npm:^0.9.0"
+    "@types/jsonwebtoken": "npm:^9"
+    "@types/node": "npm:^22.10.2"
+    cookies: "npm:^0.9.1"
+    date-fns: "npm:^4.1.0"
+    jsonwebtoken: "npm:^9.0.2"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@tw050x.net.library/configuration@workspace:*, @tw050x.net.library/configuration@workspace:library/configuration":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.library/configuration@workspace:library/configuration"
@@ -2610,7 +2630,6 @@ __metadata:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/configuration": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
-    "@tw050x.net.library/secret": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
     "@tw050x.net.library/utility": "workspace:*"
@@ -2714,6 +2733,7 @@ __metadata:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.database/authentication": "workspace:*"
     "@tw050x.net.database/user": "workspace:*"
+    "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
@@ -2771,6 +2791,7 @@ __metadata:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.database/account": "workspace:*"
     "@tw050x.net.database/assignment": "workspace:*"
+    "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
@@ -2806,6 +2827,7 @@ __metadata:
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.database/assignment": "workspace:*"
+    "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
@@ -2839,6 +2861,7 @@ __metadata:
     "@tw050x.net.database/assignment": "workspace:*"
     "@tw050x.net.database/authentication": "workspace:*"
     "@tw050x.net.database/user": "workspace:*"
+    "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"

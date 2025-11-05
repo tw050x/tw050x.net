@@ -1,7 +1,7 @@
+import { AccessTokenCookie, UseAccessTokenCookieResultingContext } from "@tw050x.net.library/authentication/use-access-token-cookie";
+import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/authentication/use-login-state-cookie";
 import { readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { AccessTokenCookie, UseAccessTokenCookieResultingContext } from "@tw050x.net.library/middleware/use-access-token-cookie";
-import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/middleware/use-login-state-cookie";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as ForbiddenDocument } from "@tw050x.net.library/uikit/document/Forbidden";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
