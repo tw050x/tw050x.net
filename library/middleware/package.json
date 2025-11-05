@@ -21,7 +21,6 @@
   },
   "exports": {
     ".": "./artifact/index.js",
-    "./use-cors-headers": "./artifact/use-cors-headers.js",
     "./use-log-request": "./artifact/use-log-request.js",
     "./use-pagination-query-parameters": "./artifact/use-pagination-query-parameters.js",
     "./use-ui-menu-state-cookie": "./artifact/use-ui-menu-state-cookie.js",

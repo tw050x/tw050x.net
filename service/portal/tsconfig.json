@@ -44,6 +44,7 @@
   "references": [
     { "path": "../../library/authentication" },
     { "path": "../../library/configuration" },
+    { "path": "../../library/cors" },
     { "path": "../../library/database" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },

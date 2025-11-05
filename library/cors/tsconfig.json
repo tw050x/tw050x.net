@@ -14,17 +14,15 @@
   ],
   "extends": "../../tsconfig.json",
   "files": [
+    "src/middleware/use-cors-headers.tsx",
     "src/index.ts",
-    "src/use-log-request.ts",
-    "src/use-pagination-query-parameters.tsx",
-    "src/use-ui-menu-state-cookie.ts",
-    "src/use-ui-user-table-tools-state-cookie.tsx",
   ],
   "references": [
     { "path": "../configuration" },
     { "path": "../logger" },
     { "path": "../secret" },
     { "path": "../service" },
+    { "path": "../uikit" },
     { "path": "../utility" },
-  ]
+  ],
 }

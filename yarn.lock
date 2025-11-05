@@ -2603,6 +2603,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@tw050x.net.library/cors@workspace:*, @tw050x.net.library/cors@workspace:library/cors":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.library/cors@workspace:library/cors"
+  dependencies:
+    "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.library/configuration": "workspace:*"
+    "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/uikit": "workspace:*"
+    "@tw050x.net.library/utility": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@tw050x.net.library/database@workspace:*, @tw050x.net.library/database@workspace:library/database":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.library/database@workspace:library/database"
@@ -2735,6 +2750,7 @@ __metadata:
     "@tw050x.net.database/user": "workspace:*"
     "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
+    "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
     "@tw050x.net.library/secret": "workspace:*"
@@ -2760,6 +2776,7 @@ __metadata:
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/configuration": "workspace:*"
+    "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
@@ -2775,6 +2792,7 @@ __metadata:
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/configuration": "workspace:*"
+    "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
@@ -2793,6 +2811,7 @@ __metadata:
     "@tw050x.net.database/assignment": "workspace:*"
     "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
+    "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
@@ -2829,6 +2848,7 @@ __metadata:
     "@tw050x.net.database/assignment": "workspace:*"
     "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
+    "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
@@ -2863,6 +2883,7 @@ __metadata:
     "@tw050x.net.database/user": "workspace:*"
     "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
+    "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"

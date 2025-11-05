@@ -2,7 +2,7 @@ import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.l
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/use-refresh-token-cookie";
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { logger } from "@tw050x.net.library/logger";
 import { readSecret, useSecret } from "@tw050x.net.library/secret";

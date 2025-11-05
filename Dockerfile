@@ -70,6 +70,12 @@ COPY --from=build /build/library/configuration/artifact /srv/library/configurati
 COPY --from=build /build/library/configuration/package.json /srv/library/configuration/package.json
 COPY --from=build /build/library/configuration/tsconfig.json /srv/library/configuration/tsconfig.json
 
+FROM node:23.11.1-alpine3.22 AS library-cors
+WORKDIR /srv
+COPY --from=build /build/library/cors/artifact /srv/library/cors/artifact
+COPY --from=build /build/library/cors/package.json /srv/library/cors/package.json
+COPY --from=build /build/library/cors/tsconfig.json /srv/library/cors/tsconfig.json
+
 FROM node:23.11.1-alpine3.22 AS library-database
 WORKDIR /srv
 COPY --from=build /build/library/database/artifact /srv/library/database/artifact
@@ -146,6 +152,7 @@ COPY --from=database-account /srv/database/account /srv/database/account
 COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
+COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
@@ -169,6 +176,7 @@ RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
+COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
 COPY --from=library-queue /srv/library/queue /srv/library/queue
@@ -189,6 +197,7 @@ RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
+COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
@@ -213,6 +222,7 @@ COPY --from=database-account /srv/database/account /srv/database/account
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
 COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
+COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
@@ -236,6 +246,7 @@ COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
 COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
+COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
@@ -261,6 +272,7 @@ COPY --from=database-authentication /srv/database/authentication /srv/database/a
 COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
+COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware

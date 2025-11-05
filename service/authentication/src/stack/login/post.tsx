@@ -4,7 +4,7 @@ import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net
 import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/authentication/use-refreshable-token-cookie";
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { database as userDatabase } from "@tw050x.net.database/user";
-import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/middleware/use-cors-headers";
+import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { logger } from "@tw050x.net.library/logger";
 import { readSecret, useSecret } from "@tw050x.net.library/secret";

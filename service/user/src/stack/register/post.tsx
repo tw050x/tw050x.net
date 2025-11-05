@@ -6,7 +6,7 @@ import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/middleware/use-cors-headers"
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers"
 import { useLogRequest } from "@tw050x.net.library/middleware";
 import { useSecret } from "@tw050x.net.library/secret";
 import { sendMessage } from "@tw050x.net.library/queue";

@@ -22,6 +22,7 @@
   ],
   "references": [
     { "path": "../../library/configuration" },
+    { "path": "../../library/cors" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
     { "path": "../../library/service" },

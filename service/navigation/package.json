@@ -8,6 +8,7 @@
     "@tw050x.net.database/assignment": "workspace:*",
     "@tw050x.net.library/authentication": "workspace:*",
     "@tw050x.net.library/configuration": "workspace:*",
+    "@tw050x.net.library/cors": "workspace:*",
     "@tw050x.net.library/database": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
     "@tw050x.net.library/middleware": "workspace:*",

@@ -1,27 +1,29 @@
 {
   "$schema": "https://json.schemastore.org/package",
   "author": "tw050x (Richard Kielty)",
-  "description": "The Marketing Service project for tw050x.net",
   "dependencies": {
     "@kitajs/html": "^4.2.9",
     "@tw050x.net.library/configuration": "workspace:*",
-    "@tw050x.net.library/cors": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
-    "@tw050x.net.library/middleware": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
-    "@tw050x.net.library/uikit": "workspace:*"
+    "@tw050x.net.library/uikit": "workspace:*",
+    "@tw050x.net.library/utility": "workspace:*"
   },
+  "description": "The @tw050x.net.library/cors package project",
   "devDependencies": {
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2"
   },
+  "exports": {
+    ".": "./artifact/index.js",
+    "./use-cors-headers": "./artifact/middleware/use-cors-headers.js"
+  },
   "license": "UNLICENSED",
-  "name": "@tw050x.net.service/marketing",
-  "private": true,
+  "name": "@tw050x.net.library/cors",
   "scripts": {
-    "nodemon": "nodemon",
     "tsc": "tsc"
   },
   "type": "module",
+  "types": "./artifact/index.d.ts",
   "version": "1.0.0"
 }

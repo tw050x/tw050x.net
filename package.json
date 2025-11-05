@@ -35,6 +35,7 @@
     "database/user",
     "library/authentication",
     "library/configuration",
+    "library/cors",
     "library/database",
     "library/logger",
     "library/middleware",
