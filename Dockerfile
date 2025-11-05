@@ -58,6 +58,12 @@ COPY --from=build /build/database/user/artifact /srv/database/user/artifact
 COPY --from=build /build/database/user/package.json /srv/database/user/package.json
 COPY --from=build /build/database/user/tsconfig.json /srv/database/user/tsconfig.json
 
+FROM node:23.11.1-alpine3.22 AS library-authentication
+WORKDIR /srv
+COPY --from=build /build/library/authentication/artifact /srv/library/authentication/artifact
+COPY --from=build /build/library/authentication/package.json /srv/library/authentication/package.json
+COPY --from=build /build/library/authentication/tsconfig.json /srv/library/authentication/tsconfig.json
+
 FROM node:23.11.1-alpine3.22 AS library-configuration
 WORKDIR /srv
 COPY --from=build /build/library/configuration/artifact /srv/library/configuration/artifact
@@ -138,6 +144,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-account /srv/database/account /srv/database/account
 COPY --from=database-user /srv/database/user /srv/database/user
+COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
@@ -204,6 +211,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-account /srv/database/account /srv/database/account
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
+COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
@@ -226,6 +234,7 @@ RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
+COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
@@ -250,6 +259,7 @@ COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
 COPY --from=database-authentication /srv/database/authentication /srv/database/authentication
 COPY --from=database-user /srv/database/user /srv/database/user
+COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configuration /srv/library/configuration /srv/library/configuration
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
