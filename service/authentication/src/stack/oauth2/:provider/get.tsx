@@ -31,9 +31,10 @@ const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
 }
 
 const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
-  cookieName: useParameter('cookie.refresh-token.name'),
   cookieDomain: useParameter('cookie.refresh-token.domain'),
   jwtSecretKey: useSecret('jwt.secret-key'),
+  refreshCookieName: useParameter('cookie.refresh-token.name'),
+  refreshableCookieName: useParameter('cookie.refreshable-token.name'),
 }
 
 export default defineServiceMiddleware([

@@ -17,9 +17,10 @@ type RefreshTokenCookie = {
 }
 
 export type UseRefreshTokenCookieOptions = {
-  cookieName: string | Parameter;
   cookieDomain: string | Parameter;
   jwtSecretKey: string | Secret;
+  refreshCookieName: string | Parameter;
+  refreshableCookieName: string | Parameter;
 }
 
 /**
@@ -51,20 +52,39 @@ type Factory = (options: UseRefreshTokenCookieOptions) => Middleware<
 export const useRefreshTokenCookie: Factory = (options) => async (context) => {
 
   // retrieve the cookie name
-  let cookieName;
+  let refreshCookieName;
   cookieNameGuard: {
-    if (isParameter(options.cookieName) === false) {
-      cookieName = options.cookieName;
+    if (isParameter(options.refreshCookieName) === false) {
+      refreshCookieName = options.refreshCookieName;
       break cookieNameGuard;
     }
     try {
-      cookieName = await readParameter(options.cookieName.key);
+      refreshCookieName = await readParameter(options.refreshCookieName.key);
     }
     catch (error) {
       logger.error(error);
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
-    if (cookieName === '') {
+    if (refreshCookieName === '') {
+      logger.error('access token cookie name is undefined or empty');
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
+    }
+  }
+
+  let refreshableCookieName;
+  cookieNameGuard: {
+    if (isParameter(options.refreshableCookieName) === false) {
+      refreshableCookieName = options.refreshableCookieName;
+      break cookieNameGuard;
+    }
+    try {
+      refreshableCookieName = await readParameter(options.refreshableCookieName.key);
+    }
+    catch (error) {
+      logger.error(error);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
+    }
+    if (refreshableCookieName === '') {
       logger.error('access token cookie name is undefined or empty');
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
@@ -113,8 +133,8 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-  const refreshTokenCookie = cookies.get(cookieName);
-  const refreshTokenRefreshableCookie = cookies.get(`${cookieName}.refreshable`);
+  const refreshTokenCookie = cookies.get(refreshCookieName);
+  const refreshTokenRefreshableCookie = cookies.get(refreshableCookieName);
 
   let refreshTokenCookieErrors: Array<Error> = [];
   let refreshTokenCookieRaw: string | undefined = refreshTokenCookie;
@@ -158,14 +178,14 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
 
   //
   const clearRefreshTokenCookie = () => {
-    cookies.set(cookieName, '', {
+    cookies.set(refreshCookieName, '', {
       domain: cookieDomain,
       httpOnly: true,
       path: '/token/refresh',
       sameSite: 'strict',
       secure: true,
     });
-    cookies.set(`${cookieName}.refreshable`, '', {
+    cookies.set(refreshableCookieName, '', {
       domain: cookieDomain,
       httpOnly: false,
       path: '/',
@@ -180,7 +200,7 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
     const expiryDate = addDays(currentDate, 7);
     const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
     const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
-    cookies.set(cookieName, value, {
+    cookies.set(refreshCookieName, value, {
       domain: cookieDomain,
       httpOnly: true,
       maxAge: maxAgeInMilliseconds,
@@ -188,7 +208,7 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
       sameSite: 'strict',
       secure: true,
     });
-    cookies.set(`${cookieName}.refreshable`, 'true', {
+    cookies.set(refreshableCookieName, 'true', {
       domain: cookieDomain,
       httpOnly: false,
       maxAge: maxAgeInMilliseconds,
