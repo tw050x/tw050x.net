@@ -12,6 +12,7 @@ type RefreshTokenCookie = {
   payload?: {
     sub: string;
   }
+  refreshable: boolean;
   raw?: string;
 }
 
@@ -112,18 +113,19 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-  const cookie = cookies.get(cookieName);
+  const refreshTokenCookie = cookies.get(cookieName);
+  const refreshTokenRefreshableCookie = cookies.get(`${cookieName}.refreshable`);
 
   let refreshTokenCookieErrors: Array<Error> = [];
-  let refreshTokenCookieRaw: string | undefined = cookie;
+  let refreshTokenCookieRaw: string | undefined = refreshTokenCookie;
   let refreshTokenCookiePayload: RefreshTokenCookie['payload'] | undefined = undefined;
   verifyCookieGuard: {
-    if (cookie === undefined) {
+    if (refreshTokenCookie === undefined) {
       break verifyCookieGuard;
     }
     let refreshTokenPayload;
     try {
-      refreshTokenPayload = jwt.verify(cookie, jwtSecretKey);
+      refreshTokenPayload = jwt.verify(refreshTokenCookie, jwtSecretKey);
     }
     catch (error) {
       logger.error(error);
@@ -145,9 +147,12 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
       sub,
     };
   }
+
+  // initialize the cookies object on the incoming message
   context.incomingMessage.refreshTokenCookie = {
     errors: refreshTokenCookieErrors,
     payload: refreshTokenCookiePayload,
+    refreshable: refreshTokenRefreshableCookie === 'true',
     raw: refreshTokenCookieRaw,
   };
 
@@ -158,6 +163,13 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
       httpOnly: true,
       path: '/token/refresh',
       sameSite: 'strict',
+      secure: true,
+    });
+    cookies.set(`${cookieName}.refreshable`, '', {
+      domain: cookieDomain,
+      httpOnly: false,
+      path: '/',
+      sameSite: 'lax',
       secure: true,
     });
   }
@@ -174,6 +186,14 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
       maxAge: maxAgeInMilliseconds,
       path: '/token/refresh',
       sameSite: 'strict',
+      secure: true,
+    });
+    cookies.set(`${cookieName}.refreshable`, 'true', {
+      domain: cookieDomain,
+      httpOnly: false,
+      maxAge: maxAgeInMilliseconds,
+      path: '/',
+      sameSite: 'lax',
       secure: true,
     });
   }

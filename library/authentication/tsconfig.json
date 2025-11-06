@@ -17,7 +17,6 @@
     "src/middleware/use-access-token-cookie.tsx",
     "src/middleware/use-login-state-cookie.tsx",
     "src/middleware/use-refresh-token-cookie.tsx",
-    "src/middleware/use-refreshable-token-cookie.tsx",
     "src/index.ts",
   ],
   "references": [

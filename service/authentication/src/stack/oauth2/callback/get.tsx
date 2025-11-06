@@ -1,7 +1,6 @@
 import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/use-refresh-token-cookie";
-import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/authentication/use-refreshable-token-cookie";
 import { useParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
@@ -12,6 +11,7 @@ import { default as ForbiddenDocument } from "@tw050x.net.library/uikit/document
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as jwt, SignOptions } from "jsonwebtoken";
 import { generateLoginFormNonce } from '../../../helper/generate-login-form-nonce.js';
+import { useLoginEnabledGate } from "../../../middleware/use-login-enabled-gate.js";
 import { default as LoginDocument } from "../../../template/document/LoginDocument.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
@@ -37,31 +37,14 @@ const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useRefreshableTokenCookieOptions: UseRefreshableTokenCookieOptions = {
-  cookieName: useParameter('cookie.refreshable-token.name'),
-  cookieDomain: useParameter('cookie.refreshable-token.domain'),
-}
-
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-
-  // Render the login page in a disabled state if it is not enabled
-  async (context) => {
-    const loginEnabled = await readParameter('authentication.service.login-enabled');
-    if (loginEnabled === 'false') {
-      const loginAsideProps = {
-        disabled: true,
-        message: 'Login is currently disabled.',
-      } as const;
-      return void context.serverResponse.sendOKHTMLResponse(<LoginDocument loginAsideProps={loginAsideProps} />);
-    }
-  },
+  useLoginEnabledGate(),
 
   useAccessTokenCookie(useAccessTokenCookieOptions),
   useLoginStateCookie(useLoginStateCookieOptions),
   useRefreshTokenCookie(useRefreshTokenCookieOptions),
-  useRefreshableTokenCookie(useRefreshableTokenCookieOptions),
 
   // check if the user has a valid access token
   // async (context) => {
@@ -70,9 +53,8 @@ export default defineServiceMiddleware([
 
   // check if the user has a valid refresh token
   async (context) => {
-    const refreshableTokenCookie = context.incomingMessage.refreshableTokenCookie.raw;
     refreshAuthenticationGuard: {
-      if (typeof refreshableTokenCookie !== 'string' || refreshableTokenCookie !== 'true') {
+      if (context.incomingMessage.refreshTokenCookie.refreshable !== true) {
         logger.debug('User is not authenticated');
         break refreshAuthenticationGuard;
       }
@@ -83,7 +65,7 @@ export default defineServiceMiddleware([
       const refreshTokenCookie = context.incomingMessage.refreshTokenCookie.raw;
       if (typeof refreshTokenCookie !== 'string') {
         logger.debug('Refresh token cookie is not set');
-        context.serverResponse.refreshableTokenCookie.clear();
+        context.serverResponse.refreshTokenCookie.clear();
         break refreshAuthenticationGuard;
       }
 
@@ -102,7 +84,6 @@ export default defineServiceMiddleware([
       }
       catch (error) {
         logger.error(error);
-        context.serverResponse.refreshableTokenCookie.clear();
         context.serverResponse.refreshTokenCookie.clear();
         return void context.serverResponse.sendForbiddenHTMLResponse(<ForbiddenDocument />);
       }

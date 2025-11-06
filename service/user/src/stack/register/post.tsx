@@ -1,7 +1,6 @@
 import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/use-refresh-token-cookie";
-import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/authentication/use-refreshable-token-cookie";
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
@@ -54,11 +53,6 @@ const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useRefreshableTokenCookieOptions: UseRefreshableTokenCookieOptions = {
-  cookieName: useParameter('cookie.refreshable-token.name'),
-  cookieDomain: useParameter('cookie.refreshable-token.domain'),
-}
-
 const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {
   getResponseHtml: async () => (
     <RegisterDocument
@@ -76,7 +70,6 @@ export default defineServiceMiddleware([
   useAccessTokenCookie(useAccessTokenCookieOptions),
   useLoginStateCookie(useLoginStateCookieOptions),
   useRefreshTokenCookie(useRefreshTokenCookieOptions),
-  useRefreshableTokenCookie(useRefreshableTokenCookieOptions),
   useRegistrationEnabledGate(useRegistrationEnabledGateOptions),
 
   // Handle the registration form submission
@@ -261,7 +254,6 @@ export default defineServiceMiddleware([
     };
     const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
     const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
-    context.serverResponse.refreshableTokenCookie.set('true');
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();;

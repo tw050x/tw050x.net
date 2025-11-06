@@ -16,7 +16,7 @@ type Props = {
  * @param props
  * @returns {JSX.Element}
  */
-const LoginDocument: Component<Props> = ({ loginAsideProps}) => {
+const LoginDocument: Component<Props> = ({ loginAsideProps }) => {
   return (
     <>
       {'<!doctype html>'}

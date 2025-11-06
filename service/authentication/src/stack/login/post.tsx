@@ -1,7 +1,6 @@
 import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/use-refresh-token-cookie";
-import { UseRefreshableTokenCookieOptions, useRefreshableTokenCookie } from "@tw050x.net.library/authentication/use-refreshable-token-cookie";
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { database as userDatabase } from "@tw050x.net.database/user";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
@@ -15,6 +14,7 @@ import { default as jwt, SignOptions } from "jsonwebtoken";
 import { default as validator } from "validator";
 import { default as zod, ZodError } from "zod";
 import { generateLoginFormNonce } from "../../helper/generate-login-form-nonce.js";
+import { useLoginEnabledGate } from "../../middleware/use-login-enabled-gate.js";
 import { default as LoginForm } from "../../template/component/LoginForm.js";
 
 const postLoginFormDataSchema = zod.object({
@@ -45,28 +45,13 @@ const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
-const useRefreshableTokenCookieOptions: UseRefreshableTokenCookieOptions ={
-  cookieName: useParameter('cookie.refreshable-token.name'),
-  cookieDomain: useParameter('cookie.refreshable-token.domain'),
-}
-
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
   useAccessTokenCookie(useAccessTokenCookieOptions),
   useLoginStateCookie(useLoginStateCookieOptions),
   useRefreshTokenCookie(useRefreshTokenCookieOptions),
-  useRefreshableTokenCookie(useRefreshableTokenCookieOptions),
-
-  // Render the login page in a disabled if it is not enabled
-  async (context) => {
-    const loginEnabled = await readParameter('authentication.service.login-enabled');
-    if (loginEnabled === 'false') {
-      return void context.serverResponse.sendOKHTMLResponse(
-        <span>Login is currently disabled</span>
-      );
-    }
-  },
+  useLoginEnabledGate(),
 
   // Handle the login form submission
   async (context) => {
@@ -186,7 +171,6 @@ export default defineServiceMiddleware([
     const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
 
     // set the cookies on the response and clear the login state cookie
-    context.serverResponse.refreshableTokenCookie.set('true');
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();

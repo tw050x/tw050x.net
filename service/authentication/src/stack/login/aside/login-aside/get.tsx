@@ -5,6 +5,7 @@ import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { generateLoginFormNonce } from '../../../../helper/generate-login-form-nonce.js';
+import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
 import { default as LoginAside } from "../../../../template/component/LoginAside.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
@@ -15,14 +16,7 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-
-  // Render the login page in a disabled if it is not enabled
-  async (context) => {
-    const loginEnabled = await readParameter('authentication.service.login-enabled');
-    if (loginEnabled === 'false') {
-      return void context.serverResponse.sendOKHTMLResponse(<LoginAside disabled={true} message="Login is currently disabled." />);
-    }
-  },
+  useLoginEnabledGate(),
 
   // Render the login aside
   async (context) => {

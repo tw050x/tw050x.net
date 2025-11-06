@@ -69,12 +69,12 @@ export const useUIMenuStateCookie: Factory = (options) => async (context) => {
   const cookie = cookies.get(cookieName);
 
   //
-  const refreshableTokenCookie: UIMenuStateCookie = {
+  const uiMenuStateCookie: UIMenuStateCookie = {
     raw: cookie,
     state: 'collapsed',
   }
   if (cookie === 'open') {
-    refreshableTokenCookie.state = 'open';
+    uiMenuStateCookie.state = 'open';
   }
-  context.incomingMessage.uiMenuStateCookie = refreshableTokenCookie
+  context.incomingMessage.uiMenuStateCookie = uiMenuStateCookie
 }
