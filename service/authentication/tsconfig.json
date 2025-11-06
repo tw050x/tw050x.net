@@ -30,6 +30,7 @@
     "src/helper/generate-login-form-nonce.ts",
     "src/middleware/use-login-enabled-gate.tsx",
     "src/middleware/use-login-state-gate.tsx",
+    "src/middleware/use-refresh-token-gate.tsx",
     "src/stack/generate/nonce/options.ts",
     "src/stack/generate/nonce/post.ts",
     "src/stack/login/aside/login-aside/get.tsx",

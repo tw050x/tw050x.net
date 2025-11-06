@@ -7,11 +7,10 @@ import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { default as ForbiddenDocument } from "@tw050x.net.library/uikit/document/Forbidden";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { default as jwt, SignOptions } from "jsonwebtoken";
 import { generateLoginFormNonce } from '../../../helper/generate-login-form-nonce.js';
 import { useLoginEnabledGate } from "../../../middleware/use-login-enabled-gate.js";
+import { useRefreshTokenGate } from "../../../middleware/use-refresh-token-gate.js";
 import { default as LoginDocument } from "../../../template/document/LoginDocument.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
@@ -51,58 +50,7 @@ export default defineServiceMiddleware([
   // TODO: implement access token check
   // },
 
-  // check if the user has a valid refresh token
-  async (context) => {
-    refreshAuthenticationGuard: {
-      if (context.incomingMessage.refreshTokenCookie.refreshable !== true) {
-        logger.debug('User is not authenticated');
-        break refreshAuthenticationGuard;
-      }
-      logger.debug('User is already authenticated');
-
-      // if refresh token cookie is not set
-      // then clear the refreshable token cookie and break out of the guard
-      const refreshTokenCookie = context.incomingMessage.refreshTokenCookie.raw;
-      if (typeof refreshTokenCookie !== 'string') {
-        logger.debug('Refresh token cookie is not set');
-        context.serverResponse.refreshTokenCookie.clear();
-        break refreshAuthenticationGuard;
-      }
-
-      // if JWT secret key is not set then return an internal server error
-      const jwtSecretKey = await readParameter('jwt.secret-key')
-      if (jwtSecretKey === undefined) {
-        logger.error('JWT secret key is not set');
-        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
-      }
-
-      // verify the refresh token
-      // if it fails then clear the refreshable token cookie and return a forbidden error
-      let refreshTokenPayload;
-      try {
-        refreshTokenPayload = jwt.verify(refreshTokenCookie, jwtSecretKey);
-      }
-      catch (error) {
-        logger.error(error);
-        context.serverResponse.refreshTokenCookie.clear();
-        return void context.serverResponse.sendForbiddenHTMLResponse(<ForbiddenDocument />);
-      }
-
-      // create the access token cookie
-      const accessTokenOptions: SignOptions = {
-        expiresIn: '1d',
-      };
-      const accessTokenPayload = {
-        sub: refreshTokenPayload.sub
-      };
-      const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
-      const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
-      context.serverResponse.accessTokenCookie.set(accessToken);
-      context.serverResponse.loginStateCookie.clear();
-      logger.debug('User authentication refreshed, redirecting to return URL');
-      return void context.serverResponse.sendFoundRedirect(returnUrl);
-    }
-  },
+  useRefreshTokenGate(),
 
   // user is not authenticated and does not have a valid refresh token
   async (context) => {

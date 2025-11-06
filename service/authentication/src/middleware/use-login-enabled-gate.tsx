@@ -1,5 +1,5 @@
-import { Middleware } from "@tw050x.net.library/service";
 import { readParameter } from "@tw050x.net.library/configuration";
+import { Middleware } from "@tw050x.net.library/service";
 import { default as LoginDocument } from "../template/document/LoginDocument.js";
 
 /**
