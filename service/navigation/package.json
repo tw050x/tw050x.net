@@ -15,7 +15,8 @@
     "@tw050x.net.library/secret": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
     "@tw050x.net.library/uikit": "workspace:*",
-    "cookies": "^0.9.1"
+    "cookies": "^0.9.1",
+    "terser": "^5.44.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5",

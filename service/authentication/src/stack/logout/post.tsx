@@ -1,23 +1,20 @@
 import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
-import { useParameter, readParameter } from "@tw050x.net.library/configuration";
+import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
+import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
-import { useLogRequest } from "@tw050x.net.library/middleware";
+import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useAuthGate } from "../../middleware/use-auth-gate.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ['GET', 'OPTIONS'],
-  allowedOrigins: useParameter('portal.service.allowed-origins'),
+  allowedMethods: ['GET', 'OPTIONS', 'POST'],
+  allowedOrigins: useParameter('authentication.service.allowed-origins'),
 }
 
 const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
   cookieName: useParameter('cookie.access-token.name'),
   cookieDomain: useParameter('cookie.access-token.domain'),
-  requiredPermissions: [
-    'read:portal:users-page',
-  ],
   jwtSecretKey: useSecret('jwt.secret-key'),
 }
 
@@ -27,15 +24,31 @@ const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
   encrypterSecretKey: useSecret('encrypter.secret-key'),
 }
 
+const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
+  cookieDomain: useParameter('cookie.refresh-token.domain'),
+  jwtSecretKey: useSecret('jwt.secret-key'),
+  refreshCookieName: useParameter('cookie.refresh-token.name'),
+  refreshableCookieName: useParameter('cookie.refreshable-token.name'),
+}
+
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
   useAccessTokenCookie(useAccessTokenCookieOptions),
   useLoginStateCookie(useLoginStateCookieOptions),
-  useAuthGate(),
+  useRefreshTokenCookie(useRefreshTokenCookieOptions),
+
+  // Handle the login form submission
   async (context) => {
-    return void context.serverResponse.sendMovedPermanentlyRedirect(
-      new URL('/portal/dashboard', `https://${await readParameter('portal.service.host')}`)
-    );
-  }
+
+    // clear cookies on the response
+    context.serverResponse.refreshTokenCookie.clear();
+    context.serverResponse.accessTokenCookie.clear();
+    context.serverResponse.loginStateCookie.clear();
+
+    // redirect to the home page;
+    return void context.serverResponse.sendSeeOtherRedirect(
+      new URL('/', `https://${await readParameter('authentication.service.host')}`)
+    )
+  },
 ])

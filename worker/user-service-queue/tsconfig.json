@@ -11,6 +11,7 @@
     "src/run.ts"
   ],
   "references": [
+    { "path": "../../database/assignment" },
     { "path": "../../database/user" },
     { "path": "../../library/configuration" },
     { "path": "../../library/database" },

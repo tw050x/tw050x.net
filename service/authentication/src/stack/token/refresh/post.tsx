@@ -1,6 +1,6 @@
-import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/use-access-token-cookie";
-import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
-import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/use-refresh-token-cookie";
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
+import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
@@ -11,7 +11,7 @@ import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/docu
 import { default as jwt, SignOptions } from "jsonwebtoken";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ['GET', 'OPTIONS', 'POST'],
+  allowedMethods: ['OPTIONS', 'POST'],
   allowedOrigins: useParameter('authentication.service.allowed-origins'),
 }
 

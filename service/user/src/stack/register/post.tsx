@@ -1,6 +1,6 @@
-import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/use-access-token-cookie";
-import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
-import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/use-refresh-token-cookie";
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
+import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
@@ -223,7 +223,7 @@ export default defineServiceMiddleware([
       const eventQueueUrl = await readParameter('user.service.event-queue-url');
       await sendMessage(
         new URL(eventQueueUrl),
-        { eventType: 'UserRegistered', userProfileId },
+        { eventType: 'UserRegistered', userProfileId, userProfileUuid },
         { MessageType: { DataType: 'String', StringValue: 'UserRegistered' } }
       );
     }

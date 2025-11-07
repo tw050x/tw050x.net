@@ -1,8 +1,7 @@
 import { Component } from "@kitajs/html";
 import { default as AnchoredBar } from "@tw050x.net.library/uikit/component/AnchoredBar";
 import { default as Header } from "@tw050x.net.library/uikit/component/Header";
-import { default as Htmx } from "@tw050x.net.library/uikit/component/Htmx";
-import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Stylesheet";
+import { default as Head } from "@tw050x.net.library/uikit/component/Head";
 import { default as MenuInitiator, Props as MenuInitiatorProps } from "../component/MenuInitiator.js";
 import { default as UserTable, Props as UserTableProps } from "../component/UserTable.js";
 import { default as UserTableTools, Props as UserTableToolsProps } from "../component/UserTableTools.js";
@@ -27,14 +26,7 @@ const Users: Component<Props> = (props) => {
     <>
       {'<!doctype html>'}
       <html lang="en">
-        <head>
-          <base href="/" />
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>Users | Portal</title>
-          <Htmx />
-          <Stylesheet />
-        </head>
+        <Head title="Users | Portal" />
         <body>
           <MenuInitiator {...props.menuInitiatorProps} />
           <main>

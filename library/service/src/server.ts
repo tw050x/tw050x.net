@@ -48,6 +48,8 @@ export default function createServer(options: CreateServerOptions) {
     server.listen(options.port, callback);
   }
 
+  logger.debug(`Begin discovery of routes in ${options.routesDirectory}`)
+
   // Load and register routes
   discoverRoutes(options.routesDirectory).then((discoveredRoutes) => {
     discoveredRoutes.forEach(route => {

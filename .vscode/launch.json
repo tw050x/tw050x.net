@@ -1,5 +1,112 @@
 {
   "configurations": [
+
+    // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    // Services
+    // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    // Authentication Service
+    {
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to Authentication Service",
+      "port": 9201,
+      "request": "attach",
+      "restart": true,
+      "sourceMaps": true,
+      "remoteRoot": "/srv",
+      "timeout": 10000,
+      "type": "node",
+    },
+
+    // Error Service
+    {
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to Error Service",
+      "port": 9202,
+      "request": "attach",
+      "restart": true,
+      "sourceMaps": true,
+      "remoteRoot": "/srv",
+      "timeout": 10000,
+      "type": "node",
+    },
+
+    // Marketing Service
+    {
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to Marketing Service",
+      "port": 9203,
+      "request": "attach",
+      "restart": true,
+      "sourceMaps": true,
+      "remoteRoot": "/srv",
+      "timeout": 10000,
+      "type": "node",
+    },
+
+    //
+    // Navigation Service
+    {
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to Navigation Service",
+      "port": 9204,
+      "request": "attach",
+      "restart": true,
+      "sourceMaps": true,
+      "remoteRoot": "/srv",
+      "timeout": 10000,
+      "type": "node",
+    },
+
+    // Portal Service
+    {
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to Portal Service",
+      "port": 9205,
+      "request": "attach",
+      "restart": true,
+      "sourceMaps": true,
+      "remoteRoot": "/srv",
+      "timeout": 10000,
+      "type": "node",
+    },
+
+    // User Service
+    {
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to User Service",
+      "port": 9206,
+      "request": "attach",
+      "restart": true,
+      "sourceMaps": true,
+      "remoteRoot": "/srv",
+      "timeout": 10000,
+      "type": "node",
+    },
+
+    // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+    // Workers
+    // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    // User Service Queue Worker
+    {
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to User Service Queue Worker",
+      "port": 9301,
+      "request": "attach",
+      "restart": true,
+      "sourceMaps": true,
+      "remoteRoot": "/srv",
+      "timeout": 10000,
+      "type": "node",
+    },
   ],
   "version": "0.2.0"
 }

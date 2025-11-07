@@ -2586,6 +2586,7 @@ __metadata:
     cookies: "npm:^0.9.1"
     date-fns: "npm:^4.1.0"
     jsonwebtoken: "npm:^9.0.2"
+    terser: "npm:^5.44.0"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
@@ -2715,6 +2716,7 @@ __metadata:
     "@types/node": "npm:^22.10.2"
     htmx-ext-response-targets: "npm:^2.0.1"
     htmx.org: "npm:^2.0.4"
+    terser: "npm:^5.44.0"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
@@ -2764,6 +2766,7 @@ __metadata:
     bcryptjs: "npm:^3.0.2"
     jsonwebtoken: "npm:^9.0.2"
     mongodb: "npm:^6.12.0"
+    terser: "npm:^5.44.0"
     typescript: "npm:^5.7.2"
     validator: "npm:^13.12.0"
     zod: "npm:^3.24.2"
@@ -2791,6 +2794,7 @@ __metadata:
   resolution: "@tw050x.net.service/marketing@workspace:service/marketing"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configuration": "workspace:*"
     "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
@@ -2824,6 +2828,7 @@ __metadata:
     "@types/node": "npm:^22.10.2"
     "@types/validator": "npm:^13.12.2"
     cookies: "npm:^0.9.1"
+    terser: "npm:^5.44.0"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft

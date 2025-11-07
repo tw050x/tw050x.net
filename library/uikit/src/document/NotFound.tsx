@@ -1,5 +1,4 @@
-import { default as Htmx } from "../component/Htmx.js";
-import { default as Stylesheet } from "../component/Stylesheet.js";
+import { default as Head } from "../component/Head.js";
 
 /**
  * The `<NotFoundDocument />` component.
@@ -10,14 +9,7 @@ export default function NotFoundDocument() {
     <>
       {'<!doctype html>'}
       <html lang="en">
-        <head>
-          <base href="/" />
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>Not Found</title>
-          <Htmx />
-          <Stylesheet />
-        </head>
+        <Head title="Not Found" />
         <body>
           <div class="flex flex-col px-8 pt-8">
             <h1 class="text-4xl">Not Found</h1>

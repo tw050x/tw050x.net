@@ -20,7 +20,13 @@ if (process.env.NODE_ENV !== 'production') {
     new transports.Console({
       format: format.combine(
         format.errors({ stack: true }),
-        format.simple(),
+        format.timestamp(),
+        format.printf(({ level, message, timestamp }) => {
+          if (level === 'debug') {
+            return `${level}: ${message}`;
+          }
+          return `${level}: ${message} ${timestamp}`;
+        }),
       ),
       level: 'debug',
     })

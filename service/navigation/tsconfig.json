@@ -17,7 +17,7 @@
     "src/middleware/use-auth-gate.tsx",
     "src/stack/navigation/portal/get.tsx",
     "src/stack/navigation/portal/options.ts",
-    "src/template/component/Menu.tsx",
+    "src/template/component/PortalMenu.tsx",
     "src/serve.ts",
   ],
   "references": [

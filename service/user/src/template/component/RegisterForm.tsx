@@ -1,19 +1,11 @@
 import { Component } from "@kitajs/html";
+import { logger } from "@tw050x.net.library/logger";
+import { default as readScript } from "@tw050x.net.library/uikit/read-script";
 import { default as EmailAddressField } from "@tw050x.net.library/uikit/component/Form/EmailAddressField";
 import { default as PasswordField } from "@tw050x.net.library/uikit/component/Form/PasswordField";
 import { default as Button } from "@tw050x.net.library/uikit/component/Button";
 import { default as Notice } from "@tw050x.net.library/uikit/component/Notice";
-import { readFileSync } from "node:fs";
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from 'node:url';
-import { minify_sync } from "terser";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Read the external JavaScript file for toggling password visibility
-// and minify its contents.
-const togglePasswordVisibilityScript = minify_sync(readFileSync(resolve(__dirname, 'toggle-password-visibility.js'), 'utf8')).code;
 
 /**
  * Props for the `<RegisterForm />` component.
@@ -43,6 +35,16 @@ const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = 
     );
   }
 
+  // Load the toggle-password-visibility-and-password-confirmation-visibility script
+  let togglePasswordVisibilityAndPasswordConfirmationVisibilityScript
+  try {
+    togglePasswordVisibilityAndPasswordConfirmationVisibilityScript = readScript("toggle-password-and-password-confirmation-visibility");
+  }
+  catch (error) {
+    logger.debug("Failed to load toggle-password-visibility-and-password-confirmation-visibility script");
+    logger.error(error);
+  }
+
   return (
     <div id="register-form">
       <form
@@ -70,7 +72,7 @@ const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = 
       </form>
       {safeFormValidationErrors}
       <script>
-        {togglePasswordVisibilityScript}
+        {togglePasswordVisibilityAndPasswordConfirmationVisibilityScript}
       </script>
     </div>
   );

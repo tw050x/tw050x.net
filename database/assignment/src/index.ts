@@ -10,6 +10,7 @@ interface AssignmentTaskDocumentBase extends DatabaseDocument {
   label: string;
   reason: string;
   userProfileId: ObjectId;
+  userProfileUuid: string;
 }
 
 //

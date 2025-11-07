@@ -1,5 +1,6 @@
 import { Component } from "@kitajs/html";
 import { assertUnreachable } from "@tw050x.net.library/utility/assert-unreachable";
+import { default as readScript } from "../read-script.js";
 
 /**
  * Props for the `<AnchoredBar />` component.
@@ -29,6 +30,16 @@ const AnchoredBar: Component<Props> = (props) => {
       assertUnreachable(props.position);
   }
 
+  //
+  let anchoredBarEventListenerScript;
+  try {
+    anchoredBarEventListenerScript = readScript("anchored-bar-event-listener");
+  }
+  catch (error) {
+    console.debug("Failed to load anchored-bar-event-listener script");
+    console.error(error);
+  }
+
   return (
     <div
       class={["bg-white border-gray-200 z-30 px-4 py-4", positionalClasses]}
@@ -39,15 +50,7 @@ const AnchoredBar: Component<Props> = (props) => {
         {props.children}
       </div>
       <script>
-        {`
-          document.addEventListener('DOMContentLoaded', function() {
-            const bar = document.querySelector('div[data-component="anchored-bar"]#${props.id}');
-            if (bar) {
-              const height = bar.offsetHeight;
-              document.documentElement.style.setProperty('--anchored-bar-height--${props.id}', height + 'px');
-            }
-          });
-        `}
+        {anchoredBarEventListenerScript?.replace('{{ID_TO_REPLACE}}', props.id)}
       </script>
     </div>
   )

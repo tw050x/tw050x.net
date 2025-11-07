@@ -2,7 +2,7 @@
 services:
 
   user-service-queue:
-    command: [ "yarn", "workspace", "@tw050x.net.worker/user-service-queue", "run", "nodemon", "--watch", "/srv", "artifact/run.js" ]
+    command: [ "yarn", "workspace", "@tw050x.net.worker/user-service-queue", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/run.js" ]
     depends_on:
       localstack:
         condition: service_healthy
@@ -22,7 +22,9 @@ services:
     #   retries: 5
     #   start_period: 30s
     image: tw050x.net.worker/user-service-queue:latest
-    mem_limit: 200mb
+    mem_limit: 512mb
+    ports:
+      - "9301:9229"
     pull_policy: never
     volumes:
       - source: ./tsconfig.json

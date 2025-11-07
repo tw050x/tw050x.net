@@ -21,6 +21,7 @@
     "src/serve.ts",
   ],
   "references": [
+    { "path": "../../library/authentication" },
     { "path": "../../library/configuration" },
     { "path": "../../library/cors" },
     { "path": "../../library/logger" },

@@ -1,6 +1,6 @@
-import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/use-access-token-cookie";
-import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
-import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/use-refresh-token-cookie";
+import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
+import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
 import { readParameter, useParameter } from "@tw050x.net.library/configuration";
 import { database as userDatabase } from "@tw050x.net.database/user";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
@@ -155,21 +155,23 @@ export default defineServiceMiddleware([
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
-    // create authentication cookies and set them on the response
-    const refreshTokenOptions: SignOptions = {
-      expiresIn: '4w',
-    };
-    const refreshTokenPayload = {
-      sub: userProfileDocument.uuid
-    };
+    // generate a new access token
     const accessTokenOptions: SignOptions = {
       expiresIn: '1d',
     };
     const accessTokenPayload = {
       sub: userProfileDocument.uuid
     };
-    const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
     const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
+
+    // generate a new refresh token
+    const refreshTokenOptions: SignOptions = {
+      expiresIn: '4w',
+    };
+    const refreshTokenPayload = {
+      sub: userProfileDocument.uuid
+    };
+    const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
 
     // set the cookies on the response and clear the login state cookie
     context.serverResponse.refreshTokenCookie.set(refreshToken);

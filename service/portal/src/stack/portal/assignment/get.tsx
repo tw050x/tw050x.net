@@ -1,6 +1,6 @@
-import { collectionMeta as assignmentCollectionMeta, database as assignmentDatabase } from "@tw050x.net.database/assignment";
-import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/use-access-token-cookie";
-import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
+import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
+import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
 import { useParameter } from "@tw050x.net.library/configuration";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
@@ -12,15 +12,9 @@ import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.librar
 import { useSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { z } from "zod";
 import { useAuthGate } from "../../../middleware/use-auth-gate.js";
 import { default as Assignment, Props as AssignmentDocumentProps } from "../../../template/document/Assignment.js";
 import { AssignmentTaskWithTemplate } from "../../../template/component/AssignmentTaskTable.js";
-
-const getQuerySchema = z.object({
-  pi: z.preprocess((value) => parseInt(value as string, 10), z.number().int().nonnegative()),
-  ps: z.preprocess((value) => parseInt(value as string, 10), z.number().int().positive()),
-});
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS'],
@@ -68,12 +62,9 @@ export default defineServiceMiddleware([
 
   // handle request
   async (context) => {
-    let assignmentTasksTemplate;
-
-    // console.log('context.incomingMessage.query', context.incomingMessage.query)
-
+    let assignmentTasks;
     try {
-      assignmentTasksTemplate = await assignmentDatabase.task.aggregate<AssignmentTaskWithTemplate>(
+      assignmentTasks = await assignmentDatabase.task.aggregate<AssignmentTaskWithTemplate>(
         sanitizeMongoDBFilterOrPipeline([
           {
             $match: {
@@ -86,20 +77,6 @@ export default defineServiceMiddleware([
           },
           {
             $skip: context.incomingMessage.query.parameters.pageIndex * context.incomingMessage.query.parameters.pageSize,
-          },
-          {
-            $lookup: {
-              from: assignmentCollectionMeta.taskTemplate.name,
-              localField: 'assignmentTaskTemplateUuid',
-              foreignField: 'uuid',
-              as: 'template'
-            }
-          },
-          {
-            $unwind: {
-              path: '$template',
-              preserveNullAndEmptyArrays: true
-            }
           }
         ])
       )
@@ -109,10 +86,10 @@ export default defineServiceMiddleware([
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
 
-    //
+    // fetch tasks from database
     let tasks: Array<AssignmentTaskWithTemplate> = [];
     try {
-      tasks = await assignmentTasksTemplate.toArray();
+      tasks = await assignmentTasks.toArray();
     }
     catch (error) {
       logger.error(error);

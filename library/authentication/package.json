@@ -10,7 +10,8 @@
     "@tw050x.net.library/uikit": "workspace:*",
     "cookies": "^0.9.1",
     "date-fns": "^4.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "terser": "^5.44.0"
   },
   "description": "The @tw050x.net.library/authentication package project",
   "devDependencies": {
@@ -21,10 +22,10 @@
   },
   "exports": {
     ".": "./artifact/index.js",
-    "./use-access-token-cookie": "./artifact/middleware/use-access-token-cookie.js",
-    "./use-login-state-cookie": "./artifact/middleware/use-login-state-cookie.js",
-    "./use-refresh-token-cookie": "./artifact/middleware/use-refresh-token-cookie.js",
-    "./use-refreshable-token-cookie": "./artifact/middleware/use-refreshable-token-cookie.js"
+    "./component/RefreshAuthenticationTokens": "./artifact/component/RefreshAuthenticationTokens.js",
+    "./middleware/use-access-token-cookie": "./artifact/middleware/use-access-token-cookie.js",
+    "./middleware/use-login-state-cookie": "./artifact/middleware/use-login-state-cookie.js",
+    "./middleware/use-refresh-token-cookie": "./artifact/middleware/use-refresh-token-cookie.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/authentication",

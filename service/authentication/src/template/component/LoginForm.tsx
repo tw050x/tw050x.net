@@ -1,4 +1,6 @@
 import { Component } from "@kitajs/html";
+import { logger } from "@tw050x.net.library/logger";
+import { default as readScript } from "@tw050x.net.library/uikit/read-script";
 import { default as EmailAddressField } from "@tw050x.net.library/uikit/component/Form/EmailAddressField";
 import { default as PasswordField } from "@tw050x.net.library/uikit/component/Form/PasswordField";
 import { default as Button } from "@tw050x.net.library/uikit/component/Button";
@@ -20,7 +22,6 @@ export type Props = {
  * @returns {JSX.Element}
  */
 const LoginForm: Component<Props> = ({ email = '', nonce, validationErrors = [] }) => {
-
   let safeFormValidationErrors;
   formValidationErrorsGuard: {
     if (validationErrors.length === 0) break formValidationErrorsGuard;
@@ -31,6 +32,16 @@ const LoginForm: Component<Props> = ({ email = '', nonce, validationErrors = [] 
         </Notice>
       </div>
     );
+  }
+
+  // Load the toggle-password-visibility script
+  let togglePasswordVisibilityScript
+  try {
+    togglePasswordVisibilityScript = readScript("toggle-password-visibility");
+  }
+  catch (error) {
+    logger.debug("Failed to load toggle-password-visibility script");
+    logger.error(error);
   }
 
   return (
@@ -63,22 +74,7 @@ const LoginForm: Component<Props> = ({ email = '', nonce, validationErrors = [] 
         <input type="hidden" name="nonce" value={nonce} />
       </form>
       <script>
-        {`
-          function togglePasswordVisibility() {
-            const passwordInput = document.getElementById('password').getElementsByTagName('input')[0];
-            const passwordInputIcon = passwordInput.nextElementSibling;
-
-            if (passwordInput.type === 'text') {
-              passwordInputIcon.querySelector('#eye-closed-icon').classList.remove('hidden');
-              passwordInputIcon.querySelector('#eye-open-icon').classList.add('hidden');
-            }
-            else {
-              passwordInputIcon.querySelector('#eye-closed-icon').classList.add('hidden');
-              passwordInputIcon.querySelector('#eye-open-icon').classList.remove('hidden');
-            }
-            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-          }
-        `}
+        {togglePasswordVisibilityScript}
       </script>
     </>
   );

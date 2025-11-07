@@ -6,7 +6,7 @@ nav {
   @apply inset-shadow-black shadow-[inset_-16px_0_16px_-8px_rgba(0,0,0,0.9)];
 }
 nav[data-state="collapsed"] {
-  @apply w-16;
+  @apply w-10;
 }
 nav[data-state="collapsed"] span.hidden-when-w-16 {
   @apply opacity-0 invisible;
@@ -19,10 +19,10 @@ nav[data-state="collapsed"] ~ main {
   @apply max-sm:w-[calc(100%-theme(spacing.16))];
 }
 nav[data-state="open"] {
-  @apply w-64;
+  @apply w-36;
 }
 nav[data-state="open"] ~ main {
-  @apply ml-64;
+  @apply ml-36;
   @apply max-sm:w-[calc(100%-theme(spacing.16))];
 }
 nav[data-state="open"] span.hidden-when-data-state-open {
@@ -58,9 +58,12 @@ nav a.attention .portal-menu-icon {
   }
 }
 nav .portal-menu-icon {
-  @apply w-6 h-6 ml-0.5 mr-2;
+  @apply w-4 h-4 ml-1 mr-2;
   @apply inline-block;
   @apply align-middle;
+}
+nav .portal-menu-icon svg {
+  @apply w-full h-full;
 }
 nav .portal-menu-text {
   @apply align-middle;

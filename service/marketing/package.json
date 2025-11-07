@@ -4,6 +4,7 @@
   "description": "The Marketing Service project for tw050x.net",
   "dependencies": {
     "@kitajs/html": "^4.2.9",
+    "@tw050x.net.library/authentication": "workspace:*",
     "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/cors": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",

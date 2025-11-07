@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
     "jsx": "react-jsx",
     "jsxImportSource": "@kitajs/html",
     "outDir": "./artifact",
@@ -21,7 +23,6 @@
     "src/stack/register/post.tsx",
     "src/template/component/RegisterAside.tsx",
     "src/template/component/RegisterForm.tsx",
-    "src/template/component/toggle-password-visibility.ts",
     "src/template/document/RegisterDocument.tsx",
     "src/serve.ts",
   ],

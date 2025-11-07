@@ -1,27 +1,26 @@
 import { Component } from "@kitajs/html";
-import { default as Htmx } from "@tw050x.net.library/uikit/component/Htmx";
-import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Stylesheet";
+import { default as RefreshAuthenticationTokens } from "@tw050x.net.library/authentication/component/RefreshAuthenticationTokens";
+import { default as Head } from "@tw050x.net.library/uikit/component/Head";
 
+/**
+ * Props for the `<HomeDocument />` component.
+ */
 type Props = {};
 
 /**
+ * The `<HomeDocument />` component.
  *
+ * @param props
+ * @returns {JSX.Element}
  */
 const HomeDocument: Component<Props> = () => {
   return (
     <>
       {'<!doctype html>'}
       <html lang="en">
-        <head>
-          <base href="/" />
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>Home</title>
-
-          <Htmx />
-          <Stylesheet />
-        </head>
+        <Head title="Home" />
         <body>
+          <RefreshAuthenticationTokens />
           <div class="flex flex-col px-8 pt-8">
             <h1 class="text-4xl">Home</h1>
           </div>

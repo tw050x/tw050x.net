@@ -1,7 +1,11 @@
-import { readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { logger } from "@tw050x.net.library/logger";
+import { readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
+import { pathToFileURL } from "node:url";
 
+/**
+ * Represents a discovered route in the application.
+ */
 interface DiscoveredRoute {
   method: string;
   path: string;
@@ -88,6 +92,11 @@ export default async function discoverRoutes(directory: string): Promise<Discove
       console.warn(`Failed to read directory ${currentPath}:`, error);
     }
   }
+
+  logger.debug('Routes Discovered:')
+  routes.forEach(route => {
+    logger.debug(`- ${route.method.toLocaleUpperCase().padEnd(8)} ${route.path}`);
+  });
 
   return routes;
 }

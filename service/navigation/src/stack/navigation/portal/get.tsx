@@ -1,8 +1,8 @@
 import { useParameter } from "@tw050x.net.library/configuration";
 import { database as accountDatabase } from "@tw050x.net.database/account";
 import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
-import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/use-access-token-cookie";
-import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/use-login-state-cookie";
+import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
@@ -20,7 +20,7 @@ import { default as Profile } from "@tw050x.net.library/uikit/svg/Profile";
 import { default as Users } from "@tw050x.net.library/uikit/svg/Users";
 import { default as Cookies } from "cookies";
 import { useAuthGate } from "../../../middleware/use-auth-gate.js";
-import { default as Menu, Props as MenuProps } from "../../../template/component/Menu.js";
+import { default as PortalMenu, Props as PortalMenuProps } from "../../../template/component/PortalMenu.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS'],
@@ -138,15 +138,15 @@ export default defineServiceMiddleware([
     // Determine user menu items
     let userMenuItems = [
       { label: 'Switch Account', src: `/portal/users/profile/${context.incomingMessage.accessTokenCookie.payload.sub}`, IconComponent: AccountSwitch },
-      { label: 'Profile', href: `/portal/users/profile/${context.incomingMessage.accessTokenCookie.payload.sub}`, IconComponent: Profile },
+      { label: 'My Profile', href: `/portal/users/profile/${context.incomingMessage.accessTokenCookie.payload.sub}`, IconComponent: Profile },
     ]
 
     //
-    const portalMenuProps: MenuProps = {
+    const portalMenuProps: PortalMenuProps = {
       menuState,
       serviceMenuItems,
       userMenuItems,
     }
-    return void context.serverResponse.sendOKHTMLResponse(<Menu {...portalMenuProps} />);
+    return void context.serverResponse.sendOKHTMLResponse(<PortalMenu {...portalMenuProps} />);
   }
 ])

@@ -1,2 +1,1 @@
-export * from "./component.js";
-export * from "./document.js";
+export { default as readScript } from "./read-script.js";

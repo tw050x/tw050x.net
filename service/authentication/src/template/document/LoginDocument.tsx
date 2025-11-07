@@ -1,6 +1,5 @@
 import { Component } from "@kitajs/html";
-import { default as Htmx } from "@tw050x.net.library/uikit/component/Htmx";
-import { default as Stylesheet } from "@tw050x.net.library/uikit/component/Stylesheet";
+import { default as Head } from "@tw050x.net.library/uikit/component/Head";
 import { default as LoginAside, Props as LoginAsideProps } from "../component/LoginAside.js";
 
 /**
@@ -21,15 +20,7 @@ const LoginDocument: Component<Props> = ({ loginAsideProps }) => {
     <>
       {'<!doctype html>'}
       <html lang="en">
-        <head>
-          <base href="/" />
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <title>Login</title>
-
-          <Htmx />
-          <Stylesheet />
-        </head>
+        <Head title="Login" />
         <body>
           <main class="bg-gray-800 text-white w-screen min-h-screen"></main>
           <div class="asides">

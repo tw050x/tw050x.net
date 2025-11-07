@@ -5,13 +5,12 @@
       "type": "shell",
       "command": "find",
       "args": [".", "-name", "\"*.tsbuildinfo\"", "-delete"],
-      "group": "build",
       "options": {
         "cwd": "${workspaceFolder}"
       },
       "presentation": {
         "reveal": "never",
-        "panel": "dedicated",
+        "panel": "shared",
         "showReuseMessage": true,
         "clear": false
       }
@@ -21,12 +20,26 @@
       "type": "shell",
       "command": "yarn",
       "args": ["tsc", "--build"],
-      "dependsOn": "tsc: clean build caches",
       "group": "build",
       "problemMatcher": ["$tsc"],
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      }
+    },
+    {
+      "label": "tsc: clean and build",
+      "type": "shell",
+      "command": "yarn",
+      "args": ["tsc", "--build"],
+      "dependsOn": "tsc: clean build caches",
+      "problemMatcher": ["$tsc-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
         "showReuseMessage": true,
         "clear": false
       }
@@ -37,12 +50,11 @@
       "command": "yarn",
       "args": ["tsc", "--build", "--preserveWatchOutput", "--watch"],
       "dependsOn": "tsc: clean build caches",
-      "group": "build",
       "problemMatcher": ["$tsc-watch"],
       "isBackground": true,
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "shared",
         "showReuseMessage": true,
         "clear": false
       }
@@ -52,12 +64,10 @@
       "type": "shell",
       "command": "yarn",
       "args": ["tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "group": "build",
       "problemMatcher": ["$tsc-watch"],
-      "isBackground": true,
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "shared",
         "showReuseMessage": true,
         "clear": false
       }
@@ -78,7 +88,7 @@
       "group": "build",
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "shared",
         "showReuseMessage": true,
         "clear": false
       }
@@ -97,10 +107,9 @@
       "options": {
         "cwd": "${workspaceFolder}"
       },
-      "group": "build",
       "presentation": {
         "reveal": "always",
-        "panel": "dedicated",
+        "panel": "shared",
         "showReuseMessage": true,
         "clear": false
       }

@@ -19,6 +19,14 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
     return void logger.error(new Error('userProfileId is not a valid ObjectId in UserRegistered event message body'));
   }
 
+  if (('userProfileUuid' in messageBody) === false) {
+    return void logger.error(new Error('userProfileUuid is missing in UserRegistered event message body'));
+  }
+
+  if (typeof messageBody.userProfileUuid !== 'string') {
+    return void logger.error(new Error('userProfileUuid is not a string in UserRegistered event message body'));
+  }
+
   const assignment = 'complete-registration';
 
   // Fetch the latest task templates for the assignment
@@ -49,6 +57,7 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
       label: template.label,
       reason: template.reason,
       userProfileId: new ObjectId(messageBody.userProfileId),
+      userProfileUuid: messageBody.userProfileUuid
     })
   }
 
