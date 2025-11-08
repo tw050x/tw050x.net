@@ -10,10 +10,10 @@
   "files": [
     "src/cache.ts",
     "src/index.ts",
-    "src/ssm-client.ts",
-    "src/ssm-read-parameter.ts",
-    "src/ssm-use-parameter.ts",
-    "src/ssm-is-parameter.ts",
+    "src/client.ts",
+    "src/is-parameter.ts",
+    "src/parameter.ts",
+    "src/read-parameter.ts",
     "src/types.ts",
   ],
   "references": [

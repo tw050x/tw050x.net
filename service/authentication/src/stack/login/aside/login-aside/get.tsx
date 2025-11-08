@@ -1,4 +1,4 @@
-import { useParameter, readParameter } from "@tw050x.net.library/configuration";
+import { parameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
@@ -10,7 +10,7 @@ import { default as LoginAside } from "../../../../template/component/LoginAside
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST'],
-  allowedOrigins: useParameter('authentication.service.allowed-origins'),
+  allowedOrigins: parameter('authentication.service.allowed-origins'),
 }
 
 export default defineServiceMiddleware([

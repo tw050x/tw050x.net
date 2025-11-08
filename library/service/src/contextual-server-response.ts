@@ -3,7 +3,8 @@ import { ServerResponse } from "node:http";
 import { default as ContextualIncomingMessage } from "./contextual-incoming-message.js";
 
 /**
- *
+ * ContextualServerResponse class that extends the ServerResponse class
+ * to provide additional methods for sending various types of HTTP responses.
  */
 export default class ContextualServerResponse extends ServerResponse<ContextualIncomingMessage> {
 

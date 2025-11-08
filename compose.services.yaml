@@ -59,7 +59,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.authentication.entrypoints=websecure
       - traefik.http.routers.authentication.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.authentication.rule=Host(`tw050x.dev`) && (Path(`/login`) || Path(`/logout`) || PathPrefix(`/token/`))
+      - traefik.http.routers.authentication.rule=Host(`tw050x.dev`) && (Path(`/login`) || Path(`/logout`) || PathPrefix(`/token/`) || PathPrefix(`/oauth2/`))
       - traefik.http.routers.authentication.tls=true
       - traefik.http.services.authentication.loadbalancer.server.port=3000
     mem_limit: 512mb

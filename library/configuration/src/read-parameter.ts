@@ -1,6 +1,6 @@
 import { GetParameterCommand } from "@aws-sdk/client-ssm";
 import { cache } from "./cache.js";
-import { ssmClient } from "./ssm-client.js";
+import { ssmClient } from "./client.js";
 
 /**
  * Reads a configuration value from AWS SSM Parameter Store. Uses a caches value if it exists and refetches the

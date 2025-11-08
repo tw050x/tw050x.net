@@ -6,7 +6,7 @@ import { Secret } from "./types.js";
  * @param key The key of the secret in Secrets Manager
  * @returns {Secret}
  */
-export const useSecret = (key: string): Secret => {
+export const secret = (key: string): Secret => {
   return {
     key,
     source: 'secrets-manager',

@@ -2597,6 +2597,7 @@ __metadata:
   dependencies:
     "@aws-sdk/client-ssm": "npm:^3.873.0"
     "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/types": "workspace:*"
     "@types/node": "npm:^22.10.2"
     lru-cache: "npm:^11.1.0"

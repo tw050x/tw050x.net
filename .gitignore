@@ -15,6 +15,9 @@ tmp/*
 .env*
 !.env.example
 
+# Secrets
+.secret/**
+
 # Terraform
 infrastructure/**/.terraform/
 infrastructure/**/*.override.tf

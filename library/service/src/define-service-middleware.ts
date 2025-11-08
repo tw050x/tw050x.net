@@ -22,7 +22,9 @@ type MiddlewareStackInitiator<Context> = (context: Context) => Promise<void>;
  * Returns a function compatible with EventEmitter.on() that executes the middleware stack
  * Automatically stops execution if a middleware has already sent a response
  */
-export default function defineServiceMiddleware<T1 extends ServiceRequestContext>(
+export default function defineServiceMiddleware<
+  T1 extends ServiceRequestContext
+>(
   middlewares: [
     Middleware<ServiceRequestContext, T1>
   ]

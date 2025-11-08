@@ -226,6 +226,6 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
   // initialize the cookies object on the incoming message
   context.serverResponse.accessTokenCookie = {
     clear: clearAccessTokenCookie,
-    set: setAccessTokenCookie
+    set: setAccessTokenCookie,
   };
 }

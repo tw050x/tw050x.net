@@ -1,4 +1,4 @@
-import { useParameter } from "@tw050x.net.library/configuration";
+import { parameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
@@ -10,7 +10,7 @@ import { default as RegisterAside } from "../../../../template/component/Registe
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST'],
-  allowedOrigins: useParameter('user.service.allowed-origins'),
+  allowedOrigins: parameter('user.service.allowed-origins'),
 }
 
 const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {

@@ -6,13 +6,7 @@ import { Parameter } from "./types.js";
  * @param key The key of the parameter in Parameter Store
  * @returns {Parameter}
  */
-export const useParameter = (key: string): Parameter => {
-
-  // return {
-  //   get value() {
-
-  //   }
-  // }
+export const parameter = (key: string): Parameter => {
 
   return {
     key,

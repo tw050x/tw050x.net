@@ -4,6 +4,7 @@
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.873.0",
     "@tw050x.net.library/logger": "workspace:*",
+    "@tw050x.net.library/service": "workspace:*",
     "lru-cache": "^11.1.0"
   },
   "description": "The @tw050x.net.library/configuration package project",
