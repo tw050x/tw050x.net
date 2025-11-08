@@ -1,9 +1,9 @@
-import { readParameter } from "@tw050x.net.library/configuration";
+import { serviceParameters } from "./parameters.js";
 import { logger } from "@tw050x.net.library/logger";
 import { receiveMessages } from "@tw050x.net.library/queue";
 import { default as handleUserRegisteredEvent } from "./event-handler/user-registered.js";
 
-const eventQueueUrl = await readParameter('user.service.event-queue-url');
+const eventQueueUrl = serviceParameters.getParameter('user.service.event-queue-url');
 
 let receivedExitSignal = false;
 

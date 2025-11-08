@@ -1,7 +1,5 @@
-import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { isAllowedHeaders } from "@tw050x.net.library/utility/is-allowed-headers";
 import { isAllowedMethod } from "@tw050x.net.library/utility/is-allowed-method";
 import { HttpMethod, isHttpMethod } from "@tw050x.net.library/utility/is-http-method";
@@ -10,16 +8,16 @@ import { isArrayOfHttpMethods } from "@tw050x.net.library/utility/is-array-of-ht
 import { isAllowedOrigin } from "@tw050x.net.library/utility/is-allowed-origin";
 
 /**
- *
+ * Options for CORS headers middleware factory
  */
 export type UseCorsHeadersFactoryOptions = {
-  allowedHeaders?: readonly string[] | '*' | Parameter;
-  allowedMethods: readonly HttpMethod[] | '*' | Parameter;
-  allowedOrigins?: string | '*' | Parameter;
+  allowedHeaders?: readonly string[] | string | '*';
+  allowedMethods: readonly HttpMethod[] | '*';
+  allowedOrigins?: string | '*';
 }
 
 /**
- *
+ * CORS headers middleware factory type
  */
 type Factory = (options: UseCorsHeadersFactoryOptions) => Middleware<ServiceRequestContext>;
 
@@ -33,115 +31,61 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
   let allowedOrigins;
 
   // Determine the allowed headers
-  // return an error in the following cases:
-  // 1. allowedHeaders is a Parameter but fails to read
-  // 2. allowedHeaders is a Parameter but results in empty string
-  // 3. allowedHeaders is neither Parameter, array of string, nor wildcard '*'
   allowedHeadersParameterGuard: {
-    if (isParameter(options.allowedHeaders) === false) {
+    if (options.allowedHeaders === undefined) {
+      allowedHeaders = '*' as const;
       break allowedHeadersParameterGuard;
     }
-    try {
-      allowedHeaders = await readParameter(options.allowedHeaders.key)
+    if (options.allowedHeaders === '') {
+      allowedHeaders = [] as Array<string>;
+      break allowedHeadersParameterGuard;
     }
-    catch (error) {
-      logger.error(error);
-      context.serverResponse.statusCode = 500;
-      return void context.serverResponse.end();
+    if (options.allowedHeaders === '*') {
+      allowedHeaders = '*' as const;
+      break allowedHeadersParameterGuard;
     }
-    if (allowedHeaders === '') {
-      logger.error(new Error('CORS allowed headers parameter is empty string'));
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+    if (typeof options.allowedHeaders === 'string') {
+      allowedHeaders = options.allowedHeaders.
+        split(',').
+        map((header) => header.trim().toLowerCase());
+      break allowedHeadersParameterGuard;
     }
-    allowedHeaders = allowedHeaders.split(',').map((header) => header.trim().toLowerCase());
+    allowedHeaders = options.allowedHeaders.
+      map((header) => header.trim().toLowerCase());
   }
-  allowedHeadersOptionsArrayGuard: {
-    if (allowedHeaders !== undefined) {
-      break allowedHeadersOptionsArrayGuard;
-    }
-    if (isArrayOfHeaders(options.allowedHeaders) === false) {
-      // An error will be thrown later if allowedHeaders is neither an array nor wildcard
-      // For now we do not know if we should return an error so we break and delegate the
-      // error handling to a subsequent guard
-      break allowedHeadersOptionsArrayGuard;
-    }
-    allowedHeaders = options.allowedHeaders
-  }
-  allowedHeadersOptionsWildcardGuard: {
-    if (allowedHeaders !== undefined) {
-      break allowedHeadersOptionsWildcardGuard;
-    }
-    allowedHeaders = '*' as const; // Requires "as const" to ensure type is literal '*' not a generalised 'string'.
+  logger.debug('Allowed Headers:', allowedHeaders);
+  if (Array.isArray(allowedHeaders) && isArrayOfHeaders(allowedHeaders) === false) {
+    throw new TypeError('Invalid allowedHeaders parameter');
   }
 
   // Determine the allowed methods
-  // return an error in the following cases:
-  // 1. allowedMethods is a Parameter but fails to read
-  // 2. allowedMethods is a Parameter but results in empty string
-  // 3. allowedMethods is neither Parameter, array of HttpMethod, nor wildcard '*'
   allowedMethodsParameterGuard: {
-    if (isParameter(options.allowedMethods) === false) {
+    if (options.allowedMethods === '*') {
+      allowedMethods = '*' as const;
       break allowedMethodsParameterGuard;
     }
-    try {
-      allowedMethods = await readParameter(options.allowedMethods.key)
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
-    }
-    if (allowedMethods === '') {
-      logger.error(new Error('CORS allowed methods parameter is empty string'));
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
-    }
-    allowedMethods = allowedMethods.
-      split(',').
+    allowedMethods = options.allowedMethods.
       map((method) => method.trim().toUpperCase()).
       filter((method): method is HttpMethod => method !== undefined && isHttpMethod(method));
   }
-  allowedMethodsOptionsArrayGuard: {
-    if (allowedMethods !== undefined) {
-      break allowedMethodsOptionsArrayGuard;
-    }
-    if (isArrayOfHttpMethods(options.allowedMethods) === false) {
-      // An error will be thrown later if allowedMethods is neither an array nor wildcard
-      // For now we do not know if we should return an error so we break and delegate the
-      // error handling to a subsequent guard
-      break allowedMethodsOptionsArrayGuard;
-    }
-    allowedMethods = options.allowedMethods
-  }
-  allowedMethodsOptionsWildcardGuard: {
-    if (allowedMethods !== undefined) {
-      break allowedMethodsOptionsWildcardGuard;
-    }
-    if (options.allowedMethods !== '*') {
-      logger.error(new Error('CORS allowed methods is neither array of HttpMethod nor wildcard'));
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
-    }
-    allowedMethods = '*' as const; // Requires "as const" to ensure type is literal '*' not a generalised 'string'.
+  logger.debug('Allowed Methods:', allowedMethods);
+  if (Array.isArray(allowedMethods) && isArrayOfHttpMethods(allowedMethods) === false) {
+    throw new TypeError('Invalid allowedMethods parameter');
   }
 
+  // Determine the allowed origins
   allowedOriginsParameterGuard: {
-    if (isParameter(options.allowedOrigins) === false) {
+    if (options.allowedOrigins === undefined ) {
+      allowedOrigins = '*' as const;
       break allowedOriginsParameterGuard;
     }
-    try {
-      allowedOrigins = await readParameter(options.allowedOrigins.key)
+    if (options.allowedOrigins === '*') {
+      allowedOrigins = '*' as const;
+      break allowedOriginsParameterGuard;
     }
-    catch (error) {
-      logger.error(error);
-      context.serverResponse.statusCode = 500;
-      return void context.serverResponse.end();
-    }
+    allowedOrigins = options.allowedOrigins.split(',').map((origin) => origin.trim())
   }
-  if (allowedOrigins === undefined || allowedOrigins === '') {
-    allowedOrigins = '*';
-  }
-  if (allowedOrigins !== '*') {
-    allowedOrigins = allowedOrigins.trim();
-    allowedOrigins = allowedOrigins.split(',').map((origin) => origin.trim())
-  }
+  logger.debug('Allowed Origins:', allowedOrigins);
 
   // Prepare headers to set on the response
   const headers = [];

@@ -1,4 +1,3 @@
-import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
@@ -17,8 +16,8 @@ type UIUserTableToolsStateCookie = {
  *
  */
 export type UseUIUserTableToolsStateCookieOptions = {
-  cookieName: string | Parameter;
-  cookieDomain: string | Parameter;
+  cookieName: string;
+  cookieDomain: string;
 }
 
 /**
@@ -50,50 +49,28 @@ type Factory = (options: UseUIUserTableToolsStateCookieOptions) => Middleware<
 export const useUIUserTableToolsStateCookie: Factory = (options) => async (context) => {
 
   // retrieve the cookie name
-  let cookieName;
   cookieNameGuard: {
-    if (isParameter(options.cookieName) === false) {
-      cookieName = options.cookieName;
+    if (options.cookieName !== '') {
       break cookieNameGuard;
     }
-    try {
-      cookieName = await readParameter(options.cookieName.key);
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-    }
-    if (cookieName === '') {
-      logger.error(new Error('access token cookie name is undefined or empty'));
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-    }
+    logger.error(new Error('access token cookie name is undefined or empty'));
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
 
-  // retrieve the cookie name
-  let cookieDomain;
+  // retrieve the cookie domain
   cookieDomainGuard: {
-    if (isParameter(options.cookieDomain) === false) {
-      cookieDomain = options.cookieDomain;
+    if (options.cookieDomain !== '') {
       break cookieDomainGuard;
     }
-    try {
-      cookieDomain = await readParameter(options.cookieDomain.key);
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-    }
-    if (cookieDomain === '') {
-      logger.error(new Error('access token cookie name is undefined or empty'));
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-    }
+    logger.error(new Error('access token cookie name is undefined or empty'));
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
 
   //
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-  const cookie = cookies.get(cookieName);
+  const cookie = cookies.get(options.cookieName);
 
   // extend the cookie expiration by 30 days if it exists
   context.incomingMessage.uiUserTableToolsStateCookie = {
@@ -103,8 +80,8 @@ export const useUIUserTableToolsStateCookie: Factory = (options) => async (conte
 
   //
   const clearUIUserTableToolsStateCookie = () => {
-    cookies.set(cookieName, '', {
-      domain: cookieDomain,
+    cookies.set(options.cookieName, '', {
+      domain: options.cookieDomain,
       httpOnly: false,
       path: '/',
       sameSite: 'lax',
@@ -118,8 +95,8 @@ export const useUIUserTableToolsStateCookie: Factory = (options) => async (conte
     const expiryDate = addDays(currentDate, 7);
     const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
     const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
-    cookies.set(cookieName, value, {
-      domain: cookieDomain,
+    cookies.set(options.cookieName, value, {
+      domain: options.cookieDomain,
       httpOnly: false,
       maxAge: maxAgeInMilliseconds,
       path: '/',

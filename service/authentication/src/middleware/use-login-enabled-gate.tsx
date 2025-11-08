@@ -1,6 +1,6 @@
-import { readParameter } from "@tw050x.net.library/configuration";
 import { Middleware } from "@tw050x.net.library/service";
 import { default as LoginDocument } from "../template/document/LoginDocument.js";
+import { serviceParameters } from "../parameters.js";
 
 /**
  * Middleware factory for the login enabled gate.
@@ -11,7 +11,7 @@ type Factory = () => Middleware
  * Middleware that gates access based on whether login is enabled.
  */
 export const useLoginEnabledGate: Factory = () => async (context) => {
-  const loginEnabled = await readParameter('authentication.service.login-enabled');
+  const loginEnabled = serviceParameters.getParameter('authentication.service.login-enabled');
   if (loginEnabled === 'false') {
     const loginAsideProps = {
       disabled: true,

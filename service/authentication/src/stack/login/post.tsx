@@ -1,12 +1,10 @@
 import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
-import { readParameter, parameter } from "@tw050x.net.library/configuration";
 import { database as userDatabase } from "@tw050x.net.database/user";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { logger } from "@tw050x.net.library/logger";
-import { readSecret, secret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { compare } from "bcryptjs";
@@ -16,6 +14,8 @@ import { default as zod, ZodError } from "zod";
 import { generateLoginFormNonce } from "../../helper/generate-login-form-nonce.js";
 import { useLoginEnabledGate } from "../../middleware/use-login-enabled-gate.js";
 import { default as LoginForm } from "../../template/component/LoginForm.js";
+import { serviceParameters } from "../../parameters.js";
+import { serviceSecrets } from "../../secrets.js";
 
 const postLoginFormDataSchema = zod.object({
   email: zod.string().email('An email address is required'),
@@ -24,26 +24,26 @@ const postLoginFormDataSchema = zod.object({
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS', 'POST'],
-  allowedOrigins: parameter('authentication.service.allowed-origins'),
+  allowedOrigins: serviceParameters.getParameter('authentication.service.allowed-origins'),
 }
 
 const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
-  cookieName: parameter('cookie.access-token.name'),
-  cookieDomain: parameter('cookie.access-token.domain'),
-  jwtSecretKey: secret('jwt.secret-key'),
+  cookieName: serviceParameters.getParameter('cookie.access-token.name'),
+  cookieDomain: serviceParameters.getParameter('cookie.access-token.domain'),
+  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  cookieName: parameter('cookie.login-state.name'),
-  cookieDomain: parameter('cookie.login-state.domain'),
-  encrypterSecretKey: secret('encrypter.secret-key'),
+  cookieName: serviceParameters.getParameter('cookie.login-state.name'),
+  cookieDomain: serviceParameters.getParameter('cookie.login-state.domain'),
+  encrypterSecretKey: serviceSecrets.getSecret('encrypter.secret-key'),
 }
 
 const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
-  cookieDomain: parameter('cookie.refresh-token.domain'),
-  jwtSecretKey: secret('jwt.secret-key'),
-  refreshCookieName: parameter('cookie.refresh-token.name'),
-  refreshableCookieName: parameter('cookie.refreshable-token.name'),
+  cookieDomain: serviceParameters.getParameter('cookie.refresh-token.domain'),
+  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
+  refreshCookieName: serviceParameters.getParameter('cookie.refresh-token.name'),
+  refreshableCookieName: serviceParameters.getParameter('cookie.refreshable-token.name'),
 }
 
 export default defineServiceMiddleware([
@@ -149,7 +149,7 @@ export default defineServiceMiddleware([
       );
     }
 
-    const jwtSecretKey = await readSecret('jwt.secret-key');
+    const jwtSecretKey = serviceSecrets.getSecret('jwt.secret-key');
     if (jwtSecretKey === undefined) {
       logger.error('JWT secret key is undefined');
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
@@ -180,7 +180,7 @@ export default defineServiceMiddleware([
 
     // redirect to the return url or the home page;
     return void context.serverResponse.sendSeeOtherRedirect(
-      context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`)
+      context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${serviceParameters.getParameter('authentication.service.host')}`)
     )
   },
 ])

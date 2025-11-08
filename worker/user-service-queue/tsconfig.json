@@ -8,16 +8,18 @@
   "files": [
     "../../types/env.worker.user-service-queue.d.ts",
     "src/event-handler/user-registered.ts",
-    "src/run.ts"
+    "src/parameters.ts",
+    "src/run.ts",
+    "src/secrets.ts",
   ],
   "references": [
     { "path": "../../database/assignment" },
     { "path": "../../database/user" },
-    { "path": "../../library/configuration" },
     { "path": "../../library/database" },
     { "path": "../../library/logger" },
+    { "path": "../../library/parameters" },
     { "path": "../../library/queue" },
-    { "path": "../../library/secret" },
+    { "path": "../../library/secrets" },
     { "path": "../../library/utility" },
   ]
 }

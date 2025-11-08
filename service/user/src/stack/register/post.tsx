@@ -1,15 +1,12 @@
 import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
-import { readParameter, parameter } from "@tw050x.net.library/configuration";
 import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers"
 import { useLogRequest } from "@tw050x.net.library/middleware";
-import { secret } from "@tw050x.net.library/secret";
 import { sendMessage } from "@tw050x.net.library/queue";
-import { readSecret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { normaliseEmailAddress } from "@tw050x.net.library/utility/normalise-email-address";
@@ -21,6 +18,8 @@ import { generateRegisterFormNonce } from "../../helper/generate-register-form-n
 import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate.js";
 import { default as RegisterDocument } from "../../template/document/RegisterDocument.js";
 import { default as RegisterForm } from "../../template/component/RegisterForm.js";
+import { serviceSecrets } from "../../secrets.js";
+import { serviceParameters } from "../../parameters.js";
 
 const postRegisterFormDataSchema = zod.object({
   email: zod.string().email('An email address is required'),
@@ -32,26 +31,26 @@ const postRegisterFormDataSchema = zod.object({
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS', 'POST'],
-  allowedOrigins: parameter('user.service.allowed-origins')
+  allowedOrigins: serviceParameters.getParameter('user.service.allowed-origins')
 }
 
 const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
-  cookieName: parameter('cookie.access-token.name'),
-  cookieDomain: parameter('cookie.access-token.domain'),
-  jwtSecretKey: secret('jwt.secret-key'),
+  cookieName: serviceParameters.getParameter('cookie.access-token.name'),
+  cookieDomain: serviceParameters.getParameter('cookie.access-token.domain'),
+  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  cookieName: parameter('cookie.login-state.name'),
-  cookieDomain: parameter('cookie.login-state.domain'),
-  encrypterSecretKey: secret('encrypter.secret-key'),
+  cookieName: serviceParameters.getParameter('cookie.login-state.name'),
+  cookieDomain: serviceParameters.getParameter('cookie.login-state.domain'),
+  encrypterSecretKey: serviceSecrets.getSecret('encrypter.secret-key'),
 }
 
 const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
-  cookieDomain: parameter('cookie.refresh-token.domain'),
-  jwtSecretKey: secret('jwt.secret-key'),
-  refreshCookieName: parameter('cookie.refresh-token.name'),
-  refreshableCookieName: parameter('cookie.refreshable-token.name'),
+  cookieDomain: serviceParameters.getParameter('cookie.refresh-token.domain'),
+  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
+  refreshCookieName: serviceParameters.getParameter('cookie.refresh-token.name'),
+  refreshableCookieName: serviceParameters.getParameter('cookie.refreshable-token.name'),
 }
 
 const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {
@@ -220,7 +219,7 @@ export default defineServiceMiddleware([
     // send a message to the event queue indicating a new user has registered
     // log any errors but do not fail the registration
     try {
-      const eventQueueUrl = await readParameter('user.service.event-queue-url');
+      const eventQueueUrl = await serviceParameters.getParameter('user.service.event-queue-url');
       await sendMessage(
         new URL(eventQueueUrl),
         { eventType: 'UserRegistered', userProfileId, userProfileUuid },
@@ -234,7 +233,7 @@ export default defineServiceMiddleware([
 
     // read the JWT secret key
     // return an error if there is a problem
-    const jwtSecretKey = await readSecret('jwt.secret-key');
+    const jwtSecretKey = await serviceSecrets.getSecret('jwt.secret-key');
     if (jwtSecretKey === undefined) {
       logger.error('JWT secret key is undefined');
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
@@ -259,7 +258,7 @@ export default defineServiceMiddleware([
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();;
     return void context.serverResponse.sendSeeOtherRedirect(
-      new URL('/portal/assignment', `https://${await readParameter('user.service.host')}`)
+      new URL('/portal/assignment', `https://${serviceParameters.getParameter('user.service.host')}`)
     )
   }
 ])

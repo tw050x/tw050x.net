@@ -6,12 +6,12 @@ import { default as discoverRoutes } from "./routes.js";
 import { CreateRequestHandlerOptions, CreateServerOptions, ServiceRequestContext } from "./types.js";
 
 /**
- * Creates and configures an HTTP server with the specified options.
+ * Defines and configures an HTTP server with the specified options.
  *
  * @param options - The server configuration options.
  * @returns The configured HTTP server instance.
  */
-export default function createServer(options: CreateServerOptions) {
+export default function defineServer(options: CreateServerOptions) {
   const routes = new Map<string, (context: ServiceRequestContext) => void>();
 
   // Default 404 route

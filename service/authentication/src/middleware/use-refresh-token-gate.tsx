@@ -1,12 +1,13 @@
 import { UseAccessTokenCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
 import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
 import { UseRefreshTokenCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
-import { readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as Forbidden } from "@tw050x.net.library/uikit/document/Forbidden";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as jwt, SignOptions } from "jsonwebtoken";
+import { serviceParameters } from "../parameters.js";
+import { serviceSecrets } from "../secrets.js";
 
 /**
  * Middleware factory for the login enabled gate.
@@ -16,7 +17,7 @@ type Factory = () => Middleware<
 >
 
 /**
- *
+ * Middleware that refreshes authentication based on the refresh token cookie.
  */
 export const useRefreshTokenGate: Factory = () => async (context) => {
   refreshAuthenticationGuard: {
@@ -36,7 +37,7 @@ export const useRefreshTokenGate: Factory = () => async (context) => {
     }
 
     // if JWT secret key is not set then return an internal server error
-    const jwtSecretKey = await readParameter('jwt.secret-key')
+    const jwtSecretKey = serviceSecrets.getSecret('jwt.secret-key');
     if (jwtSecretKey === undefined) {
       logger.error('JWT secret key is not set');
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
@@ -63,7 +64,7 @@ export const useRefreshTokenGate: Factory = () => async (context) => {
       sub: refreshTokenPayload.sub
     };
     const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
-    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
+    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${serviceParameters.getParameter('authentication.service.host')}`);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();
     logger.debug('User authentication refreshed, redirecting to return URL');

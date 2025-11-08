@@ -3,9 +3,7 @@
   "author": "tw050x (Richard Kielty)",
   "dependencies": {
     "@kitajs/html": "^4.2.9",
-    "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
-    "@tw050x.net.library/secret": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
     "@tw050x.net.library/uikit": "workspace:*",
     "cookies": "^0.9.1",

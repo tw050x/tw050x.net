@@ -21,9 +21,9 @@
     "src/index.ts",
   ],
   "references": [
-    { "path": "../configuration" },
     { "path": "../logger" },
-    { "path": "../secret" },
+    { "path": "../parameters" },
+    { "path": "../secrets" },
     { "path": "../service" },
     { "path": "../utility" },
   ],

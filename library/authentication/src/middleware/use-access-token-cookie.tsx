@@ -1,6 +1,4 @@
-import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
-import { isSecret, readSecret, Secret } from "@tw050x.net.library/secret";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Cookies } from "cookies";
@@ -24,9 +22,9 @@ export type AccessTokenCookie = {
  *
  */
 export type UseAccessTokenCookieOptions = {
-  cookieName: string | Parameter;
-  cookieDomain: string | Parameter;
-  jwtSecretKey: Secret;
+  cookieName: string;
+  cookieDomain: string;
+  jwtSecretKey: string;
   requiredPermissions?: Array<string>;
 }
 
@@ -59,41 +57,17 @@ type Factory = (options: UseAccessTokenCookieOptions) => Middleware<
 export const useAccessTokenCookie: Factory = (options) => async (context) => {
 
   // retrieve the cookie name
-  let cookieName;
   cookieNameGuard: {
-    if (isParameter(options.cookieName) === false) {
-      cookieName = options.cookieName;
+    if (options.cookieName !== '') {
       break cookieNameGuard;
     }
-    try {
-      cookieName = await readParameter(options.cookieName.key);
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-    }
-    if (cookieName !== '') {
-      break cookieNameGuard;
-    }
-    logger.error(new Error('access token cookie name is undefined or empty'));
+    logger.error(new Error('access token cookie name is empty'));
     return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
   }
 
   // retrieve the cookie domain
-  let cookieDomain;
   cookieDomainGuard: {
-    if (isParameter(options.cookieDomain) === false) {
-      cookieDomain = options.cookieDomain;
-      break cookieDomainGuard;
-    }
-    try {
-      cookieDomain = await readParameter(options.cookieDomain.key);
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-    }
-    if (cookieDomain !== '') {
+    if (options.cookieDomain !== '') {
       break cookieDomainGuard;
     }
     logger.error(new Error('access token cookie domain is empty'));
@@ -101,19 +75,7 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
   }
 
   // retrieve the jwt secret key
-  let jwtSecretKey;
-  if (isSecret(options.jwtSecretKey) === false) {
-    logger.error(new Error('jwt secret key is not a secret'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-  try {
-    jwtSecretKey = await readSecret(options.jwtSecretKey.key);
-  }
-  catch (error) {
-    logger.error(error);
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-  if (jwtSecretKey === '') {
+  if (options.jwtSecretKey === '') {
     logger.error(new Error('jwt secret key is empty'));
     return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
@@ -129,7 +91,7 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-  const cookie = cookies.get(cookieName);
+  const cookie = cookies.get(options.cookieName);
 
   let accessTokenCookieAuthorised: boolean | null = null;
   let accessTokenCookieErrors: Array<Error> = [];
@@ -143,7 +105,7 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
     // verify the cookie
     let accessTokenPayload;
     try {
-      accessTokenPayload = jwt.verify(cookie, jwtSecretKey);
+      accessTokenPayload = jwt.verify(cookie, options.jwtSecretKey);
     }
     catch (error) {
       logger.error(error);
@@ -198,8 +160,8 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
 
   // define the clear function
   const clearAccessTokenCookie = () => {
-    cookies.set(cookieName, '', {
-      domain: cookieDomain,
+    cookies.set(options.cookieName, '', {
+      domain: options.cookieDomain,
       httpOnly: false,
       path: '/',
       sameSite: 'strict',
@@ -213,8 +175,8 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
     const expiryDate = addHours(currentDate, 3);
     const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
     const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
-    cookies.set(cookieName, value, {
-      domain: cookieDomain,
+    cookies.set(options.cookieName, value, {
+      domain: options.cookieDomain,
       httpOnly: false,
       maxAge: maxAgeInMilliseconds,
       path: '/',

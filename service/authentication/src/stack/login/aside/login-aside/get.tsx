@@ -1,4 +1,3 @@
-import { parameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
@@ -7,10 +6,11 @@ import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/docu
 import { generateLoginFormNonce } from '../../../../helper/generate-login-form-nonce.js';
 import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
 import { default as LoginAside } from "../../../../template/component/LoginAside.js";
+import { serviceParameters } from "../../../../parameters.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST'],
-  allowedOrigins: parameter('authentication.service.allowed-origins'),
+  allowedOrigins: serviceParameters.getParameter('authentication.service.allowed-origins'),
 }
 
 export default defineServiceMiddleware([

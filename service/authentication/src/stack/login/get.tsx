@@ -1,40 +1,40 @@
 import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
-import { parameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { secret } from "@tw050x.net.library/secret";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { generateLoginFormNonce } from '../../helper/generate-login-form-nonce.js';
 import { useLoginEnabledGate } from "../../middleware/use-login-enabled-gate.js";
 import { useRefreshTokenGate } from "../../middleware/use-refresh-token-gate.js";
 import { default as LoginDocument } from "../../template/document/LoginDocument.js";
+import { serviceParameters } from "../../parameters.js";
+import { serviceSecrets } from "../../secrets.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST', 'OPTIONS'],
-  allowedOrigins: parameter('authentication.service.allowed-origins'),
+  allowedOrigins: serviceParameters.getParameter('authentication.service.allowed-origins'),
 }
 
 const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
-  cookieName: parameter('cookie.access-token.name'),
-  cookieDomain: parameter('cookie.access-token.domain'),
-  jwtSecretKey: secret('jwt.secret-key'),
+  cookieName: serviceParameters.getParameter('cookie.access-token.name'),
+  cookieDomain: serviceParameters.getParameter('cookie.access-token.domain'),
+  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  cookieName: parameter('cookie.login-state.name'),
-  cookieDomain: parameter('cookie.login-state.domain'),
-  encrypterSecretKey: secret('encrypter.secret-key'),
+  cookieName: serviceParameters.getParameter('cookie.login-state.name'),
+  cookieDomain: serviceParameters.getParameter('cookie.login-state.domain'),
+  encrypterSecretKey: serviceSecrets.getSecret('encrypter.secret-key'),
 }
 
 const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
-  cookieDomain: parameter('cookie.refresh-token.domain'),
-  jwtSecretKey: secret('jwt.secret-key'),
-  refreshCookieName: parameter('cookie.refresh-token.name'),
-  refreshableCookieName: parameter('cookie.refreshable-token.name'),
+  cookieDomain: serviceParameters.getParameter('cookie.refresh-token.domain'),
+  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
+  refreshCookieName: serviceParameters.getParameter('cookie.refresh-token.name'),
+  refreshableCookieName: serviceParameters.getParameter('cookie.refreshable-token.name'),
 }
 
 export default defineServiceMiddleware([
@@ -73,7 +73,7 @@ export default defineServiceMiddleware([
 
     // return the login page
     logger.debug('Rendering login page');
-    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${await readParameter('authentication.service.host')}`);
+    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${serviceParameters.getParameter('authentication.service.host')}`);
     context.serverResponse.loginStateCookie.set(JSON.stringify({
       returnUrl: returnUrl.toString()
     }));

@@ -1,6 +1,6 @@
-import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
+import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Cookies } from "cookies";
 
 /**
@@ -15,7 +15,7 @@ type UIMenuStateCookie = {
  *
  */
 export type UseUIMenuStateCookieOptions = {
-  cookieName: string | Parameter;
+  cookieName: string;
 }
 
 /**
@@ -41,32 +41,19 @@ type Factory = (options: UseUIMenuStateCookieOptions) => Middleware<
 export const useUIMenuStateCookie: Factory = (options) => async (context) => {
 
   // retrieve the cookie name
-  let cookieName;
   cookieNameGuard: {
-    if (isParameter(options.cookieName) === false) {
-      cookieName = options.cookieName;
+    if (options.cookieName !== '') {
       break cookieNameGuard;
     }
-    try {
-      cookieName = await readParameter(options.cookieName.key);
-    }
-    catch (error) {
-      logger.error(error);
-      context.serverResponse.statusCode = 500;
-      return void context.serverResponse.end();
-    }
-  }
-  if (cookieName === undefined || cookieName === '') {
-    logger.error('access token cookie name is undefined or empty');
-    context.serverResponse.statusCode = 500;
-    return void context.serverResponse.end();
+    logger.error(new Error('access token cookie name is undefined or empty'));
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
 
   //
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-  const cookie = cookies.get(cookieName);
+  const cookie = cookies.get(options.cookieName);
 
   //
   const uiMenuStateCookie: UIMenuStateCookie = {

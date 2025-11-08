@@ -5,11 +5,11 @@
   "dependencies": {
     "@tw050x.net.database/assignment": "workspace:*",
     "@tw050x.net.database/user": "workspace:*",
-    "@tw050x.net.library/configuration": "workspace:*",
     "@tw050x.net.library/database": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
+    "@tw050x.net.library/parameters": "workspace:*",
     "@tw050x.net.library/queue": "workspace:*",
-    "@tw050x.net.library/secret": "workspace:*",
+    "@tw050x.net.library/secrets": "workspace:*",
     "@tw050x.net.library/utility": "workspace:*",
     "bcryptjs": "^3.0.2",
     "mongodb": "^6.12.0"

@@ -1,4 +1,3 @@
-import { parameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware";
@@ -7,10 +6,11 @@ import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/docu
 import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate.js";
 import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce.js"
 import { default as RegisterDocument } from "../../template/document/RegisterDocument.js";
+import { serviceParameters } from "../../parameters.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS', 'POST'],
-  allowedOrigins: parameter('user.service.allowed-origins'),
+  allowedOrigins: serviceParameters.getParameter('user.service.allowed-origins'),
 }
 
 const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {

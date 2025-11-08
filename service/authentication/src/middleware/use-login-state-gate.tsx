@@ -1,5 +1,4 @@
 import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
-import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as BadRequest } from "@tw050x.net.library/uikit/document/BadRequest";
@@ -7,14 +6,14 @@ import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unr
 import { isAllowedDomain } from "@tw050x.net.library/utility/is-allowed-domain";
 
 /**
- *
+ * Options for the login state gate middleware.
  */
 export type UseLoginStateGateOptions = {
-  allowedReturnUrlDomains: string | Parameter;
+  allowedReturnUrlDomains: string;
 }
 
 /**
- *
+ * Resulting context after the login state gate middleware has run.
  */
 export type LoginStateGateResultingContext = ServiceRequestContext & {
   incomingMessage: ServiceRequestContext['incomingMessage'] & {
@@ -27,7 +26,7 @@ export type LoginStateGateResultingContext = ServiceRequestContext & {
 }
 
 /**
- *
+ * Middleware factory for the login state gate.
  */
 type Factory = (options: UseLoginStateGateOptions) => Middleware<
   ServiceRequestContext & UseLoginStateCookieResultingContext,
@@ -35,33 +34,12 @@ type Factory = (options: UseLoginStateGateOptions) => Middleware<
 >
 
 /**
- *
+ * Middleware that gates access based on the login state cookie.
  */
 export const useLoginStateGate: Factory = (options) => async (context) => {
 
-  // retrieve the cookie name
-  let allowedReturnUrlDomains;
-  allowedReturnUrlDomainsGuard: {
-    if (isParameter(options.allowedReturnUrlDomains) === false) {
-      allowedReturnUrlDomains = options.allowedReturnUrlDomains;
-      break allowedReturnUrlDomainsGuard;
-    }
-    try {
-      allowedReturnUrlDomains = await readParameter(options.allowedReturnUrlDomains.key);
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-    }
-  }
-  if (allowedReturnUrlDomains === '') {
-    logger.error(new Error('access token cookie name is undefined or empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-  logger.debug(`Allowed return URL domains: ${allowedReturnUrlDomains}`);
-
   // parse the allowed return URL domains
-  const listOfAllowedDomains = allowedReturnUrlDomains.split(',').map((domain) => domain.trim()).filter((domain) => domain !== '');
+  const listOfAllowedDomains = options.allowedReturnUrlDomains.split(',').map((domain) => domain.trim()).filter((domain) => domain !== '');
   if (listOfAllowedDomains.length === 0) {
     logger.error(new Error('no allowed return URL domains are configured'));
     return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);

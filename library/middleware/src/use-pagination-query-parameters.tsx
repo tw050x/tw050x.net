@@ -1,4 +1,3 @@
-import { Parameter, isParameter, readParameter } from "@tw050x.net.library/configuration";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
@@ -7,8 +6,8 @@ import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unr
  *
  */
 export type UsePaginationQueryParametersOptions = {
-  defaultPageIndex: number | Parameter;
-  defaultPageSize: number | Parameter;
+  defaultPageIndex: string;
+  defaultPageSize: string;
 }
 
 /**
@@ -42,41 +41,12 @@ type Factory = (options: UsePaginationQueryParametersOptions) => Middleware<
  *
  */
 export const usePaginationQueryParameters: Factory = (options) => async (context) => {
-  let defaultPageIndex: number;
-  let defaultPageSize: number;
-
-  if (isParameter(options.defaultPageIndex)) {
-    try {
-      defaultPageIndex = Number(await readParameter(options.defaultPageIndex.key));
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
-    }
-  }
-  else {
-    defaultPageIndex = options.defaultPageIndex;
-  }
-
-  if (isParameter(options.defaultPageSize)) {
-    try {
-      defaultPageSize = Number(await readParameter(options.defaultPageSize.key));
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
-    }
-  }
-  else {
-    defaultPageSize = options.defaultPageSize;
-  }
-
-  if (isNaN(defaultPageIndex) || defaultPageIndex < 0) {
+  if (isNaN(Number(options.defaultPageIndex)) || Number(options.defaultPageIndex) < 0) {
     logger.error(new Error('The default page index must be a non-negative number'));
     return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
   }
 
-  if (isNaN(defaultPageSize) || defaultPageSize <= 0) {
+  if (isNaN(Number(options.defaultPageSize)) || Number(options.defaultPageSize) <= 0) {
     logger.error(new Error('The default page size must be a positive number'));
     return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
   }
@@ -94,18 +64,18 @@ export const usePaginationQueryParameters: Factory = (options) => async (context
   if (pageIndexUrlQueryValue === null || pageSizeUrlQueryValue === null) {
     const replacementURL = new URL(context.incomingMessage.url, `https://${context.incomingMessage.headers.host}`);
     if (pageIndexUrlQueryValue === null) {
-      replacementURL.searchParams.set('pi', String(defaultPageIndex));
+      replacementURL.searchParams.set('pi', String(options.defaultPageIndex));
     }
     if (pageSizeUrlQueryValue === null) {
-      replacementURL.searchParams.set('ps', String(defaultPageSize));
+      replacementURL.searchParams.set('ps', String(options.defaultPageSize));
     }
     return void context.serverResponse.sendMovedPermanentlyRedirect(replacementURL);
   }
 
   context.incomingMessage.query = {
     parameters: {
-      pageIndex: Number(pageIndexUrlQueryValue) || defaultPageIndex,
-      pageSize: Number(pageSizeUrlQueryValue) || defaultPageSize,
+      pageIndex: Number(pageIndexUrlQueryValue) || Number(options.defaultPageIndex),
+      pageSize: Number(pageSizeUrlQueryValue) || Number(options.defaultPageSize),
     }
   };
 };

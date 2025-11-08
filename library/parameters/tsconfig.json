@@ -8,17 +8,11 @@
   ],
   "extends": "../../tsconfig.json",
   "files": [
-    "src/cache.ts",
     "src/index.ts",
     "src/client.ts",
-    "src/is-parameter.ts",
-    "src/parameter.ts",
-    "src/read-parameter.ts",
-    "src/types.ts",
+    "src/service-parameters.ts",
   ],
   "references": [
     { "path": "../logger" },
-    { "path": "../service" },
-    { "path": "../utility" },
   ]
 }
