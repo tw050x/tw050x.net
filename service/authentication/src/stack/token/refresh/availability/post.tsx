@@ -38,5 +38,6 @@ export default defineServiceMiddleware([
   useRefreshTokenCookie(useRefreshTokenCookieOptions),
   async (context) => {
     console.log('Refresh token availability check received');
+    return void context.serverResponse.sendNotImplementedTextResponse();
   }
 ])

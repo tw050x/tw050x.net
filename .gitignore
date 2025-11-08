@@ -5,6 +5,9 @@ coverage/*
 log/*
 tmp/*
 
+# Chrome
+.chrome/
+
 # Docker
 **/data/*
 

@@ -219,7 +219,7 @@ export default defineServiceMiddleware([
     // send a message to the event queue indicating a new user has registered
     // log any errors but do not fail the registration
     try {
-      const eventQueueUrl = await serviceParameters.getParameter('user.service.event-queue-url');
+      const eventQueueUrl = serviceParameters.getParameter('user.service.event-queue-url');
       await sendMessage(
         new URL(eventQueueUrl),
         { eventType: 'UserRegistered', userProfileId, userProfileUuid },
@@ -233,7 +233,7 @@ export default defineServiceMiddleware([
 
     // read the JWT secret key
     // return an error if there is a problem
-    const jwtSecretKey = await serviceSecrets.getSecret('jwt.secret-key');
+    const jwtSecretKey = serviceSecrets.getSecret('jwt.secret-key');
     if (jwtSecretKey === undefined) {
       logger.error('JWT secret key is undefined');
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);

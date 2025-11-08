@@ -5,7 +5,7 @@ services:
     env_file:
       - .env.service.localstack
     # image: localstack/localstack
-    image: gresau/localstack-persist:latest # don't trust this
+    image: gresau/localstack-persist:4.10 # don't trust this
     ports:
       - "127.0.0.1:4566:4566"
       - "127.0.0.1:4510-4559:4510-4559"

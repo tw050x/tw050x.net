@@ -54,10 +54,10 @@ export default class ServiceSecrets<Keys extends string> {
   private abortController: AbortController | null = null;
 
   /**
-   * Synchronise service parameters from SSM
+   * Synchronise service secrets from SSM
    */
   async synchroniseServiceSecrets(): Promise<void> {
-    logger.debug('Synchronising service parameters');
+    logger.debug('Synchronising service secrets');
 
     // Abort any existing synchronisation
     if (this.abortController !== null) {
@@ -79,7 +79,7 @@ export default class ServiceSecrets<Keys extends string> {
     }
     catch (error) {
       logger.error(error);
-      logger.debug('Failed to synchronise service parameters');
+      logger.debug('Failed to synchronise service secrets');
       return void this.eventEmitter.emit('initialised', false);
     }
 
@@ -90,7 +90,7 @@ export default class ServiceSecrets<Keys extends string> {
     }
 
     this.eventEmitter.emit('initialised', true);
-    logger.debug('Service parameters synchronised');
+    logger.debug('Service secrets synchronised');
   }
 
   /**

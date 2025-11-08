@@ -54,51 +54,48 @@ export default defineServiceMiddleware([
 
   // user is not authenticated and does not have a valid refresh token
   async (context) => {
+    const { provider } = await context.incomingMessage.useUrlParams('/oauth2/:provider');
 
-    // const { provider } = await context.incomingMessage.useUrlParams('/oauth2/:provider');
+    const encrypterSecretKey = serviceSecrets.getSecret('encrypter.secret-key');
 
-    // const clientId = readParameter('oauth2.provider.google.client-id');
+    const state = JSON.stringify({
+      loginStatePayload: context.incomingMessage.loginStateCookie.payload,
+      salt: randomBytes(16).toString('hex'),
+    })
 
-    // let encrypterSecretKey;
-    // try {
-    //   encrypterSecretKey = await readSecret('');
-    // }
-    // catch (error) {
-    //   logger.error(error);
-    //   return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-    // }
-    // if (encrypterSecretKey === '') {
-    //   logger.error(new Error('encrypter secret key is undefined or empty'));
-    //   return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-    // }
-    // logger.debug('Encrypter secret key retrieved');
+    let encryptedState;
 
-    // let state;
-    // try {
-    //   const iv = randomBytes(16);
-    //   const cipher = createCipheriv('aes-256-cbc', Buffer.from(encrypterSecretKey, 'hex'), iv);
-    //   let encrypted = cipher.update(state, 'utf8', 'hex');
-    // }
-    // catch (error) {
-    //   logger.error(error);
-    //   logger.debug('Failed to encrypt state parameter for OAuth2 authorisation URL');
-    // }
+    try {
+      const iv = randomBytes(16);
+      const cipher = createCipheriv('aes-256-cbc', Buffer.from(encrypterSecretKey, 'hex'), iv);
+      encryptedState = cipher.update(state, 'utf8', 'hex');
+    }
+    catch (error) {
+      logger.error(error);
+      logger.debug('Failed to encrypt state parameter for OAuth2 authorisation URL');
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+        <Unrecoverable />
+      );
+    }
 
-    // let authorisationURL
-    // switch (provider) {
-    //   case 'google':
-    //     authorisationURL = googleAuthorisationURL({
-    //       clientId: await readParameter('oauth2.provider.google.client-id'),
-    //       redirectUrl: new URL('/oauth2/callback', `https://${await readParameter('authentication.service.host')}`),
-    //       state: '' // TODO: generate state parameter
-    //     })
-    //     break;
-    //   default:
-    //     logger.debug(`Unsupported OAuth2 provider requested: ${provider}`);
-    //     logger.error(new Error(`Unsupported OAuth2 provider`));
-    //     return context.serverResponse.sendInternalServerErrorHTMLResponse(
-    //       <Unrecoverable />
-    //     )
-    // }
+    let authorisationURL: URL;
+    switch (provider) {
+      case 'google':
+        authorisationURL = googleAuthorisationURL({
+          clientId: serviceParameters.getParameter('oauth2.provider.google.client-id'),
+          prompt: 'consent login', // TODO: replace this with 'none' and handle errors on the callback page by retrying with an appropriate user prompt for the error
+          redirectUrl: new URL('/oauth2/callback', `https://${serviceParameters.getParameter('authentication.service.host')}`),
+          state: encryptedState,
+        })
+        break;
+      default:
+        logger.debug(`Unsupported OAuth2 provider requested: ${provider}`);
+        logger.error(new Error(`Unsupported OAuth2 provider`));
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+          <Unrecoverable />
+        )
+    }
+
+    return void context.serverResponse.sendSeeOtherRedirect(authorisationURL);
   }
 ])
