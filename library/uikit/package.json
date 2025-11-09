@@ -14,6 +14,8 @@
     "typescript": "^5.7.2"
   },
   "exports": {
+    "./component/Button/ContinueWithGoogleButton": "./artifact/component/Button/ContinueWithGoogleButton.js",
+    "./component/Button/LoginWithPasswordButton": "./artifact/component/Button/LoginWithPasswordButton.js",
     "./component/Form/EmailAddressField": "./artifact/component/Form/EmailAddressField.js",
     "./component/Form/PasswordField": "./artifact/component/Form/PasswordField.js",
     "./component/AnchoredBar": "./artifact/component/AnchoredBar.js",

@@ -21,6 +21,8 @@
 
 @import "./stylesheet/asides.css";
 @import "./stylesheet/body.css";
+@import "./stylesheet/button/continue-with-google.css";
+@import "./stylesheet/button/login-with-password.css";
 @import "./stylesheet/main.css";
 @import "./stylesheet/nav.css";
 @import "./stylesheet/nav~main>div[data-component=anchored-bar].css";

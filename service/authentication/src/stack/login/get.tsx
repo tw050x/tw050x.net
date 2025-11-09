@@ -5,11 +5,11 @@ import { logger } from "@tw050x.net.library/logger";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { generateLoginFormNonce } from '../../helper/generate-login-form-nonce.js';
 import { useLoginEnabledGate } from "../../middleware/use-login-enabled-gate.js";
 import { useRefreshTokenGate } from "../../middleware/use-refresh-token-gate.js";
-import { default as LoginDocument } from "../../template/document/LoginDocument.js";
+import { default as LoginWithOAuth } from "../../template/document/LoginWithOAuth.js";
 import { serviceParameters } from "../../parameters.js";
 import { serviceSecrets } from "../../secrets.js";
 
@@ -61,13 +61,11 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
     const loginAsideProps = {
-      loginFormProps: {
-        email: '',
-        nonce,
-        validationErrors: []
+      oauthProviders: {
+        google: { enabled: true },
       }
     }
 
@@ -77,6 +75,10 @@ export default defineServiceMiddleware([
     context.serverResponse.loginStateCookie.set(JSON.stringify({
       returnUrl: returnUrl.toString()
     }));
-    return void context.serverResponse.sendOKHTMLResponse(<LoginDocument loginAsideProps={loginAsideProps} />);
+    return void context.serverResponse.sendOKHTMLResponse(
+      <LoginWithOAuth
+        loginWithOAuthAsideProps={loginAsideProps}
+      />
+    );
   }
 ])

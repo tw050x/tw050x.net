@@ -2,10 +2,10 @@ import { logger } from "@tw050x.net.library/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { generateLoginFormNonce } from '../../../../helper/generate-login-form-nonce.js';
 import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
-import { default as LoginAside } from "../../../../template/component/LoginAside.js";
+import { default as LoginWithPasswordAside } from "../../../../template/component/LoginWithPasswordAside.js";
 import { serviceParameters } from "../../../../parameters.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
@@ -26,12 +26,15 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+        <Unrecoverable />
+      );
     }
+
     return void context.serverResponse.sendOKHTMLResponse(
-      <aside>
-        <LoginAside
-          loginFormProps={{
+      <aside class="disable-animation">
+        <LoginWithPasswordAside
+          loginWithPasswordFormProps={{
             email: '',
             nonce,
             validationErrors: []

@@ -8,6 +8,7 @@
   @apply sm:w-160;
 }
 .asides aside {
+  display: flex;
   opacity: 1;
   overflow-y: scroll;
   transition: opacity 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -20,7 +21,7 @@
     transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
-  .asides aside.htmx-added {
+  .asides aside.htmx-added:not(.disable-animation) {
     opacity: 1;
     transform: translateX(100%);
   }

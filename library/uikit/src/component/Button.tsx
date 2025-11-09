@@ -1,8 +1,13 @@
 import { Component } from "@kitajs/html";
 
 type Props = {
-  variant?: 'contained' | 'outlined' | 'text';
+  attributes?: JSX.HtmlButtonTag & {
+    'hx-get'?: string;
+    'hx-target'?: string;
+    'hx-swap'?: string;
+  };
   type?: 'button' | 'submit' | 'reset';
+  variant?: 'contained' | 'outlined' | 'text';
 };
 
 /**
@@ -11,7 +16,7 @@ type Props = {
  * @param props
  * @returns {JSX.Element}
  */
-const Button: Component<Props> = ({ children, type = 'button', variant = 'text' }) => {
+const Button: Component<Props> = ({ children, attributes, type = 'button', variant = 'text' }) => {
   let classes = [
     'px-12', 'py-4',
     'cursor-pointer',
@@ -30,7 +35,8 @@ const Button: Component<Props> = ({ children, type = 'button', variant = 'text' 
     case 'outlined':
       classes.push(...[
         'border border-blue-500',
-        'text-blue-500'
+        'text-blue-500',
+        'transition-colors duration-200'
       ]);
       break;
     case 'text':
@@ -41,7 +47,12 @@ const Button: Component<Props> = ({ children, type = 'button', variant = 'text' 
   }
 
   return (
-    <button class={classes} data-component="button" type={type}>
+    <button
+      {...attributes}
+      class={classes}
+      data-component="button"
+      type={type}
+    >
       {children}
     </button>
   )

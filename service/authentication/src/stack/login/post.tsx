@@ -13,7 +13,7 @@ import { default as validator } from "validator";
 import { default as zod, ZodError } from "zod";
 import { generateLoginFormNonce } from "../../helper/generate-login-form-nonce.js";
 import { useLoginEnabledGate } from "../../middleware/use-login-enabled-gate.js";
-import { default as LoginForm } from "../../template/component/LoginForm.js";
+import { default as LoginForm } from "../../template/component/LoginWithPasswordForm.js";
 import { serviceParameters } from "../../parameters.js";
 import { serviceSecrets } from "../../secrets.js";
 

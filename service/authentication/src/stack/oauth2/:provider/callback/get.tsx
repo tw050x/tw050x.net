@@ -6,12 +6,12 @@ import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { generateLoginFormNonce } from '../../../helper/generate-login-form-nonce.js';
-import { useLoginEnabledGate } from "../../../middleware/use-login-enabled-gate.js";
-import { useRefreshTokenGate } from "../../../middleware/use-refresh-token-gate.js";
-import { default as LoginDocument } from "../../../template/document/LoginDocument.js";
-import { serviceParameters } from "../../../parameters.js";
-import { serviceSecrets } from "../../../secrets.js";
+import { default as googleAuthorisationURL } from '../../../../helper/oauth2/provider/google/authorisation-url.js';
+import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
+import { useRefreshTokenGate } from "../../../../middleware/use-refresh-token-gate.js";
+import { default as LoginDocument } from "../../../../template/document/LoginWithPassword.js";
+import { serviceParameters } from "../../../../parameters.js";
+import { serviceSecrets } from "../../../../secrets.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST', 'OPTIONS'],
@@ -55,29 +55,33 @@ export default defineServiceMiddleware([
 
   // user is not authenticated and does not have a valid refresh token
   async (context) => {
-    logger.debug('Creating nonce for login form');
-    let nonce;
-    try {
-      nonce = await generateLoginFormNonce();
-    }
-    catch (error) {
-      logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
-    }
-    const loginAsideProps = {
-      loginFormProps: {
-        email: '',
-        nonce,
-        validationErrors: []
+    const { error, state } = await context.incomingMessage.useUrlQuery();
+
+    errorInCallbackGuard: {
+      if (error === undefined) {
+        break errorInCallbackGuard;
       }
+
+      switch (error) {
+        case 'interaction_required':
+          const authorisationURL = googleAuthorisationURL({
+            clientId: serviceParameters.getParameter('oauth2.provider.google.client-id'),
+            prompt: 'consent login',
+            redirectUrl: new URL('/oauth2/google/callback', `https://${serviceParameters.getParameter('authentication.service.host')}`),
+            state,
+          })
+          return void context.serverResponse.sendSeeOtherRedirect(authorisationURL);
+          break;
+      }
+
+
+      return context.serverResponse.sendSeeOtherRedirect(
+        new URL('/login', `https://${serviceParameters.getParameter('authentication.service.host')}`),
+      )
     }
 
-    // return the login page
-    logger.debug('Rendering login page');
-    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${serviceParameters.getParameter('authentication.service.host')}`);
-    context.serverResponse.loginStateCookie.set(JSON.stringify({
-      returnUrl: returnUrl.toString()
-    }));
-    return void context.serverResponse.sendOKHTMLResponse(<LoginDocument loginAsideProps={loginAsideProps} />);
+    return context.serverResponse.sendSeeOtherRedirect(
+      new URL('/', `https://${serviceParameters.getParameter('authentication.service.host')}`)
+    )
   }
 ])

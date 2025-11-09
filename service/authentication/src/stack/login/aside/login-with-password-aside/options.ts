@@ -1,10 +1,10 @@
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { serviceParameters } from "../../../parameters.js";
+import { serviceParameters } from "../../../../parameters.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ['GET', 'OPTIONS'],
+  allowedMethods: ['GET', 'POST', 'OPTIONS'],
   allowedOrigins: serviceParameters.getParameter('authentication.service.allowed-origins'),
 }
 

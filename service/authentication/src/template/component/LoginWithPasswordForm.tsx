@@ -7,7 +7,7 @@ import { default as Button } from "@tw050x.net.library/uikit/component/Button";
 import { default as Notice } from "@tw050x.net.library/uikit/component/Notice";
 
 /**
- * Props for the `<LoginForm />` component.
+ * Props for the `<LoginWithPasswordForm />` component.
  */
 export type Props = {
   email?: string;
@@ -16,12 +16,12 @@ export type Props = {
 }
 
 /**
- * The `<LoginForm />` component.
+ * The `<LoginWithPasswordForm />` component.
  *
  * @param props
  * @returns {JSX.Element}
  */
-const LoginForm: Component<Props> = ({ email = '', nonce, validationErrors = [] }) => {
+const LoginWithPasswordForm: Component<Props> = ({ email = '', nonce, validationErrors = [] }) => {
   let safeFormValidationErrors;
   formValidationErrorsGuard: {
     if (validationErrors.length === 0) break formValidationErrorsGuard;
@@ -65,9 +65,19 @@ const LoginForm: Component<Props> = ({ email = '', nonce, validationErrors = [] 
             onClickHandler="togglePasswordVisibility"
           />
         </div>
-        <div>
+        <div class="flex flex-row space-x-2">
           <Button type="submit" variant="contained">
             Submit
+          </Button>
+          <Button
+            attributes={{
+              'hx-get': '/login/aside/login-with-oauth-aside',
+              'hx-target': '.asides',
+              'hx-swap': 'innerHTML'
+            }}
+            variant="outlined"
+          >
+            Back
           </Button>
         </div>
         {safeFormValidationErrors}
@@ -79,4 +89,4 @@ const LoginForm: Component<Props> = ({ email = '', nonce, validationErrors = [] 
     </>
   );
 }
-export default LoginForm;
+export default LoginWithPasswordForm;

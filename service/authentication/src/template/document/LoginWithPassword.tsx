@@ -1,21 +1,21 @@
 import { Component } from "@kitajs/html";
 import { default as Head } from "@tw050x.net.library/uikit/component/Head";
-import { default as LoginAside, Props as LoginAsideProps } from "../component/LoginAside.js";
+import { default as LoginAside, Props as LoginAsideProps } from "../component/LoginWithPasswordAside.js";
 
 /**
- * Props for the `<LoginDocument />` component.
+ * Props for the `<LoginWithPassword />` component.
  */
 type Props = {
-  loginAsideProps: LoginAsideProps;
+  loginWithPasswordAsideProps: LoginAsideProps;
 }
 
 /**
- * The `<LoginDocument />` component.
+ * The `<LoginWithPassword />` component.
  *
  * @param props
  * @returns {JSX.Element}
  */
-const LoginDocument: Component<Props> = ({ loginAsideProps }) => {
+const LoginWithPassword: Component<Props> = ({ loginWithPasswordAsideProps }) => {
   return (
     <>
       {'<!doctype html>'}
@@ -25,7 +25,7 @@ const LoginDocument: Component<Props> = ({ loginAsideProps }) => {
           <main class="bg-gray-800 text-white w-screen min-h-screen"></main>
           <div class="asides">
             <aside>
-              <LoginAside {...loginAsideProps} />
+              <LoginAside {...loginWithPasswordAsideProps} />
             </aside>
           </div>
         </body>
@@ -33,4 +33,4 @@ const LoginDocument: Component<Props> = ({ loginAsideProps }) => {
     </>
   );
 }
-export default LoginDocument;
+export default LoginWithPassword;

@@ -1,5 +1,5 @@
 import { Middleware } from "@tw050x.net.library/service";
-import { default as LoginDocument } from "../template/document/LoginDocument.js";
+import { default as LoginWithPassword } from "../template/document/LoginWithPassword.js";
 import { serviceParameters } from "../parameters.js";
 
 /**
@@ -17,6 +17,10 @@ export const useLoginEnabledGate: Factory = () => async (context) => {
       disabled: true,
       message: 'Login is currently disabled.',
     } as const;
-    return void context.serverResponse.sendOKHTMLResponse(<LoginDocument loginAsideProps={loginAsideProps} />);
+    return void context.serverResponse.sendOKHTMLResponse(
+      <LoginWithPassword
+        loginWithPasswordAsideProps={loginAsideProps}
+      />
+    );
   }
 }

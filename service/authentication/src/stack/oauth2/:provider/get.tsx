@@ -6,7 +6,7 @@ import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
+import { createCipheriv, randomBytes } from 'node:crypto';
 import { default as googleAuthorisationURL } from '../../../helper/oauth2/provider/google/authorisation-url.js';
 import { useLoginEnabledGate } from "../../../middleware/use-login-enabled-gate.js";
 import { useRefreshTokenGate } from "../../../middleware/use-refresh-token-gate.js";
@@ -83,8 +83,7 @@ export default defineServiceMiddleware([
       case 'google':
         authorisationURL = googleAuthorisationURL({
           clientId: serviceParameters.getParameter('oauth2.provider.google.client-id'),
-          prompt: 'consent login', // TODO: replace this with 'none' and handle errors on the callback page by retrying with an appropriate user prompt for the error
-          redirectUrl: new URL('/oauth2/callback', `https://${serviceParameters.getParameter('authentication.service.host')}`),
+          redirectUrl: new URL('/oauth2/google/callback', `https://${serviceParameters.getParameter('authentication.service.host')}`),
           state: encryptedState,
         })
         break;
