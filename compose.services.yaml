@@ -28,61 +28,6 @@ services:
         target: /srv/service/assets/public
         type: bind
 
-  authentication:
-    command: [ "yarn", "workspace", "@tw050x.net.service/authentication", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
-    depends_on:
-      assets:
-        condition: service_healthy
-      error:
-        condition: service_healthy
-      localstack:
-        condition: service_healthy
-      mongo-primary:
-        condition: service_healthy
-      traefik:
-        condition: service_healthy
-    env_file:
-      - .env.database.authentication
-      - .env.database.user
-      - .env.aws
-      - .env.service.authentication
-      - .env.services.logs
-      - .env.services.mongo-client
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
-      interval: 1m30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
-    image: tw050x.net.service/authentication:latest
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.authentication.entrypoints=websecure
-      - traefik.http.routers.authentication.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.authentication.rule=Host(`tw050x.dev`) && (PathPrefix(`/login`) || Path(`/logout`) || PathPrefix(`/token/`) || PathPrefix(`/oauth2/`))
-      - traefik.http.routers.authentication.tls=true
-      - traefik.http.services.authentication.loadbalancer.server.port=3000
-    mem_limit: 512mb
-    ports:
-      - "9201:9229"
-    pull_policy: never
-    volumes:
-      - source: ./tsconfig.json
-        target: /srv/tsconfig.json
-        type: bind
-      - source: ./database
-        target: /srv/database
-        type: bind
-      - source: ./library
-        target: /srv/library
-        type: bind
-      - source: ./log/service/authentication
-        target: /log
-        type: bind
-      - source: ./service/authentication
-        target: /srv/service/authentication
-        type: bind
-
   error:
     command: [ "yarn", "workspace", "@tw050x.net.service/error", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
     depends_on:
@@ -237,8 +182,6 @@ services:
     depends_on:
       assets:
         condition: service_healthy
-      authentication:
-        condition: service_healthy
       error:
         condition: service_healthy
       localstack:
@@ -317,7 +260,7 @@ services:
       - traefik.enable=true
       - traefik.http.routers.user.entrypoints=websecure
       - traefik.http.routers.user.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.user.rule=Host(`tw050x.dev`) && PathPrefix(`/register`)
+      - traefik.http.routers.user.rule=Host(`tw050x.dev`) && (Path(`/logout`) || Path(`/register`) || PathPrefix(`/login`) || PathPrefix(`/token/`) || PathPrefix(`/oauth2/`))
       - traefik.http.routers.user.tls=true
       - traefik.http.services.user.loadbalancer.server.port=3000
     mem_limit: 512mb

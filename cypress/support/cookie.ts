@@ -33,5 +33,5 @@ export const createEncryptedLoginCookieValue = async (content: string): Promise<
   return JSON.stringify({
     iv: iv.toString('hex'),
     content: encrypted
-  })
+  });
 }

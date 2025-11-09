@@ -292,7 +292,7 @@ export default class ContextualIncomingMessage extends IncomingMessage {
    * const query = await incomingMessage.useUrlQuery();
    * console.log(query); // {}
    */
-  async useUrlQuery(): Promise<Record<string, string>> {
+  async useUrlQuery(): Promise<Record<string, string | undefined>> {
     const url = new URL(this.url || '', `http://${this.headers.host}`);
     const query: Record<string, string> = {};
     url.searchParams.forEach((value, key) => {

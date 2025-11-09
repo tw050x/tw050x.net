@@ -5,6 +5,7 @@ export const serviceParameters = new ServiceParameters([
   'user.service.allowed-origins',
   'user.service.event-queue-url',
   'user.service.host',
+  'user.service.login-enabled',
   'user.service.registration-enabled',
   'cookie.access-token.name',
   'cookie.access-token.domain',
@@ -12,7 +13,8 @@ export const serviceParameters = new ServiceParameters([
   'cookie.login-state.domain',
   'cookie.refresh-token.domain',
   'cookie.refresh-token.name',
-  'cookie.refreshable-token.name'
+  'cookie.refreshable-token.name',
+  'oauth2.provider.google.client-id',
 ]);
 
 await serviceParameters.synchroniseServiceParameters();

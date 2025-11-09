@@ -6,10 +6,8 @@ To run a development environment you will need to create the necessary environme
 
 - .env.aws
 - .env.database.assignment
-- .env.database.authentication
 - .env.database.user
 - .env.mongo
-- .env.service.authentication
 - .env.service.error
 - .env.service.localstack
 - .env.service.marketing
@@ -44,13 +42,6 @@ To run a development environment you will need to create the necessary environme
 | .env.database.assignment | ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME          | Name of the tasks collection in the assignment database          |
 | .env.database.assignment | ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME | Name of the task templates collection in the assignment database |
 
-### .env.database.authentication
-
-| Filename                     | Key                                            | Description                                                  |
-| ---------------------------- | ---------------------------------------------- | ------------------------------------------------------------ |
-| .env.database.authentication | AUTHENTICATION_DATABASE_NAME                   | Name of the authentication database                          |
-| .env.database.authentication | AUTHENTICATION_DATABASE_NONCES_COLLECTION_NAME | Name of the nonces collection in the authentication database |
-
 ### .env.database.user
 
 | Filename           | Key                                       | Description                                             |
@@ -66,12 +57,6 @@ To run a development environment you will need to create the necessary environme
 | Filename            | Key      | Description                                      |
 | ------------------- | -------- | ------------------------------------------------ |
 | .env.service.assets | NODE_ENV | Node environment (development, production, etc.) |
-
-### .env.service.authentication
-
-| Filename                    | Key      | Description                                      |
-| --------------------------- | -------- | ------------------------------------------------ |
-| .env.service.authentication | NODE_ENV | Node environment (development, production, etc.) |
 
 ### .env.service.error
 

@@ -1,7 +1,0 @@
-
-# Directories
-artifact/
-
-# Files
-*.js
-tsconfig.tsbuildinfo

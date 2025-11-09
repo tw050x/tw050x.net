@@ -5,11 +5,11 @@
   "dependencies": {
     "@kitajs/html": "^4.2.9",
     "@tw050x.net.database/assignment": "workspace:*",
-    "@tw050x.net.database/authentication": "workspace:*",
     "@tw050x.net.database/user": "workspace:*",
     "@tw050x.net.library/authentication": "workspace:*",
     "@tw050x.net.library/cors": "workspace:*",
     "@tw050x.net.library/database": "workspace:*",
+    "@tw050x.net.library/encryption": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
     "@tw050x.net.library/middleware": "workspace:*",
     "@tw050x.net.library/parameters": "workspace:*",

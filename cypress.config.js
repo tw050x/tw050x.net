@@ -4,10 +4,8 @@ import { default as dotenv } from "dotenv";
 
 // Load environment variables from .env file
 dotenv.config({ path: resolve(__dirname, './.env.aws') });
-dotenv.config({ path: resolve(__dirname, './.env.database.authentication') });
 dotenv.config({ path: resolve(__dirname, './.env.database.user') });
 dotenv.config({ path: resolve(__dirname, './.env.service.error') });
-dotenv.config({ path: resolve(__dirname, './.env.service.authentication') });
 dotenv.config({ path: resolve(__dirname, './.env.service.marketing') });
 dotenv.config({ path: resolve(__dirname, './.env.service.navigation') });
 dotenv.config({ path: resolve(__dirname, './.env.service.portal') });

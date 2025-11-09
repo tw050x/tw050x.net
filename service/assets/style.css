@@ -2,7 +2,6 @@
 
 @source "./stylesheet";
 @source "../../library/uikit/src";
-@source "../../service/authentication/src/template";
 @source "../../service/error/src/template";
 @source "../../service/marketing/src/template";
 @source "../../service/navigation/src/template";

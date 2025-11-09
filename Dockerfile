@@ -15,7 +15,6 @@ RUN yarn
 
 ## Build the project
 RUN yarn workspaces foreach \
-  --from @tw050x.net.service/authentication \
   --from @tw050x.net.service/error \
   --from @tw050x.net.service/marketing \
   --from @tw050x.net.service/navigation \
@@ -46,12 +45,6 @@ COPY --from=build /build/database/assignment/artifact /srv/database/assignment/a
 COPY --from=build /build/database/assignment/package.json /srv/database/assignment/package.json
 COPY --from=build /build/database/assignment/tsconfig.json /srv/database/assignment/tsconfig.json
 
-FROM node:23.11.1-alpine3.22 AS database-authentication
-WORKDIR /srv
-COPY --from=build /build/database/authentication/artifact /srv/database/authentication/artifact
-COPY --from=build /build/database/authentication/package.json /srv/database/authentication/package.json
-COPY --from=build /build/database/authentication/tsconfig.json /srv/database/authentication/tsconfig.json
-
 FROM node:23.11.1-alpine3.22 AS database-user
 WORKDIR /srv
 COPY --from=build /build/database/user/artifact /srv/database/user/artifact
@@ -75,6 +68,12 @@ WORKDIR /srv
 COPY --from=build /build/library/database/artifact /srv/library/database/artifact
 COPY --from=build /build/library/database/package.json /srv/library/database/package.json
 COPY --from=build /build/library/database/tsconfig.json /srv/library/database/tsconfig.json
+
+FROM node:23.11.1-alpine3.22 AS library-encryption
+WORKDIR /srv
+COPY --from=build /build/library/encryption/artifact /srv/library/encryption/artifact
+COPY --from=build /build/library/encryption/package.json /srv/library/encryption/package.json
+COPY --from=build /build/library/encryption/tsconfig.json /srv/library/encryption/tsconfig.json
 
 FROM node:23.11.1-alpine3.22 AS library-logger
 WORKDIR /srv
@@ -142,33 +141,6 @@ COPY --from=build /build/service/assets/serve.json /srv/service/assets/serve.jso
 RUN yarn workspaces focus --production @tw050x.net.service/assets --production
 ENTRYPOINT [ "sh", "-c" ]
 CMD [ "yarn workspace @tw050x.net.service/assets serve --config /srv/service/assets/serve.json --listen tcp://0.0.0.0:3000" ]
-
-FROM node:23.11.1-alpine3.22 AS service-authentication
-RUN apk add --no-cache curl
-RUN npm install -g nodemon --production --no-optional && npm cache clean --force
-WORKDIR /srv
-COPY --from=dependencies /srv /srv
-COPY --from=database-account /srv/database/account /srv/database/account
-COPY --from=database-user /srv/database/user /srv/database/user
-COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
-COPY --from=library-cors /srv/library/cors /srv/library/cors
-COPY --from=library-database /srv/library/database /srv/library/database
-COPY --from=library-logger /srv/library/logger /srv/library/logger
-COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
-COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
-COPY --from=library-queue /srv/library/queue /srv/library/queue
-COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
-COPY --from=library-service /srv/library/service /srv/library/service
-COPY --from=library-types /srv/library/types /srv/library/types
-COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
-COPY --from=library-utility /srv/library/utility /srv/library/utility
-COPY --from=build /build/database/authentication /srv/database/authentication
-COPY --from=build /build/database/user /srv/database/user
-COPY --from=build /build/service/authentication/artifact /srv/service/authentication/artifact
-COPY --from=build /build/service/authentication/package.json /srv/service/authentication/package.json
-COPY --from=build /build/service/authentication/tsconfig.json /srv/service/authentication/tsconfig.json
-RUN yarn workspaces focus @tw050x.net.service/authentication --production
-CMD [ "node", "service/authentication/artifact/serve.js" ]
 
 FROM node:23.11.1-alpine3.22 AS service-error
 RUN apk add --no-cache curl
@@ -269,11 +241,11 @@ RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
-COPY --from=database-authentication /srv/database/authentication /srv/database/authentication
 COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
+COPY --from=library-encryption /srv/library/encryption /srv/library/encryption
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
 COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
@@ -283,7 +255,6 @@ COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
 COPY --from=library-utility /srv/library/utility /srv/library/utility
-COPY --from=build /build/database/authentication /srv/database/authentication
 COPY --from=build /build/database/user /srv/database/user
 COPY --from=build /build/service/user/artifact /srv/service/user/artifact
 COPY --from=build /build/service/user/package.json /srv/service/user/package.json

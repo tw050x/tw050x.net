@@ -19,7 +19,7 @@ export type CredentialDocument = PasswordCredentialsDocument;
 //
 export type NonceDocument = {
   createdAt: Date;
-  type: 'register';
+  type: 'register' | 'login';
   value: string;
 }
 

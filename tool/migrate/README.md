@@ -12,6 +12,8 @@ Add to root workspaces (done) and run your package manager to link.
 
 ## Usage
 
+> TODO: The Usage section is out of date and needs to be updated
+
 In a database package (e.g. `database/authentication`):
 
 - Create a `migrations/` folder
