@@ -12,7 +12,11 @@ const ContinueWithGoogleButton: Component<Props> = () => {
 
   return (
     <>
-      <button class="gsi-material-button">
+      <button
+        class="gsi-material-button"
+        hx-inherit="hx-get hx-target hx-swap"
+        type="button"
+      >
         <div class="gsi-material-button-state"></div>
         <div class="gsi-material-button-content-wrapper">
           <div class="gsi-material-button-icon">

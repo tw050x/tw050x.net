@@ -35,7 +35,12 @@ const LoginWithOAuthAside: Component<Props> = (props) => {
     }
     safeOAuthButtonForm = (
       <div class="flex flex-col space-y-2 mb-12">
-        <ContinueWithGoogleButton />
+        <div
+          class="flex flex-col"
+          hx-get="/oauth2/google"
+        >
+          <ContinueWithGoogleButton />
+        </div>
         <span class="font-bold text-center text-italic text-gray-400">
           — or —
         </span>
