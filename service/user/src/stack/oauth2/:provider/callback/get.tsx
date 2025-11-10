@@ -16,6 +16,7 @@ import { default as jwt, SignOptions } from "jsonwebtoken";
 import { default as googleAuthorisationURL } from '../../../../helper/oauth2/provider/google/authorisation-url.js';
 import { default as googleOAuth2ExchangeCodeForAccessTokenAndScope } from '../../../../helper/oauth2/provider/google/exchange-code-for-access-token-and-scopes.js';
 import { default as googleFetchUserProfile } from '../../../../helper/oauth2/provider/google/fetch-user-profile.js';
+import { default as googleInsertUserOAuthCredentials } from '../../../../helper/oauth2/provider/google/insert-user-oauth-credentials.js';
 import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
 import { useRefreshTokenGate } from "../../../../middleware/use-refresh-token-gate.js";
 import { default as OAuthCallback } from "../../../../template/document/OAuthCallback.js";
@@ -208,13 +209,7 @@ export default defineServiceMiddleware([
                 emailNormalised: normalisedGoogleUserProfileEmailAddress,
                 uuid: userProfileUuid,
               });
-              await userDatabase.credentials.insertOne({
-                createdAt: new Date(),
-                updatedAt: new Date(),
-                provider: 'google',
-                type: 'oauth2',
-                userProfileId: profile.insertedId,
-              });
+              await googleInsertUserOAuthCredentials(profile.insertedId);
               await userDatabaseSession.commitTransaction();
               userProfileId = profile.insertedId;
             }
@@ -264,6 +259,40 @@ export default defineServiceMiddleware([
               );
             }
           }
+          else {
+            logger.debug('Existing user profile found for OAuth2 login', { email: googleUserProfile.email });
+
+            let userOAuthCredentialDocument;
+            try {
+              userOAuthCredentialDocument = await userDatabase.credentials.findOne(
+                sanitizeMongoDBFilterOrPipeline({
+                  userProfileId: userProfileDocument._id,
+                  provider: 'google',
+                  type: 'oauth2',
+                })
+              );
+            }
+            catch (error) {
+              logger.error(error);
+              return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+                <Unrecoverable />
+              );
+            }
+
+            if (userOAuthCredentialDocument === null) {
+              logger.debug('OAuth2 credential document not found for existing user, creating a new credential document', { email: googleUserProfile.email });
+              try {
+                await googleInsertUserOAuthCredentials(userProfileDocument._id);
+              }
+              catch (error) {
+                logger.error(error);
+                return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+                  <Unrecoverable />
+                );
+              }
+            }
+          }
+
           break;
         default:
           logger.debug('OAuth2 callback received for unsupported provider', { provider });

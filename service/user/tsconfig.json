@@ -26,6 +26,7 @@
     "src/helper/oauth2/provider/google/authorisation-url.ts",
     "src/helper/oauth2/provider/google/exchange-code-for-access-token-and-scopes.ts",
     "src/helper/oauth2/provider/google/fetch-user-profile.ts",
+    "src/helper/oauth2/provider/google/insert-user-oauth-credentials.ts",
     "src/helper/oauth2/provider/x/authorisation-url.ts",
     "src/helper/oauth2/provider/x/exchange-code-for-token.ts",
     "src/helper/oauth2/provider/x/fetch-user-profile.ts",

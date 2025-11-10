@@ -29,7 +29,7 @@ const RegisterForm: Component<Props> = ({ email = '', nonce, validationErrors = 
     safeFormValidationErrors = (
       <div class="mt-6">
         <Notice type="error">
-          Invalid email address or password
+          {validationErrors.map((error) => error.message)}
         </Notice>
       </div>
     );
