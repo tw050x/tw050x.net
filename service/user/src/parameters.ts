@@ -15,6 +15,7 @@ export const serviceParameters = new ServiceParameters([
   'cookie.refresh-token.name',
   'cookie.refreshable-token.name',
   'oauth2.provider.google.client-id',
+  'oauth2.provider.google.redirect-uri',
 ]);
 
 await serviceParameters.synchroniseServiceParameters();

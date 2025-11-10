@@ -1,3 +1,4 @@
+import { database as userDatabase } from "@tw050x.net.database/user";
 import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
@@ -8,6 +9,7 @@ import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as googleAuthorisationURL } from '../../../../helper/oauth2/provider/google/authorisation-url.js';
+import { default as googleOAuth2ExchangeCodeForAccessToken } from '../../../../helper/oauth2/provider/google/exchange-code-for-access-token.js';
 import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
 import { useRefreshTokenGate } from "../../../../middleware/use-refresh-token-gate.js";
 import { default as OAuthCallback } from "../../../../template/document/OAuthCallback.js";
@@ -90,9 +92,10 @@ export default defineServiceMiddleware([
       }
 
       // TODO: handle successful authentication flow
-
+      let oauthAccessToken;
       switch (provider) {
         case 'google':
+          oauthAccessToken = await googleOAuth2ExchangeCodeForAccessToken(code);
           break;
         default:
           logger.debug('OAuth2 callback received for unsupported provider', { provider });

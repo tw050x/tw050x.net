@@ -4,6 +4,7 @@ import { ServiceSecrets as ServiceSecrets } from "@tw050x.net.library/secrets";
 export const serviceSecrets = new ServiceSecrets([
   'jwt.secret-key',
   'encrypter.secret-key',
+  'oauth2.provider.google.client-secret',
 ]);
 
 await serviceSecrets.synchroniseServiceSecrets();

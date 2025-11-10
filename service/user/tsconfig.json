@@ -24,7 +24,7 @@
     "src/helper/oauth2/provider/facebook/exchange-code-for-token.ts",
     "src/helper/oauth2/provider/facebook/fetch-user-profile.ts",
     "src/helper/oauth2/provider/google/authorisation-url.ts",
-    "src/helper/oauth2/provider/google/exchange-code-for-token.ts",
+    "src/helper/oauth2/provider/google/exchange-code-for-access-token.ts",
     "src/helper/oauth2/provider/google/fetch-user-profile.ts",
     "src/helper/oauth2/provider/x/authorisation-url.ts",
     "src/helper/oauth2/provider/x/exchange-code-for-token.ts",
