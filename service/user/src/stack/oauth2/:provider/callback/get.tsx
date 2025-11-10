@@ -1,15 +1,21 @@
-import { database as userDatabase } from "@tw050x.net.database/user";
+import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
+import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { decrypt, encrypt } from "@tw050x.net.library/encryption";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
+import { sendMessage } from "@tw050x.net.library/queue";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { normaliseEmailAddress } from "@tw050x.net.library/utility/normalise-email-address";
+import { randomUUID } from "node:crypto"
+import { default as jwt, SignOptions } from "jsonwebtoken";
 import { default as googleAuthorisationURL } from '../../../../helper/oauth2/provider/google/authorisation-url.js';
-import { default as googleOAuth2ExchangeCodeForAccessToken } from '../../../../helper/oauth2/provider/google/exchange-code-for-access-token.js';
+import { default as googleOAuth2ExchangeCodeForAccessTokenAndScope } from '../../../../helper/oauth2/provider/google/exchange-code-for-access-token-and-scopes.js';
+import { default as googleFetchUserProfile } from '../../../../helper/oauth2/provider/google/fetch-user-profile.js';
 import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
 import { useRefreshTokenGate } from "../../../../middleware/use-refresh-token-gate.js";
 import { default as OAuthCallback } from "../../../../template/document/OAuthCallback.js";
@@ -91,11 +97,173 @@ export default defineServiceMiddleware([
         )
       }
 
-      // TODO: handle successful authentication flow
-      let oauthAccessToken;
+      let userProfileDocument;
       switch (provider) {
         case 'google':
-          oauthAccessToken = await googleOAuth2ExchangeCodeForAccessToken(code);
+          let oauthAccessTokenAndScope;
+          try {
+            oauthAccessTokenAndScope = await googleOAuth2ExchangeCodeForAccessTokenAndScope(code);
+          }
+          catch (error) {
+            logger.error(error);
+            logger.debug('Failed to exchange OAuth2 code for access token', { provider });
+            return context.serverResponse.sendBadRequestHTMLResponse(
+              <OAuthCallback error="failed_to_exchange_oauth2_code_for_token" provider={provider} />
+            )
+          }
+
+          // check allowed scopes
+          if (oauthAccessTokenAndScope.scope === null) {
+            logger.debug('OAuth2 access token scope is null', { provider });
+            return context.serverResponse.sendBadRequestHTMLResponse(
+              <OAuthCallback error="insufficient_oauth2_scopes" provider={provider} />
+            )
+          }
+          if (oauthAccessTokenAndScope.scope.includes('https://www.googleapis.com/auth/userinfo.email') === false) {
+            logger.debug('OAuth2 access token missing required email scope', { provider, scopes: oauthAccessTokenAndScope.scope });
+            return context.serverResponse.sendBadRequestHTMLResponse(
+              <OAuthCallback error="insufficient_oauth2_scopes" provider={provider} />
+            )
+          }
+
+          // use the access token to retrieve user info from Google
+          let googleUserProfile;
+          try {
+            googleUserProfile = await googleFetchUserProfile(oauthAccessTokenAndScope.accessToken);
+          }
+          catch (error) {
+            logger.error(error);
+            logger.debug('Failed to fetch user profile from OAuth2 provider', { provider });
+            return context.serverResponse.sendBadRequestHTMLResponse(
+              <OAuthCallback error="failed_to_fetch_oauth2_user_profile" provider={provider} />
+            )
+          }
+
+          if (('email' in googleUserProfile) === false) {
+            logger.debug('OAuth2 user profile missing email', { provider });
+            return context.serverResponse.sendBadRequestHTMLResponse(
+              <OAuthCallback error="oauth2_user_profile_missing_email" provider={provider} />
+            )
+          }
+          if (typeof googleUserProfile.email !== 'string') {
+            logger.debug('OAuth2 user profile email is not a string', { provider });
+            return context.serverResponse.sendBadRequestHTMLResponse(
+              <OAuthCallback error="oauth2_user_profile_missing_email" provider={provider} />
+            )
+          }
+
+          // normalise email address
+          let normalisedGoogleUserProfileEmailAddress;
+          try {
+            normalisedGoogleUserProfileEmailAddress = normaliseEmailAddress(googleUserProfile.email);
+          }
+          catch (error) {
+            logger.error(error);
+            return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+              <Unrecoverable />
+            );
+          }
+
+          try {
+            userProfileDocument = await userDatabase.profile.findOne(
+              sanitizeMongoDBFilterOrPipeline({ emailNormalised: normalisedGoogleUserProfileEmailAddress })
+            );
+          }
+          catch (error) {
+            logger.error(error);
+            return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+              <Unrecoverable />
+            );
+          }
+
+          if (userProfileDocument === null) {
+            let userProfileUuid;
+            let userProfileDocumentByUuid;
+            do {
+              userProfileUuid = randomUUID();
+              try {
+                userProfileDocumentByUuid = await userDatabase.profile.findOne({
+                  uuid: userProfileUuid
+                });
+              }
+              catch (error) {
+                logger.error(error);
+                return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+                  <Unrecoverable />
+                );
+              }
+            }
+            while (userProfileDocumentByUuid !== null);
+            logger.debug('credential document not found, creating a new user', { email: googleUserProfile.email });
+
+            // create a new user profile and credential document within a transaction
+            let userDatabaseSession = userDatabaseClient.startSession();
+            let userProfileId;
+            userDatabaseSession.startTransaction();
+            try {
+              const profile = await userDatabase.profile.insertOne({
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                email: googleUserProfile.email,
+                emailNormalised: normalisedGoogleUserProfileEmailAddress,
+                uuid: userProfileUuid,
+              });
+              await userDatabase.credentials.insertOne({
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                provider: 'google',
+                type: 'oauth2',
+                userProfileId: profile.insertedId,
+              });
+              await userDatabaseSession.commitTransaction();
+              userProfileId = profile.insertedId;
+            }
+            catch (error) {
+              logger.error(error);
+              await userDatabaseSession.abortTransaction();
+              return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+                <Unrecoverable />
+              );
+            }
+            finally {
+              // end the user database session
+              await userDatabaseSession.endSession();
+            }
+
+            // send a message to the event queue indicating a new user has registered
+            // log any errors but do not fail the registration
+            try {
+              const eventQueueUrl = serviceParameters.getParameter('user.service.event-queue-url');
+              await sendMessage(
+                new URL(eventQueueUrl),
+                { eventType: 'UserRegistered', userProfileId, userProfileUuid },
+                { MessageType: { DataType: 'String', StringValue: 'UserRegistered' } }
+              );
+            }
+            catch (error) {
+              // We can survive a failure to send the message, so just log it
+              logger.error(error);
+            }
+
+            try {
+              userProfileDocument = await userDatabase.profile.findOne({
+                _id: userProfileId
+              });
+            }
+            catch (error) {
+              logger.error(error);
+              logger.debug('Failed to fetch newly created user profile document');
+              return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+                <Unrecoverable />
+              );
+            }
+            if (userProfileDocument === null) {
+              logger.error('Newly created user profile document not found');
+              return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+                <Unrecoverable />
+              );
+            }
+          }
           break;
         default:
           logger.debug('OAuth2 callback received for unsupported provider', { provider });
@@ -104,15 +272,34 @@ export default defineServiceMiddleware([
           )
       }
 
-      // retrieve user info from provider
+      // read the JWT secret key
+      // return an error if there is a problem
+      const jwtSecretKey = serviceSecrets.getSecret('jwt.secret-key');
+      if (jwtSecretKey === undefined) {
+        logger.error('JWT secret key is undefined');
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+          <Unrecoverable />
+        );
+      }
 
-      // lookup user via api call to user service
-      //   if user doesn't exist:
-      //     make api call to create the user via the user service and return the user profile id
-      //   else:
-      //     retrieve user profile id
-
-      // create access and refresh tokens, set cookies, redirect to returnUrl
+      // generate JWT tokens and set cookies
+      const refreshTokenOptions: SignOptions = {
+        expiresIn: '4w',
+      };
+      const refreshTokenPayload = {
+        sub: userProfileDocument.uuid
+      };
+      const accessTokenOptions: SignOptions = {
+        expiresIn: '1d',
+      };
+      const accessTokenPayload = {
+        sub: userProfileDocument.uuid
+      };
+      const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
+      const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
+      context.serverResponse.refreshTokenCookie.set(refreshToken);
+      context.serverResponse.accessTokenCookie.set(accessToken);
+      context.serverResponse.loginStateCookie.clear();
 
       return context.serverResponse.sendSeeOtherRedirect(
         new URL('/', `https://${serviceParameters.getParameter('user.service.host')}`)

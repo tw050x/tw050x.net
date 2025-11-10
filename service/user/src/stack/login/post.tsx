@@ -6,7 +6,7 @@ import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.librar
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { logger } from "@tw050x.net.library/logger";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { compare } from "bcryptjs";
 import { default as jwt, SignOptions } from "jsonwebtoken";
 import { default as validator } from "validator";
@@ -65,7 +65,7 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
 
     // validate the email and password fields
@@ -97,7 +97,7 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
     if (userProfileDocument === null) {
       logger.debug('credential document not found', { email });
@@ -122,7 +122,9 @@ export default defineServiceMiddleware([
     catch (error) {
       logger.debug('credential document fetch error', { email });
       logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+        <Unrecoverable />
+      );
     }
     if (credentialDocument === null) {
       logger.debug('credential document not found', { email });
@@ -132,6 +134,14 @@ export default defineServiceMiddleware([
           nonce={nonce}
           validationErrors={[{ message: 'Invalid email or password' }]}
         />
+      );
+    }
+
+    // ensure the credential document is of type password
+    if (credentialDocument.type !== 'password') {
+      logger.debug('credential document is not of type password', { email });
+      return void context.serverResponse.sendBadRequestHTMLResponse(
+        <Unrecoverable />
       );
     }
 
@@ -152,7 +162,7 @@ export default defineServiceMiddleware([
     const jwtSecretKey = serviceSecrets.getSecret('jwt.secret-key');
     if (jwtSecretKey === undefined) {
       logger.error('JWT secret key is undefined');
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
     }
 
     // generate a new access token

@@ -133,7 +133,9 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+        <UnrecoverableDocument />
+      );
     }
     logger.debug('Checked for existing user profile document', { userProfileDocument });
     if (userProfileDocument !== null) {
@@ -168,7 +170,6 @@ export default defineServiceMiddleware([
 
     // generate a unique (unused) UUID for the user
     // return an error if there is a problem
-    let userProfileId;
     let userProfileUuid;
     do {
       userProfileUuid = randomUUID();
@@ -189,6 +190,7 @@ export default defineServiceMiddleware([
 
     // Create the user and credentials documents in the database
     // return an error if there is a problem
+    let userProfileId;
     userDatabaseSession.startTransaction();
     try {
       const profile = await userDatabase.profile.insertOne({
@@ -209,12 +211,14 @@ export default defineServiceMiddleware([
       userProfileId = profile.insertedId;
     }
     catch (error) {
-      await userDatabaseSession.abortTransaction();
       logger.error(error);
+      await userDatabaseSession.abortTransaction();
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
     }
-    // end the user database session
-    await userDatabaseSession.endSession();
+    finally {
+      // end the user database session
+      await userDatabaseSession.endSession();
+    }
 
     // send a message to the event queue indicating a new user has registered
     // log any errors but do not fail the registration
@@ -256,9 +260,9 @@ export default defineServiceMiddleware([
     const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
-    context.serverResponse.loginStateCookie.clear();;
+    context.serverResponse.loginStateCookie.clear();
     return void context.serverResponse.sendSeeOtherRedirect(
-      new URL('/portal/assignment', `https://${serviceParameters.getParameter('user.service.host')}`)
+      new URL('/portal', `https://${serviceParameters.getParameter('user.service.host')}`)
     )
   }
 ])

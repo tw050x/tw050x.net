@@ -7,7 +7,7 @@ import { serviceSecrets } from "../../../../secrets.js";
  * @param code The authorization code received from Google.
  * @returns The access token.
  */
-const exchangeCodeForToken = async (code: string): Promise<string> => {
+const exchangeCodeForTokenAndScopes = async (code: string): Promise<{ accessToken: string; scope: null | string  }> => {
   const url = new URL('/token', 'https://oauth2.googleapis.com');
 
   // fetch the access token
@@ -63,11 +63,19 @@ const exchangeCodeForToken = async (code: string): Promise<string> => {
     throw new Error('failed_to_exchange_oauth2_code_for_token');
   }
 
+  if (('scope' in responseData) === false) {
+    logger.debug('OAuth2 token exchange response missing scope');
+    throw new Error('failed_to_exchange_oauth2_code_for_token');
+  }
+
   if (typeof responseData.access_token !== 'string') {
     logger.debug('OAuth2 token exchange response access_token is not a string');
     throw new Error('failed_to_exchange_oauth2_code_for_token');
   }
 
-  return responseData.access_token;
+  return {
+    accessToken: responseData.access_token,
+    scope: typeof responseData.scope === 'string' ? responseData.scope : null,
+  };
 };
-export default exchangeCodeForToken;
+export default exchangeCodeForTokenAndScopes;

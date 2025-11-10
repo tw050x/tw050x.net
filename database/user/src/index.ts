@@ -14,7 +14,12 @@ export interface PasswordCredentialsDocument extends CredentialDocumentBase {
   type: 'password';
 }
 
-export type CredentialDocument = PasswordCredentialsDocument;
+export interface OAuth2CredentialsDocument extends CredentialDocumentBase {
+  provider: 'google';
+  type: 'oauth2';
+}
+
+export type CredentialDocument = PasswordCredentialsDocument | OAuth2CredentialsDocument;
 
 //
 export type NonceDocument = {
