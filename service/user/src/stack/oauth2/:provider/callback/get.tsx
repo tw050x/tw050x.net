@@ -331,7 +331,7 @@ export default defineServiceMiddleware([
       context.serverResponse.loginStateCookie.clear();
 
       return context.serverResponse.sendSeeOtherRedirect(
-        new URL('/', `https://${serviceParameters.getParameter('user.service.host')}`)
+        context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${serviceParameters.getParameter('user.service.host')}`)
       )
     }
 
