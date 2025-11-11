@@ -2,7 +2,11 @@ import { DatabaseDocument } from "@tw050x.net.library/types"
 import { mongoClient } from "./client.js";
 
 
-export interface AuthorisationPermissionDocument extends DatabaseDocument {}
+export interface AuthorisationPermissionDocument extends DatabaseDocument {
+  userProfileId: string;
+  resource: string;
+  action: string;
+}
 
 /**
  *
