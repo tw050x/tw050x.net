@@ -42,6 +42,13 @@ To run a development environment you will need to create the necessary environme
 | .env.database.assignment | ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME          | Name of the tasks collection in the assignment database          |
 | .env.database.assignment | ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME | Name of the task templates collection in the assignment database |
 
+### .env.database.authorisation
+
+| Filename                    | Key                                            | Description                                                      |
+| --------------------------- | ---------------------------------------------- | ---------------------------------------------------------------- |
+| .env.database.authorisation | ASSIGNMENT_DATABASE_NAME                       | Name of the authorisation database                               |
+| .env.database.authorisation | ASSIGNMENT_DATABASE_PERMISSION_COLLECTION_NAME | Name of the permissions collection in the authorisation database |
+
 ### .env.database.user
 
 | Filename           | Key                                       | Description                                             |
@@ -57,6 +64,12 @@ To run a development environment you will need to create the necessary environme
 | Filename            | Key      | Description                                      |
 | ------------------- | -------- | ------------------------------------------------ |
 | .env.service.assets | NODE_ENV | Node environment (development, production, etc.) |
+
+### .env.service.authorisation
+
+| Filename                   | Key      | Description                                      |
+| -------------------------- | -------- | ------------------------------------------------ |
+| .env.service.authorisation | NODE_ENV | Node environment (development, production, etc.) |
 
 ### .env.service.error
 

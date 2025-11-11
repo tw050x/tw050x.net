@@ -6,7 +6,7 @@ import { addHours, differenceInSeconds } from "date-fns";
 import { default as jwt } from "jsonwebtoken";
 
 /**
- *
+ * Access token cookie
  */
 export type AccessTokenCookie = {
   authorised: boolean | null;
@@ -19,7 +19,7 @@ export type AccessTokenCookie = {
 }
 
 /**
- *
+ * Options for the useAccessTokenCookie middleware
  */
 export type UseAccessTokenCookieOptions = {
   cookieName: string;
@@ -29,7 +29,7 @@ export type UseAccessTokenCookieOptions = {
 }
 
 /**
- *
+ * Resulting context after the useAccessTokenCookie middleware has run
  */
 export type UseAccessTokenCookieResultingContext = ServiceRequestContext & {
   incomingMessage: ServiceRequestContext['incomingMessage'] & {
@@ -44,7 +44,7 @@ export type UseAccessTokenCookieResultingContext = ServiceRequestContext & {
 }
 
 /**
- *
+ * Factory type for the useAccessTokenCookie middleware
  */
 type Factory = (options: UseAccessTokenCookieOptions) => Middleware<
   ServiceRequestContext,
