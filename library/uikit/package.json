@@ -52,6 +52,7 @@
     "./svg/Portal": "./artifact/svg/Portal.js",
     "./svg/Products": "./artifact/svg/Products.js",
     "./svg/Profile": "./artifact/svg/Profile.js",
+    "./svg/Settings": "./artifact/svg/Settings.js",
     "./svg/Thankful": "./artifact/svg/Thankful.js",
     "./svg/Users": "./artifact/svg/Users.js",
     "./svg/Warning": "./artifact/svg/Warning.js",

@@ -57,6 +57,7 @@
     "src/svg/Logout.tsx",
     "src/svg/Products.tsx",
     "src/svg/Profile.tsx",
+    "src/svg/Settings.tsx",
     "src/svg/Thankful.tsx",
     "src/svg/Users.tsx",
     "src/svg/Warning.tsx",

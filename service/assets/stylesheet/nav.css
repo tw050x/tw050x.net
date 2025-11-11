@@ -28,6 +28,12 @@ nav[data-state="open"] ~ main {
 nav[data-state="open"] span.hidden-when-data-state-open {
   @apply hidden;
 }
+nav a, nav button, nav header {
+  @apply whitespace-nowrap;
+  @apply flex items-center;
+  @apply inline-block;
+}
+
 nav a, nav button {
   @apply whitespace-nowrap;
   @apply flex items-center;

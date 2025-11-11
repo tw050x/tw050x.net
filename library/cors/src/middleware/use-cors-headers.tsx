@@ -53,7 +53,7 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
     allowedHeaders = options.allowedHeaders.
       map((header) => header.trim().toLowerCase());
   }
-  logger.debug('Allowed Headers:', allowedHeaders);
+  logger.debug('Allowed Headers:', allowedHeaders === '*' ? '*' : allowedHeaders.join(', '));
   if (Array.isArray(allowedHeaders) && isArrayOfHeaders(allowedHeaders) === false) {
     throw new TypeError('Invalid allowedHeaders parameter');
   }
@@ -68,7 +68,7 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
       map((method) => method.trim().toUpperCase()).
       filter((method): method is HttpMethod => method !== undefined && isHttpMethod(method));
   }
-  logger.debug('Allowed Methods:', allowedMethods);
+  logger.debug('Allowed Methods:', allowedMethods === '*' ? '*' : allowedMethods.join(', '));
   if (Array.isArray(allowedMethods) && isArrayOfHttpMethods(allowedMethods) === false) {
     throw new TypeError('Invalid allowedMethods parameter');
   }
@@ -85,7 +85,7 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
     }
     allowedOrigins = options.allowedOrigins.split(',').map((origin) => origin.trim())
   }
-  logger.debug('Allowed Origins:', allowedOrigins);
+  logger.debug('Allowed Origins:', allowedOrigins === '*' ? '*' : allowedOrigins.join(', '));
 
   // Prepare headers to set on the response
   const headers = [];

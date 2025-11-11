@@ -87,17 +87,10 @@ export default defineServiceMiddleware([
 
     // Add default menu items
     serviceMenuItems.push({
-      href: '/portal/assignment',
-      label: 'Assignments',
-      IconComponent: Assignment,
-      classes: [
-        incompleteAssignmentDocuments > 0 ? 'attention' : ''
-      ]
-    });
-    serviceMenuItems.push({
       IconComponent: Dashboard,
       href: '/portal/dashboard',
       label: 'Dashboard',
+      disabled: hasActiveBillingAccount === false,
     });
     serviceMenuItems.push({
       IconComponent: Brands,
@@ -110,16 +103,6 @@ export default defineServiceMiddleware([
       href: '/portal/products',
       label: 'Products',
       disabled: hasActiveBillingAccount === false,
-    });
-    serviceMenuItems.push({
-      IconComponent: Account,
-      href: '/portal/account',
-      label: 'Account',
-    });
-    serviceMenuItems.push({
-      IconComponent: Users,
-      href: '/portal/users',
-      label: 'Users',
     });
 
     // Determine menu state from cookie
@@ -135,17 +118,10 @@ export default defineServiceMiddleware([
         menuState = 'open';
     }
 
-    // Determine user menu items
-    let userMenuItems = [
-      { label: 'Switch Account', src: `/portal/users/profile/${context.incomingMessage.accessTokenCookie.payload.sub}`, IconComponent: AccountSwitch },
-      { label: 'My Profile', href: `/portal/users/profile/${context.incomingMessage.accessTokenCookie.payload.sub}`, IconComponent: Profile },
-    ]
-
     //
     const portalMenuProps: PortalMenuProps = {
       menuState,
       serviceMenuItems,
-      userMenuItems,
     }
     return void context.serverResponse.sendOKHTMLResponse(<PortalMenu {...portalMenuProps} />);
   }
