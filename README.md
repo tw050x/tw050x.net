@@ -129,3 +129,47 @@ This should be used in the `.env.<service-name>` files for the services that nee
 ```
 mongodb://root:password@mongo-primary:27017,mongo-secondary-a:27017/?replicaSet=rs0&authSource=admin
 ```
+
+## Setup SSL Certificates
+
+This repo requires SSL certificates to be used for local development. You can use the certificate tool located in the `tool/certificate` directory to create a local Certificate Authority (CA) and issue SSL certificates for the services.
+
+Begin by installing the tool's dependencies:
+
+```bash
+yarn install
+```
+
+### Setting up a certificate for a local domain
+
+Create a Certificate Authority:
+
+```bash
+yarn certificate create-ca --dir="./ca/traefik"
+```
+
+> Ensure you follow the instructions to install/trust the CA on your system. This should be printed as output of the `create-ca` command
+
+Next, create SSL certificates:
+
+```bash
+yarn certificate create-cert --ca-dir="./ca/traefik" --cert-dir="./certificates/traefik" --name="development" --domains="tw050x.dev,*.tw050x.dev"
+```
+
+You should now have certificates for traefik to use in local development. Traefik is already setup to use the above certificate.
+
+### Setting up a certificate for service to authorisation service communication
+
+Create a Certificate Authority:
+
+```bash
+yarn certificate create-ca --dir="./ca/authorisation"
+```
+
+> Ensure you follow the instructions to install/trust the CA on your system. This should be printed as output of the `create-ca` command
+
+Next, create SSL certificates:
+
+```bash
+yarn certificate create-cert --ca-dir="./ca/authorisation" --cert-dir="./certificates/authorisation" --name="development"
+```

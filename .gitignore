@@ -1,6 +1,7 @@
 
 # Top level directories
-artifact/*
+ca/*
+certificates/*
 coverage/*
 log/*
 tmp/*

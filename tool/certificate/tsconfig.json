@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./artifact",
+    "rootDir": "./src",
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "src/bin/certificate.ts",
+    "src/index.ts",
+    "src/generator.ts",
+    "src/types.ts",
+    "src/validator.ts",
+  ]
+}

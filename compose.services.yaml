@@ -28,6 +28,50 @@ services:
         target: /srv/service/assets/public
         type: bind
 
+  authorisation:
+    command: [ "yarn", "workspace", "@tw050x.net.service/authorisation", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      localstack:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.aws
+      - .env.service.authorisation
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/authorisation:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.authorisation.entrypoints=websecure
+      - traefik.http.routers.authorisation.tls=true
+      - traefik.http.services.authorisation.loadbalancer.server.port=3000
+    mem_limit: 512mb
+    ports:
+      - "9201:9229"
+    pull_policy: never
+    volumes:
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/authorisation
+        target: /log
+        type: bind
+      - source: ./service/authorisation
+        target: /srv/service/authorisation
+        type: bind
+
   error:
     command: [ "yarn", "workspace", "@tw050x.net.service/error", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
     depends_on:

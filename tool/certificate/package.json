@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "author": "tw050x (Richard Kielty)",
+  "bin": "artifact/bin/certificate.js",
+  "dependencies": {
+    "node-forge": "^1.3.1"
+  },
+  "description": "CLI tool to manage SSL certificates.",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/node-forge": "^1.3.4",
+    "typescript": "^5.7.2"
+  },
+  "exports": {
+    ".": "./artifact/index.js"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net.tool/certificate",
+  "private": true,
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "type": "module",
+  "types": "artifact/index.d.ts",
+  "version": "1.0.0"
+}

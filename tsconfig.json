@@ -56,6 +56,7 @@
     { "path": "./service/payment" },
     { "path": "./service/portal" },
     { "path": "./service/user" },
+    { "path": "./tool/certificate" },
     { "path": "./tool/migrate" },
     { "path": "./worker/user-service-queue" },
   ]

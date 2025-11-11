@@ -15,6 +15,7 @@ RUN yarn
 
 ## Build the project
 RUN yarn workspaces foreach \
+  --from @tw050x.net.service/authorisation \
   --from @tw050x.net.service/error \
   --from @tw050x.net.service/marketing \
   --from @tw050x.net.service/navigation \
@@ -141,6 +142,27 @@ COPY --from=build /build/service/assets/serve.json /srv/service/assets/serve.jso
 RUN yarn workspaces focus --production @tw050x.net.service/assets --production
 ENTRYPOINT [ "sh", "-c" ]
 CMD [ "yarn workspace @tw050x.net.service/assets serve --config /srv/service/assets/serve.json --listen tcp://0.0.0.0:3000" ]
+
+FROM node:23.11.1-alpine3.22 AS service-authorisation
+RUN apk add --no-cache curl
+RUN npm install -g nodemon --production --no-optional && npm cache clean --force
+WORKDIR /srv
+COPY --from=dependencies /srv /srv
+COPY --from=library-cors /srv/library/cors /srv/library/cors
+COPY --from=library-logger /srv/library/logger /srv/library/logger
+COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
+COPY --from=library-queue /srv/library/queue /srv/library/queue
+COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
+COPY --from=library-service /srv/library/service /srv/library/service
+COPY --from=library-types /srv/library/types /srv/library/types
+COPY --from=library-utility /srv/library/utility /srv/library/utility
+COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
+COPY --from=build /build/service/authorisation/artifact /srv/service/authorisation/artifact
+COPY --from=build /build/service/authorisation/package.json /srv/service/authorisation/package.json
+COPY --from=build /build/service/authorisation/tsconfig.json /srv/service/authorisation/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.service/authorisation --production
+CMD [ "node", "service/authorisation/artifact/serve.js" ]
 
 FROM node:23.11.1-alpine3.22 AS service-error
 RUN apk add --no-cache curl

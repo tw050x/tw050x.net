@@ -5,6 +5,20 @@
     // Services
     // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+    // Authorisation Service
+    {
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}",
+      "name": "Attach to Authorisation Service",
+      "port": 9201,
+      "request": "attach",
+      "restart": true,
+      "sourceMaps": true,
+      "remoteRoot": "/srv",
+      "timeout": 10000,
+      "type": "node",
+    },
+
     // Error Service
     {
       "address": "localhost",

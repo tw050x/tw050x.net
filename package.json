@@ -6,6 +6,7 @@
   },
   "devDependencies": {
     "@kitajs/ts-html-plugin": "^4.1.2",
+    "@tw050x.net.tool/certificate": "workspace:*",
     "@tw050x.net.tool/migrate": "workspace:*",
     "@yarnpkg/types": "^4.0.0",
     "cypress": "^15.2.0",
@@ -22,6 +23,7 @@
     "cy:open": "cypress open",
     "docker:build": "docker buildx bake --builder tw050x.net.builder --file bake.hcl --load",
     "mongo:migrate": "migrate",
+    "ssl:certificate": "certificate",
     "xss-scan:test": "xss-scan"
   },
   "type": "module",
@@ -55,6 +57,7 @@
     "service/portal",
     "service/traefik",
     "service/user",
+    "tool/certificate",
     "tool/migrate",
     "worker/user-service-queue"
   ]

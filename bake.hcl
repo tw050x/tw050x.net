@@ -1,6 +1,7 @@
 group "default" {
   targets = [
     "service-assets",
+    "service-authorisation",
     "service-error",
     "service-marketing",
     "service-navigation",
@@ -14,6 +15,12 @@ target "service-assets" {
   dockerfile = "Dockerfile"
   target = "service-assets"
   tags = ["tw050x.net.service/assets:latest"]
+}
+
+target "service-authorisation" {
+  dockerfile = "Dockerfile"
+  target = "service-authorisation"
+  tags = ["tw050x.net.service/authorisation:latest"]
 }
 
 target "service-error" {

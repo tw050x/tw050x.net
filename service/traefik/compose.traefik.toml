@@ -34,5 +34,5 @@
   exposedByDefault = false
 
 [[tls.certificates]]
-  certFile = "/root/certificates/localhost.crt"
-  keyFile = "/root/certificates/localhost.key"
+  certFile = "/root/certificates/development.crt"
+  keyFile = "/root/certificates/development.key"

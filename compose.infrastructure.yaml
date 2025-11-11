@@ -92,7 +92,7 @@ services:
     restart: always
     volumes:
       - ./service/traefik/compose.traefik.toml:/etc/traefik/traefik.toml
-      - ./service/traefik/certificates:/root/certificates
+      - ./certificates/traefik:/root/certificates
 
   traefik-socket:
     image: tecnativa/docker-socket-proxy:0.3.0
