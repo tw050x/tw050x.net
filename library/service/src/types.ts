@@ -15,6 +15,15 @@ export type CreateRequestHandlerOptions = {
 }
 
 export type CreateServerOptions = {
-  routesDirectory: string;
+  mTLSOptions?: {
+    caPaths: Array<string>;
+    rejectUnauthorized?: boolean;
+    requestCert?: boolean;
+  };
+  sslOptions: {
+    certPath: string;
+    keyPath: string;
+  };
   port: number;
+  routesDirectory: string;
 }

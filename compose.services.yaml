@@ -1,4 +1,8 @@
 
+networks:
+  services:
+    driver: bridge
+
 services:
 
   assets:
@@ -22,6 +26,8 @@ services:
       - traefik.http.routers.assets.tls=true
       - traefik.http.services.assets.loadbalancer.server.port=3000
     mem_limit: 512mb
+    networks:
+      - services
     pull_policy: never
     volumes:
       - source: ./service/assets/public
@@ -43,7 +49,7 @@ services:
       - .env.services.logs
       - .env.services.mongo-client
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -54,13 +60,25 @@ services:
       - traefik.http.routers.authorisation.entrypoints=websecure
       - traefik.http.routers.authorisation.tls=true
       - traefik.http.services.authorisation.loadbalancer.server.port=3000
+      - traefik.http.services.authorisation.loadbalancer.server.scheme=https
+      - traefik.http.services.authorisation.loadbalancer.serversTransport=secure@file
     mem_limit: 512mb
+    networks:
+      services:
+        aliases:
+          - authorisation.service.internal
     ports:
       - "9201:9229"
     pull_policy: never
     volumes:
       - source: ./tsconfig.json
         target: /srv/tsconfig.json
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
         type: bind
       - source: ./library
         target: /srv/library
@@ -87,7 +105,7 @@ services:
       - .env.services.logs
       - .env.services.mongo-client
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -98,13 +116,25 @@ services:
       - traefik.http.routers.error.entrypoints=websecure
       - traefik.http.routers.error.tls=true
       - traefik.http.services.error.loadbalancer.server.port=3000
+      - traefik.http.services.error.loadbalancer.server.scheme=https
+      - traefik.http.services.error.loadbalancer.serversTransport=secure@file
     mem_limit: 512mb
+    networks:
+      services:
+        aliases:
+          - error.service.internal
     ports:
       - "9202:9229"
     pull_policy: never
     volumes:
       - source: ./tsconfig.json
         target: /srv/tsconfig.json
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
         type: bind
       - source: ./library
         target: /srv/library
@@ -136,7 +166,7 @@ services:
       - .env.services.logs
       - .env.services.mongo-client
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -150,13 +180,25 @@ services:
       - traefik.http.routers.marketing.priority=1
       - traefik.http.routers.marketing.tls=true
       - traefik.http.services.marketing.loadbalancer.server.port=3000
+      - traefik.http.services.marketing.loadbalancer.server.scheme=https
+      - traefik.http.services.marketing.loadbalancer.serversTransport=secure@file
     mem_limit: 512mb
+    networks:
+      services:
+        aliases:
+          - marketing.service.internal
     ports:
       - "9203:9229"
     pull_policy: never
     volumes:
       - source: ./tsconfig.json
         target: /srv/tsconfig.json
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
         type: bind
       - source: ./library
         target: /srv/library
@@ -190,7 +232,7 @@ services:
       - .env.services.logs
       - .env.services.mongo-client
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -203,13 +245,25 @@ services:
       - traefik.http.routers.navigation.rule=Host(`tw050x.dev`) && PathPrefix(`/navigation/`)
       - traefik.http.routers.navigation.tls=true
       - traefik.http.services.navigation.loadbalancer.server.port=3000
+      - traefik.http.services.navigation.loadbalancer.server.scheme=https
+      - traefik.http.services.navigation.loadbalancer.serversTransport=secure@file
     mem_limit: 512mb
+    networks:
+      services:
+        aliases:
+          - navigation.service.internal
     ports:
       - "9204:9229"
     pull_policy: never
     volumes:
       - source: ./tsconfig.json
         target: /srv/tsconfig.json
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
         type: bind
       - source: ./library
         target: /srv/library
@@ -242,7 +296,7 @@ services:
       - .env.services.logs
       - .env.services.mongo-client
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -255,13 +309,25 @@ services:
       - traefik.http.routers.portal.rule=Host(`tw050x.dev`) && PathPrefix(`/portal`)
       - traefik.http.routers.portal.tls=true
       - traefik.http.services.portal.loadbalancer.server.port=3000
+      - traefik.http.services.portal.loadbalancer.server.scheme=https
+      - traefik.http.services.portal.loadbalancer.serversTransport=secure@file
     mem_limit: 512mb
+    networks:
+      services:
+        aliases:
+          - portal.service.internal
     ports:
       - "9205:9229"
     pull_policy: never
     volumes:
       - source: ./tsconfig.json
         target: /srv/tsconfig.json
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
         type: bind
       - source: ./library
         target: /srv/library
@@ -294,7 +360,7 @@ services:
       - .env.services.logs
       - .env.services.mongo-client
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/healthcheck || exit 1"]
+      test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
@@ -307,13 +373,25 @@ services:
       - traefik.http.routers.user.rule=Host(`tw050x.dev`) && (Path(`/logout`) || Path(`/register`) || PathPrefix(`/login`) || PathPrefix(`/token/`) || PathPrefix(`/oauth2/`))
       - traefik.http.routers.user.tls=true
       - traefik.http.services.user.loadbalancer.server.port=3000
+      - traefik.http.services.user.loadbalancer.server.scheme=https
+      - traefik.http.services.user.loadbalancer.serversTransport=secure@file
     mem_limit: 512mb
+    networks:
+      services:
+        aliases:
+          - user.service.internal
     ports:
       - "9206:9229"
     pull_policy: never
     volumes:
       - source: ./tsconfig.json
         target: /srv/tsconfig.json
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
         type: bind
       - source: ./database
         target: /srv/database

@@ -153,7 +153,7 @@ yarn certificate create-ca --dir="./ca/traefik"
 Next, create SSL certificates:
 
 ```bash
-yarn certificate create-cert --ca-dir="./ca/traefik" --cert-dir="./certificates/traefik" --name="development" --domains="tw050x.dev,*.tw050x.dev"
+yarn certificate create-cert --ca-dir="./ca/traefik" --cert-dir="./certificates" --name="traefik" --domains="tw050x.dev,*.tw050x.dev"
 ```
 
 You should now have certificates for traefik to use in local development. Traefik is already setup to use the above certificate.
@@ -164,6 +164,11 @@ Create a Certificate Authority:
 
 ```bash
 yarn certificate create-ca --dir="./ca/authorisation"
+yarn certificate create-ca --dir="./ca/error"
+yarn certificate create-ca --dir="./ca/marketing"
+yarn certificate create-ca --dir="./ca/navigation"
+yarn certificate create-ca --dir="./ca/portal"
+yarn certificate create-ca --dir="./ca/user"
 ```
 
 > Ensure you follow the instructions to install/trust the CA on your system. This should be printed as output of the `create-ca` command
@@ -171,5 +176,10 @@ yarn certificate create-ca --dir="./ca/authorisation"
 Next, create SSL certificates:
 
 ```bash
-yarn certificate create-cert --ca-dir="./ca/authorisation" --cert-dir="./certificates/authorisation" --name="development"
+yarn certificate create-cert --ca-dir="./ca/authorisation" --cert-dir="./certificates" --name="authorisation" --domains="authorisation.service.internal"
+yarn certificate create-cert --ca-dir="./ca/error" --cert-dir="./certificates" --name="error" --domains="error.service.internal"
+yarn certificate create-cert --ca-dir="./ca/marketing" --cert-dir="./certificates" --name="marketing" --domains="marketing.service.internal"
+yarn certificate create-cert --ca-dir="./ca/navigation" --cert-dir="./certificates" --name="navigation" --domains="navigation.service.internal"
+yarn certificate create-cert --ca-dir="./ca/portal" --cert-dir="./certificates" --name="portal" --domains="portal.service.internal"
+yarn certificate create-cert --ca-dir="./ca/user" --cert-dir="./certificates" --name="user" --domains="user.service.internal"
 ```

@@ -7,8 +7,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const server = defineServer({
-  routesDirectory: resolve(__dirname, 'stack'),
+  mTLSOptions: {
+    caPaths: [
+      resolve(__dirname, '..', '..', '..', 'ca', 'user', 'ca.crt')
+    ],
+  },
   port: 3000,
+  routesDirectory: resolve(__dirname, 'stack'),
+  sslOptions: {
+    certPath: resolve(__dirname, '..', '..', '..', 'certificates', 'authorisation.crt'),
+    keyPath: resolve(__dirname, '..', '..', '..', 'certificates', 'authorisation.key'),
+  },
 });
 
 server.listen(() => {

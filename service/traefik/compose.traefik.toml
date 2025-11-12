@@ -19,6 +19,9 @@
   status = ["404"]
   service = "error@docker"
   query = "/404"
+[http.serversTransports]
+[http.serversTransports.secure]
+  insecureSkipVerify = true # This can be used as traefik is only for local development
 
 [log]
   level = "DEBUG"
@@ -34,5 +37,5 @@
   exposedByDefault = false
 
 [[tls.certificates]]
-  certFile = "/root/certificates/development.crt"
-  keyFile = "/root/certificates/development.key"
+  certFile = "/root/certificates/traefik.crt"
+  keyFile = "/root/certificates/traefik.key"

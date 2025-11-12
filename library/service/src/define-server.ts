@@ -1,5 +1,6 @@
 import { logger } from "@tw050x.net.library/logger";
-import { createServer as createHttpServer } from "node:http";
+import { createServer as createHttpsServer } from "node:https";
+import { readFileSync } from "node:fs";
 import { default as ContextualIncomingMessage } from "./contextual-incoming-message.js";
 import { default as ContextualServerResponse } from "./contextual-server-response.js";
 import { default as discoverRoutes } from "./routes.js";
@@ -31,9 +32,23 @@ export default function defineServer(options: CreateServerOptions) {
     return void context.serverResponse.end('Healthy');
   });
 
-  const server = createHttpServer({
+  const server = createHttpsServer({
     IncomingMessage: ContextualIncomingMessage,
     ServerResponse: ContextualServerResponse,
+
+    // Server certificate
+    cert: readFileSync(options.sslOptions.certPath),
+    key: readFileSync(options.sslOptions.keyPath),
+
+    // mTLS options
+    ...(options.mTLSOptions
+      ? {
+        ca: options.mTLSOptions.caPaths,
+        rejectUnauthorized: options.mTLSOptions.rejectUnauthorized ?? true,
+        requestCert: options.mTLSOptions.requestCert ?? true,
+      }
+      : {}
+    )
   });
 
   server.on('request', createRequestHandler({ routes }));

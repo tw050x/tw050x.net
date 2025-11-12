@@ -23,6 +23,8 @@ services:
     #   start_period: 30s
     image: tw050x.net.worker/user-service-queue:latest
     mem_limit: 512mb
+    networks:
+      - services
     ports:
       - "9301:9229"
     pull_policy: never

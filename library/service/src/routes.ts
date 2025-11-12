@@ -82,13 +82,15 @@ export default async function discoverRoutes(directory: string): Promise<Discove
                 path,
                 middleware
               });
-            } catch (error) {
+            }
+            catch (error) {
               console.warn(`Failed to load middleware from ${entryPath}:`, error);
             }
           }
         }
       }
-    } catch (error) {
+    }
+    catch (error) {
       console.warn(`Failed to read directory ${currentPath}:`, error);
     }
   }
