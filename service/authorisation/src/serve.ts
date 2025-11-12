@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 const server = defineServer({
   mTLSOptions: {
     caPaths: [
-      resolve(__dirname, '..', '..', '..', 'ca', 'user', 'ca.crt')
+      resolve(__dirname, '..', '..', '..', 'ca', 'user', 'ca.crt'),
     ],
   },
   port: 3000,
