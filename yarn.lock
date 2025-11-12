@@ -2590,6 +2590,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@tw050x.net.library/authorisation@workspace:library/authorisation":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.library/authorisation@workspace:library/authorisation"
+  dependencies:
+    "@tw050x.net.library/logger": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@tw050x.net.library/cors@workspace:*, @tw050x.net.library/cors@workspace:library/cors":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.library/cors@workspace:library/cors"

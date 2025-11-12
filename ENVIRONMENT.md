@@ -5,12 +5,18 @@ To run a development environment you will need to create the necessary environme
 ## Files
 
 - .env.aws
+- .env.database.account
 - .env.database.assignment
+- .env.database.authorisation
+- .env.database.payment
 - .env.database.user
-- .env.mongo
+- .env.migration.mongo
+- .env.service.assets
+- .env.service.authorisation
 - .env.service.error
 - .env.service.localstack
 - .env.service.marketing
+- .env.service.mongo
 - .env.service.navigation
 - .env.service.portal
 - .env.service.traefik
@@ -34,6 +40,16 @@ To run a development environment you will need to create the necessary environme
 | .env.aws | AWS_SECRET_ACCESS_KEY | Secret key for AWS services, Can be set to a dummy value when using localstack |
 | .env.aws | AWS_REGION            | AWS region to use                                                              |
 
+### .env.database.account
+
+| Filename              | Key                                         | Description                                               |
+| --------------------- | ------------------------------------------- | --------------------------------------------------------- |
+| .env.database.account | ACCOUNT_DATABASE_NAME                       | Name of the account database                              |
+| .env.database.account | ACCOUNT_DATABASE_BILLING_COLLECTION_NAME    | Name of the billing collection in the account database    |
+| .env.database.account | ACCOUNT_DATABASE_INVITATION_COLLECTION_NAME | Name of the invitation collection in the account database |
+| .env.database.account | ACCOUNT_DATABASE_MEMBERSHIP_COLLECTION_NAME | Name of the membership collection in the account database |
+| .env.database.account | ACCOUNT_DATABASE_PROFILE_COLLECTION_NAME    | Name of the profile collection in the account database    |
+
 ### .env.database.assignment
 
 | Filename                 | Key                                               | Description                                                      |
@@ -49,6 +65,13 @@ To run a development environment you will need to create the necessary environme
 | .env.database.authorisation | ASSIGNMENT_DATABASE_NAME                       | Name of the authorisation database                               |
 | .env.database.authorisation | ASSIGNMENT_DATABASE_PERMISSION_COLLECTION_NAME | Name of the permissions collection in the authorisation database |
 
+### .env.database.payment
+
+| Filename              | Key                                     | Description                                           |
+| --------------------- | --------------------------------------- | ----------------------------------------------------- |
+| .env.database.payment | ASSIGNMENT_DATABASE_NAME                | Name of the payment database                          |
+| .env.database.payment | PAYMENT_DATABASE_NONCES_COLLECTION_NAME | Name of the nonces collection in the payment database |
+
 ### .env.database.user
 
 | Filename           | Key                                       | Description                                             |
@@ -58,6 +81,15 @@ To run a development environment you will need to create the necessary environme
 | .env.database.user | USER_DATABASE_NONCES_COLLECTION_NAME      | Name of the nonces collection in the user database      |
 | .env.database.user | USER_DATABASE_PERMISSIONS_COLLECTION_NAME | Name of the permissions collection in the user database |
 | .env.database.user | USER_DATABASE_PROFILE_COLLECTION_NAME     | Name of the profile collection in the user database     |
+
+### .env.migration.mongo
+
+| Filename             | Key                     | Description           |
+| -------------------- | ----------------------- | --------------------- |
+| .env.migration.mongo | MONGO_DATABASE_USERNAME | MongoDB username      |
+| .env.migration.mongo | MONGO_DATABASE_PASSWORD | MongoDB password      |
+| .env.migration.mongo | MONGO_DATABASE_HOST     | MongoDB database host |
+| .env.migration.mongo | MONGO_DATABASE_PORT     | MongoDB database port |
 
 ### .env.service.assets
 

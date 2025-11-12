@@ -36,6 +36,7 @@
     "database/payment",
     "database/user",
     "library/authentication",
+    "library/authorisation",
     "library/cors",
     "library/database",
     "library/encryption",

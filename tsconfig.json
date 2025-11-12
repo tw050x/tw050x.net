@@ -36,6 +36,7 @@
     { "path": "./database/payment" },
     { "path": "./database/user" },
     { "path": "./library/authentication" },
+    { "path": "./library/authorisation" },
     { "path": "./library/cors" },
     { "path": "./library/database" },
     { "path": "./library/encryption" },

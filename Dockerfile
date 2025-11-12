@@ -58,6 +58,12 @@ COPY --from=build /build/library/authentication/artifact /srv/library/authentica
 COPY --from=build /build/library/authentication/package.json /srv/library/authentication/package.json
 COPY --from=build /build/library/authentication/tsconfig.json /srv/library/authentication/tsconfig.json
 
+FROM node:23.11.1-alpine3.22 AS library-authorisation
+WORKDIR /srv
+COPY --from=build /build/library/authorisation/artifact /srv/library/authorisation/artifact
+COPY --from=build /build/library/authorisation/package.json /srv/library/authorisation/package.json
+COPY --from=build /build/library/authorisation/tsconfig.json /srv/library/authorisation/tsconfig.json
+
 FROM node:23.11.1-alpine3.22 AS library-cors
 WORKDIR /srv
 COPY --from=build /build/library/cors/artifact /srv/library/cors/artifact
