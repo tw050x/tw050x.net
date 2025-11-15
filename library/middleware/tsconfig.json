@@ -17,8 +17,6 @@
     "src/index.ts",
     "src/use-log-request.ts",
     "src/use-pagination-query-parameters.tsx",
-    "src/use-ui-menu-state-cookie.tsx",
-    "src/use-ui-user-table-tools-state-cookie.tsx",
   ],
   "references": [
     { "path": "../logger" },

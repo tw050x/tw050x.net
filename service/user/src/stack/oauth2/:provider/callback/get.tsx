@@ -3,11 +3,13 @@ import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.l
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
-import { logger } from "@tw050x.net.library/logger";
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { decrypt, encrypt } from "@tw050x.net.library/encryption";
+import { logger } from "@tw050x.net.library/logger";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { sendMessage } from "@tw050x.net.library/queue";
+import { usePublisher } from "@tw050x.net.library/queue";
+import { read as readSecret } from "@tw050x.net.library/secrets";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { normaliseEmailAddress } from "@tw050x.net.library/utility/normalise-email-address";
@@ -20,31 +22,30 @@ import { default as googleInsertUserOAuthCredentials } from '../../../../helper/
 import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
 import { useRefreshTokenGate } from "../../../../middleware/use-refresh-token-gate.js";
 import { default as OAuthCallback } from "../../../../template/document/OAuthCallback.js";
-import { serviceParameters } from "../../../../parameters.js";
-import { serviceSecrets } from "../../../../secrets.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST', 'OPTIONS'],
-  allowedOrigins: serviceParameters.getParameter('user.service.allowed-origins'),
+  allowedOrigins: readConfig('service.user.allowed-origins'),
 }
 
 const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
-  cookieName: serviceParameters.getParameter('cookie.access-token.name'),
-  cookieDomain: serviceParameters.getParameter('cookie.access-token.domain'),
-  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
+  cookieName: readConfig('cookie.access-token.name'),
+  cookieDomain: readConfig('cookie.access-token.domain'),
+  jwtSecretKey: readSecret('jwt.secret-key'),
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  cookieName: serviceParameters.getParameter('cookie.login-state.name'),
-  cookieDomain: serviceParameters.getParameter('cookie.login-state.domain'),
-  encrypterSecretKey: serviceSecrets.getSecret('encrypter.secret-key'),
+  cookieName: readConfig('cookie.login-state.name'),
+  cookieDomain: readConfig('cookie.login-state.domain'),
+  encrypterSecretKey: readSecret('encrypter.secret-key'),
 }
 
 const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
-  cookieDomain: serviceParameters.getParameter('cookie.refresh-token.domain'),
-  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
-  refreshCookieName: serviceParameters.getParameter('cookie.refresh-token.name'),
-  refreshableCookieName: serviceParameters.getParameter('cookie.refreshable-token.name'),
+  jwtSecretKey: readSecret('jwt.secret-key'),
+  refreshCookieName: readConfig("cookie.refresh-token.name"),
+  refreshCookieDomain: readConfig("cookie.refresh-token.domain"),
+  refreshableCookieName: readConfig("cookie.refreshable-token.name"),
+  refreshableCookieDomain: readConfig("cookie.refreshable-token.domain"),
 }
 
 export default defineServiceMiddleware([
@@ -54,6 +55,7 @@ export default defineServiceMiddleware([
   useAccessTokenCookie(useAccessTokenCookieOptions),
   useLoginStateCookie(useLoginStateCookieOptions),
   useRefreshTokenCookie(useRefreshTokenCookieOptions),
+  usePublisher(),
 
   // check if the user has a valid access token
   // async (context) => {
@@ -76,7 +78,7 @@ export default defineServiceMiddleware([
 
     let decryptedState;
     try {
-      decryptedState = decrypt(state, serviceSecrets.getSecret('encrypter.secret-key'));
+      decryptedState = decrypt(state, readSecret('encrypter.secret-key'));
     }
     catch (error) {
       logger.error(error);
@@ -228,11 +230,10 @@ export default defineServiceMiddleware([
             // send a message to the event queue indicating a new user has registered
             // log any errors but do not fail the registration
             try {
-              const eventQueueUrl = serviceParameters.getParameter('user.service.event-queue-url');
-              await sendMessage(
-                new URL(eventQueueUrl),
-                { eventType: 'UserRegistered', userProfileId, userProfileUuid },
-                { MessageType: { DataType: 'String', StringValue: 'UserRegistered' } }
+              const eventQueueName = readConfig('service.user.event-queue-name');
+              await context.incomingMessage.queuePublisher.send(
+                eventQueueName,
+                { type: 'UserRegistered', userProfileId, userProfileUuid }
               );
             }
             catch (error) {
@@ -303,7 +304,7 @@ export default defineServiceMiddleware([
 
       // read the JWT secret key
       // return an error if there is a problem
-      const jwtSecretKey = serviceSecrets.getSecret('jwt.secret-key');
+      const jwtSecretKey = readSecret('jwt.secret-key');
       if (jwtSecretKey === undefined) {
         logger.error('JWT secret key is undefined');
         return void context.serverResponse.sendInternalServerErrorHTMLResponse(
@@ -331,7 +332,7 @@ export default defineServiceMiddleware([
       context.serverResponse.loginStateCookie.clear();
 
       return context.serverResponse.sendSeeOtherRedirect(
-        context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${serviceParameters.getParameter('user.service.host')}`)
+        context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${readConfig('service.user.host')}`)
       )
     }
 
@@ -369,15 +370,15 @@ export default defineServiceMiddleware([
         ...decryptedState,
         attempt,
       }),
-      serviceSecrets.getSecret('encrypter.secret-key')
+      readSecret('encrypter.secret-key')
     );
 
     switch (`${provider}__${error}`) {
       case 'google__interaction_required':
         const authorisationURL = googleAuthorisationURL({
-          clientId: serviceParameters.getParameter('oauth2.provider.google.client-id'),
+          clientId: readConfig('oauth2.google.client-id'),
           prompt: 'consent login',
-          redirectUrl: new URL('/oauth2/google/callback', `https://${serviceParameters.getParameter('user.service.host')}`),
+          redirectUrl: new URL('/oauth2/google/callback', `https://${readConfig('service.user.host')}`),
           state: updatedEncryptedState,
         })
         return void context.serverResponse.sendSeeOtherRedirect(authorisationURL);

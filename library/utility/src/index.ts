@@ -8,3 +8,4 @@ export { isArrayOfHttpMethods } from './is-array-of-http-methods.js';
 export { isHttpMethod } from './is-http-method.js';
 export { isObjectId } from './is-object-id.js';
 export { normaliseEmailAddress } from './normalise-email-address.js';
+export { updateJSON } from './update-json.js';

@@ -1,25 +1,26 @@
 {
   "compilerOptions": {
-    "lib": [
-      "ESNext.Disposable"
-    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
     "outDir": "./artifact",
     "rootDir": "./src",
+    "types": [
+      "@types/node",
+      "@kitajs/html/htmx.d.ts"
+    ],
   },
   "exclude": [
     "artifact"
   ],
   "extends": "../../tsconfig.json",
   "files": [
+    "../../types/env.services.rabbitmq.d.ts",
+    "src/middleware/use-publisher.ts",
     "src/index.ts",
-    "src/sqs-client.ts",
-    "src/sqs-receive-messages.ts",
-    "src/sqs-send-message.ts",
-    "src/types.ts",
+    "src/client.ts",
   ],
   "references": [
     { "path": "../logger" },
     { "path": "../service" },
-    { "path": "../utility" },
   ]
 }

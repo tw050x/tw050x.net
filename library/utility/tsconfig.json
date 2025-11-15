@@ -19,5 +19,6 @@
     "src/is-http-method.ts",
     "src/is-object-id.ts",
     "src/normalise-email-address.ts",
+    "src/update-json.ts"
   ]
 }

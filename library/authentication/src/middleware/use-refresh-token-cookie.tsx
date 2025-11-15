@@ -15,10 +15,11 @@ type RefreshTokenCookie = {
 }
 
 export type UseRefreshTokenCookieOptions = {
-  cookieDomain: string;
   jwtSecretKey: string;
   refreshCookieName: string;
+  refreshCookieDomain: string;
   refreshableCookieName: string;
+  refreshableCookieDomain: string;
 }
 
 /**
@@ -58,6 +59,16 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
     return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
   }
 
+  //
+  cookieDomainGuard: {
+    if (options.refreshCookieDomain !== '') {
+      break cookieDomainGuard;
+    }
+    logger.error('access token cookie name is undefined or empty');
+    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
+  }
+
+  //
   cookieNameGuard: {
     if (options.refreshableCookieName !== '') {
       break cookieNameGuard;
@@ -68,7 +79,7 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
 
   //
   cookieDomainGuard: {
-    if (options.cookieDomain !== '') {
+    if (options.refreshableCookieDomain !== '') {
       break cookieDomainGuard;
     }
     logger.error('access token cookie name is undefined or empty');
@@ -133,14 +144,14 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
   //
   const clearRefreshTokenCookie = () => {
     cookies.set(options.refreshCookieName, '', {
-      domain: options.cookieDomain,
+      domain: options.refreshCookieDomain,
       httpOnly: true,
       path: '/token/refresh',
       sameSite: 'strict',
       secure: true,
     });
     cookies.set(options.refreshableCookieName, '', {
-      domain: options.cookieDomain,
+      domain: options.refreshableCookieDomain,
       httpOnly: false,
       path: '/',
       sameSite: 'lax',
@@ -155,7 +166,7 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
     const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
     const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
     cookies.set(options.refreshCookieName, value, {
-      domain: options.cookieDomain,
+      domain: options.refreshCookieDomain,
       httpOnly: true,
       maxAge: maxAgeInMilliseconds,
       path: '/token/refresh',
@@ -163,7 +174,7 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
       secure: true,
     });
     cookies.set(options.refreshableCookieName, 'true', {
-      domain: options.cookieDomain,
+      domain: options.refreshableCookieDomain,
       httpOnly: false,
       maxAge: maxAgeInMilliseconds,
       path: '/',

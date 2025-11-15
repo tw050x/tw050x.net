@@ -1,9 +1,12 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
     "outDir": "./artifact",
     "rootDir": "./src",
     "types": [
       "@types/node",
+      "@kitajs/html/htmx.d.ts"
     ],
   },
   "exclude": [
@@ -11,9 +14,10 @@
   ],
   "extends": "../../tsconfig.json",
   "files": [
+    "src/middleware/use-authorisation.ts",
     "src/index.ts",
   ],
   "references": [
-    { "path": "../logger" },
+    { "path": "../service" },
   ],
 }

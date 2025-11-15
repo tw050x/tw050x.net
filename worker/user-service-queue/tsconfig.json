@@ -1,25 +1,28 @@
 {
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
     "outDir": "./artifact",
     "rootDir": "./src",
+    "types": [
+      "@types/node",
+      "@kitajs/html/htmx.d.ts"
+    ],
   },
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
     "../../types/env.worker.user-service-queue.d.ts",
     "src/event-handler/user-registered.ts",
-    "src/parameters.ts",
     "src/run.ts",
-    "src/secrets.ts",
   ],
   "references": [
     { "path": "../../database/assignment" },
     { "path": "../../database/user" },
+    { "path": "../../library/configs" },
     { "path": "../../library/database" },
     { "path": "../../library/logger" },
-    { "path": "../../library/parameters" },
     { "path": "../../library/queue" },
-    { "path": "../../library/secrets" },
     { "path": "../../library/utility" },
   ]
 }

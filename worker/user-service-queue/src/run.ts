@@ -1,56 +1,67 @@
-import { serviceParameters } from "./parameters.js";
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
-import { receiveMessages } from "@tw050x.net.library/queue";
+import { ConsumerProps, rabbit } from "@tw050x.net.library/queue";
 import { default as handleUserRegisteredEvent } from "./event-handler/user-registered.js";
 
-const eventQueueUrl = serviceParameters.getParameter('user.service.event-queue-url');
+const consumerProps: ConsumerProps = {
+  queue: readConfig('service.user.event-queue-name'),
+  noAck: false,
+};
 
-let receivedExitSignal = false;
+const consumer = rabbit.createConsumer(consumerProps, async (message: unknown) => {
+  // ensure the message is a valid structure
+  if (typeof message !== 'object') {
+    throw new Error('Invalid message format');
+  }
+  if (message === null) {
+    throw new Error('Invalid message format');
+  }
+  if (('type' in message) === false) {
+    throw new Error('Message type is missing');
+  }
+  if (typeof message.type !== 'string') {
+    throw new Error('Message type must be a string');
+  }
 
-const cleanup =  () => {
-  logger.info('Received SIGINT, shutting down gracefully...');
-  receivedExitSignal = true;
-}
-
-process.on('SIGINT', cleanup);
-process.on('SIGTERM', cleanup);
-
-try {
-  for await (const { deleteMessage, message } of receiveMessages(eventQueueUrl)) {
-    logger.debug('Received message:', message);
-    if (receivedExitSignal) {
-      logger.debug('Exiting after receiving exit signal.');
-      break;
-    }
-
-    if (message.Body === undefined) {
-      logger.warn(`Message body is undefined for message ID: ${message.MessageId}`);
-      continue;
-    }
-    logger.debug('Processing UserRegistered event:', message.Body);
-
-    let messageBody;
-    try {
-      messageBody = JSON.parse(message.Body) as Record<string, unknown>;
-    }
-    catch (error) {
-      logger.debug(`Failed to parse message body for message ID: ${message.MessageId}`);
-      logger.error(error);
-      continue;
-    }
-
-    logger.debug('MessageType:', message.MessageAttributes?.MessageType?.StringValue);
-    switch (message.MessageAttributes?.MessageType?.StringValue) {
-      case 'UserRegistered':
-        await handleUserRegisteredEvent(messageBody);
-        await deleteMessage();
+  // handle the message type
+  switch (message.type) {
+    case 'UserRegistered':
+        await handleUserRegisteredEvent(message);
         break;
       default:
-        logger.warn('Unknown message type:', message.MessageAttributes?.MessageType);
-    }
+        logger.debug(`Unknown message type: ${message.type}`);
+        throw new Error(`Unknown message type`);
   }
+});
+
+const cleanup =  () => {
+  consumer.close();
+  rabbit.close();
 }
-catch (error) {
-  logger.debug('Error in main processing loop');
+
+consumer.on('error', (error) => {
+  cleanup();
   logger.error(error);
-}
+  logger.debug('Consumer error occurred, shutting down...');
+  process.exit(1);
+});
+
+process.on('SIGINT', () => {
+  cleanup();
+  logger.debug('Received SIGINT, shutting down gracefully...');
+  process.exit(0);
+});
+
+process.on('SIGTERM', () => {
+  cleanup();
+  logger.debug('Received SIGTERM, shutting down gracefully...');
+  process.exit(0);
+});
+
+process.on('unhandledRejection', async (reason, promise) => {
+  cleanup();
+  logger.debug('An Unhandled Rejection Occured');
+  logger.error('Reason:', reason);
+  logger.error('Promise:', promise);
+  process.exit(1);
+});

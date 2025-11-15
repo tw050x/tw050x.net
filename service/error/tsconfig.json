@@ -17,14 +17,13 @@
     "../../types/env.service.error.d.ts",
     "src/stack/404/get.tsx",
     "src/stack/404/options.ts",
-    "src/parameters.ts",
     "src/serve.ts",
   ],
   "references": [
+    { "path": "../../library/configs" },
     { "path": "../../library/cors" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
-    { "path": "../../library/parameters" },
     { "path": "../../library/service" },
     { "path": "../../library/uikit" },
   ]

@@ -17,15 +17,14 @@
     "../../types/env.service.authorisation.d.ts",
     "src/stack/authorise/get.tsx",
     "src/stack/authorise/options.ts",
-    "src/parameters.ts",
     "src/serve.ts",
   ],
   "references": [
     { "path": "../../library/authentication" },
+    { "path": "../../library/configs" },
     { "path": "../../library/cors" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
-    { "path": "../../library/parameters" },
     { "path": "../../library/service" },
   ]
 }

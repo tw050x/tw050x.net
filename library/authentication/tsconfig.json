@@ -22,7 +22,6 @@
   ],
   "references": [
     { "path": "../logger" },
-    { "path": "../parameters" },
     { "path": "../secrets" },
     { "path": "../service" },
     { "path": "../utility" },

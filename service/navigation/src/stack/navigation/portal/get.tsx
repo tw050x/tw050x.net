@@ -2,10 +2,12 @@ import { database as accountDatabase } from "@tw050x.net.database/account";
 import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
 import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
 import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
+import { read as readSecret } from "@tw050x.net.library/secrets";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Account } from "@tw050x.net.library/uikit/svg/Account";
@@ -19,24 +21,22 @@ import { default as Users } from "@tw050x.net.library/uikit/svg/Users";
 import { default as Cookies } from "cookies";
 import { useAuthGate } from "../../../middleware/use-auth-gate.js";
 import { default as PortalMenu, Props as PortalMenuProps } from "../../../template/component/PortalMenu.js";
-import { serviceParameters } from "../../../parameters.js";
-import { serviceSecrets } from "../../../secrets.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS'],
-  allowedOrigins: serviceParameters.getParameter('navigation.service.allowed-origins'),
+  allowedOrigins: readConfig('service.navigation.allowed-origins'),
 }
 
 const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
-  cookieName: serviceParameters.getParameter('cookie.access-token.name'),
-  cookieDomain: serviceParameters.getParameter('cookie.access-token.domain'),
-  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
+  cookieName: readConfig('cookie.access-token.name'),
+  cookieDomain: readConfig('cookie.access-token.domain'),
+  jwtSecretKey: readSecret('jwt.secret-key'),
 }
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  cookieName: serviceParameters.getParameter('cookie.login-state.name'),
-  cookieDomain: serviceParameters.getParameter('cookie.login-state.domain'),
-  encrypterSecretKey: serviceSecrets.getSecret('encrypter.secret-key'),
+  cookieName: readConfig('cookie.login-state.name'),
+  cookieDomain: readConfig('cookie.login-state.domain'),
+  encrypterSecretKey: readSecret('encrypter.secret-key'),
 }
 
 export default defineServiceMiddleware([

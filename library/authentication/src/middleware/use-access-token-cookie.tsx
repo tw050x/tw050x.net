@@ -39,7 +39,7 @@ export type UseAccessTokenCookieResultingContext = ServiceRequestContext & {
     accessTokenCookie: {
       clear: () => void;
       set: (value: string) => void;
-    }
+    };
   }
 }
 

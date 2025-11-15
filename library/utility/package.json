@@ -19,7 +19,8 @@
     "./is-array-of-http-methods": "./artifact/is-array-of-http-methods.js",
     "./is-http-method": "./artifact/is-http-method.js",
     "./is-object-id": "./artifact/is-object-id.js",
-    "./normalise-email-address": "./artifact/normalise-email-address.js"
+    "./normalise-email-address": "./artifact/normalise-email-address.js",
+    "./update-json": "./artifact/update-json.js"
   },
   "installConfig": {
     "hoistingLimits": "workspaces"

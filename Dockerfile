@@ -64,6 +64,12 @@ COPY --from=build /build/library/authorisation/artifact /srv/library/authorisati
 COPY --from=build /build/library/authorisation/package.json /srv/library/authorisation/package.json
 COPY --from=build /build/library/authorisation/tsconfig.json /srv/library/authorisation/tsconfig.json
 
+FROM node:23.11.1-alpine3.22 AS library-configs
+WORKDIR /srv
+COPY --from=build /build/library/configs/artifact /srv/library/configs/artifact
+COPY --from=build /build/library/configs/package.json /srv/library/configs/package.json
+COPY --from=build /build/library/configs/tsconfig.json /srv/library/configs/tsconfig.json
+
 FROM node:23.11.1-alpine3.22 AS library-cors
 WORKDIR /srv
 COPY --from=build /build/library/cors/artifact /srv/library/cors/artifact
@@ -93,12 +99,6 @@ WORKDIR /srv
 COPY --from=build /build/library/middleware/artifact /srv/library/middleware/artifact
 COPY --from=build /build/library/middleware/package.json /srv/library/middleware/package.json
 COPY --from=build /build/library/middleware/tsconfig.json /srv/library/middleware/tsconfig.json
-
-FROM node:23.11.1-alpine3.22 AS library-parameters
-WORKDIR /srv
-COPY --from=build /build/library/parameters/artifact /srv/library/parameters/artifact
-COPY --from=build /build/library/parameters/package.json /srv/library/parameters/package.json
-COPY --from=build /build/library/parameters/tsconfig.json /srv/library/parameters/tsconfig.json
 
 FROM node:23.11.1-alpine3.22 AS library-queue
 WORKDIR /srv
@@ -154,10 +154,10 @@ RUN apk add --no-cache curl
 RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
+COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
-COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
@@ -175,10 +175,10 @@ RUN apk add --no-cache curl
 RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
+COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
-COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
@@ -197,11 +197,11 @@ RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
+COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
-COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
@@ -222,11 +222,11 @@ COPY --from=dependencies /srv /srv
 COPY --from=database-account /srv/database/account /srv/database/account
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
 COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
+COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
-COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
@@ -246,11 +246,11 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
 COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
+COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
-COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
@@ -271,12 +271,12 @@ COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
 COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
+COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-encryption /srv/library/encryption /srv/library/encryption
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
-COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
@@ -297,11 +297,12 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
 COPY --from=database-user /srv/database/user /srv/database/user
+COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
-COPY --from=library-parameters /srv/library/parameters /srv/library/parameters
 COPY --from=library-queue /srv/library/queue /srv/library/queue
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
+COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/worker/user-service-queue/artifact /srv/worker/user-service-queue/artifact

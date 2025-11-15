@@ -1,22 +1,19 @@
 
 services:
 
-  localstack:
+  rabbitmq:
     env_file:
-      - .env.service.localstack
-    # image: localstack/localstack
-    image: gresau/localstack-persist:4.10 # don't trust this
+      - .env.service.rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:4.2.0-management-alpine
     networks:
       - services
     ports:
-      - "127.0.0.1:4566:4566"
-      - "127.0.0.1:4510-4559:4510-4559"
+      - 5672:5672
+      - 15672:15672
     volumes:
-      - source: ./service/localstack/data
-        target: /persisted-data
-        type: bind
-      - source: /var/run/docker.sock
-        target: /var/run/docker.sock
+      - source: ./service/rabbitmq/data
+        target: /var/lib/rabbitmq
         type: bind
 
   mongo-primary:

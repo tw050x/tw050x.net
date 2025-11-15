@@ -10,7 +10,7 @@ const server = defineServer({
   port: 3000,
   routesDirectory: resolve(__dirname, 'stack'),
   sslOptions: {
-    certPath: resolve(__dirname, '..', '..', '..', 'certificates', 'user.crt'),
+    crtPath: resolve(__dirname, '..', '..', '..', 'certificates', 'user.crt'),
     keyPath: resolve(__dirname, '..', '..', '..', 'certificates', 'user.key'),
   },
 });
@@ -19,22 +19,38 @@ server.listen(() => {
   logger.info('Server is listening on port 3000');
 });
 
+const cleanup = () => {
+  server.close();
+}
+
+server.on('error', (error) => {
+  logger.error(error);
+  logger.info('Server error occurred, shutting down...');
+  cleanup();
+  process.exit(1);
+});
+
 process.on('SIGINT', () => {
   logger.info('Received SIGINT, shutting down gracefully...');
-  server.close();
+  cleanup();
+  process.exit(0);
 });
 
 process.on('SIGTERM', () => {
   logger.info('Received SIGTERM, shutting down gracefully...');
-  server.close();
+  cleanup();
+  process.exit(0);
 });
 
 process.on('uncaughtException', (error) => {
   logger.error('Uncaught Exception:', error);
-  server.close();
+  cleanup();
+  process.exit(1);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  server.close();
+  logger.error('Unhandled Rejection at:', promise);
+  logger.debug(`Reason: ${reason}`);
+  cleanup();
+  process.exit(1);
 });

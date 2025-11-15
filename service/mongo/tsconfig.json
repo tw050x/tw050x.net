@@ -4,10 +4,11 @@
     "rootDir": "./src",
   },
   "exclude": [
-    "../../types/env.service.mongo.d.ts",
     "data/",
     "migration/",
   ],
   "extends": "../../tsconfig.json",
-  "files": []
+  "files": [
+    "../../types/env.service.mongo.d.ts",
+  ]
 }

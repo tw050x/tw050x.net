@@ -21,9 +21,7 @@
   "exports": {
     ".": "./artifact/index.js",
     "./use-log-request": "./artifact/use-log-request.js",
-    "./use-pagination-query-parameters": "./artifact/use-pagination-query-parameters.js",
-    "./use-ui-menu-state-cookie": "./artifact/use-ui-menu-state-cookie.js",
-    "./use-ui-user-table-tools-state-cookie": "./artifact/use-ui-user-table-tools-state-cookie.js"
+    "./use-pagination-query-parameters": "./artifact/use-pagination-query-parameters.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/middleware",

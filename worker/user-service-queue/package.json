@@ -3,13 +3,14 @@
   "author": "tw050x (Richard Kielty)",
   "description": "The User Service Events Worker project for tw050x.net",
   "dependencies": {
+    "@kitajs/html": "^4.2.9",
     "@tw050x.net.database/assignment": "workspace:*",
     "@tw050x.net.database/user": "workspace:*",
+    "@tw050x.net.library/configs": "workspace:*",
     "@tw050x.net.library/database": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
-    "@tw050x.net.library/parameters": "workspace:*",
     "@tw050x.net.library/queue": "workspace:*",
-    "@tw050x.net.library/secrets": "workspace:*",
+    "@tw050x.net.library/service": "workspace:*",
     "@tw050x.net.library/utility": "workspace:*",
     "bcryptjs": "^3.0.2",
     "mongodb": "^6.12.0"

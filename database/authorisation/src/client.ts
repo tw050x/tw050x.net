@@ -35,16 +35,13 @@ export const mongoClient = new MongoClient(process.env.MONGO_CLIENT_URI, configu
 
 process.on('SIGINT', async () => {
   await mongoClient.close();
-  process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
   await mongoClient.close();
-  process.exit(0);
 });
 
 process.on('uncaughtException', async (error) => {
   console.error('Uncaught Exception:', error);
   await mongoClient.close();
-  process.exit(1);
 });

@@ -1,6 +1,6 @@
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
-import { serviceParameters } from "../../../../parameters.js";
-import { serviceSecrets } from "../../../../secrets.js";
+import { read as readSecret } from "@tw050x.net.library/secrets";
 
 /**
  * Exchange an OAuth2 authorization code for an access token from Google.
@@ -20,10 +20,10 @@ const exchangeCodeForTokenAndScopes = async (code: string): Promise<{ accessToke
       },
       body: new URLSearchParams({
         code: code,
-        client_id: serviceParameters.getParameter('oauth2.provider.google.client-id'),
-        client_secret: serviceSecrets.getSecret('oauth2.provider.google.client-secret'),
+        client_id: readConfig('oauth2.google.client-id'),
+        client_secret: readSecret('oauth2.google.client-secret'),
         grant_type: 'authorization_code',
-        redirect_uri: serviceParameters.getParameter('oauth2.provider.google.redirect-uri'),
+        redirect_uri: readConfig('oauth2.google.redirect-uri'),
       })
     });
   }

@@ -1,5 +1,5 @@
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { serviceParameters } from "../parameters.js";
 
 /**
  * Options for the useRegistrationEnabledGate middleware.
@@ -28,10 +28,10 @@ type Factory = (options: RegistrationEnabledGateOptions) => Middleware<
  * @returns the middleware function that performs the check and sends the response if registration is disabled.
  */
 export const useRegistrationEnabledGate: Factory = ({ getResponseHtml }) => async (context) => {
-  const registrationEnabled = serviceParameters.getParameter('user.service.registration-enabled');
+  const registrationEnabled = readConfig('service.user.registration-enabled');
 
   if (registrationEnabled === undefined) {
-    throw new Error('No configuration found for user.service.registration-enabled');
+    throw new Error('No configuration found for service.user.registration-enabled');
   }
 
   if (registrationEnabled === 'false') {

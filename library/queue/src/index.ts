@@ -1,4 +1,3 @@
-export { Message } from "@aws-sdk/client-sqs";
-export { receiveMessages } from './sqs-receive-messages.js';
-export { sendMessage } from './sqs-send-message.js';
-export { Secret } from './types.js';
+export { Consumer, ConsumerProps } from "rabbitmq-client"
+export { rabbit } from './client.js';
+export { usePublisher } from './middleware/use-publisher.js';

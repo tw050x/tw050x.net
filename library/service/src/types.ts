@@ -21,7 +21,7 @@ export type CreateServerOptions = {
     requestCert?: boolean;
   };
   sslOptions: {
-    certPath: string;
+    crtPath: string;
     keyPath: string;
   };
   port: number;

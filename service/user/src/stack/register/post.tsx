@@ -3,14 +3,16 @@ import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.lib
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
 import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers"
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware";
-import { sendMessage } from "@tw050x.net.library/queue";
+import { usePublisher } from "@tw050x.net.library/queue";
+import { read as readSecret } from "@tw050x.net.library/secrets";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { normaliseEmailAddress } from "@tw050x.net.library/utility/normalise-email-address";
-import { randomUUID } from "node:crypto"
+import { randomUUID } from "node:crypto";
 import { hash } from "bcryptjs";
 import { default as jwt, SignOptions } from "jsonwebtoken";
 import { default as zod, ZodError } from "zod";
@@ -18,51 +20,56 @@ import { generateRegisterFormNonce } from "../../helper/generate-register-form-n
 import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate.js";
 import { default as RegisterDocument } from "../../template/document/RegisterDocument.js";
 import { default as RegisterForm } from "../../template/component/RegisterForm.js";
-import { serviceSecrets } from "../../secrets.js";
-import { serviceParameters } from "../../parameters.js";
 
-const postRegisterFormDataSchema = zod.object({
-  email: zod.string().email('An email address is required'),
-  password: zod.string().min(8, 'Password must be at least 8 characters long'),
-  'password-confirmation': zod.string().min(8, 'Confirm Password must be at least 8 characters long'),
-}).refine((data) => data.password === data['password-confirmation'], {
-  message: 'Passwords do not match',
-})
+const postRegisterFormDataSchema = zod
+  .object({
+    email: zod.string().email("An email address is required"),
+    password: zod
+      .string()
+      .min(8, "Password must be at least 8 characters long"),
+    "password-confirmation": zod
+      .string()
+      .min(8, "Confirm Password must be at least 8 characters long"),
+  })
+  .refine((data) => data.password === data["password-confirmation"], {
+    message: "Passwords do not match",
+  });
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ['GET', 'OPTIONS', 'POST'],
-  allowedOrigins: serviceParameters.getParameter('user.service.allowed-origins')
-}
+  allowedMethods: ["GET", "OPTIONS", "POST"],
+  allowedOrigins: readConfig("service.user.allowed-origins"),
+};
 
 const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
-  cookieName: serviceParameters.getParameter('cookie.access-token.name'),
-  cookieDomain: serviceParameters.getParameter('cookie.access-token.domain'),
-  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
-}
+  cookieName: readConfig("cookie.access-token.name"),
+  cookieDomain: readConfig("cookie.access-token.domain"),
+  jwtSecretKey: readSecret("jwt.secret-key"),
+};
 
 const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  cookieName: serviceParameters.getParameter('cookie.login-state.name'),
-  cookieDomain: serviceParameters.getParameter('cookie.login-state.domain'),
-  encrypterSecretKey: serviceSecrets.getSecret('encrypter.secret-key'),
-}
+  cookieName: readConfig("cookie.login-state.name"),
+  cookieDomain: readConfig("cookie.login-state.domain"),
+  encrypterSecretKey: readSecret("encrypter.secret-key"),
+};
 
 const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
-  cookieDomain: serviceParameters.getParameter('cookie.refresh-token.domain'),
-  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
-  refreshCookieName: serviceParameters.getParameter('cookie.refresh-token.name'),
-  refreshableCookieName: serviceParameters.getParameter('cookie.refreshable-token.name'),
-}
+  jwtSecretKey: readSecret("jwt.secret-key"),
+  refreshCookieName: readConfig("cookie.refresh-token.name"),
+  refreshCookieDomain: readConfig("cookie.refresh-token.domain"),
+  refreshableCookieName: readConfig("cookie.refreshable-token.name"),
+  refreshableCookieDomain: readConfig("cookie.refreshable-token.domain"),
+};
 
 const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {
   getResponseHtml: async () => (
     <RegisterDocument
       registerAsideProps={{
         disabled: true,
-        message: "Registration is currently disabled."
+        message: "Registration is currently disabled.",
       }}
     />
-  )
-}
+  ),
+};
 
 export default defineServiceMiddleware([
   useLogRequest(),
@@ -71,11 +78,12 @@ export default defineServiceMiddleware([
   useLoginStateCookie(useLoginStateCookieOptions),
   useRefreshTokenCookie(useRefreshTokenCookieOptions),
   useRegistrationEnabledGate(useRegistrationEnabledGateOptions),
+  usePublisher(),
 
   // Handle the registration form submission
   async (context) => {
     const body = await context.incomingMessage.useFormDataBody();
-    logger.debug('Parsed incoming form data', { body });
+    logger.debug("Parsed incoming form data", { body });
 
     // validate the incoming form data
     // return an error if the data is invalid
@@ -87,10 +95,14 @@ export default defineServiceMiddleware([
       passwordFieldValue = result.password;
     }
     catch (error) {
-      if (error instanceof ZodError) error.errors.forEach((issue) => logger.error(issue));
+      if (error instanceof ZodError)
+        error.errors.forEach((issue) => logger.error(issue));
       else logger.error(error);
     }
-    logger.debug('Ran post register form data schema validation', { emailFieldValue, passwordFieldValue });
+    logger.debug("Ran post register form data schema validation", {
+      emailFieldValue,
+      passwordFieldValue,
+    });
 
     // if there was a problem with the data, re-render the registration form with a generic error message
     // to avoid disclosing which field was incorrect
@@ -101,18 +113,25 @@ export default defineServiceMiddleware([
       }
       catch (error) {
         logger.error(error);
-        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+          <UnrecoverableDocument />
+        );
       }
 
       return void context.serverResponse.sendOKHTMLResponse(
         <RegisterForm
-          email={body?.email ?? ''}
+          email={body?.email ?? ""}
           nonce={nonce}
-          validationErrors={[{ message: 'There was a problem with your email address or password, please try again' }]}
+          validationErrors={[
+            {
+              message:
+                "There was a problem with your email address or password, please try again",
+            },
+          ]}
         />
       );
     }
-    logger.debug('Register form data is valid');
+    logger.debug("Register form data is valid");
 
     //
     let normalisedEmailAddress;
@@ -121,14 +140,18 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+        <UnrecoverableDocument />
+      );
     }
 
     //
     let userProfileDocument;
     try {
       userProfileDocument = await userDatabase.profile.findOne(
-        sanitizeMongoDBFilterOrPipeline({ emailNormalised: normalisedEmailAddress })
+        sanitizeMongoDBFilterOrPipeline({
+          emailNormalised: normalisedEmailAddress,
+        })
       );
     }
     catch (error) {
@@ -137,7 +160,9 @@ export default defineServiceMiddleware([
         <UnrecoverableDocument />
       );
     }
-    logger.debug('Checked for existing user profile document', { userProfileDocument });
+    logger.debug("Checked for existing user profile document", {
+      userProfileDocument,
+    });
     if (userProfileDocument !== null) {
       let nonce;
       try {
@@ -145,14 +170,18 @@ export default defineServiceMiddleware([
       }
       catch (error) {
         logger.error(error);
-        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+          <UnrecoverableDocument />
+        );
       }
 
       return void context.serverResponse.sendOKHTMLResponse(
         <RegisterForm
-          email={body?.email ?? ''}
+          email={body?.email ?? ""}
           nonce={nonce}
-          validationErrors={[{ message: 'This email address is already registered' }]}
+          validationErrors={[
+            { message: "This email address is already registered" },
+          ]}
         />
       );
     }
@@ -165,7 +194,9 @@ export default defineServiceMiddleware([
     }
     catch (error) {
       logger.error(error);
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+        <UnrecoverableDocument />
+      );
     }
 
     // generate a unique (unused) UUID for the user
@@ -175,12 +206,14 @@ export default defineServiceMiddleware([
       userProfileUuid = randomUUID();
       try {
         userProfileDocument = await userDatabase.profile.findOne({
-          uuid: userProfileUuid
+          uuid: userProfileUuid,
         });
       }
       catch (error) {
         logger.error(error);
-        return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+        return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+          <UnrecoverableDocument />
+        );
       }
     }
     while (userProfileDocument !== null);
@@ -204,7 +237,7 @@ export default defineServiceMiddleware([
         createdAt: new Date(),
         updatedAt: new Date(),
         passwordHash,
-        type: 'password',
+        type: "password",
         userProfileId: profile.insertedId,
       });
       await userDatabaseSession.commitTransaction();
@@ -213,7 +246,9 @@ export default defineServiceMiddleware([
     catch (error) {
       logger.error(error);
       await userDatabaseSession.abortTransaction();
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+        <UnrecoverableDocument />
+      );
     }
     finally {
       // end the user database session
@@ -223,11 +258,10 @@ export default defineServiceMiddleware([
     // send a message to the event queue indicating a new user has registered
     // log any errors but do not fail the registration
     try {
-      const eventQueueUrl = serviceParameters.getParameter('user.service.event-queue-url');
-      await sendMessage(
-        new URL(eventQueueUrl),
-        { eventType: 'UserRegistered', userProfileId, userProfileUuid },
-        { MessageType: { DataType: 'String', StringValue: 'UserRegistered' } }
+      const eventQueueName = readConfig('service.user.event-queue-name');
+      await context.incomingMessage.queuePublisher.send(
+        eventQueueName,
+        { type: 'UserRegistered', userProfileUuid },
       );
     }
     catch (error) {
@@ -237,32 +271,49 @@ export default defineServiceMiddleware([
 
     // read the JWT secret key
     // return an error if there is a problem
-    const jwtSecretKey = serviceSecrets.getSecret('jwt.secret-key');
+    const jwtSecretKey = readSecret("jwt.secret-key");
     if (jwtSecretKey === undefined) {
-      logger.error('JWT secret key is undefined');
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);
+      logger.error("JWT secret key is undefined");
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+        <UnrecoverableDocument />
+      );
     }
 
-    // generate JWT tokens and set cookies
+    // generate refresh token
     const refreshTokenOptions: SignOptions = {
-      expiresIn: '4w',
+      expiresIn: "4w",
     };
     const refreshTokenPayload = {
-      sub: userProfileUuid
+      sub: userProfileUuid,
     };
+    const refreshToken = jwt.sign(
+      refreshTokenPayload,
+      jwtSecretKey,
+      refreshTokenOptions
+    );
+
+    // generate access token
     const accessTokenOptions: SignOptions = {
-      expiresIn: '1d',
+      expiresIn: "1d",
     };
     const accessTokenPayload = {
-      sub: userProfileUuid
+      sub: userProfileUuid,
     };
-    const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
-    const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
+    const accessToken = jwt.sign(
+      accessTokenPayload,
+      jwtSecretKey,
+      accessTokenOptions
+    );
+
     context.serverResponse.refreshTokenCookie.set(refreshToken);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();
+
     return void context.serverResponse.sendSeeOtherRedirect(
-      new URL('/portal', `https://${serviceParameters.getParameter('user.service.host')}`)
-    )
-  }
-])
+      new URL(
+        "/portal",
+        `https://${readConfig("service.user.host")}`
+      )
+    );
+  },
+]);

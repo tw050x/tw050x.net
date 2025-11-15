@@ -37,7 +37,7 @@ export default function defineServer(options: CreateServerOptions) {
     ServerResponse: ContextualServerResponse,
 
     // Server certificate
-    cert: readFileSync(options.sslOptions.certPath),
+    cert: readFileSync(options.sslOptions.crtPath),
     key: readFileSync(options.sslOptions.keyPath),
 
     // mTLS options
@@ -63,6 +63,8 @@ export default function defineServer(options: CreateServerOptions) {
     server.listen(options.port, callback);
   }
 
+  const on = server.on.bind(server);
+
   logger.debug(`Begin discovery of routes in ${options.routesDirectory}`)
 
   // Load and register routes
@@ -76,6 +78,7 @@ export default function defineServer(options: CreateServerOptions) {
   return Object.freeze({
     close,
     listen,
+    on,
   })
 }
 

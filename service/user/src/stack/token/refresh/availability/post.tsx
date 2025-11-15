@@ -1,30 +1,31 @@
 import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
 import { UseRefreshTokenCookieOptions, useRefreshTokenCookie } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { logger } from "@tw050x.net.library/logger";
+import { read as readSecret } from "@tw050x.net.library/secrets";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as jwt, SignOptions } from "jsonwebtoken";
-import { serviceParameters } from "../../../../parameters.js";
-import { serviceSecrets } from "../../../../secrets.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS', 'POST'],
-  allowedOrigins: serviceParameters.getParameter('user.service.allowed-origins'),
+  allowedOrigins: readConfig('service.user.allowed-origins'),
 }
 
 const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
-  cookieName: serviceParameters.getParameter('cookie.access-token.name'),
-  cookieDomain: serviceParameters.getParameter('cookie.access-token.domain'),
-  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
+  cookieName: readConfig('cookie.access-token.name'),
+  cookieDomain: readConfig('cookie.access-token.domain'),
+  jwtSecretKey: readSecret('jwt.secret-key'),
 }
 
 const useRefreshTokenCookieOptions: UseRefreshTokenCookieOptions = {
-  cookieDomain: serviceParameters.getParameter('cookie.refresh-token.domain'),
-  jwtSecretKey: serviceSecrets.getSecret('jwt.secret-key'),
-  refreshCookieName: serviceParameters.getParameter('cookie.refresh-token.name'),
-  refreshableCookieName: serviceParameters.getParameter('cookie.refreshable-token.name'),
+  jwtSecretKey: readSecret('jwt.secret-key'),
+  refreshCookieName: readConfig("cookie.refresh-token.name"),
+  refreshCookieDomain: readConfig("cookie.refresh-token.domain"),
+  refreshableCookieName: readConfig("cookie.refreshable-token.name"),
+  refreshableCookieDomain: readConfig("cookie.refreshable-token.domain"),
 }
 
 /**

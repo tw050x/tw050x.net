@@ -39,12 +39,9 @@ services:
     depends_on:
       assets:
         condition: service_healthy
-      localstack:
-        condition: service_healthy
       traefik:
         condition: service_healthy
     env_file:
-      - .env.aws
       - .env.service.authorisation
       - .env.services.logs
       - .env.services.mongo-client
@@ -71,8 +68,11 @@ services:
       - "9201:9229"
     pull_policy: never
     volumes:
-      - source: ./tsconfig.json
-        target: /srv/tsconfig.json
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
         type: bind
       - source: ./ca
         target: /srv/ca
@@ -89,18 +89,18 @@ services:
       - source: ./service/authorisation
         target: /srv/service/authorisation
         type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
 
   error:
     command: [ "yarn", "workspace", "@tw050x.net.service/error", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
     depends_on:
       assets:
         condition: service_healthy
-      localstack:
-        condition: service_healthy
       traefik:
         condition: service_healthy
     env_file:
-      - .env.aws
       - .env.service.error
       - .env.services.logs
       - .env.services.mongo-client
@@ -127,8 +127,11 @@ services:
       - "9202:9229"
     pull_policy: never
     volumes:
-      - source: ./tsconfig.json
-        target: /srv/tsconfig.json
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
         type: bind
       - source: ./ca
         target: /srv/ca
@@ -145,6 +148,9 @@ services:
       - source: ./service/error
         target: /srv/service/error
         type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
 
   marketing:
     command: [ "yarn", "workspace", "@tw050x.net.service/marketing", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
@@ -153,14 +159,11 @@ services:
         condition: service_healthy
       error:
         condition: service_healthy
-      localstack:
-        condition: service_healthy
       mongo-primary:
         condition: service_healthy
       traefik:
         condition: service_healthy
     env_file:
-      - .env.aws
       - .env.database.user
       - .env.service.marketing
       - .env.services.logs
@@ -191,8 +194,11 @@ services:
       - "9203:9229"
     pull_policy: never
     volumes:
-      - source: ./tsconfig.json
-        target: /srv/tsconfig.json
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
         type: bind
       - source: ./ca
         target: /srv/ca
@@ -209,6 +215,9 @@ services:
       - source: ./service/marketing
         target: /srv/service/marketing
         type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
 
   navigation:
     command: [ "yarn", "workspace", "@tw050x.net.service/navigation", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
@@ -217,14 +226,11 @@ services:
         condition: service_healthy
       error:
         condition: service_healthy
-      localstack:
-        condition: service_healthy
       mongo-primary:
         condition: service_healthy
       traefik:
         condition: service_healthy
     env_file:
-      - .env.aws
       - .env.database.account
       - .env.database.assignment
       - .env.database.user
@@ -256,8 +262,11 @@ services:
       - "9204:9229"
     pull_policy: never
     volumes:
-      - source: ./tsconfig.json
-        target: /srv/tsconfig.json
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
         type: bind
       - source: ./ca
         target: /srv/ca
@@ -274,6 +283,9 @@ services:
       - source: ./service/navigation
         target: /srv/service/navigation
         type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
 
   portal:
     command: [ "yarn", "workspace", "@tw050x.net.service/portal", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
@@ -282,14 +294,11 @@ services:
         condition: service_healthy
       error:
         condition: service_healthy
-      localstack:
-        condition: service_healthy
       mongo-primary:
         condition: service_healthy
       traefik:
         condition: service_healthy
     env_file:
-      - .env.aws
       - .env.database.assignment
       - .env.database.user
       - .env.service.portal
@@ -320,8 +329,11 @@ services:
       - "9205:9229"
     pull_policy: never
     volumes:
-      - source: ./tsconfig.json
-        target: /srv/tsconfig.json
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
         type: bind
       - source: ./ca
         target: /srv/ca
@@ -338,6 +350,9 @@ services:
       - source: ./service/portal
         target: /srv/service/portal
         type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
 
   user:
     command: [ "yarn", "workspace", "@tw050x.net.service/user", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
@@ -346,19 +361,17 @@ services:
         condition: service_healthy
       error:
         condition: service_healthy
-      localstack:
-        condition: service_healthy
       mongo-primary:
         condition: service_healthy
       traefik:
         condition: service_healthy
     env_file:
-      - .env.aws
       - .env.database.assignment
       - .env.database.user
       - .env.service.user
       - .env.services.logs
       - .env.services.mongo-client
+      - .env.services.rabbitmq-client
     healthcheck:
       test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
       interval: 1m30s
@@ -384,8 +397,11 @@ services:
       - "9206:9229"
     pull_policy: never
     volumes:
-      - source: ./tsconfig.json
-        target: /srv/tsconfig.json
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
         type: bind
       - source: ./ca
         target: /srv/ca
@@ -404,4 +420,7 @@ services:
         type: bind
       - source: ./service/user
         target: /srv/service/user
+        type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
         type: bind

@@ -4,10 +4,10 @@
   "description": "The Error Service project for tw050x.net",
   "dependencies": {
     "@kitajs/html": "^4.2.9",
+    "@tw050x.net.library/configs": "workspace:*",
     "@tw050x.net.library/cors": "workspace:*",
     "@tw050x.net.library/logger": "workspace:*",
     "@tw050x.net.library/middleware": "workspace:*",
-    "@tw050x.net.library/parameters": "workspace:*",
     "@tw050x.net.library/secrets": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
     "@tw050x.net.library/uikit": "workspace:*"

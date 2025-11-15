@@ -12,12 +12,15 @@ tmp/*
 # Docker
 **/data/*
 
-# MacOS
-.DS_Store
-
 # Environment
 .env*
 !.env.example
+
+# SSH
+.ssh/*
+
+# MacOS
+.DS_Store
 
 # Secrets
 .secret/**
@@ -25,6 +28,7 @@ tmp/*
 # Terraform
 infrastructure/**/.terraform/
 infrastructure/**/*.override.tf
+infrastructure/**/*.tfbackend
 infrastructure/**/*.tfstate
 infrastructure/**/*.tfstate.backup
 infrastructure/**/*.tfvars
