@@ -24,11 +24,11 @@ Secrets management is crucial for maintaining the security of the infrastructure
 
 Each node in the swarm cluster is setup via an independent project. The following projects handle the swarm nodes in regions/data centers:
 
-* __infrastructure/swarm/manager/newton__ - _Handles the Docker Swarm `manager` node for the __London__ data center._
-* __infrastructure/swarm/worker/hawking__ - _Manages the Docker Swarm `worker` node for the __London__ data center._
-* __infrastructure/swarm/worker/turing__ - _Manages the second Docker Swarm `worker` node for the __London__ data center._
+* __infrastructure/swarm/london/manager/newton__ - _Handles the Docker Swarm `manager` node for the __London__ data center._
+* __infrastructure/swarm/london/worker/hawking__ - _Manages the Docker Swarm `worker` node for the __London__ data center._
+* __infrastructure/swarm/london/worker/turing__ - _Manages the second Docker Swarm `worker` node for the __London__ data center._
 
-The historical figues names are only to differentiate between multiple nodes of the same type in a given region/data center. And generally you won't have a need to keep a specific node around. Therefore if you need to scale down then remove any node you think appropriate. Running services should auto rescale to other nodes in the swarm.
+The historical figures names are only to differentiate between multiple nodes of the same type in a given region/data center. And generally you won't have a need to keep a specific node around. Therefore if you need to scale down then remove any node you think appropriate. Running services should auto rescale to other nodes in the swarm.
 
 Names should be sought from the region of the infrastructure. For Example, using a London based datacenter should use historical figures from England. Historical figures should be from various fields such as exploration, science, engineering, and medicine.
 
