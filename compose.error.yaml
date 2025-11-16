@@ -1,0 +1,60 @@
+
+services:
+  error:
+    command: [ "yarn", "workspace", "@tw050x.net.service/error", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.service.error
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/error:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.error.entrypoints=websecure
+      - traefik.http.routers.error.tls=true
+      - traefik.http.services.error.loadbalancer.server.port=3000
+      - traefik.http.services.error.loadbalancer.server.scheme=https
+      - traefik.http.services.error.loadbalancer.serversTransport=secure@file
+    mem_limit: 512mb
+    networks:
+      services:
+        aliases:
+          - error.service.internal
+    ports:
+      - "9202:9229"
+    pull_policy: never
+    volumes:
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/error
+        target: /log
+        type: bind
+      - source: ./service/error
+        target: /srv/service/error
+        type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind

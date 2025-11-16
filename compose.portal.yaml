@@ -1,0 +1,68 @@
+
+services:
+  portal:
+    command: [ "yarn", "workspace", "@tw050x.net.service/portal", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      error:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.database.assignment
+      - .env.database.user
+      - .env.service.portal
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/portal:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.portal.entrypoints=websecure
+      - traefik.http.routers.portal.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.portal.rule=Host(`tw050x.dev`) && PathPrefix(`/portal`)
+      - traefik.http.routers.portal.tls=true
+      - traefik.http.services.portal.loadbalancer.server.port=3000
+      - traefik.http.services.portal.loadbalancer.server.scheme=https
+      - traefik.http.services.portal.loadbalancer.serversTransport=secure@file
+    mem_limit: 512mb
+    networks:
+      services:
+        aliases:
+          - portal.service.internal
+    ports:
+      - "9205:9229"
+    pull_policy: never
+    volumes:
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/portal
+        target: /log
+        type: bind
+      - source: ./service/portal
+        target: /srv/service/portal
+        type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind

@@ -143,7 +143,6 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=build /build/service/assets/public /srv/service/assets/public
 COPY --from=build /build/service/assets/package.json /srv/service/assets/package.json
-COPY --from=build /build/service/assets/tsconfig.json /srv/service/assets/tsconfig.json
 COPY --from=build /build/service/assets/serve.json /srv/service/assets/serve.json
 RUN yarn workspaces focus --production @tw050x.net.service/assets --production
 ENTRYPOINT [ "sh", "-c" ]

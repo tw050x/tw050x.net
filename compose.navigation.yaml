@@ -1,0 +1,69 @@
+
+services:
+  navigation:
+    command: [ "yarn", "workspace", "@tw050x.net.service/navigation", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/serve.js" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      error:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    env_file:
+      - .env.database.account
+      - .env.database.assignment
+      - .env.database.user
+      - .env.service.navigation
+      - .env.services.logs
+      - .env.services.mongo-client
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f --insecure https://localhost:3000/healthcheck || exit 1"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/navigation:latest
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.navigation.entrypoints=websecure
+      - traefik.http.routers.navigation.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.navigation.rule=Host(`tw050x.dev`) && PathPrefix(`/navigation/`)
+      - traefik.http.routers.navigation.tls=true
+      - traefik.http.services.navigation.loadbalancer.server.port=3000
+      - traefik.http.services.navigation.loadbalancer.server.scheme=https
+      - traefik.http.services.navigation.loadbalancer.serversTransport=secure@file
+    mem_limit: 512mb
+    networks:
+      services:
+        aliases:
+          - navigation.service.internal
+    ports:
+      - "9204:9229"
+    pull_policy: never
+    volumes:
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/navigation
+        target: /log
+        type: bind
+      - source: ./service/navigation
+        target: /srv/service/navigation
+        type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind

@@ -1,6 +1,5 @@
 
 services:
-
   user-service-queue:
     command: [ "yarn", "workspace", "@tw050x.net.worker/user-service-queue", "run", "nodemon", "--inspect=0.0.0.0:9229", "--watch", "/srv", "artifact/run.js" ]
     depends_on:

@@ -1,5 +1,17 @@
 
 include:
-  - compose.infrastructure.yaml
-  - compose.services.yaml
-  - compose.workers.yaml
+  - compose.assets.yaml
+  - compose.authorisation.yaml
+  - compose.error.yaml
+  - compose.marketing.yaml
+  - compose.mongo.yaml
+  - compose.navigation.yaml
+  - compose.portal.yaml
+  - compose.rabbitmq.yaml
+  - compose.traefik.yaml
+  - compose.user-service-queue.yaml
+  - compose.user.yaml
+
+networks:
+  services:
+    driver: bridge
