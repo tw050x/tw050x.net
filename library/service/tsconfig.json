@@ -10,6 +10,7 @@
   "files": [
     "src/contextual-incoming-message.ts",
     "src/contextual-server-response.ts",
+    "src/define-healthcheck.ts",
     "src/define-server.ts",
     "src/define-service-middleware.ts",
     "src/index.ts",

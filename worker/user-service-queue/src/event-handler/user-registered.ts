@@ -1,4 +1,4 @@
-import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.database/assignment";
+import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.database/assignment-service";
 import { logger } from "@tw050x.net.library/logger";
 import { isObjectId } from "@tw050x.net.library/utility/is-object-id";
 import { ObjectId } from "mongodb";
@@ -9,28 +9,28 @@ import { ObjectId } from "mongodb";
  * @param messageBody - The message body for the UserRegistered event.
  */
 export default async function handleUserRegisteredEvent(messageBody: Record<string, unknown>): Promise<void> {
-  logger.debug('Handling UserRegistered message body:', messageBody);
+  logger.debug('Handling UserRegistered message');
 
   if (('userProfileId' in messageBody) === false) {
-    return void logger.error(new Error('userProfileId is missing in UserRegistered event message body'));
+    throw new Error('userProfileId is missing in UserRegistered event message body');
   }
 
   if (isObjectId(messageBody.userProfileId) === false) {
-    return void logger.error(new Error('userProfileId is not a valid ObjectId in UserRegistered event message body'));
+    throw new Error('userProfileId is not a valid ObjectId in UserRegistered event message body');
   }
 
   if (('userProfileUuid' in messageBody) === false) {
-    return void logger.error(new Error('userProfileUuid is missing in UserRegistered event message body'));
+    throw new Error('userProfileUuid is missing in UserRegistered event message body');
   }
 
   if (typeof messageBody.userProfileUuid !== 'string') {
-    return void logger.error(new Error('userProfileUuid is not a string in UserRegistered event message body'));
+    throw new Error('userProfileUuid is not a string in UserRegistered event message body');
   }
 
   const assignment = 'complete-registration';
 
   // Fetch the latest task templates for the assignment
-  let taskTemplates;
+  let taskTemplates
   try {
     taskTemplates = await assignmentDatabase.taskTemplate.find({
       assignment,
@@ -38,8 +38,8 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
     }).toArray();
   }
   catch (error) {
-    logger.debug('Error fetching task templates for assignment');
-    return void logger.error(error);
+    logger.error(`Failed to fetch task templates for assignment: ${assignment}`, { error });
+    throw new Error(`Failed to fetch task templates for assignment: ${assignment}`);
   }
   logger.debug(`Fetched ${taskTemplates.length} task templates for assignment: ${assignment}`);
 
@@ -62,16 +62,10 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
   }
 
   if (tasks.length === 0) {
-    return void logger.debug(`No task templates found for assignment: ${assignment}, skipping task creation`);
+    throw new Error(`No task templates found for assignment: ${assignment}, skipping task creation`);
   }
 
-  try {
-    await assignmentDatabase.task.insertMany(tasks);
-  }
-  catch (error) {
-    logger.debug('Error inserting assignment tasks for user');
-    return void logger.error(error);
-  }
+  await assignmentDatabase.task.insertMany(tasks);
 
   logger.debug(`Created ${tasks.length} assignment tasks for userProfileId: ${messageBody.userProfileId}`);
 }

@@ -1,30 +1,30 @@
 
 services:
-  assets:
+  assets-service:
     depends_on:
-      traefik:
+      traefik-service:
         condition: service_healthy
-    env_file:
-      - .env.service.assets
+    environment:
+      - NODE_ENV=development
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/assets/healthcheck.txt || exit 1"]
       interval: 1m30s
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net.service/assets:latest
+    image: tw050x.net.service/assets-service:latest
     labels:
       - traefik.enable=true
-      - traefik.http.routers.assets.entrypoints=websecure
-      - traefik.http.routers.assets.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.assets.rule=Host(`tw050x.dev`) && PathPrefix(`/assets/`)
-      - traefik.http.routers.assets.tls=true
-      - traefik.http.services.assets.loadbalancer.server.port=3000
+      - traefik.http.routers.assets-service.entrypoints=websecure
+      - traefik.http.routers.assets-service.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.assets-service.rule=Host(`tw050x.dev`) && PathPrefix(`/assets/`)
+      - traefik.http.routers.assets-service.tls=true
+      - traefik.http.services.assets-service.loadbalancer.server.port=3000
     mem_limit: 512mb
     networks:
       - services
     pull_policy: never
     volumes:
-      - source: ./service/assets/public
-        target: /srv/service/assets/public
+      - source: ./service/assets-service/public
+        target: /srv/service/assets-service/public
         type: bind

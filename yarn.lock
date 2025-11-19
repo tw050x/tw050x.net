@@ -614,6 +614,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ioredis/commands@npm:1.4.0":
+  version: 1.4.0
+  resolution: "@ioredis/commands@npm:1.4.0"
+  checksum: 10c0/99afe21fba794f84a2b84cceabcc370a7622e7b8b97a6589456c07c9fa62a15d54c5546f6f7214fb9a2458b1fa87579d5c531aaf48e06cc9be156d5923892c8d
+  languageName: node
+  linkType: hard
+
 "@isaacs/cliui@npm:^8.0.2":
   version: 8.0.2
   resolution: "@isaacs/cliui@npm:8.0.2"
@@ -733,6 +740,48 @@ __metadata:
   dependencies:
     sparse-bitfield: "npm:^3.0.3"
   checksum: 10c0/d51bbeaf04bbd9c019bbd9178c035ae3e3f0d64f6cfc85bc5e745aefdcedc0b4fa1b8dc139a7fe07804943bd36043bfc5a6f1a72c5e547a689078af1f7d0f168
+  languageName: node
+  linkType: hard
+
+"@msgpackr-extract/msgpackr-extract-darwin-arm64@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@msgpackr-extract/msgpackr-extract-darwin-arm64@npm:3.0.3"
+  conditions: os=darwin & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@msgpackr-extract/msgpackr-extract-darwin-x64@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@msgpackr-extract/msgpackr-extract-darwin-x64@npm:3.0.3"
+  conditions: os=darwin & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@msgpackr-extract/msgpackr-extract-linux-arm64@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@msgpackr-extract/msgpackr-extract-linux-arm64@npm:3.0.3"
+  conditions: os=linux & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@msgpackr-extract/msgpackr-extract-linux-arm@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@msgpackr-extract/msgpackr-extract-linux-arm@npm:3.0.3"
+  conditions: os=linux & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@msgpackr-extract/msgpackr-extract-linux-x64@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@msgpackr-extract/msgpackr-extract-linux-x64@npm:3.0.3"
+  conditions: os=linux & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@msgpackr-extract/msgpackr-extract-win32-x64@npm:3.0.3":
+  version: 3.0.3
+  resolution: "@msgpackr-extract/msgpackr-extract-win32-x64@npm:3.0.3"
+  conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
 
@@ -1596,9 +1645,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.database/account@workspace:*, @tw050x.net.database/account@workspace:database/account":
+"@tw050x.net.database/account-service@workspace:*, @tw050x.net.database/account-service@workspace:database/account-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/account@workspace:database/account"
+  resolution: "@tw050x.net.database/account-service@workspace:database/account-service"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@types/node": "npm:^22.10.2"
@@ -1608,22 +1657,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.database/assignment@workspace:*, @tw050x.net.database/assignment@workspace:database/assignment":
+"@tw050x.net.database/assignment-service@workspace:*, @tw050x.net.database/assignment-service@workspace:database/assignment-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/assignment@workspace:database/assignment"
-  dependencies:
-    "@tw050x.net.library/logger": "workspace:*"
-    "@tw050x.net.library/types": "workspace:*"
-    "@types/node": "npm:^22.10.2"
-    bson: "npm:^6.10.4"
-    mongodb: "npm:^6.12.0"
-    typescript: "npm:^5.7.2"
-  languageName: unknown
-  linkType: soft
-
-"@tw050x.net.database/authorisation@workspace:database/authorisation":
-  version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/authorisation@workspace:database/authorisation"
+  resolution: "@tw050x.net.database/assignment-service@workspace:database/assignment-service"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/types": "workspace:*"
@@ -1634,9 +1670,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.database/payment@workspace:database/payment":
+"@tw050x.net.database/authorisation-service@workspace:database/authorisation-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/payment@workspace:database/payment"
+  resolution: "@tw050x.net.database/authorisation-service@workspace:database/authorisation-service"
+  dependencies:
+    "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/types": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    bson: "npm:^6.10.4"
+    mongodb: "npm:^6.12.0"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@tw050x.net.database/payment-service@workspace:database/payment-service":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.database/payment-service@workspace:database/payment-service"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@types/node": "npm:^22.10.2"
@@ -1646,9 +1695,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.database/user@workspace:*, @tw050x.net.database/user@workspace:database/user":
+"@tw050x.net.database/user-service@workspace:*, @tw050x.net.database/user-service@workspace:database/user-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/user@workspace:database/user"
+  resolution: "@tw050x.net.database/user-service@workspace:database/user-service"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@types/node": "npm:^22.10.2"
@@ -1761,20 +1810,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.library/queue@workspace:*, @tw050x.net.library/queue@workspace:library/queue":
-  version: 0.0.0-use.local
-  resolution: "@tw050x.net.library/queue@workspace:library/queue"
-  dependencies:
-    "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.library/logger": "workspace:*"
-    "@tw050x.net.library/service": "workspace:*"
-    "@tw050x.net.library/types": "workspace:*"
-    "@types/node": "npm:^22.10.2"
-    rabbitmq-client: "npm:^5.0.7"
-    typescript: "npm:^5.7.2"
-  languageName: unknown
-  linkType: soft
-
 "@tw050x.net.library/secrets@workspace:*, @tw050x.net.library/secrets@workspace:library/secrets":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.library/secrets@workspace:library/secrets"
@@ -1832,9 +1867,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/assets@workspace:service/assets":
+"@tw050x.net.service/assets-service@workspace:service/assets-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/assets@workspace:service/assets"
+  resolution: "@tw050x.net.service/assets-service@workspace:service/assets-service"
   dependencies:
     "@tailwindcss/cli": "npm:^4.1.12"
     serve: "npm:^14.2.4"
@@ -1842,9 +1877,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/authorisation@workspace:service/authorisation":
+"@tw050x.net.service/authorisation-service@workspace:service/authorisation-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/authorisation@workspace:service/authorisation"
+  resolution: "@tw050x.net.service/authorisation-service@workspace:service/authorisation-service"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/configs": "workspace:*"
@@ -1857,9 +1892,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/error@workspace:service/error":
+"@tw050x.net.service/error-service@workspace:service/error-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/error@workspace:service/error"
+  resolution: "@tw050x.net.service/error-service@workspace:service/error-service"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/configs": "workspace:*"
@@ -1874,9 +1909,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/marketing@workspace:service/marketing":
+"@tw050x.net.service/marketing-service@workspace:service/marketing-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/marketing@workspace:service/marketing"
+  resolution: "@tw050x.net.service/marketing-service@workspace:service/marketing-service"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/authentication": "workspace:*"
@@ -1891,13 +1926,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/navigation@workspace:service/navigation":
+"@tw050x.net.service/navigation-service@workspace:service/navigation-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/navigation@workspace:service/navigation"
+  resolution: "@tw050x.net.service/navigation-service@workspace:service/navigation-service"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.database/account": "workspace:*"
-    "@tw050x.net.database/assignment": "workspace:*"
+    "@tw050x.net.database/account-service": "workspace:*"
+    "@tw050x.net.database/assignment-service": "workspace:*"
     "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/cors": "workspace:*"
@@ -1918,9 +1953,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/payment@workspace:service/payment":
+"@tw050x.net.service/payment-service@workspace:service/payment-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/payment@workspace:service/payment"
+  resolution: "@tw050x.net.service/payment-service@workspace:service/payment-service"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/logger": "workspace:*"
@@ -1930,12 +1965,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/portal@workspace:service/portal":
+"@tw050x.net.service/portal-service@workspace:service/portal-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/portal@workspace:service/portal"
+  resolution: "@tw050x.net.service/portal-service@workspace:service/portal-service"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.database/assignment": "workspace:*"
+    "@tw050x.net.database/assignment-service": "workspace:*"
     "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/cors": "workspace:*"
@@ -1959,19 +1994,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/traefik@workspace:service/traefik":
+"@tw050x.net.service/traefik-service@workspace:service/traefik-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/traefik@workspace:service/traefik"
+  resolution: "@tw050x.net.service/traefik-service@workspace:service/traefik-service"
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/user@workspace:service/user":
+"@tw050x.net.service/user-service@workspace:service/user-service":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/user@workspace:service/user"
+  resolution: "@tw050x.net.service/user-service@workspace:service/user-service"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.database/assignment": "workspace:*"
-    "@tw050x.net.database/user": "workspace:*"
+    "@tw050x.net.database/assignment-service": "workspace:*"
+    "@tw050x.net.database/user-service": "workspace:*"
     "@tw050x.net.library/authentication": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/cors": "workspace:*"
@@ -1979,7 +2014,6 @@ __metadata:
     "@tw050x.net.library/encryption": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
-    "@tw050x.net.library/queue": "workspace:*"
     "@tw050x.net.library/secrets": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
@@ -1989,6 +2023,7 @@ __metadata:
     "@types/node": "npm:^22.10.2"
     "@types/validator": "npm:^13.12.2"
     bcryptjs: "npm:^3.0.2"
+    bullmq: "npm:5.63.2"
     jsonwebtoken: "npm:^9.0.2"
     mongodb: "npm:^6.12.0"
     terser: "npm:^5.44.0"
@@ -2028,16 +2063,16 @@ __metadata:
   resolution: "@tw050x.net.worker/user-service-queue@workspace:worker/user-service-queue"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.database/assignment": "workspace:*"
-    "@tw050x.net.database/user": "workspace:*"
+    "@tw050x.net.database/assignment-service": "workspace:*"
+    "@tw050x.net.database/user-service": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
-    "@tw050x.net.library/queue": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/utility": "workspace:*"
     "@types/node": "npm:^22.10.2"
     bcryptjs: "npm:^3.0.2"
+    bullmq: "npm:5.63.2"
     mongodb: "npm:^6.12.0"
     typescript: "npm:^5.7.2"
   languageName: unknown
@@ -2614,6 +2649,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bullmq@npm:5.63.2":
+  version: 5.63.2
+  resolution: "bullmq@npm:5.63.2"
+  dependencies:
+    cron-parser: "npm:^4.9.0"
+    ioredis: "npm:^5.8.2"
+    msgpackr: "npm:^1.11.2"
+    node-abort-controller: "npm:^3.1.1"
+    semver: "npm:^7.5.4"
+    tslib: "npm:^2.0.0"
+    uuid: "npm:^11.1.0"
+  checksum: 10c0/2477b8c1bfac575a7adbf331312f64c6d0abb1024314e3dd13acc6c629a9c91c3336e06ddf7a9d3273111083ee72bf0138ee521c5032cc7092c84d5fbd25ef7f
+  languageName: node
+  linkType: hard
+
 "bytes@npm:3.0.0":
   version: 3.0.0
   resolution: "bytes@npm:3.0.0"
@@ -2811,6 +2861,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cluster-key-slot@npm:^1.1.0":
+  version: 1.1.2
+  resolution: "cluster-key-slot@npm:1.1.2"
+  checksum: 10c0/d7d39ca28a8786e9e801eeb8c770e3c3236a566625d7299a47bb71113fb2298ce1039596acb82590e598c52dbc9b1f088c8f587803e697cb58e1867a95ff94d3
+  languageName: node
+  linkType: hard
+
 "color-convert@npm:^1.9.3":
   version: 1.9.3
   resolution: "color-convert@npm:1.9.3"
@@ -2972,6 +3029,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cron-parser@npm:^4.9.0":
+  version: 4.9.0
+  resolution: "cron-parser@npm:4.9.0"
+  dependencies:
+    luxon: "npm:^3.2.1"
+  checksum: 10c0/348622bdcd1a15695b61fc33af8a60133e5913a85cf99f6344367579e7002896514ba3b0a9d6bb569b02667d6b06836722bf2295fcd101b3de378f71d37bed0b
+  languageName: node
+  linkType: hard
+
 "cross-spawn@npm:^7.0.0, cross-spawn@npm:^7.0.3, cross-spawn@npm:^7.0.6":
   version: 7.0.6
   resolution: "cross-spawn@npm:7.0.6"
@@ -3123,6 +3189,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"denque@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "denque@npm:2.1.0"
+  checksum: 10c0/f9ef81aa0af9c6c614a727cb3bd13c5d7db2af1abf9e6352045b86e85873e629690f6222f4edd49d10e4ccf8f078bbeec0794fafaf61b659c0589d0c511ec363
+  languageName: node
+  linkType: hard
+
 "depd@npm:~2.0.0":
   version: 2.0.0
   resolution: "depd@npm:2.0.0"
@@ -3136,6 +3209,13 @@ __metadata:
   bin:
     detect-libc: ./bin/detect-libc.js
   checksum: 10c0/4da0deae9f69e13bc37a0902d78bf7169480004b1fed3c19722d56cff578d16f0e11633b7fbf5fb6249181236c72e90024cbd68f0b9558ae06e281f47326d50d
+  languageName: node
+  linkType: hard
+
+"detect-libc@npm:^2.0.1":
+  version: 2.1.2
+  resolution: "detect-libc@npm:2.1.2"
+  checksum: 10c0/acc675c29a5649fa1fb6e255f993b8ee829e510b6b56b0910666949c80c364738833417d0edb5f90e4e46be17228b0f2b66a010513984e18b15deeeac49369c4
   languageName: node
   linkType: hard
 
@@ -3803,6 +3883,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ioredis@npm:^5.8.2":
+  version: 5.8.2
+  resolution: "ioredis@npm:5.8.2"
+  dependencies:
+    "@ioredis/commands": "npm:1.4.0"
+    cluster-key-slot: "npm:^1.1.0"
+    debug: "npm:^4.3.4"
+    denque: "npm:^2.1.0"
+    lodash.defaults: "npm:^4.2.0"
+    lodash.isarguments: "npm:^3.1.0"
+    redis-errors: "npm:^1.2.0"
+    redis-parser: "npm:^3.0.0"
+    standard-as-callback: "npm:^2.1.0"
+  checksum: 10c0/305e385f811d49908899e32c2de69616cd059f909afd9e0a53e54f596b1a5835ee3449bfc6a3c49afbc5a2fd27990059e316cc78f449c94024957bd34c826d88
+  languageName: node
+  linkType: hard
+
 "ip-address@npm:^10.0.1":
   version: 10.0.1
   resolution: "ip-address@npm:10.0.1"
@@ -4199,10 +4296,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lodash.defaults@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "lodash.defaults@npm:4.2.0"
+  checksum: 10c0/d5b77aeb702caa69b17be1358faece33a84497bcca814897383c58b28a2f8dfc381b1d9edbec239f8b425126a3bbe4916223da2a576bb0411c2cefd67df80707
+  languageName: node
+  linkType: hard
+
 "lodash.includes@npm:^4.3.0":
   version: 4.3.0
   resolution: "lodash.includes@npm:4.3.0"
   checksum: 10c0/7ca498b9b75bf602d04e48c0adb842dfc7d90f77bcb2a91a2b2be34a723ad24bc1c8b3683ec6b2552a90f216c723cdea530ddb11a3320e08fa38265703978f4b
+  languageName: node
+  linkType: hard
+
+"lodash.isarguments@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "lodash.isarguments@npm:3.1.0"
+  checksum: 10c0/5e8f95ba10975900a3920fb039a3f89a5a79359a1b5565e4e5b4310ed6ebe64011e31d402e34f577eca983a1fc01ff86c926e3cbe602e1ddfc858fdd353e62d8
   languageName: node
   linkType: hard
 
@@ -4302,6 +4413,13 @@ __metadata:
   version: 11.1.0
   resolution: "lru-cache@npm:11.1.0"
   checksum: 10c0/85c312f7113f65fae6a62de7985348649937eb34fb3d212811acbf6704dc322a421788aca253b62838f1f07049a84cc513d88f494e373d3756514ad263670a64
+  languageName: node
+  linkType: hard
+
+"luxon@npm:^3.2.1":
+  version: 3.7.2
+  resolution: "luxon@npm:3.7.2"
+  checksum: 10c0/ed8f0f637826c08c343a29dd478b00628be93bba6f068417b1d8896b61cb61c6deacbe1df1e057dbd9298334044afa150f9aaabbeb3181418ac8520acfdc2ae2
   languageName: node
   linkType: hard
 
@@ -4585,6 +4703,49 @@ __metadata:
   languageName: node
   linkType: hard
 
+"msgpackr-extract@npm:^3.0.2":
+  version: 3.0.3
+  resolution: "msgpackr-extract@npm:3.0.3"
+  dependencies:
+    "@msgpackr-extract/msgpackr-extract-darwin-arm64": "npm:3.0.3"
+    "@msgpackr-extract/msgpackr-extract-darwin-x64": "npm:3.0.3"
+    "@msgpackr-extract/msgpackr-extract-linux-arm": "npm:3.0.3"
+    "@msgpackr-extract/msgpackr-extract-linux-arm64": "npm:3.0.3"
+    "@msgpackr-extract/msgpackr-extract-linux-x64": "npm:3.0.3"
+    "@msgpackr-extract/msgpackr-extract-win32-x64": "npm:3.0.3"
+    node-gyp: "npm:latest"
+    node-gyp-build-optional-packages: "npm:5.2.2"
+  dependenciesMeta:
+    "@msgpackr-extract/msgpackr-extract-darwin-arm64":
+      optional: true
+    "@msgpackr-extract/msgpackr-extract-darwin-x64":
+      optional: true
+    "@msgpackr-extract/msgpackr-extract-linux-arm":
+      optional: true
+    "@msgpackr-extract/msgpackr-extract-linux-arm64":
+      optional: true
+    "@msgpackr-extract/msgpackr-extract-linux-x64":
+      optional: true
+    "@msgpackr-extract/msgpackr-extract-win32-x64":
+      optional: true
+  bin:
+    download-msgpackr-prebuilds: bin/download-prebuilds.js
+  checksum: 10c0/e504fd8bf86a29d7527c83776530ee6dc92dcb0273bb3679fd4a85173efead7f0ee32fb82c8410a13c33ef32828c45f81118ffc0fbed5d6842e72299894623b4
+  languageName: node
+  linkType: hard
+
+"msgpackr@npm:^1.11.2":
+  version: 1.11.5
+  resolution: "msgpackr@npm:1.11.5"
+  dependencies:
+    msgpackr-extract: "npm:^3.0.2"
+  dependenciesMeta:
+    msgpackr-extract:
+      optional: true
+  checksum: 10c0/f35ffd218661e8afc52490cde3dbf2656304e7940563c5313aa2f45e31ac5bdce3b58f27e55b785c700085ee76f26fc7afbae25ae5abe05068a8f000fd0ac6cd
+  languageName: node
+  linkType: hard
+
 "negotiator@npm:^1.0.0":
   version: 1.0.0
   resolution: "negotiator@npm:1.0.0"
@@ -4596,6 +4757,13 @@ __metadata:
   version: 0.6.4
   resolution: "negotiator@npm:0.6.4"
   checksum: 10c0/3e677139c7fb7628a6f36335bf11a885a62c21d5390204590a1a214a5631fcbe5ea74ef6a610b60afe84b4d975cbe0566a23f20ee17c77c73e74b80032108dea
+  languageName: node
+  linkType: hard
+
+"node-abort-controller@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "node-abort-controller@npm:3.1.1"
+  checksum: 10c0/f7ad0e7a8e33809d4f3a0d1d65036a711c39e9d23e0319d80ebe076b9a3b4432b4d6b86a7fab65521de3f6872ffed36fc35d1327487c48eb88c517803403eda3
   languageName: node
   linkType: hard
 
@@ -4612,6 +4780,19 @@ __metadata:
   version: 1.3.1
   resolution: "node-forge@npm:1.3.1"
   checksum: 10c0/e882819b251a4321f9fc1d67c85d1501d3004b4ee889af822fd07f64de3d1a8e272ff00b689570af0465d65d6bf5074df9c76e900e0aff23e60b847f2a46fbe8
+  languageName: node
+  linkType: hard
+
+"node-gyp-build-optional-packages@npm:5.2.2":
+  version: 5.2.2
+  resolution: "node-gyp-build-optional-packages@npm:5.2.2"
+  dependencies:
+    detect-libc: "npm:^2.0.1"
+  bin:
+    node-gyp-build-optional-packages: bin.js
+    node-gyp-build-optional-packages-optional: optional.js
+    node-gyp-build-optional-packages-test: build-test.js
+  checksum: 10c0/c81128c6f91873381be178c5eddcbdf66a148a6a89a427ce2bcd457593ce69baf2a8662b6d22cac092d24aa9c43c230dec4e69b3a0da604503f4777cd77e282b
   languageName: node
   linkType: hard
 
@@ -4863,13 +5044,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rabbitmq-client@npm:^5.0.7":
-  version: 5.0.7
-  resolution: "rabbitmq-client@npm:5.0.7"
-  checksum: 10c0/4bc32ec8d4ee34e6140999f7d87fd3c778b54cf0569e177a17a756c497927543437fa859b3f5259b751de844ac9a79bd56d6c0cdb50ba0106232d6b3e3dc0783
-  languageName: node
-  linkType: hard
-
 "range-parser@npm:1.2.0":
   version: 1.2.0
   resolution: "range-parser@npm:1.2.0"
@@ -4899,6 +5073,22 @@ __metadata:
     string_decoder: "npm:^1.1.1"
     util-deprecate: "npm:^1.0.1"
   checksum: 10c0/e37be5c79c376fdd088a45fa31ea2e423e5d48854be7a22a58869b4e84d25047b193f6acb54f1012331e1bcd667ffb569c01b99d36b0bd59658fb33f513511b7
+  languageName: node
+  linkType: hard
+
+"redis-errors@npm:^1.0.0, redis-errors@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "redis-errors@npm:1.2.0"
+  checksum: 10c0/5b316736e9f532d91a35bff631335137a4f974927bb2fb42bf8c2f18879173a211787db8ac4c3fde8f75ed6233eb0888e55d52510b5620e30d69d7d719c8b8a7
+  languageName: node
+  linkType: hard
+
+"redis-parser@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "redis-parser@npm:3.0.0"
+  dependencies:
+    redis-errors: "npm:^1.0.0"
+  checksum: 10c0/ee16ac4c7b2a60b1f42a2cdaee22b005bd4453eb2d0588b8a4939718997ae269da717434da5d570fe0b05030466eeb3f902a58cf2e8e1ca058bf6c9c596f632f
   languageName: node
   linkType: hard
 
@@ -5250,6 +5440,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"standard-as-callback@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "standard-as-callback@npm:2.1.0"
+  checksum: 10c0/012677236e3d3fdc5689d29e64ea8a599331c4babe86956bf92fc5e127d53f85411c5536ee0079c52c43beb0026b5ce7aa1d834dd35dd026e82a15d1bcaead1f
+  languageName: node
+  linkType: hard
+
 "string-width-cjs@npm:string-width@^4.2.0, string-width@npm:^4.1.0, string-width@npm:^4.2.0, string-width@npm:^4.2.3":
   version: 4.2.3
   resolution: "string-width@npm:4.2.3"
@@ -5489,7 +5686,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.2, tslib@npm:^2.8.0, tslib@npm:^2.8.1":
+"tslib@npm:^2.0.0, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.6.2, tslib@npm:^2.8.0, tslib@npm:^2.8.1":
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
@@ -5632,7 +5829,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^11.0.3":
+"uuid@npm:^11.0.3, uuid@npm:^11.1.0":
   version: 11.1.0
   resolution: "uuid@npm:11.1.0"
   bin:

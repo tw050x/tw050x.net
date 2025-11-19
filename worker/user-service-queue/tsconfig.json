@@ -14,15 +14,15 @@
   "files": [
     "../../types/env.worker.user-service-queue.d.ts",
     "src/event-handler/user-registered.ts",
+    "src/healthcheck.ts",
     "src/run.ts",
   ],
   "references": [
-    { "path": "../../database/assignment" },
-    { "path": "../../database/user" },
+    { "path": "../../database/assignment-service" },
+    { "path": "../../database/user-service" },
     { "path": "../../library/configs" },
     { "path": "../../library/database" },
     { "path": "../../library/logger" },
-    { "path": "../../library/queue" },
     { "path": "../../library/utility" },
   ]
 }

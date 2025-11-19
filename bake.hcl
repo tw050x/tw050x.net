@@ -1,60 +1,60 @@
 group "default" {
   targets = [
-    "service-assets",
-    "service-authorisation",
-    "service-error",
-    "service-marketing",
-    "service-navigation",
-    "service-portal",
-    "service-user",
-    "worker-user-service-queue",
+    "assets-service",
+    "authorisation-service",
+    "error-service",
+    "marketing-service",
+    "navigation-service",
+    "portal-service",
+    "user-service",
+    "user-service-queue",
   ]
 }
 
-target "service-assets" {
+target "assets-service" {
   dockerfile = "Dockerfile"
-  target = "service-assets"
-  tags = ["tw050x.net.service/assets:latest"]
+  target = "assets-service"
+  tags = ["tw050x.net.service/assets-service:latest"]
 }
 
-target "service-authorisation" {
+target "authorisation-service" {
   dockerfile = "Dockerfile"
-  target = "service-authorisation"
-  tags = ["tw050x.net.service/authorisation:latest"]
+  target = "authorisation-service"
+  tags = ["tw050x.net.service/authorisation-service:latest"]
 }
 
-target "service-error" {
+target "error-service" {
   dockerfile = "Dockerfile"
-  target = "service-error"
-  tags = ["tw050x.net.service/error:latest"]
+  target = "error-service"
+  tags = ["tw050x.net.service/error-service:latest"]
 }
 
-target "service-marketing" {
+target "marketing-service" {
   dockerfile = "Dockerfile"
-  target = "service-marketing"
-  tags = ["tw050x.net.service/marketing:latest"]
+  target = "marketing-service"
+  tags = ["tw050x.net.service/marketing-service:latest"]
 }
 
-target "service-navigation" {
+target "navigation-service" {
   dockerfile = "Dockerfile"
-  target = "service-navigation"
-  tags = ["tw050x.net.service/navigation:latest"]
+  target = "navigation-service"
+  tags = ["tw050x.net.service/navigation-service:latest"]
 }
 
-target "service-portal" {
+target "portal-service" {
   dockerfile = "Dockerfile"
-  target = "service-portal"
-  tags = ["tw050x.net.service/portal:latest"]
+  target = "portal-service"
+  tags = ["tw050x.net.service/portal-service:latest"]
 }
 
-target "service-user" {
+target "user-service" {
   dockerfile = "Dockerfile"
-  target = "service-user"
-  tags = ["tw050x.net.service/user:latest"]
+  target = "user-service"
+  tags = ["tw050x.net.service/user-service:latest"]
 }
 
-target "worker-user-service-queue" {
+target "user-service-queue" {
   dockerfile = "Dockerfile"
-  target = "worker-user-service-queue"
+  target = "user-service-queue"
   tags = ["tw050x.net.worker/user-service-queue:latest"]
 }

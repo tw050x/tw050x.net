@@ -1,48 +1,40 @@
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
-import { ConsumerProps, rabbit } from "@tw050x.net.library/queue";
+import { writeFileSync } from "node:fs";
+import { Job, Worker, WorkerOptions } from "bullmq";
 import { default as handleUserRegisteredEvent } from "./event-handler/user-registered.js";
+import { default as healthcheck } from "./healthcheck.js";
 
-const consumerProps: ConsumerProps = {
-  queue: readConfig('service.user.event-queue-name'),
-  noAck: false,
+let unrecoverableErrorOccured = false;
+
+const workerOptions: WorkerOptions = {
+  connection: {
+    host: 'user-service-redis.internal',
+  },
 };
 
-const consumer = rabbit.createConsumer(consumerProps, async (message: unknown) => {
-  // ensure the message is a valid structure
-  if (typeof message !== 'object') {
-    throw new Error('Invalid message format');
-  }
-  if (message === null) {
-    throw new Error('Invalid message format');
-  }
-  if (('type' in message) === false) {
-    throw new Error('Message type is missing');
-  }
-  if (typeof message.type !== 'string') {
-    throw new Error('Message type must be a string');
-  }
-
-  // handle the message type
-  switch (message.type) {
-    case 'UserRegistered':
-        await handleUserRegisteredEvent(message);
-        break;
+const worker = new Worker(
+  readConfig('service.user.event-queue-name'),
+  async (job: Job) => {
+    switch (job.name) {
+      case 'UserRegistered':
+        return await handleUserRegisteredEvent(job.data);
       default:
-        logger.debug(`Unknown message type: ${message.type}`);
-        throw new Error(`Unknown message type`);
-  }
-});
+        throw new Error(`Unknown message type: ${job.name}`);
+    }
+  },
+  workerOptions,
+);
 
 const cleanup =  () => {
-  consumer.close();
-  rabbit.close();
+  healthcheck.stop();
+  worker.close();
 }
 
-consumer.on('error', (error) => {
+worker.on('error', (error) => {
   cleanup();
   logger.error(error);
-  logger.debug('Consumer error occurred, shutting down...');
+  logger.debug('Worker error occurred, shutting down...');
   process.exit(1);
 });
 
@@ -65,3 +57,9 @@ process.on('unhandledRejection', async (reason, promise) => {
   logger.error('Promise:', promise);
   process.exit(1);
 });
+
+// Healthcheck file updater
+setInterval(
+  () => writeFileSync('/healthcheck', unrecoverableErrorOccured ? 'unhealthy' : 'healthy'),
+  15_000
+)

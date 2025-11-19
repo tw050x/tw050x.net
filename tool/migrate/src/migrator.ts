@@ -1,4 +1,4 @@
-import { MongoClient, type Db, type Collection } from "mongodb";
+import { MongoClient } from "mongodb";
 import { readdir } from "fs/promises";
 import * as path from "path";
 import { pathToFileURL } from "url";
