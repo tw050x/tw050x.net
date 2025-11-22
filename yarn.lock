@@ -1733,6 +1733,7 @@ __metadata:
   resolution: "@tw050x.net.library/cors@workspace:library/cors"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
@@ -1843,7 +1844,9 @@ __metadata:
   resolution: "@tw050x.net.library/user@workspace:library/user"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/secrets": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
     "@types/cookies": "npm:^0.9.0"

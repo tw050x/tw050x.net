@@ -52,7 +52,7 @@ export const useAuthGate: Factory = () => async (context) => {
   if (context.incomingMessage.accessTokenCookie.authorised === null) {
     logger.debug('User is not authorized, redirecting to login page');
 
-    const portalServiceHost = readConfig('service.portal.host');
+    const portalServiceHost = readConfig('service.*.host');
     if (!portalServiceHost) {
       logger.error('No portal host configured, cannot redirect to login page');
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(<UnrecoverableDocument />);

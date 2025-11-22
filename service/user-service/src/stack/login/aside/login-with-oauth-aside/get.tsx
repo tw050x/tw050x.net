@@ -1,4 +1,3 @@
-import { read as readConfig } from "@tw050x.net.library/configs";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { logger } from "@tw050x.net.library/logger";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
@@ -10,7 +9,6 @@ import { default as LoginWithOAuthAside } from "../../../../template/component/L
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST'],
-  allowedOrigins: readConfig('service.user.allowed-origins'),
 }
 
 export default defineServiceMiddleware([

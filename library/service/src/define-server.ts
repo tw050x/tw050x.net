@@ -149,9 +149,9 @@ export const createRequestHandler = (options: CreateRequestHandlerOptions) => (i
 
   // if no exact match found, check wildcard and parameter patterns by length
   // prioritize longer patterns over shorter ones for specificity
-  const sortedRouteKeys = routeKeys.slice().sort(
-    (a, b) => getSegmentCount(b) - getSegmentCount(a)
-  );
+  const sortedFilteredRouteKeys = routeKeys.
+    filter(key => key.startsWith(`${method} `)).
+    sort((a, b) => getSegmentCount(b) - getSegmentCount(a));
 
   // TODO: the below loop does not account for multiple parameters in the same route
   // e.g., "/users/:id/:action"
@@ -159,7 +159,7 @@ export const createRequestHandler = (options: CreateRequestHandlerOptions) => (i
 
   // match either a wildcard or parameter pattern to the available routes using the sorted list
   let matchedRequestWithParametersRouteKey;
-  for (const routeKey of sortedRouteKeys) {
+  for (const routeKey of sortedFilteredRouteKeys) {
     const route = []
     const routeSegments = routeKey.split(' ')[1].split('/');
 

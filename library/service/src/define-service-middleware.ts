@@ -352,5 +352,12 @@ export default function defineServiceMiddleware(
       }
       await middleware(context);
     }
+
+    // Final check to ensure a response has been sent
+    // If no response has been sent by any middleware, send a 500 Internal Server Error response
+    if (context.serverResponse.sendingOrSent === false) {
+      logger.error('No response sent by middleware stack. Sending 500 Internal Server Error response as fallback.');
+      return void context.serverResponse.sendInternalServerErrorTextResponse();
+    }
   };
 }

@@ -1,3 +1,4 @@
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { isAllowedHeaders } from "@tw050x.net.library/utility/is-allowed-headers";
@@ -13,7 +14,6 @@ import { isAllowedOrigin } from "@tw050x.net.library/utility/is-allowed-origin";
 export type UseCorsHeadersFactoryOptions = {
   allowedHeaders?: readonly string[] | string | '*';
   allowedMethods: readonly HttpMethod[] | '*';
-  allowedOrigins?: string | '*';
 }
 
 /**
@@ -26,6 +26,9 @@ type Factory = (options: UseCorsHeadersFactoryOptions) => Middleware<ServiceRequ
  * Returns middleware that sets appropriate CORS headers based on request
  */
 export const useCorsHeaders: Factory = (options) => async (context) => {
+  const allowedOriginsConfig = readConfig('cors.*.allowed-origins');
+
+  // Define variables to hold processed options
   let allowedHeaders;
   let allowedMethods;
   let allowedOrigins;
@@ -53,7 +56,7 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
     allowedHeaders = options.allowedHeaders.
       map((header) => header.trim().toLowerCase());
   }
-  logger.debug('Allowed Headers:', allowedHeaders === '*' ? '*' : allowedHeaders.join(', '));
+  logger.debug(`Allowed Headers: ${allowedHeaders === '*' ? '*' : allowedHeaders.join(', ')}`);
   if (Array.isArray(allowedHeaders) && isArrayOfHeaders(allowedHeaders) === false) {
     throw new TypeError('Invalid allowedHeaders parameter');
   }
@@ -68,24 +71,20 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
       map((method) => method.trim().toUpperCase()).
       filter((method): method is HttpMethod => method !== undefined && isHttpMethod(method));
   }
-  logger.debug('Allowed Methods:', allowedMethods === '*' ? '*' : allowedMethods.join(', '));
+  logger.debug(`Allowed Methods: ${allowedMethods === '*' ? '*' : allowedMethods.join(', ')}`);
   if (Array.isArray(allowedMethods) && isArrayOfHttpMethods(allowedMethods) === false) {
     throw new TypeError('Invalid allowedMethods parameter');
   }
 
   // Determine the allowed origins
   allowedOriginsParameterGuard: {
-    if (options.allowedOrigins === undefined ) {
+    if (allowedOriginsConfig === '*') {
       allowedOrigins = '*' as const;
       break allowedOriginsParameterGuard;
     }
-    if (options.allowedOrigins === '*') {
-      allowedOrigins = '*' as const;
-      break allowedOriginsParameterGuard;
-    }
-    allowedOrigins = options.allowedOrigins.split(',').map((origin) => origin.trim())
+    allowedOrigins = allowedOriginsConfig.split(',').map((origin) => origin.trim())
   }
-  logger.debug('Allowed Origins:', allowedOrigins === '*' ? '*' : allowedOrigins.join(', '));
+  logger.debug(`Allowed Origins: ${allowedOrigins === '*' ? '*' : allowedOrigins.join(', ')}`);
 
   // Prepare headers to set on the response
   const headers = [];

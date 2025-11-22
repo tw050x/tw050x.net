@@ -1,9 +1,12 @@
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
+import { read as readSecret } from "@tw050x.net.library/secrets";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Cookies } from "cookies";
 import { addHours, differenceInSeconds } from "date-fns";
 import { default as jwt } from "jsonwebtoken";
+
+const accessTokenCookieName = 'user-service.auth-token.access';
 
 /**
  * Access token cookie
@@ -22,9 +25,6 @@ export type AccessTokenCookie = {
  * Options for the useAccessTokenCookie middleware
  */
 export type UseAccessTokenCookieOptions = {
-  cookieName: string;
-  cookieDomain: string;
-  jwtSecretKey: string;
   requiredPermissions?: Array<string>;
 }
 
@@ -46,7 +46,7 @@ export type UseAccessTokenCookieResultingContext = ServiceRequestContext & {
 /**
  * Factory type for the useAccessTokenCookie middleware
  */
-type Factory = (options: UseAccessTokenCookieOptions) => Middleware<
+type Factory = (options?: UseAccessTokenCookieOptions) => Middleware<
   ServiceRequestContext,
   UseAccessTokenCookieResultingContext
 >;
@@ -55,43 +55,23 @@ type Factory = (options: UseAccessTokenCookieOptions) => Middleware<
  * @returns void
  */
 export const useAccessTokenCookie: Factory = (options) => async (context) => {
-
-  // retrieve the cookie name
-  cookieNameGuard: {
-    if (options.cookieName !== '') {
-      break cookieNameGuard;
-    }
-    logger.error(new Error('access token cookie name is empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
-  }
-
-  // retrieve the cookie domain
-  cookieDomainGuard: {
-    if (options.cookieDomain !== '') {
-      break cookieDomainGuard;
-    }
-    logger.error(new Error('access token cookie domain is empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />)
-  }
-
-  // retrieve the jwt secret key
-  if (options.jwtSecretKey === '') {
-    logger.error(new Error('jwt secret key is empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
+  const cookieDomain = readConfig('cookie.*.domain');
+  const jwtSecretKey = readSecret('jwt.secret-key');
 
   // retrieve the required permissions
   let requiredPermissions: Array<string>;
-  if (Array.isArray(options.requiredPermissions) === false) {
+  if (Array.isArray(options?.requiredPermissions) === false) {
     requiredPermissions = [];
   }
-  else requiredPermissions = options.requiredPermissions;
+  else {
+    requiredPermissions = options.requiredPermissions;
+  }
 
   // read the cookie
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-  const cookie = cookies.get(options.cookieName);
+  const cookie = cookies.get(accessTokenCookieName);
 
   let accessTokenCookieAuthorised: boolean | null = null;
   let accessTokenCookieErrors: Array<Error> = [];
@@ -105,7 +85,7 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
     // verify the cookie
     let accessTokenPayload;
     try {
-      accessTokenPayload = jwt.verify(cookie, options.jwtSecretKey);
+      accessTokenPayload = jwt.verify(cookie, jwtSecretKey);
     }
     catch (error) {
       logger.error(error);
@@ -160,8 +140,8 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
 
   // define the clear function
   const clearAccessTokenCookie = () => {
-    cookies.set(options.cookieName, '', {
-      domain: options.cookieDomain,
+    cookies.set(accessTokenCookieName, '', {
+      domain: cookieDomain,
       httpOnly: false,
       path: '/',
       sameSite: 'strict',
@@ -175,8 +155,8 @@ export const useAccessTokenCookie: Factory = (options) => async (context) => {
     const expiryDate = addHours(currentDate, 3);
     const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
     const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
-    cookies.set(options.cookieName, value, {
-      domain: options.cookieDomain,
+    cookies.set(accessTokenCookieName, value, {
+      domain: cookieDomain,
       httpOnly: false,
       maxAge: maxAgeInMilliseconds,
       path: '/',

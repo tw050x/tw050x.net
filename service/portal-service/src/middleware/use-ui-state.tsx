@@ -1,9 +1,10 @@
-import { logger } from "@tw050x.net.library/logger";
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { updateJSON } from "@tw050x.net.library/utility/update-json";
 import { default as Cookies } from "cookies";
 import { addHours, differenceInSeconds } from "date-fns";
+
+const cookieName = 'ui.state.portal';
 
 /**
  *
@@ -18,14 +19,6 @@ type UIStateCookie = {
       open: boolean;
     }
   };
-}
-
-/**
- *
- */
-export type UseUIStateCookieOptions = {
-  cookieName: string;
-  cookieDomain: string;
 }
 
 /**
@@ -46,7 +39,7 @@ export type UseUIStateCookieResultingContext = ServiceRequestContext & {
 /**
  *
  */
-type Factory = (options: UseUIStateCookieOptions) => Middleware<
+type Factory = () => Middleware<
   ServiceRequestContext,
   UseUIStateCookieResultingContext
 >
@@ -54,24 +47,14 @@ type Factory = (options: UseUIStateCookieOptions) => Middleware<
 /**
  * @returns void
  */
-export const useUIStateCookie: Factory = (options) => async (context) => {
-
-  // retrieve the cookie name
-  cookieNameGuard: {
-    if (options.cookieName !== '') {
-      break cookieNameGuard;
-    }
-    logger.error(new Error('access token cookie name is undefined or empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(
-      <Unrecoverable />
-    );
-  }
+export const useUIStateCookie: Factory = () => async (context) => {
+  const cookieDomain = readConfig("cookie.*.domain");
 
   // read the cookie
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-  const cookie = cookies.get(options.cookieName);
+  const cookie = cookies.get(cookieName);
 
   // create a default ui state cookie
   const uiStateCookie: UIStateCookie = {
@@ -104,11 +87,11 @@ export const useUIStateCookie: Factory = (options) => async (context) => {
   context.incomingMessage.uiStateCookie = uiStateCookie
 
   const clearUIStateCookie = () => {
-    cookies.set(options.cookieName, '', {
+    cookies.set(cookieName, '', {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
-      domain: options.cookieDomain,
+      domain: cookieDomain,
       path: '/',
     });
   }
@@ -119,11 +102,11 @@ export const useUIStateCookie: Factory = (options) => async (context) => {
     const expiryDate = addHours(currentDate, 3);
     const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
     const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
-    cookies.set(options.cookieName, updatedCookieValue, {
+    cookies.set(cookieName, updatedCookieValue, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
-      domain: options.cookieDomain,
+      domain: cookieDomain,
       path: '/',
       maxAge: maxAgeInMilliseconds,
     });

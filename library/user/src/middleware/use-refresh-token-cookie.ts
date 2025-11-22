@@ -1,9 +1,13 @@
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
+import { read as readSecret } from "@tw050x.net.library/secrets";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { default as Cookies } from "cookies";
 import { addDays, differenceInSeconds } from "date-fns";
 import { default as jwt } from "jsonwebtoken";
+
+const refreshTokenCookieName = 'user-service.auth-token.refresh';
+const refreshableTokenCookieName = 'user-service.auth-token.refreshable';
 
 type RefreshTokenCookie = {
   errors: Array<Error>;
@@ -12,14 +16,6 @@ type RefreshTokenCookie = {
   }
   refreshable: boolean;
   raw?: string;
-}
-
-export type UseRefreshTokenCookieOptions = {
-  jwtSecretKey: string;
-  refreshCookieName: string;
-  refreshCookieDomain: string;
-  refreshableCookieName: string;
-  refreshableCookieDomain: string;
 }
 
 /**
@@ -40,66 +36,25 @@ export type UseRefreshTokenCookieResultingContext = ServiceRequestContext & {
 /**
  *
  */
-type Factory = (options: UseRefreshTokenCookieOptions) => Middleware<
+type Factory = () => Middleware<
   ServiceRequestContext,
   UseRefreshTokenCookieResultingContext
 >
 
 /**
+ * Middleware to handle refresh token cookies.
+ *
  * @returns void
  */
-export const useRefreshTokenCookie: Factory = (options) => async (context) => {
-
-  // retrieve the cookie name
-  cookieNameGuard: {
-    if (options.refreshCookieName !== '') {
-      break cookieNameGuard;
-    }
-    logger.error('access token cookie name is undefined or empty');
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-
-  //
-  cookieDomainGuard: {
-    if (options.refreshCookieDomain !== '') {
-      break cookieDomainGuard;
-    }
-    logger.error('access token cookie name is undefined or empty');
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-
-  //
-  cookieNameGuard: {
-    if (options.refreshableCookieName !== '') {
-      break cookieNameGuard;
-    }
-    logger.error('access token cookie name is undefined or empty');
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-
-  //
-  cookieDomainGuard: {
-    if (options.refreshableCookieDomain !== '') {
-      break cookieDomainGuard;
-    }
-    logger.error('access token cookie name is undefined or empty');
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-
-  // retrieve the JWT secret key
-  jwtSecretKeyGuard: {
-    if (options.jwtSecretKey !== '') {
-      break jwtSecretKeyGuard;
-    }
-    logger.error(new Error('encrypter secret key is undefined or empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
+export const useRefreshTokenCookie: Factory = () => async (context) => {
+  const cookieDomain = readConfig('cookie.*.domain');
+  const jwtSecretKey = readSecret('jwt.secret-key');
 
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-  const refreshTokenCookie = cookies.get(options.refreshCookieName);
-  const refreshTokenRefreshableCookie = cookies.get(options.refreshableCookieName);
+  const refreshTokenCookie = cookies.get(refreshTokenCookieName);
+  const refreshTokenRefreshableCookie = cookies.get(refreshableTokenCookieName);
 
   let refreshTokenCookieErrors: Array<Error> = [];
   let refreshTokenCookieRaw: string | undefined = refreshTokenCookie;
@@ -110,7 +65,7 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
     }
     let refreshTokenPayload;
     try {
-      refreshTokenPayload = jwt.verify(refreshTokenCookie, options.jwtSecretKey);
+      refreshTokenPayload = jwt.verify(refreshTokenCookie, jwtSecretKey);
     }
     catch (error) {
       logger.error(error);
@@ -143,15 +98,15 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
 
   //
   const clearRefreshTokenCookie = () => {
-    cookies.set(options.refreshCookieName, '', {
-      domain: options.refreshCookieDomain,
+    cookies.set(refreshTokenCookieName, '', {
+      domain: cookieDomain,
       httpOnly: true,
       path: '/token/refresh',
       sameSite: 'strict',
       secure: true,
     });
-    cookies.set(options.refreshableCookieName, '', {
-      domain: options.refreshableCookieDomain,
+    cookies.set(refreshableTokenCookieName, '', {
+      domain: cookieDomain,
       httpOnly: false,
       path: '/',
       sameSite: 'lax',
@@ -165,16 +120,16 @@ export const useRefreshTokenCookie: Factory = (options) => async (context) => {
     const expiryDate = addDays(currentDate, 7);
     const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
     const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
-    cookies.set(options.refreshCookieName, value, {
-      domain: options.refreshCookieDomain,
+    cookies.set(refreshTokenCookieName, value, {
+      domain: cookieDomain,
       httpOnly: true,
       maxAge: maxAgeInMilliseconds,
       path: '/token/refresh',
       sameSite: 'strict',
       secure: true,
     });
-    cookies.set(options.refreshableCookieName, 'true', {
-      domain: options.refreshableCookieDomain,
+    cookies.set(refreshableTokenCookieName, 'true', {
+      domain: cookieDomain,
       httpOnly: false,
       maxAge: maxAgeInMilliseconds,
       path: '/',

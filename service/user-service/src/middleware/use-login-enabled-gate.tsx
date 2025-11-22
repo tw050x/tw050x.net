@@ -11,7 +11,7 @@ type Factory = () => Middleware
  * Middleware that gates access based on whether login is enabled.
  */
 export const useLoginEnabledGate: Factory = () => async (context) => {
-  const loginEnabled = readConfig('service.user.login-enabled');
+  const loginEnabled = readConfig('service.*.login-enabled');
   if (loginEnabled === 'false') {
     const loginAsideProps = {
       disabled: true,

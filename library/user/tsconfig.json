@@ -15,9 +15,9 @@
   "extends": "../../tsconfig.json",
   "files": [
     "src/component/RefreshAuthenticationTokens.tsx",
-    "src/middleware/use-access-token-cookie.tsx",
-    "src/middleware/use-login-state-cookie.tsx",
-    "src/middleware/use-refresh-token-cookie.tsx",
+    "src/middleware/use-access-token-cookie.ts",
+    "src/middleware/use-login-state-cookie.ts",
+    "src/middleware/use-refresh-token-cookie.ts",
     "src/index.ts",
   ],
   "references": [

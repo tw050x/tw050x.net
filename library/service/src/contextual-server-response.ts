@@ -29,13 +29,14 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   private _serverResponseSendingOrSent: boolean = false;
 
   /**
-   *
+   * Indicates whether the server response is currently being sent or has already been sent.
    */
   get sendingOrSent(): boolean {
     return this._serverResponseSendingOrSent;
   }
 
   /**
+   * Sends a 202 Accepted response with a JSON message
    *
    */
   sendAcceptedJSONResponse(): void {
@@ -48,7 +49,9 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 400 Bad Request response with the provided HTML content
    *
+   * @param jsxElement The JSX element to render as the response body
    */
   sendBadRequestHTMLResponse(jsxElement: JSX.Element): void {
     this.statusCode = 400;
@@ -58,6 +61,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 400 Bad Request response with a JSON message
    *
    */
   sendBadRequestJSONResponse(): void {
@@ -70,6 +74,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 201 Created response with a JSON message
    *
    */
   sendCreatedJSONResponse(): void {
@@ -82,7 +87,9 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 302 Found redirect response to the specified URL
    *
+   * @param url The URL to redirect to
    */
   sendFoundRedirect(url: URL): void {
     this.statusCode = 302;
@@ -96,7 +103,9 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 403 Forbidden response with the provided HTML content
    *
+   * @param jsxElement The JSX element to render as the response body
    */
   sendForbiddenHTMLResponse(jsxElement: JSX.Element): void {
     this.statusCode = 403;
@@ -106,7 +115,21 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 403 Forbidden response with a JSON message
    *
+   * @param text Optional text to include in the response body
+   */
+  sendForbiddenTextResponse(text?: string): void {
+    this.statusCode = 403;
+    this.setHeader('Content-Type', 'text/plain');
+    this.end(text || 'Forbidden');
+    this._serverResponseSendingOrSent = true;
+  }
+
+  /**
+   * Sends a 403 Forbidden response with a JSON message
+   *
+   * @param jsxElement The JSX element to render as the response body
    */
   sendInternalServerErrorHTMLResponse(jsxElement: JSX.Element): void {
     this.statusCode = 500;
@@ -116,6 +139,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 500 Internal Server Error response with a JSON message
    *
    */
   sendInternalServerErrorJSONResponse(): void {
@@ -128,7 +152,21 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 500 Internal Server Error response with optional text
    *
+   * @param text Optional text to include in the response body
+   */
+  sendInternalServerErrorTextResponse(text?: string): void {
+    this.statusCode = 500;
+    this.setHeader('Content-Type', 'text/plain');
+    this.end(text || 'Internal Server Error');
+    this._serverResponseSendingOrSent = true;
+  }
+
+  /**
+   * Sends a 301 Moved Permanently redirect response to the specified URL
+   *
+   * @param url The URL to redirect to
    */
   sendMovedPermanentlyRedirect(url: URL): void {
     this.statusCode = 301;
@@ -142,7 +180,9 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 302 Moved Temporarily redirect response to the specified URL
    *
+   * @param url The URL to redirect to
    */
   sendMovedTemporarilyRedirect(url: URL): void {
     this.statusCode = 302;
@@ -156,7 +196,21 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 204 No Content response with optional text
    *
+   * @param text Optional text to include in the response body
+   */
+  sendNoContentTextResponse(text?: string): void {
+    this.statusCode = 204;
+    this.setHeader('Content-Type', 'text/plain');
+    this.end(text || 'No Content');
+    this._serverResponseSendingOrSent = true;
+  }
+
+  /**
+   * Sends a 404 Not Found response with the provided HTML content
+   *
+   * @param jsxElement The JSX element to render as the response body
    */
   sendNotFoundHTMLResponse(jsxElement: JSX.Element): void {
     this.statusCode = 404;
@@ -166,6 +220,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 404 Not Found response with a JSON message
    *
    */
   sendNotFoundJSONResponse(): void {
@@ -178,7 +233,9 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 501 Not Implemented response with optional text
    *
+   * @param text Optional text to include in the response body
    */
   sendNotImplementedTextResponse(text?: string): void {
     this.statusCode = 501;
@@ -188,7 +245,9 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 200 OK response with the provided HTML content
    *
+   * @param jsxElement The JSX element to render as the response body
    */
   sendOKHTMLResponse(jsxElement: JSX.Element): void {
     this.statusCode = 200;
@@ -198,6 +257,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 200 OK response with a JSON message
    *
    */
   sendOKJSONResponse(): void {
@@ -210,7 +270,9 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 200 OK response with optional text
    *
+   * @param text Optional text to include in the response body
    */
   sendOKTextResponse(text?: string): void {
     this.statusCode = 200;
@@ -220,7 +282,9 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 303 See Other redirect response to the specified URL
    *
+   * @param url The URL to redirect to
    */
   sendSeeOtherRedirect(url: URL): void {
     this.statusCode = 303;
@@ -234,7 +298,9 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 401 Unauthorized response with the provided HTML content
    *
+   * @param jsxElement The JSX element to render as the response body
    */
   sendUnauthorizedHTMLResponse(jsxElement: JSX.Element): void {
     this.statusCode = 401;
@@ -244,6 +310,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
   }
 
   /**
+   * Sends a 401 Unauthorized response with a JSON message
    *
    */
   sendUnauthorizedJSONResponse(): void {

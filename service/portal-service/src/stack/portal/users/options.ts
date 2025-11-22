@@ -5,10 +5,10 @@ import { defineServiceMiddleware } from "@tw050x.net.library/service";;
 
 const useCorsHeadersOptions = {
   allowedMethods: ['GET', 'OPTIONS'],
-  allowedOrigins: readConfig('service.portal.allowed-origins'),
 }
 
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
+  async (context) => void context.serverResponse.sendNoContentTextResponse(),
 ]);

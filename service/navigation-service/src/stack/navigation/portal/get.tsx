@@ -1,7 +1,7 @@
 import { database as accountDatabase } from "@tw050x.net.database/account-service";
 import { database as assignmentDatabase } from "@tw050x.net.database/assignment-service";
-import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
-import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
+import { useAccessTokenCookie } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
+import { useLoginStateCookie } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
@@ -24,26 +24,13 @@ import { default as PortalMenu, Props as PortalMenuProps } from "../../../templa
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS'],
-  allowedOrigins: readConfig('service.navigation.allowed-origins'),
-}
-
-const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
-  cookieName: readConfig('cookie.access-token.name'),
-  cookieDomain: readConfig('cookie.access-token.domain'),
-  jwtSecretKey: readSecret('jwt.secret-key'),
-}
-
-const useLoginStateCookieOptions: UseLoginStateCookieOptions = {
-  cookieName: readConfig('cookie.login-state.name'),
-  cookieDomain: readConfig('cookie.login-state.domain'),
-  encrypterSecretKey: readSecret('encrypter.secret-key'),
 }
 
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookie(useAccessTokenCookieOptions),
-  useLoginStateCookie(useLoginStateCookieOptions),
+  useAccessTokenCookie(),
+  useLoginStateCookie(),
   useAuthGate(),
 
   //

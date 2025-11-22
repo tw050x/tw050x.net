@@ -1,4 +1,3 @@
-import { read as readConfig } from "@tw050x.net.library/configs";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { logger } from "@tw050x.net.library/logger";
 import { useLogRequest } from "@tw050x.net.library/middleware";
@@ -10,7 +9,6 @@ import { default as RegisterDocument } from "../../template/document/RegisterDoc
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS', 'POST'],
-  allowedOrigins: readConfig('service.user.allowed-origins'),
 }
 
 const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {

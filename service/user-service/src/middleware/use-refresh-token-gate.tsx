@@ -64,7 +64,7 @@ export const useRefreshTokenGate: Factory = () => async (context) => {
       sub: refreshTokenPayload.sub
     };
     const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
-    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${readConfig('service.user.host')}`);
+    const returnUrl = context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${readConfig('service.*.host')}`);
     context.serverResponse.accessTokenCookie.set(accessToken);
     context.serverResponse.loginStateCookie.clear();
     logger.debug('User authentication refreshed, redirecting to return URL');

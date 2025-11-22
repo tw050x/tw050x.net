@@ -1,8 +1,12 @@
+import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
+import { read as readSecret } from "@tw050x.net.library/secrets";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
 import { default as Cookies } from "cookies";
+
+const loginStateCookieName = 'user-service.auth-state.login';
+const stateCipherAlgorithm = 'aes-256-cbc';
 
 /**
  * The payload stored in the login state cookie.
@@ -11,20 +15,6 @@ export type LoginStateCookiePayload = {
   returnUrl?: URL;
 }
 
-/**
- * The options for the useLoginStateCookie middleware.
- */
-export type UseLoginStateCookieOptions = {
-  cookieName: string;
-  cookieDomain: string;
-  encrypterSecretKey: string;
-  stateCipherAlgorithm?: string;
-}
-
-/**
- * The default state cipher algorithm to use.
- */
-const defaultStateCipherAlgorithm = 'aes-256-cbc';
 
 /**
  * The resulting context for the useLoginStateCookie middleware.
@@ -46,7 +36,7 @@ export type UseLoginStateCookieResultingContext = ServiceRequestContext & {
 /**
  *
  */
-type Factory = (options: UseLoginStateCookieOptions) => Middleware<
+type Factory = () => Middleware<
   ServiceRequestContext,
   UseLoginStateCookieResultingContext
 >
@@ -54,59 +44,15 @@ type Factory = (options: UseLoginStateCookieOptions) => Middleware<
 /**
  * @returns void
  */
-export const useLoginStateCookie: Factory = (options) => async (context) => {
-
-  // check the cookie name
-  cookieNameGuard: {
-    if (options.cookieName !== '') {
-      break cookieNameGuard;
-    }
-    logger.error(new Error('access token cookie name is undefined or empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-  logger.debug(`Login state cookie name: ${options.cookieName}`);
-
-  // check the cookie domain
-  cookieDomainGuard: {
-    if (options.cookieDomain !== '') {
-      break cookieDomainGuard;
-    }
-    logger.error(new Error('access token cookie domain is undefined or empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-  logger.debug(`Login state cookie domain: ${options.cookieDomain}`);
-
-  // check the encrypter secret key
-  encrypterSecretKeyGuard: {
-    if (options.encrypterSecretKey !== '') {
-      break encrypterSecretKeyGuard;
-    }
-    logger.error(new Error('encrypter secret key is undefined or empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-  logger.debug('Encrypter secret key retrieved');
-
-  // retrieve the cookie name
-  let stateCipherAlgorithm;
-  stateCipherAlgorithmGuard: {
-    if (options.stateCipherAlgorithm === undefined) {
-      stateCipherAlgorithm = defaultStateCipherAlgorithm;
-      break stateCipherAlgorithmGuard;
-    }
-    if (options.stateCipherAlgorithm !== '') {
-      stateCipherAlgorithm = options.stateCipherAlgorithm;
-      break stateCipherAlgorithmGuard;
-    }
-    logger.error(new Error('access token cookie name is undefined or empty'));
-    return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
-  }
-  logger.debug(`State cipher algorithm: ${stateCipherAlgorithm}`);
+export const useLoginStateCookie: Factory = () => async (context) => {
+  const cookieDomain = readConfig('cookie.*.domain');
+  const encrypterSecretKey = readSecret('encrypter.secret-key');
 
   // read the cookie
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
     secure: true,
   });
-  const cookie = cookies.get(options.cookieName)
+  const cookie = cookies.get(loginStateCookieName)
 
   // parse the cookie
   let loginStateCookiePayload: LoginStateCookiePayload | undefined
@@ -116,7 +62,7 @@ export const useLoginStateCookie: Factory = (options) => async (context) => {
     }
     try {
       const parsedCookie = JSON.parse(cookie);
-      const decipher = createDecipheriv(stateCipherAlgorithm, Buffer.from(options.encrypterSecretKey, 'hex'), Buffer.from(parsedCookie.iv, 'hex'));
+      const decipher = createDecipheriv(stateCipherAlgorithm, Buffer.from(encrypterSecretKey, 'hex'), Buffer.from(parsedCookie.iv, 'hex'));
       let decrypted = decipher.update(parsedCookie.content, 'hex', 'utf8');
       decrypted += decipher.final('utf8');
       loginStateCookiePayload = JSON.parse(decrypted);
@@ -150,8 +96,8 @@ export const useLoginStateCookie: Factory = (options) => async (context) => {
 
   // define the clear function
   const clearLoginStateCookie = () => {
-    cookies.set(options.cookieName, '', {
-      domain: options.cookieDomain,
+    cookies.set(loginStateCookieName, '', {
+      domain: cookieDomain,
       httpOnly: false,
       path: '/',
       sameSite: 'strict',
@@ -162,15 +108,15 @@ export const useLoginStateCookie: Factory = (options) => async (context) => {
   // define the set function
   const setLoginStateCookie = (state: string) => {
     const iv = randomBytes(16);
-    const cipher = createCipheriv(stateCipherAlgorithm, Buffer.from(options.encrypterSecretKey, 'hex'), iv);
+    const cipher = createCipheriv(stateCipherAlgorithm, Buffer.from(encrypterSecretKey, 'hex'), iv);
     let encrypted = cipher.update(state, 'utf8', 'hex');
     encrypted += cipher.final('hex');
     const value = JSON.stringify({
       iv: iv.toString('hex'),
       content: encrypted
     })
-    cookies.set(options.cookieName, value, {
-      domain: options.cookieDomain,
+    cookies.set(loginStateCookieName, value, {
+      domain: cookieDomain,
       httpOnly: false,
       path: '/',
       sameSite: 'strict',
