@@ -1,7 +1,7 @@
 import { database as accountDatabase } from "@tw050x.net.database/account-service";
 import { database as assignmentDatabase } from "@tw050x.net.database/assignment-service";
-import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
-import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
+import { useAccessTokenCookie, UseAccessTokenCookieOptions } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
+import { UseLoginStateCookieOptions, useLoginStateCookie } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";

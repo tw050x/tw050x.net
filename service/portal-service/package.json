@@ -5,7 +5,6 @@
   "dependencies": {
     "@kitajs/html": "^4.2.9",
     "@tw050x.net.database/assignment-service": "workspace:*",
-    "@tw050x.net.library/authentication": "workspace:*",
     "@tw050x.net.library/configs": "workspace:*",
     "@tw050x.net.library/cors": "workspace:*",
     "@tw050x.net.library/database": "workspace:*",
@@ -14,6 +13,7 @@
     "@tw050x.net.library/secrets": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
     "@tw050x.net.library/uikit": "workspace:*",
+    "@tw050x.net.library/user": "workspace:*",
     "@tw050x.net.library/utility": "workspace:*",
     "cookies": "^0.9.1",
     "date-fns": "^4.1.0",

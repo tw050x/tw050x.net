@@ -1,6 +1,6 @@
-import { UseAccessTokenCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
-import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
-import { UseRefreshTokenCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-refresh-token-cookie";
+import { UseAccessTokenCookieResultingContext } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
+import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
+import { UseRefreshTokenCookieResultingContext } from "@tw050x.net.library/user/middleware/use-refresh-token-cookie";
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
 import { read as readSecret } from "@tw050x.net.library/secrets";

@@ -74,7 +74,6 @@
   ],
   "references": [
     { "path": "../../database/user-service" },
-    { "path": "../../library/authentication" },
     { "path": "../../library/configs" },
     { "path": "../../library/cors" },
     { "path": "../../library/database" },
@@ -83,6 +82,7 @@
     { "path": "../../library/secrets" },
     { "path": "../../library/service" },
     { "path": "../../library/uikit" },
+    { "path": "../../library/user" },
     { "path": "../../library/utility" },
   ]
 }

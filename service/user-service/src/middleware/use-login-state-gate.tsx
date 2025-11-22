@@ -1,4 +1,4 @@
-import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
+import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { default as BadRequest } from "@tw050x.net.library/uikit/document/BadRequest";

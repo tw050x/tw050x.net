@@ -21,11 +21,11 @@
     "src/serve.ts",
   ],
   "references": [
-    { "path": "../../library/authentication" },
     { "path": "../../library/configs" },
     { "path": "../../library/cors" },
     { "path": "../../library/logger" },
     { "path": "../../library/middleware" },
     { "path": "../../library/service" },
+    { "path": "../../library/user" },
   ]
 }

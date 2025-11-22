@@ -1,5 +1,5 @@
 import { Component } from "@kitajs/html";
-import { default as RefreshAuthenticationTokens } from "@tw050x.net.library/authentication/component/RefreshAuthenticationTokens";
+import { default as RefreshAuthenticationTokens } from "@tw050x.net.library/user/component/RefreshAuthenticationTokens";
 import { default as Head } from "@tw050x.net.library/uikit/component/Head";
 
 /**

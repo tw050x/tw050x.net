@@ -1,5 +1,5 @@
-import { AccessTokenCookie, UseAccessTokenCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-access-token-cookie";
-import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/authentication/middleware/use-login-state-cookie";
+import { AccessTokenCookie, UseAccessTokenCookieResultingContext } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
+import { UseLoginStateCookieResultingContext } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
 import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";

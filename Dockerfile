@@ -50,12 +50,6 @@ COPY --from=build /build/database/user-service/artifact /srv/database/user-servi
 COPY --from=build /build/database/user-service/package.json /srv/database/user-service/package.json
 COPY --from=build /build/database/user-service/tsconfig.json /srv/database/user-service/tsconfig.json
 
-FROM node:23.11.1-alpine3.22 AS library-authentication
-WORKDIR /srv
-COPY --from=build /build/library/authentication/artifact /srv/library/authentication/artifact
-COPY --from=build /build/library/authentication/package.json /srv/library/authentication/package.json
-COPY --from=build /build/library/authentication/tsconfig.json /srv/library/authentication/tsconfig.json
-
 FROM node:23.11.1-alpine3.22 AS library-authorisation
 WORKDIR /srv
 COPY --from=build /build/library/authorisation/artifact /srv/library/authorisation/artifact
@@ -122,6 +116,12 @@ COPY --from=build /build/library/uikit/artifact /srv/library/uikit/artifact
 COPY --from=build /build/library/uikit/package.json /srv/library/uikit/package.json
 COPY --from=build /build/library/uikit/tsconfig.json /srv/library/uikit/tsconfig.json
 
+FROM node:23.11.1-alpine3.22 AS library-user
+WORKDIR /srv
+COPY --from=build /build/library/user/artifact /srv/library/user/artifact
+COPY --from=build /build/library/user/package.json /srv/library/user/package.json
+COPY --from=build /build/library/user/tsconfig.json /srv/library/user/tsconfig.json
+
 FROM node:23.11.1-alpine3.22 AS library-utility
 WORKDIR /srv
 COPY --from=build /build/library/utility/artifact /srv/library/utility/artifact
@@ -185,7 +185,6 @@ RUN apk add --no-cache curl
 RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
-COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
@@ -195,6 +194,7 @@ COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
+COPY --from=library-user /srv/library/user /srv/library/user
 COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/service/marketing-service/artifact /srv/service/marketing-service/artifact
 COPY --from=build /build/service/marketing-service/package.json /srv/service/marketing-service/package.json
@@ -209,7 +209,6 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-account-service /srv/database/account-service /srv/database/account-service
 COPY --from=database-assignment-service /srv/database/assignment-service /srv/database/assignment-service
-COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
@@ -219,6 +218,7 @@ COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
+COPY --from=library-user /srv/library/user /srv/library/user
 COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/service/navigation-service/artifact /srv/service/navigation-service/artifact
 COPY --from=build /build/service/navigation-service/package.json /srv/service/navigation-service/package.json
@@ -232,7 +232,6 @@ RUN npm install -g nodemon --production --no-optional && npm cache clean --force
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment-service /srv/database/assignment-service /srv/database/assignment-service
-COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
@@ -242,6 +241,7 @@ COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
+COPY --from=library-user /srv/library/user /srv/library/user
 COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/service/portal-service/artifact /srv/service/portal-service/artifact
 COPY --from=build /build/service/portal-service/package.json /srv/service/portal-service/package.json
@@ -256,7 +256,6 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment-service /srv/database/assignment-service /srv/database/assignment-service
 COPY --from=database-user-service /srv/database/user-service /srv/database/user-service
-COPY --from=library-authentication /srv/library/authentication /srv/library/authentication
 COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
@@ -267,6 +266,7 @@ COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
+COPY --from=library-user /srv/library/user /srv/library/user
 COPY --from=library-utility /srv/library/utility /srv/library/utility
 COPY --from=build /build/database/user-service /srv/database/user-service
 COPY --from=build /build/service/user-service/artifact /srv/service/user-service/artifact
