@@ -1,26 +1,28 @@
 import { Component } from "@kitajs/html";
-import { default as RefreshAuthenticationTokens } from "@tw050x.net.library/user/component/RefreshAuthenticationTokens";
+import { default as RefreshAuthenticationTokens, Props as RefreshAuthenticationTokenProps } from "@tw050x.net.library/user/component/RefreshAuthenticationTokens";
 import { default as Head } from "@tw050x.net.library/uikit/component/Head";
 
 /**
- * Props for the `<HomeDocument />` component.
+ * Props for the `<Home />` component.
  */
-type Props = {};
+type Props = {
+  refreshAuthenticationTokenProps?: RefreshAuthenticationTokenProps;
+};
 
 /**
- * The `<HomeDocument />` component.
+ * The `<Home />` component.
  *
  * @param props
  * @returns {JSX.Element}
  */
-const HomeDocument: Component<Props> = () => {
+const Home: Component<Props> = (props) => {
   return (
     <>
       {'<!doctype html>'}
       <html lang="en">
         <Head title="Home" />
         <body>
-          <RefreshAuthenticationTokens />
+          <RefreshAuthenticationTokens {...props.refreshAuthenticationTokenProps} />
           <div class="flex flex-col px-8 pt-8">
             <h1 class="text-4xl">Home</h1>
           </div>
@@ -29,4 +31,4 @@ const HomeDocument: Component<Props> = () => {
     </>
   );
 }
-export default HomeDocument;
+export default Home;

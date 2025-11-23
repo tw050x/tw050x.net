@@ -5,6 +5,7 @@ import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { logger } from "@tw050x.net.library/logger";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { default as RefreshAuthenticationTokens } from "@tw050x.net.library/user/component/RefreshAuthenticationTokens";
 import { default as jwt, SignOptions } from "jsonwebtoken";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
@@ -26,16 +27,22 @@ export default defineServiceMiddleware([
     if (context.incomingMessage.refreshTokenCookie.raw === undefined) {
       context.serverResponse.accessTokenCookie.clear();
       context.serverResponse.refreshTokenCookie.clear();
-      return void context.serverResponse.sendForbiddenTextResponse();
+      return void context.serverResponse.sendOKHTMLResponse(
+        <RefreshAuthenticationTokens disabled={true} />,
+      );
     }
 
     // Check the presence of an access token
     if (context.incomingMessage.accessTokenCookie.raw === undefined) {
       context.serverResponse.accessTokenCookie.clear();
       context.serverResponse.refreshTokenCookie.clear();
-      return void context.serverResponse.sendForbiddenTextResponse();
+      return void context.serverResponse.sendOKHTMLResponse(
+        <RefreshAuthenticationTokens disabled={true} />,
+      );
     }
 
-    return void context.serverResponse.sendNotImplementedTextResponse();
+    return void context.serverResponse.sendOKHTMLResponse(
+      <RefreshAuthenticationTokens />,
+    );
   }
 ]);
