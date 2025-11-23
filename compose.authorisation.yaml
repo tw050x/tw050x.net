@@ -1,0 +1,74 @@
+
+services:
+  authorisation:
+    command: [ "yarn", "workspace", "@tw050x.net.service/authorisation", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/serve.js" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: restart
+          include:
+            - "**/*.js"
+          path: ./library/
+        - action: restart
+          include:
+            - "**/*.js"
+          path: ./service/authorisation/artifact
+    environment:
+      - LOGS_LEVEL=info
+      - LOGS_DIRECTORY=/log
+      - MONGO_CLIENT_AUTH_PASSWORD=password
+      - MONGO_CLIENT_AUTH_USERNAME=root
+      - MONGO_CLIENT_REPLICA_SET=rs0
+      - MONGO_CLIENT_URI=mongodb://mongo-primary:27017,mongo-secondary-a:27017
+      - NODE_ENV=development
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /healthcheck && grep -q '^healthy$' /healthcheck"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/authorisation:latest
+    labels:
+      - traefik.docker.network=services
+      - traefik.enable=true
+      - traefik.http.routers.authorisation.entrypoints=websecure
+      - traefik.http.routers.authorisation.tls=true
+      - traefik.http.services.authorisation.loadbalancer.server.port=3000
+      - traefik.http.services.authorisation.loadbalancer.server.scheme=https
+      - traefik.http.services.authorisation.loadbalancer.serversTransport=secure@file
+    mem_limit: 512mb
+    networks:
+      mongo: {}
+      services: {}
+    ports:
+      - "9201:9229"
+    pull_policy: never
+    volumes:
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/authorisation
+        target: /log
+        type: bind
+      - source: ./service/authorisation
+        target: /srv/service/authorisation
+        type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind

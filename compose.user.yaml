@@ -1,0 +1,178 @@
+
+services:
+  user:
+    command: [ "yarn", "workspace", "@tw050x.net.service/user", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/serve.js" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      error:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: restart
+          include:
+            - "**/*.js"
+          path: ./library/
+        - action: restart
+          include:
+            - "**/*.js"
+          path: ./service/user/artifact
+    environment:
+      - ASSIGNMENT_DATABASE_NAME=assignments
+      - ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME=tasks
+      - ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME=task-templates
+      - ASSIGNMENT_TEMPLATE_UUID_ENTER_YOUR_NAME_TASK=8c79f0b4-60ef-4971-824c-957d228d9d8b
+      - ASSIGNMENT_TEMPLATE_UUID_VERIFY_EMAIL_TASK=fd1a13de-1a7f-448e-8bc5-a4eb458ed850
+      - LOGS_LEVEL=info
+      - LOGS_DIRECTORY=/log
+      - MONGO_CLIENT_AUTH_PASSWORD=password
+      - MONGO_CLIENT_AUTH_USERNAME=root
+      - MONGO_CLIENT_REPLICA_SET=rs0
+      - MONGO_CLIENT_URI=mongodb://mongo-primary:27017,mongo-secondary-a:27017
+      - USER_DATABASE_NAME=users
+      - USER_DATABASE_CREDENTIALS_COLLECTION_NAME=credentials
+      - USER_DATABASE_NONCES_COLLECTION_NAME=nonces
+      - USER_DATABASE_PERMISSIONS_COLLECTION_NAME=permissions
+      - USER_DATABASE_PROFILE_COLLECTION_NAME=profiles
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /healthcheck && grep -q '^healthy$' /healthcheck"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/user:latest
+    labels:
+      - traefik.docker.network=services
+      - traefik.enable=true
+      - traefik.http.routers.user.entrypoints=websecure
+      - traefik.http.routers.user.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.user.rule=Host(`tw050x.dev`) && (Path(`/logout`) || Path(`/register`) || PathPrefix(`/login`) || PathPrefix(`/token/`) || PathPrefix(`/oauth2/`))
+      - traefik.http.routers.user.tls=true
+      - traefik.http.services.user.loadbalancer.server.port=3000
+      - traefik.http.services.user.loadbalancer.server.scheme=https
+      - traefik.http.services.user.loadbalancer.serversTransport=secure@file
+    mem_limit: 512mb
+    networks:
+      mongo: {}
+      services: {}
+      user: {}
+    ports:
+      - "9206:9229"
+    pull_policy: never
+    volumes:
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
+        type: bind
+      - source: ./database
+        target: /srv/database
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/user
+        target: /log
+        type: bind
+      - source: ./service/user
+        target: /srv/service/user
+        type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+
+  user-redis:
+    command: [ "redis-server", "--save", "", "--appendonly", "no" ]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: redis:8.0.5-alpine
+    mem_limit: 256mb
+    networks:
+      user:
+        aliases:
+          - user-redis.internal
+    ports:
+      - "6381:6379"
+    volumes:
+      - source: ./log/service/user-redis
+        target: /log
+        type: bind
+
+  user-queue:
+    command: [ "yarn", "workspace", "@tw050x.net.worker/user-queue", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/run.js" ]
+    depends_on:
+      mongo-primary:
+        condition: service_healthy
+    develop:
+      watch:
+        - path: ./worker/user-queue/artifact
+          action: restart
+    environment:
+      - ASSIGNMENT_DATABASE_NAME=assignments
+      - ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME=tasks
+      - ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME=task-templates
+      - LOGS_LEVEL=info
+      - LOGS_DIRECTORY=/log
+      - MONGO_CLIENT_AUTH_PASSWORD=password
+      - MONGO_CLIENT_AUTH_USERNAME=root
+      - MONGO_CLIENT_REPLICA_SET=rs0
+      - MONGO_CLIENT_URI=mongodb://mongo-primary:27017,mongo-secondary-a:27017
+      - NODE_ENV=development
+      - USER_DATABASE_NAME=users
+      - USER_DATABASE_CREDENTIALS_COLLECTION_NAME=credentials
+      - USER_DATABASE_NONCES_COLLECTION_NAME=nonces
+      - USER_DATABASE_PERMISSIONS_COLLECTION_NAME=permissions
+      - USER_DATABASE_PROFILE_COLLECTION_NAME=profiles
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /healthcheck && grep -q '^healthy$' /healthcheck"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.worker/user-queue:latest
+    mem_limit: 512mb
+    networks:
+      mongo:
+        aliases:
+          - mongo.internal
+      user: {}
+    ports:
+      - "9301:9229"
+    pull_policy: never
+    volumes:
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
+        type: bind
+      - source: ./database
+        target: /srv/database
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/worker/user-queue
+        target: /log
+        type: bind
+      - source: ./worker/user-queue
+        target: /srv/worker/user-queue
+        type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind

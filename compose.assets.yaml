@@ -1,8 +1,8 @@
 
 services:
-  assets-service:
+  assets:
     depends_on:
-      traefik-service:
+      traefik:
         condition: service_healthy
     environment:
       - NODE_ENV=development
@@ -12,19 +12,19 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net.service/assets-service:latest
+    image: tw050x.net.service/assets:latest
     labels:
       - traefik.enable=true
-      - traefik.http.routers.assets-service.entrypoints=websecure
-      - traefik.http.routers.assets-service.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.assets-service.rule=Host(`tw050x.dev`) && PathPrefix(`/assets/`)
-      - traefik.http.routers.assets-service.tls=true
-      - traefik.http.services.assets-service.loadbalancer.server.port=3000
+      - traefik.http.routers.assets.entrypoints=websecure
+      - traefik.http.routers.assets.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.assets.rule=Host(`tw050x.dev`) && PathPrefix(`/assets/`)
+      - traefik.http.routers.assets.tls=true
+      - traefik.http.services.assets.loadbalancer.server.port=3000
     mem_limit: 512mb
     networks:
       - services
     pull_policy: never
     volumes:
-      - source: ./service/assets-service/public
-        target: /srv/service/assets-service/public
+      - source: ./service/assets/public
+        target: /srv/service/assets/public
         type: bind

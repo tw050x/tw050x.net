@@ -25,5 +25,5 @@ export type CreateServerOptions = {
     keyPath: string;
   };
   port: number;
-  routesDirectory: string;
+  routes: Record<string, unknown>;
 }

@@ -95,14 +95,8 @@ This repo requires a MongoDB replica set to be running. The `docker compose` fil
 > You should only have to do this once. Unless you delete the volume directories in the `./service/mongo/data` directory.
 
 ```bash
-
-# Read the environment variables from the .env.mongo file
-set -a
-source .env.mongo
-set +a
-
 # Connect to the primary MongoDB instance
-docker exec -it master-mongo-service-primary-1 mongosh --username root --password password --authenticationDatabase admin
+docker exec -it master-mongo-primary-1 mongosh --username root --password password --authenticationDatabase admin
 ```
 
 Once connected run the following command to initiate the replica set:
@@ -111,8 +105,8 @@ Once connected run the following command to initiate the replica set:
 rs.initiate({
   _id: "rs0",
   members: [
-    { _id: 0, host: "mongo-service-primary:27017", priority: 2 },
-    { _id: 1, host: "mongo-service-secondary-a:27017", priority: 1 }
+    { _id: 0, host: "mongo-primary:27017", priority: 2 },
+    { _id: 1, host: "mongo-secondary-a:27017", priority: 1 }
   ]
 })
 ```
@@ -130,7 +124,7 @@ To add more instances to the replica set, connect to the primary instance (shown
 Be sure to add the DNS names of the new instances to you hosts file:
 
 ```
-127.0.0.1 mongo-service-primary mongo-service-primary-a
+127.0.0.1 mongo-primary mongo-primary-a
 ```
 
 > This is necessary as connectiong via Compass will start with `localhost` but will be redirected to the replica set members DNS names. If you cannot access those replica sets via the DNS names used on the docker network, the connection will fail.
@@ -150,7 +144,7 @@ mongodb://root:password@localhost:27017,localhost:27018/?replicaSet=rs0&authSour
 This should be used in the `.env.<type>.mongo-client` file for the services that need to connect to MongoDB.
 
 ```
-mongodb://mongo-service-primary:27017,mongo-service-secondary-a:27017
+mongodb://mongo-primary:27017,mongo-secondary-a:27017
 ```
 
 ## Development Servers
@@ -163,10 +157,11 @@ yarn docker:build
 
 > This build command will take a while. Go make a drink. Take a walk.
 
-Then to run the servers locally use `docker compose`.
+Then to run the services locally use `docker compose`.
 
 ```bash
 docker compose up --detach
+docker compose watch # for auto reloading (optional)
 ```
 
 > The build command could take a while. Go make a drink. Take a walk.

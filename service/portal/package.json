@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "author": "tw050x (Richard Kielty)",
+  "description": "The Portal Service project for tw050x.net",
+  "dependencies": {
+    "@kitajs/html": "^4.2.9",
+    "@tw050x.net.database/assignment": "workspace:*",
+    "@tw050x.net.library/configs": "workspace:*",
+    "@tw050x.net.library/cors": "workspace:*",
+    "@tw050x.net.library/database": "workspace:*",
+    "@tw050x.net.library/logger": "workspace:*",
+    "@tw050x.net.library/middleware": "workspace:*",
+    "@tw050x.net.library/secrets": "workspace:*",
+    "@tw050x.net.library/service": "workspace:*",
+    "@tw050x.net.library/uikit": "workspace:*",
+    "@tw050x.net.library/user": "workspace:*",
+    "@tw050x.net.library/utility": "workspace:*",
+    "cookies": "^0.9.1",
+    "date-fns": "^4.1.0",
+    "http-status-codes": "^2.3.0",
+    "mongodb": "^6.12.0",
+    "uuid": "^11.0.3",
+    "validator": "^13.12.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/cookies": "^0.9.0",
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net.service/portal",
+  "private": true,
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "type": "module",
+  "version": "1.0.0"
+}

@@ -1,28 +1,28 @@
 
 include:
   - compose.assets.yaml
-  - compose.authorisation-service.yaml
-  - compose.error-service.yaml
-  - compose.marketing-service.yaml
-  - compose.mongo-service.yaml
-  - compose.navigation-service.yaml
-  - compose.portal-service.yaml
-  - compose.traefik-service.yaml
-  - compose.user-service.yaml
+  - compose.authorisation.yaml
+  - compose.error.yaml
+  - compose.marketing.yaml
+  - compose.mongo.yaml
+  - compose.navigation.yaml
+  - compose.portal.yaml
+  - compose.traefik.yaml
+  - compose.user.yaml
 
 networks:
-  mongo-service:
+  mongo:
     driver: bridge
-    name: mongo-service
-  portal-service:
+    name: mongo
+  portal:
     driver: bridge
-    name: portal-service
-  traefik-service:
+    name: portal
+  traefik:
     driver: bridge
-    name: traefik-services
-  user-service:
+    name: traefiks
+  user:
     driver: bridge
-    name: user-service
+    name: user
   services:
     driver: bridge
     name: services

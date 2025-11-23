@@ -3,7 +3,6 @@ import { createServer as createHttpsServer } from "node:https";
 import { readFileSync } from "node:fs";
 import { default as ContextualIncomingMessage } from "./contextual-incoming-message.js";
 import { default as ContextualServerResponse } from "./contextual-server-response.js";
-import { default as discoverRoutes } from "./routes.js";
 import { CreateRequestHandlerOptions, CreateServerOptions, ServiceRequestContext } from "./types.js";
 
 /**
@@ -51,7 +50,19 @@ export default function defineServer(options: CreateServerOptions) {
     )
   });
 
-  server.on('request', createRequestHandler({ routes }));
+  // Register provided routes
+  Object.entries(options.routes).forEach(([routePattern, route]) => {
+    const splitRoutePattern = routePattern.split(' ');
+    logger.debug(`- ${splitRoutePattern[0].toLocaleUpperCase().padEnd(8)} ${splitRoutePattern[1]}`);
+    routes.set(routePattern.trim(), route as (context: ServiceRequestContext) => void);
+  });
+
+  server.on(
+    'request',
+    createRequestHandler({
+      routes
+    })
+  );
 
   const close = () => {
     routes.clear(); // this is probably not needed, but just in case
@@ -64,16 +75,6 @@ export default function defineServer(options: CreateServerOptions) {
   }
 
   const on = server.on.bind(server);
-
-  logger.debug(`Begin discovery of routes in ${options.routesDirectory}`)
-
-  // Load and register routes
-  discoverRoutes(options.routesDirectory).then((discoveredRoutes) => {
-    discoveredRoutes.forEach(route => {
-      const routePattern = `${route.method} ${route.path}`;
-      routes.set(routePattern.trim(), route.middleware);
-    });
-  });
 
   return Object.freeze({
     close,

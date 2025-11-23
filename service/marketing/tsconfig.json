@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "outDir": "./artifact",
+    "rootDir": "./src",
+    "types": [
+      "@kitajs/html/htmx.d.ts",
+      "@types/node",
+    ],
+  },
+  "exclude": [
+    "artifact"
+  ],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "../../types/env.service.marketing.d.ts",
+    "src/route/get.tsx",
+    "src/route/options.ts",
+    "src/template/document/Home.tsx",
+    "src/healthcheck.ts",
+    "src/routes.ts",
+    "src/serve.ts",
+  ],
+  "references": [
+    { "path": "../../library/configs" },
+    { "path": "../../library/cors" },
+    { "path": "../../library/logger" },
+    { "path": "../../library/middleware" },
+    { "path": "../../library/service" },
+    { "path": "../../library/uikit" },
+    { "path": "../../library/user" },
+    { "path": "../../library/utility" },
+  ]
+}

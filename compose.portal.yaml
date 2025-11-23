@@ -1,0 +1,88 @@
+
+services:
+  portal:
+    command: [ "yarn", "workspace", "@tw050x.net.service/portal", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/serve.js" ]
+    depends_on:
+      assets:
+        condition: service_healthy
+      error:
+        condition: service_healthy
+      mongo-primary:
+        condition: service_healthy
+      traefik:
+        condition: service_healthy
+    develop:
+      watch:
+        - action: restart
+          include:
+            - "**/*.js"
+          path: ./library/
+        - action: restart
+          include:
+            - "**/*.js"
+          path: ./service/portal/artifact
+    environment:
+      - ASSIGNMENT_DATABASE_NAME=assignments
+      - ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME=tasks
+      - ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME=task-templates
+      - LOGS_LEVEL=info
+      - LOGS_DIRECTORY=/log
+      - MONGO_CLIENT_AUTH_PASSWORD=password
+      - MONGO_CLIENT_AUTH_USERNAME=root
+      - MONGO_CLIENT_REPLICA_SET=rs0
+      - MONGO_CLIENT_URI=mongodb://mongo-primary:27017,mongo-secondary-a:27017
+      - NODE_ENV=development
+      - USER_DATABASE_NAME=users
+      - USER_DATABASE_CREDENTIALS_COLLECTION_NAME=credentials
+      - USER_DATABASE_NONCES_COLLECTION_NAME=nonces
+      - USER_DATABASE_PERMISSIONS_COLLECTION_NAME=permissions
+      - USER_DATABASE_PROFILE_COLLECTION_NAME=profiles
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /healthcheck && grep -q '^healthy$' /healthcheck"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.service/portal:latest
+    labels:
+      - traefik.docker.network=services
+      - traefik.enable=true
+      - traefik.http.routers.portal.entrypoints=websecure
+      - traefik.http.routers.portal.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.portal.rule=Host(`tw050x.dev`) && PathPrefix(`/portal`)
+      - traefik.http.routers.portal.tls=true
+      - traefik.http.services.portal.loadbalancer.server.port=3000
+      - traefik.http.services.portal.loadbalancer.server.scheme=https
+      - traefik.http.services.portal.loadbalancer.serversTransport=secure@file
+    mem_limit: 512mb
+    networks:
+      mongo: {}
+      services: {}
+    ports:
+      - "9205:9229"
+    pull_policy: never
+    volumes:
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
+        type: bind
+      - source: ./ca
+        target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/service/portal
+        target: /log
+        type: bind
+      - source: ./service/portal
+        target: /srv/service/portal
+        type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind

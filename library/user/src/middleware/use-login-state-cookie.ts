@@ -5,7 +5,7 @@ import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
 import { createCipheriv, createDecipheriv, randomBytes } from 'node:crypto';
 import { default as Cookies } from "cookies";
 
-const loginStateCookieName = 'user-service.auth-state.login';
+const loginStateCookieName = 'user.auth-state.login';
 const stateCipherAlgorithm = 'aes-256-cbc';
 
 /**

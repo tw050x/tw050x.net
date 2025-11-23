@@ -6,8 +6,8 @@ import { default as Cookies } from "cookies";
 import { addDays, differenceInSeconds } from "date-fns";
 import { default as jwt } from "jsonwebtoken";
 
-const refreshTokenCookieName = 'user-service.auth-token.refresh';
-const refreshableTokenCookieName = 'user-service.auth-token.refreshable';
+const refreshTokenCookieName = 'user.auth-token.refresh';
+const refreshableTokenCookieName = 'user.auth-token.refreshable';
 
 type RefreshTokenCookie = {
   errors: Array<Error>;

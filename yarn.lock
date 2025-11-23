@@ -1645,9 +1645,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.database/account-service@workspace:*, @tw050x.net.database/account-service@workspace:database/account-service":
+"@tw050x.net.database/account@workspace:*, @tw050x.net.database/account@workspace:database/account":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/account-service@workspace:database/account-service"
+  resolution: "@tw050x.net.database/account@workspace:database/account"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@types/node": "npm:^22.10.2"
@@ -1657,22 +1657,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.database/assignment-service@workspace:*, @tw050x.net.database/assignment-service@workspace:database/assignment-service":
+"@tw050x.net.database/assignment@workspace:*, @tw050x.net.database/assignment@workspace:database/assignment":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/assignment-service@workspace:database/assignment-service"
-  dependencies:
-    "@tw050x.net.library/logger": "workspace:*"
-    "@tw050x.net.library/types": "workspace:*"
-    "@types/node": "npm:^22.10.2"
-    bson: "npm:^6.10.4"
-    mongodb: "npm:^6.12.0"
-    typescript: "npm:^5.7.2"
-  languageName: unknown
-  linkType: soft
-
-"@tw050x.net.database/authorisation-service@workspace:database/authorisation-service":
-  version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/authorisation-service@workspace:database/authorisation-service"
+  resolution: "@tw050x.net.database/assignment@workspace:database/assignment"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/types": "workspace:*"
@@ -1683,9 +1670,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.database/payment-service@workspace:database/payment-service":
+"@tw050x.net.database/authorisation@workspace:database/authorisation":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/payment-service@workspace:database/payment-service"
+  resolution: "@tw050x.net.database/authorisation@workspace:database/authorisation"
+  dependencies:
+    "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/types": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    bson: "npm:^6.10.4"
+    mongodb: "npm:^6.12.0"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@tw050x.net.database/payment@workspace:database/payment":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.database/payment@workspace:database/payment"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@types/node": "npm:^22.10.2"
@@ -1695,9 +1695,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.database/user-service@workspace:*, @tw050x.net.database/user-service@workspace:database/user-service":
+"@tw050x.net.database/user@workspace:*, @tw050x.net.database/user@workspace:database/user":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.database/user-service@workspace:database/user-service"
+  resolution: "@tw050x.net.database/user@workspace:database/user"
   dependencies:
     "@tw050x.net.library/logger": "workspace:*"
     "@types/node": "npm:^22.10.2"
@@ -1870,9 +1870,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/assets-service@workspace:service/assets-service":
+"@tw050x.net.service/assets@workspace:service/assets":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/assets-service@workspace:service/assets-service"
+  resolution: "@tw050x.net.service/assets@workspace:service/assets"
   dependencies:
     "@tailwindcss/cli": "npm:^4.1.12"
     serve: "npm:^14.2.4"
@@ -1880,9 +1880,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/authorisation-service@workspace:service/authorisation-service":
+"@tw050x.net.service/authorisation@workspace:service/authorisation":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/authorisation-service@workspace:service/authorisation-service"
+  resolution: "@tw050x.net.service/authorisation@workspace:service/authorisation"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/configs": "workspace:*"
@@ -1895,9 +1895,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/error-service@workspace:service/error-service":
+"@tw050x.net.service/error@workspace:service/error":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/error-service@workspace:service/error-service"
+  resolution: "@tw050x.net.service/error@workspace:service/error"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/configs": "workspace:*"
@@ -1912,9 +1912,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/marketing-service@workspace:service/marketing-service":
+"@tw050x.net.service/marketing@workspace:service/marketing":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/marketing-service@workspace:service/marketing-service"
+  resolution: "@tw050x.net.service/marketing@workspace:service/marketing"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/configs": "workspace:*"
@@ -1929,13 +1929,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/navigation-service@workspace:service/navigation-service":
+"@tw050x.net.service/navigation@workspace:service/navigation":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/navigation-service@workspace:service/navigation-service"
+  resolution: "@tw050x.net.service/navigation@workspace:service/navigation"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.database/account-service": "workspace:*"
-    "@tw050x.net.database/assignment-service": "workspace:*"
+    "@tw050x.net.database/account": "workspace:*"
+    "@tw050x.net.database/assignment": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
@@ -1956,9 +1956,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/payment-service@workspace:service/payment-service":
+"@tw050x.net.service/payment@workspace:service/payment":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/payment-service@workspace:service/payment-service"
+  resolution: "@tw050x.net.service/payment@workspace:service/payment"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/logger": "workspace:*"
@@ -1968,12 +1968,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/portal-service@workspace:service/portal-service":
+"@tw050x.net.service/portal@workspace:service/portal":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/portal-service@workspace:service/portal-service"
+  resolution: "@tw050x.net.service/portal@workspace:service/portal"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.database/assignment-service": "workspace:*"
+    "@tw050x.net.database/assignment": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
@@ -1997,19 +1997,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/traefik-service@workspace:service/traefik-service":
+"@tw050x.net.service/traefik@workspace:service/traefik":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/traefik-service@workspace:service/traefik-service"
+  resolution: "@tw050x.net.service/traefik@workspace:service/traefik"
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/user-service@workspace:service/user-service":
+"@tw050x.net.service/user@workspace:service/user":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/user-service@workspace:service/user-service"
+  resolution: "@tw050x.net.service/user@workspace:service/user"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.database/assignment-service": "workspace:*"
-    "@tw050x.net.database/user-service": "workspace:*"
+    "@tw050x.net.database/assignment": "workspace:*"
+    "@tw050x.net.database/user": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/cors": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
@@ -2061,13 +2061,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.worker/user-service-queue@workspace:worker/user-service-queue":
+"@tw050x.net.worker/user-queue@workspace:worker/user-queue":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.worker/user-service-queue@workspace:worker/user-service-queue"
+  resolution: "@tw050x.net.worker/user-queue@workspace:worker/user-queue"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
-    "@tw050x.net.database/assignment-service": "workspace:*"
-    "@tw050x.net.database/user-service": "workspace:*"
+    "@tw050x.net.database/assignment": "workspace:*"
+    "@tw050x.net.database/user": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
     "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"

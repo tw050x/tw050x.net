@@ -6,7 +6,7 @@ import { default as Cookies } from "cookies";
 import { addHours, differenceInSeconds } from "date-fns";
 import { default as jwt } from "jsonwebtoken";
 
-const accessTokenCookieName = 'user-service.auth-token.access';
+const accessTokenCookieName = 'user.auth-token.access';
 
 /**
  * Access token cookie

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json.schemastore.org/package",
+  "author": "tw050x (Richard Kielty)",
+  "dependencies": {
+    "serve": "^14.2.4"
+  },
+  "description": "The Assets Service project for tw050x.net",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.12",
+    "tailwindcss": "^4.0.12"
+  },
+  "license": "UNLICENSED",
+  "name": "@tw050x.net.service/assets",
+  "private": true,
+  "scripts": {
+    "@tailwindcss/cli": "tailwindcss"
+  },
+  "type": "module",
+  "version": "1.0.0"
+}
