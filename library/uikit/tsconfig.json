@@ -29,11 +29,8 @@
     "src/document/BadRequest.tsx",
     "src/document/Forbidden.tsx",
     "src/document/NotFound.tsx",
+    "src/document/Unauthorised.tsx",
     "src/document/Unrecoverable.tsx",
-    "src/script/anchored-bar-event-listener.ts",
-    "src/script/toggle-password-and-password-confirmation-visibility.ts",
-    "src/script/toggle-password-visibility.ts",
-    "src/script/toggle-portal-menu.ts",
     "src/svg/Account.tsx",
     "src/svg/AccountSwitch.tsx",
     "src/svg/ArrowCircleLeft.tsx",
@@ -62,7 +59,6 @@
     "src/svg/Users.tsx",
     "src/svg/Warning.tsx",
     "src/index.ts",
-    "src/read-script.ts",
   ],
   "references": [
     { "path": "../utility" }

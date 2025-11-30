@@ -4,7 +4,11 @@
       "label": "tsc: clean build caches",
       "type": "shell",
       "command": "find",
-      "args": [".", "-name", "\"*.tsbuildinfo\"", "-delete"],
+      "args": [
+        ".",
+          "-name", "\"*.tsbuildinfo\"",
+          "-delete"
+      ],
       "options": {
         "cwd": "${workspaceFolder}"
       },
@@ -13,15 +17,42 @@
         "panel": "shared",
         "showReuseMessage": true,
         "clear": false
-      }
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "tsc: clean artifact directories",
+      "type": "shell",
+      "command": "find",
+      "args": [
+        ".",
+          "-name", "\"*\"",
+          "-path",  "\"*/artifact/*\"",
+          "-delete"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "never",
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
     },
     {
       "label": "tsc: build",
       "type": "shell",
       "command": "yarn",
-      "args": ["tsc", "--build"],
+      "args": [
+        "tsc",
+          "--build"
+      ],
       "group": "build",
-      "problemMatcher": ["$tsc"],
+      "problemMatcher": [
+        "$tsc"
+      ],
       "presentation": {
         "reveal": "always",
         "panel": "shared",
@@ -33,9 +64,14 @@
       "label": "tsc: clean and build",
       "type": "shell",
       "command": "yarn",
-      "args": ["tsc", "--build"],
+      "args": [
+        "tsc",
+          "--build"
+      ],
       "dependsOn": "tsc: clean build caches",
-      "problemMatcher": ["$tsc-watch"],
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
       "isBackground": true,
       "presentation": {
         "reveal": "always",
@@ -48,9 +84,16 @@
       "label": "tsc: clean and watch",
       "type": "shell",
       "command": "yarn",
-      "args": ["tsc", "--build", "--preserveWatchOutput", "--watch"],
+      "args": [
+        "tsc",
+          "--build",
+          "--preserveWatchOutput",
+          "--watch"
+      ],
       "dependsOn": "tsc: clean build caches",
-      "problemMatcher": ["$tsc-watch"],
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
       "isBackground": true,
       "presentation": {
         "reveal": "always",
@@ -63,8 +106,15 @@
       "label": "tsc: watch",
       "type": "shell",
       "command": "yarn",
-      "args": ["tsc", "--build", "--preserveWatchOutput", "--watch"],
-      "problemMatcher": ["$tsc-watch"],
+      "args": [
+        "tsc",
+          "--build",
+          "--preserveWatchOutput",
+          "--watch"
+      ],
+      "problemMatcher": [
+        "$tsc-watch"
+      ],
       "presentation": {
         "reveal": "always",
         "panel": "shared",
@@ -77,10 +127,11 @@
       "type": "shell",
       "command": "yarn",
       "args": [
-        "workspace", "@tw050x.net.service/assets", "@tailwindcss/cli",
-        "--cwd", "${workspaceFolder}",
-        "--input", "${workspaceFolder}/service/assets/style.css",
-        "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css",
+        "workspace", "@tw050x.net.service/assets",
+          "@tailwindcss/cli",
+            "--cwd", "${workspaceFolder}",
+            "--input", "${workspaceFolder}/service/assets/style.css",
+            "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css"
       ],
       "options": {
         "cwd": "${workspaceFolder}"
@@ -98,11 +149,12 @@
       "type": "shell",
       "command": "yarn",
       "args": [
-        "workspace", "@tw050x.net.service/assets", "@tailwindcss/cli",
-        "--cwd", "${workspaceFolder}",
-        "--input", "${workspaceFolder}/service/assets/style.css",
-        "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css",
-        "--watch"
+        "workspace", "@tw050x.net.service/assets",
+          "@tailwindcss/cli",
+          "--cwd", "${workspaceFolder}",
+            "--input", "${workspaceFolder}/service/assets/style.css",
+            "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css",
+            "--watch"
       ],
       "options": {
         "cwd": "${workspaceFolder}"
@@ -113,7 +165,7 @@
         "showReuseMessage": true,
         "clear": false
       },
-      "problemMatcher": ["$tailwindcss"]
+      "problemMatcher": []
     }
   ],
   "version": "2.0.0"

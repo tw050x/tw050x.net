@@ -21,6 +21,7 @@ RUN yarn workspaces foreach \
   --from @tw050x.net.service/navigation \
   --from @tw050x.net.service/portal \
   --from @tw050x.net.service/user \
+  --from @tw050x.net.worker/sessions-queue \
   --from @tw050x.net.worker/user-queue \
   --recursive \
   --topological \
@@ -44,6 +45,13 @@ WORKDIR /srv
 COPY --from=build /build/database/assignment/artifact /srv/database/assignment/artifact
 COPY --from=build /build/database/assignment/package.json /srv/database/assignment/package.json
 COPY --from=build /build/database/assignment/tsconfig.json /srv/database/assignment/tsconfig.json
+
+FROM node:23.11.1-alpine3.22 AS database-sessions
+WORKDIR /srv
+COPY --from=build /build/database/sessions/artifact /srv/database/sessions/artifact
+COPY --from=build /build/database/sessions/package.json /srv/database/sessions/package.json
+COPY --from=build /build/database/sessions/tsconfig.json /srv/database/sessions/tsconfig.json
+
 FROM node:23.11.1-alpine3.22 AS database-user
 WORKDIR /srv
 COPY --from=build /build/database/user/artifact /srv/database/user/artifact
@@ -92,6 +100,12 @@ COPY --from=build /build/library/middleware/artifact /srv/library/middleware/art
 COPY --from=build /build/library/middleware/package.json /srv/library/middleware/package.json
 COPY --from=build /build/library/middleware/tsconfig.json /srv/library/middleware/tsconfig.json
 
+FROM node:23.11.1-alpine3.22 AS library-script
+WORKDIR /srv
+COPY --from=build /build/library/script/artifact /srv/library/script/artifact
+COPY --from=build /build/library/script/package.json /srv/library/script/package.json
+COPY --from=build /build/library/script/tsconfig.json /srv/library/script/tsconfig.json
+
 FROM node:23.11.1-alpine3.22 AS library-secrets
 WORKDIR /srv
 COPY --from=build /build/library/secrets/artifact /srv/library/secrets/artifact
@@ -103,6 +117,12 @@ WORKDIR /srv
 COPY --from=build /build/library/service/artifact /srv/library/service/artifact
 COPY --from=build /build/library/service/package.json /srv/library/service/package.json
 COPY --from=build /build/library/service/tsconfig.json /srv/library/service/tsconfig.json
+
+FROM node:23.11.1-alpine3.22 AS library-sessions
+WORKDIR /srv
+COPY --from=build /build/library/sessions/artifact /srv/library/sessions/artifact
+COPY --from=build /build/library/sessions/package.json /srv/library/sessions/package.json
+COPY --from=build /build/library/sessions/tsconfig.json /srv/library/sessions/tsconfig.json
 
 FROM node:23.11.1-alpine3.22 AS library-types
 WORKDIR /srv
@@ -146,6 +166,7 @@ COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-script /srv/library/script /srv/library/script
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
@@ -164,6 +185,7 @@ COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-script /srv/library/script /srv/library/script
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
@@ -178,13 +200,17 @@ CMD [ "node", "service/error/artifact/serve.js" ]
 FROM node:23.11.1-alpine3.22 AS marketing
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
+COPY --from=database-sessions /srv/database/sessions /srv/database/sessions
+COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-script /srv/library/script /srv/library/script
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
+COPY --from=library-sessions /srv/library/sessions /srv/library/sessions
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
 COPY --from=library-user /srv/library/user /srv/library/user
@@ -200,13 +226,17 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-account /srv/database/account /srv/database/account
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
+COPY --from=database-sessions /srv/database/sessions /srv/database/sessions
+COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-script /srv/library/script /srv/library/script
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
+COPY --from=library-sessions /srv/library/sessions /srv/library/sessions
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
 COPY --from=library-user /srv/library/user /srv/library/user
@@ -221,13 +251,17 @@ FROM node:23.11.1-alpine3.22 AS portal
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
+COPY --from=database-sessions /srv/database/sessions /srv/database/sessions
+COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
 COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-script /srv/library/script /srv/library/script
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
+COPY --from=library-sessions /srv/library/sessions /srv/library/sessions
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
 COPY --from=library-user /srv/library/user /srv/library/user
@@ -238,10 +272,25 @@ COPY --from=build /build/service/portal/tsconfig.json /srv/service/portal/tsconf
 RUN yarn workspaces focus @tw050x.net.service/portal --production
 CMD [ "node", "service/portal/artifact/serve.js" ]
 
+FROM node:23.11.1-alpine3.22 AS sessions-queue
+WORKDIR /srv
+COPY --from=dependencies /srv /srv
+COPY --from=database-sessions /srv/database/sessions /srv/database/sessions
+COPY --from=library-configs /srv/library/configs /srv/library/configs
+COPY --from=library-logger /srv/library/logger /srv/library/logger
+COPY --from=library-service /srv/library/service /srv/library/service
+COPY --from=library-utility /srv/library/utility /srv/library/utility
+COPY --from=build /build/worker/sessions-queue/artifact /srv/worker/sessions-queue/artifact
+COPY --from=build /build/worker/sessions-queue/package.json /srv/worker/sessions-queue/package.json
+COPY --from=build /build/worker/sessions-queue/tsconfig.json /srv/worker/sessions-queue/tsconfig.json
+RUN yarn workspaces focus @tw050x.net.worker/sessions-queue --production
+CMD [ "node", "worker/sessions-queue/artifact/run.js" ]
+
 FROM node:23.11.1-alpine3.22 AS user
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
+COPY --from=database-sessions /srv/database/sessions /srv/database/sessions
 COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-configs /srv/library/configs /srv/library/configs
 COPY --from=library-cors /srv/library/cors /srv/library/cors
@@ -249,8 +298,10 @@ COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-encryption /srv/library/encryption /srv/library/encryption
 COPY --from=library-logger /srv/library/logger /srv/library/logger
 COPY --from=library-middleware /srv/library/middleware /srv/library/middleware
+COPY --from=library-script /srv/library/script /srv/library/script
 COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
+COPY --from=library-sessions /srv/library/sessions /srv/library/sessions
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-uikit /srv/library/uikit /srv/library/uikit
 COPY --from=library-user /srv/library/user /srv/library/user
@@ -266,11 +317,8 @@ FROM node:23.11.1-alpine3.22 AS user-queue
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=database-assignment /srv/database/assignment /srv/database/assignment
-COPY --from=database-user /srv/database/user /srv/database/user
 COPY --from=library-configs /srv/library/configs /srv/library/configs
-COPY --from=library-database /srv/library/database /srv/library/database
 COPY --from=library-logger /srv/library/logger /srv/library/logger
-COPY --from=library-secrets /srv/library/secrets /srv/library/secrets
 COPY --from=library-service /srv/library/service /srv/library/service
 COPY --from=library-types /srv/library/types /srv/library/types
 COPY --from=library-utility /srv/library/utility /srv/library/utility

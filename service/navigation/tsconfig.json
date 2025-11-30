@@ -14,7 +14,6 @@
   "extends": "../../tsconfig.json",
   "files": [
     "../../types/env.service.navigation.d.ts",
-    "src/middleware/use-auth-gate.tsx",
     "src/route/navigation/portal/get.tsx",
     "src/route/navigation/portal/options.ts",
     "src/template/component/PortalMenu.tsx",

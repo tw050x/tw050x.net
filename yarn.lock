@@ -1695,6 +1695,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@tw050x.net.database/sessions@workspace:*, @tw050x.net.database/sessions@workspace:database/sessions":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.database/sessions@workspace:database/sessions"
+  dependencies:
+    "@tw050x.net.library/logger": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    bson: "npm:^6.10.4"
+    mongodb: "npm:^6.12.0"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@tw050x.net.database/user@workspace:*, @tw050x.net.database/user@workspace:database/user":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.database/user@workspace:database/user"
@@ -1783,11 +1795,23 @@ __metadata:
     "@tw050x.net.library/uikit": "workspace:*"
     "@tw050x.net.library/utility": "workspace:*"
     "@types/cookies": "npm:^0.9.0"
-    "@types/jsonwebtoken": "npm:^9"
     "@types/node": "npm:^22.10.2"
     cookies: "npm:^0.9.1"
     date-fns: "npm:^4.1.0"
-    jsonwebtoken: "npm:^9.0.2"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@tw050x.net.library/script@workspace:*, @tw050x.net.library/script@workspace:library/script":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.library/script@workspace:library/script"
+  dependencies:
+    "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.library/utility": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    htmx-ext-response-targets: "npm:^2.0.1"
+    htmx.org: "npm:^2.0.4"
+    terser: "npm:^5.44.0"
     typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
@@ -1816,6 +1840,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@tw050x.net.library/sessions@workspace:*, @tw050x.net.library/sessions@workspace:library/sessions":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.library/sessions@workspace:library/sessions"
+  dependencies:
+    "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.database/sessions": "workspace:*"
+    "@tw050x.net.library/configs": "workspace:*"
+    "@tw050x.net.library/database": "workspace:*"
+    "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/uikit": "workspace:*"
+    "@types/cookies": "npm:^0.9.0"
+    "@types/node": "npm:^22.10.2"
+    bullmq: "npm:5.63.2"
+    cookies: "npm:^0.9.1"
+    date-fns: "npm:^4.1.0"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@tw050x.net.library/types@workspace:*, @tw050x.net.library/types@workspace:library/types":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.library/types@workspace:library/types"
@@ -1830,6 +1874,8 @@ __metadata:
   resolution: "@tw050x.net.library/uikit@workspace:library/uikit"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.library/configs": "workspace:*"
+    "@tw050x.net.library/script": "workspace:*"
     "@tw050x.net.library/utility": "workspace:*"
     "@types/node": "npm:^22.10.2"
     htmx-ext-response-targets: "npm:^2.0.1"
@@ -1844,17 +1890,21 @@ __metadata:
   resolution: "@tw050x.net.library/user@workspace:library/user"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.database/user": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
+    "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/script": "workspace:*"
     "@tw050x.net.library/secrets": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
+    "@tw050x.net.library/utility": "workspace:*"
     "@types/cookies": "npm:^0.9.0"
-    "@types/jsonwebtoken": "npm:^9"
     "@types/node": "npm:^22.10.2"
+    bullmq: "npm:5.63.2"
     cookies: "npm:^0.9.1"
     date-fns: "npm:^4.1.0"
-    jsonwebtoken: "npm:^9.0.2"
+    mongodb: "npm:^6.12.0"
     terser: "npm:^5.44.0"
     typescript: "npm:^5.7.2"
   languageName: unknown
@@ -1922,6 +1972,7 @@ __metadata:
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/sessions": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
     "@tw050x.net.library/user": "workspace:*"
     "@types/node": "npm:^22.10.2"
@@ -1941,13 +1992,14 @@ __metadata:
     "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/middleware": "workspace:*"
+    "@tw050x.net.library/script": "workspace:*"
     "@tw050x.net.library/secrets": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/sessions": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
     "@tw050x.net.library/user": "workspace:*"
     "@types/bcrypt": "npm:^5"
     "@types/cookies": "npm:^0.9.0"
-    "@types/jsonwebtoken": "npm:^9"
     "@types/node": "npm:^22.10.2"
     "@types/validator": "npm:^13.12.2"
     cookies: "npm:^0.9.1"
@@ -1981,6 +2033,7 @@ __metadata:
     "@tw050x.net.library/middleware": "workspace:*"
     "@tw050x.net.library/secrets": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/sessions": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
     "@tw050x.net.library/user": "workspace:*"
     "@tw050x.net.library/utility": "workspace:*"
@@ -2018,16 +2071,14 @@ __metadata:
     "@tw050x.net.library/middleware": "workspace:*"
     "@tw050x.net.library/secrets": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/sessions": "workspace:*"
     "@tw050x.net.library/uikit": "workspace:*"
     "@tw050x.net.library/user": "workspace:*"
     "@tw050x.net.library/utility": "workspace:*"
     "@types/bcrypt": "npm:^5"
-    "@types/jsonwebtoken": "npm:^9"
     "@types/node": "npm:^22.10.2"
     "@types/validator": "npm:^13.12.2"
     bcryptjs: "npm:^3.0.2"
-    bullmq: "npm:5.63.2"
-    jsonwebtoken: "npm:^9.0.2"
     mongodb: "npm:^6.12.0"
     terser: "npm:^5.44.0"
     typescript: "npm:^5.7.2"
@@ -2061,20 +2112,32 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@tw050x.net.worker/sessions-queue@workspace:worker/sessions-queue":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.worker/sessions-queue@workspace:worker/sessions-queue"
+  dependencies:
+    "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.database/sessions": "workspace:*"
+    "@tw050x.net.library/configs": "workspace:*"
+    "@tw050x.net.library/logger": "workspace:*"
+    "@tw050x.net.library/service": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    bullmq: "npm:5.63.2"
+    mongodb: "npm:^6.12.0"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
 "@tw050x.net.worker/user-queue@workspace:worker/user-queue":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.worker/user-queue@workspace:worker/user-queue"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.database/assignment": "workspace:*"
-    "@tw050x.net.database/user": "workspace:*"
     "@tw050x.net.library/configs": "workspace:*"
-    "@tw050x.net.library/database": "workspace:*"
     "@tw050x.net.library/logger": "workspace:*"
     "@tw050x.net.library/service": "workspace:*"
-    "@tw050x.net.library/utility": "workspace:*"
     "@types/node": "npm:^22.10.2"
-    bcryptjs: "npm:^3.0.2"
     bullmq: "npm:5.63.2"
     mongodb: "npm:^6.12.0"
     typescript: "npm:^5.7.2"
@@ -2176,16 +2239,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jsonwebtoken@npm:^9":
-  version: 9.0.10
-  resolution: "@types/jsonwebtoken@npm:9.0.10"
-  dependencies:
-    "@types/ms": "npm:*"
-    "@types/node": "npm:*"
-  checksum: 10c0/0688ac8fb75f809201cb7e18a12b9d80ce539cb9dd27e1b01e11807cb1a337059e899b8ee3abc3f2c9417f02e363a3069d9eab9ef9724b1da1f0e10713514f94
-  languageName: node
-  linkType: hard
-
 "@types/keygrip@npm:*":
   version: 1.0.6
   resolution: "@types/keygrip@npm:1.0.6"
@@ -2197,13 +2250,6 @@ __metadata:
   version: 1.3.5
   resolution: "@types/mime@npm:1.3.5"
   checksum: 10c0/c2ee31cd9b993804df33a694d5aa3fa536511a49f2e06eeab0b484fef59b4483777dbb9e42a4198a0809ffbf698081fdbca1e5c2218b82b91603dfab10a10fbc
-  languageName: node
-  linkType: hard
-
-"@types/ms@npm:*":
-  version: 2.1.0
-  resolution: "@types/ms@npm:2.1.0"
-  checksum: 10c0/5ce692ffe1549e1b827d99ef8ff71187457e0eb44adbae38fdf7b9a74bae8d20642ee963c14516db1d35fa2652e65f47680fdf679dcbde52bbfadd021f497225
   languageName: node
   linkType: hard
 
@@ -2625,13 +2671,6 @@ __metadata:
   version: 0.2.13
   resolution: "buffer-crc32@npm:0.2.13"
   checksum: 10c0/cb0a8ddf5cf4f766466db63279e47761eb825693eeba6a5a95ee4ec8cb8f81ede70aa7f9d8aeec083e781d47154290eb5d4d26b3f7a465ec57fb9e7d59c47150
-  languageName: node
-  linkType: hard
-
-"buffer-equal-constant-time@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "buffer-equal-constant-time@npm:1.0.1"
-  checksum: 10c0/fb2294e64d23c573d0dd1f1e7a466c3e978fe94a4e0f8183937912ca374619773bef8e2aceb854129d2efecbbc515bbd0cc78d2734a3e3031edb0888531bbc8e
   languageName: node
   linkType: hard
 
@@ -3261,15 +3300,6 @@ __metadata:
     jsbn: "npm:~0.1.0"
     safer-buffer: "npm:^2.1.0"
   checksum: 10c0/6cf168bae1e2dad2e46561d9af9cbabfbf5ff592176ad4e9f0f41eaaf5fe5e10bb58147fe0a804de62b1ee9dad42c28810c88d652b21b6013c47ba8efa274ca1
-  languageName: node
-  linkType: hard
-
-"ecdsa-sig-formatter@npm:1.0.11":
-  version: 1.0.11
-  resolution: "ecdsa-sig-formatter@npm:1.0.11"
-  dependencies:
-    safe-buffer: "npm:^5.0.1"
-  checksum: 10c0/ebfbf19d4b8be938f4dd4a83b8788385da353d63307ede301a9252f9f7f88672e76f2191618fd8edfc2f24679236064176fab0b78131b161ee73daa37125408c
   languageName: node
   linkType: hard
 
@@ -4094,24 +4124,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsonwebtoken@npm:^9.0.2":
-  version: 9.0.2
-  resolution: "jsonwebtoken@npm:9.0.2"
-  dependencies:
-    jws: "npm:^3.2.2"
-    lodash.includes: "npm:^4.3.0"
-    lodash.isboolean: "npm:^3.0.3"
-    lodash.isinteger: "npm:^4.0.4"
-    lodash.isnumber: "npm:^3.0.3"
-    lodash.isplainobject: "npm:^4.0.6"
-    lodash.isstring: "npm:^4.0.1"
-    lodash.once: "npm:^4.0.0"
-    ms: "npm:^2.1.1"
-    semver: "npm:^7.5.4"
-  checksum: 10c0/d287a29814895e866db2e5a0209ce730cbc158441a0e5a70d5e940eb0d28ab7498c6bf45029cc8b479639bca94056e9a7f254e2cdb92a2f5750c7f358657a131
-  languageName: node
-  linkType: hard
-
 "jsprim@npm:^2.0.2":
   version: 2.0.2
   resolution: "jsprim@npm:2.0.2"
@@ -4121,27 +4133,6 @@ __metadata:
     json-schema: "npm:0.4.0"
     verror: "npm:1.10.0"
   checksum: 10c0/677be2d41df536c92c6d0114a492ef197084018cfbb1a3e10b1fa1aad889564b2e3a7baa6af7949cc2d73678f42368b0be165a26bd4e4de6883a30dd6a24e98d
-  languageName: node
-  linkType: hard
-
-"jwa@npm:^1.4.1":
-  version: 1.4.2
-  resolution: "jwa@npm:1.4.2"
-  dependencies:
-    buffer-equal-constant-time: "npm:^1.0.1"
-    ecdsa-sig-formatter: "npm:1.0.11"
-    safe-buffer: "npm:^5.0.1"
-  checksum: 10c0/210a544a42ca22203e8fc538835205155ba3af6a027753109f9258bdead33086bac3c25295af48ac1981f87f9c5f941bc8f70303670f54ea7dcaafb53993d92c
-  languageName: node
-  linkType: hard
-
-"jws@npm:^3.2.2":
-  version: 3.2.2
-  resolution: "jws@npm:3.2.2"
-  dependencies:
-    jwa: "npm:^1.4.1"
-    safe-buffer: "npm:^5.0.1"
-  checksum: 10c0/e770704533d92df358adad7d1261fdecad4d7b66fa153ba80d047e03ca0f1f73007ce5ed3fbc04d2eba09ba6e7e6e645f351e08e5ab51614df1b0aa4f384dfff
   languageName: node
   linkType: hard
 
@@ -4306,13 +4297,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.includes@npm:^4.3.0":
-  version: 4.3.0
-  resolution: "lodash.includes@npm:4.3.0"
-  checksum: 10c0/7ca498b9b75bf602d04e48c0adb842dfc7d90f77bcb2a91a2b2be34a723ad24bc1c8b3683ec6b2552a90f216c723cdea530ddb11a3320e08fa38265703978f4b
-  languageName: node
-  linkType: hard
-
 "lodash.isarguments@npm:^3.1.0":
   version: 3.1.0
   resolution: "lodash.isarguments@npm:3.1.0"
@@ -4320,42 +4304,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.isboolean@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "lodash.isboolean@npm:3.0.3"
-  checksum: 10c0/0aac604c1ef7e72f9a6b798e5b676606042401dd58e49f051df3cc1e3adb497b3d7695635a5cbec4ae5f66456b951fdabe7d6b387055f13267cde521f10ec7f7
-  languageName: node
-  linkType: hard
-
-"lodash.isinteger@npm:^4.0.4":
-  version: 4.0.4
-  resolution: "lodash.isinteger@npm:4.0.4"
-  checksum: 10c0/4c3e023a2373bf65bf366d3b8605b97ec830bca702a926939bcaa53f8e02789b6a176e7f166b082f9365bfec4121bfeb52e86e9040cb8d450e64c858583f61b7
-  languageName: node
-  linkType: hard
-
-"lodash.isnumber@npm:^3.0.3":
-  version: 3.0.3
-  resolution: "lodash.isnumber@npm:3.0.3"
-  checksum: 10c0/2d01530513a1ee4f72dd79528444db4e6360588adcb0e2ff663db2b3f642d4bb3d687051ae1115751ca9082db4fdef675160071226ca6bbf5f0c123dbf0aa12d
-  languageName: node
-  linkType: hard
-
-"lodash.isplainobject@npm:^4.0.6":
-  version: 4.0.6
-  resolution: "lodash.isplainobject@npm:4.0.6"
-  checksum: 10c0/afd70b5c450d1e09f32a737bed06ff85b873ecd3d3d3400458725283e3f2e0bb6bf48e67dbe7a309eb371a822b16a26cca4a63c8c52db3fc7dc9d5f9dd324cbb
-  languageName: node
-  linkType: hard
-
-"lodash.isstring@npm:^4.0.1":
-  version: 4.0.1
-  resolution: "lodash.isstring@npm:4.0.1"
-  checksum: 10c0/09eaf980a283f9eef58ef95b30ec7fee61df4d6bf4aba3b5f096869cc58f24c9da17900febc8ffd67819b4e29de29793190e88dc96983db92d84c95fa85d1c92
-  languageName: node
-  linkType: hard
-
-"lodash.once@npm:^4.0.0, lodash.once@npm:^4.1.1":
+"lodash.once@npm:^4.1.1":
   version: 4.1.1
   resolution: "lodash.once@npm:4.1.1"
   checksum: 10c0/46a9a0a66c45dd812fcc016e46605d85ad599fe87d71a02f6736220554b52ffbe82e79a483ad40f52a8a95755b0d1077fba259da8bfb6694a7abbf4a48f1fc04

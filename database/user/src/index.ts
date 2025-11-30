@@ -1,11 +1,10 @@
-import { ObjectId } from "mongodb";
 import { mongoClient } from "./client.js";
 
 //
 interface CredentialDocumentBase {
   createdAt: Date;
   updatedAt: Date;
-  userProfileId: ObjectId;
+  userProfileUuid: string;
 }
 
 //
@@ -20,6 +19,13 @@ export interface OAuth2CredentialsDocument extends CredentialDocumentBase {
 }
 
 export type CredentialDocument = PasswordCredentialsDocument | OAuth2CredentialsDocument;
+
+//
+export type JTIDocument = {
+  createdAt: Date;
+  userProfileUuid: string;
+  value: string;
+}
 
 //
 export type NonceDocument = {
@@ -78,14 +84,14 @@ export const database = {
     }
     throw new Error(`Missing environment variable: USER_DATABASE_PERMISSIONS_COLLECTION_NAME`);
   },
-  get profile() {
-    const profileCollectionName = process.env.USER_DATABASE_PROFILE_COLLECTION_NAME;
+  get profiles() {
+    const profileCollectionName = process.env.USER_DATABASE_PROFILES_COLLECTION_NAME;
     guard: {
       if (profileCollectionName === undefined) break guard;
       if (profileCollectionName === '') break guard;
       return mongoClient.db(process.env.USER_DATABASE_NAME).collection<ProfileDocument>(profileCollectionName);
     }
-    throw new Error(`Missing environment variable: USER_DATABASE_PROFILE_COLLECTION_NAME`);
+    throw new Error(`Missing environment variable: USER_DATABASE_PROFILES_COLLECTION_NAME`);
   },
 }
 

@@ -1,6 +1,4 @@
 import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
-import { UseAccessTokenCookieOptions, useAccessTokenCookie } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
-import { useLoginStateCookie } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
@@ -8,8 +6,10 @@ import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { UsePaginationQueryParametersOptions, usePaginationQueryParameters } from "@tw050x.net.library/middleware/use-pagination-query-parameters";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
+import { useSession } from "@tw050x.net.library/sessions/middleware/use-session";
+import { useSessionGate } from "@tw050x.net.library/sessions/middleware/use-session-gate";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { useAuthGate } from "../../../middleware/use-auth-gate.js";
+import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
 import { useUIStateCookie } from "../../../middleware/use-ui-state.js";
 import { default as Assignment, Props as AssignmentDocumentProps } from "../../../template/document/Assignment.js";
 import { AssignmentTaskWithTemplate } from "../../../template/component/AssignmentTaskTable.js";
@@ -23,31 +23,28 @@ const usePaginationQueryParametersOptions: UsePaginationQueryParametersOptions =
   defaultPageSize: readConfig('service.portal.default-assignment-query-parameters-page-size'),
 }
 
-const useAccessTokenCookieOptions: UseAccessTokenCookieOptions = {
-  requiredPermissions: [
-    'read:portal:users-page',
-  ],
-}
-
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookie(useAccessTokenCookieOptions),
-  useLoginStateCookie(),
-  useAuthGate(),
+  useLoginState(),
+  useSession({
+    activity: 'get-portal-assignment-route',
+  }),
+  useSessionGate(),
   usePaginationQueryParameters(usePaginationQueryParametersOptions),
   useUIStateCookie(),
 
   // handle request
   async (context) => {
+
     let assignmentTasks;
     try {
       assignmentTasks = await assignmentDatabase.task.aggregate<AssignmentTaskWithTemplate>(
         sanitizeMongoDBFilterOrPipeline([
           {
             $match: {
-              userProfileUuid: context.incomingMessage.accessTokenCookie.payload.sub,
               completed: false,
+              userProfileUuid: context.incomingMessage.session.userProfileUuid,
             }
           },
           {

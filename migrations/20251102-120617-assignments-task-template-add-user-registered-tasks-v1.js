@@ -5,8 +5,9 @@ export const database = "assignments";
 
 const completeRegistrationAssignment = 'complete-registration';
 
+const enterYourNameTaskObjectId = new ObjectId('656f1c29f1e4f0001a2b3c4d');
 const enterYourNameTask = {
-  _id: new ObjectId(),
+  _id: enterYourNameTaskObjectId,
   createdAt: new Date(),
   actions: [
     'profile.enter-first-name',
@@ -19,8 +20,9 @@ const enterYourNameTask = {
   replaces: null,
 }
 
+const verifyEmailAddressTaskObjectId = new ObjectId('656f1c29f1e4f0001a2b3c4e');
 const verifyEmailAddressTask = {
-  _id: new ObjectId(),
+  _id: verifyEmailAddressTaskObjectId,
   createdAt: new Date(),
   actions: [
     'profile.verify-email',
@@ -44,6 +46,6 @@ export async function up({ db }) {
  * @param context
  */
 export async function down({ db }) {
-  await db.collection("task-templates").deleteOne({ _id: enterYourNameTask._id });
-  await db.collection("task-templates").deleteOne({ _id: verifyEmailAddressTask._id });
+  await db.collection("task-templates").deleteOne({ _id: enterYourNameTaskObjectId });
+  await db.collection("task-templates").deleteOne({ _id: verifyEmailAddressTaskObjectId });
 }

@@ -1,7 +1,5 @@
 import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.database/assignment";
 import { logger } from "@tw050x.net.library/logger";
-import { isObjectId } from "@tw050x.net.library/utility/is-object-id";
-import { ObjectId } from "mongodb";
 
 /**
  * Handles a UserRegistered event message.
@@ -10,14 +8,6 @@ import { ObjectId } from "mongodb";
  */
 export default async function handleUserRegisteredEvent(messageBody: Record<string, unknown>): Promise<void> {
   logger.debug('Handling UserRegistered message');
-
-  if (('userProfileId' in messageBody) === false) {
-    throw new Error('userProfileId is missing in UserRegistered event message body');
-  }
-
-  if (isObjectId(messageBody.userProfileId) === false) {
-    throw new Error('userProfileId is not a valid ObjectId in UserRegistered event message body');
-  }
 
   if (('userProfileUuid' in messageBody) === false) {
     throw new Error('userProfileUuid is missing in UserRegistered event message body');
@@ -56,7 +46,6 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
       description: template.description,
       label: template.label,
       reason: template.reason,
-      userProfileId: new ObjectId(messageBody.userProfileId),
       userProfileUuid: messageBody.userProfileUuid
     })
   }

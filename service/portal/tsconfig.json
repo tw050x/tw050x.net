@@ -12,7 +12,6 @@
   "extends": "../../tsconfig.json",
   "files": [
     "../../types/env.service.portal.d.ts",
-    "src/middleware/use-auth-gate.tsx",
     "src/middleware/use-ui-state.tsx",
     "src/route/portal/account/get.tsx",
     "src/route/portal/account/options.ts",

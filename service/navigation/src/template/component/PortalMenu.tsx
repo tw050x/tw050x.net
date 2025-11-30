@@ -1,5 +1,5 @@
 import { Component } from "@kitajs/html";
-import { default as readScript } from "@tw050x.net.library/uikit/read-script";
+import { readScript } from "@tw050x.net.library/script";
 import { default as Account } from "@tw050x.net.library/uikit/svg/Account";
 import { default as AccountSwitch } from "@tw050x.net.library/uikit/svg/AccountSwitch";
 import { default as ChevronLeft } from "@tw050x.net.library/uikit/svg/ChevronLeft";
@@ -38,7 +38,14 @@ const PortalMenu: Component<Props> = (props) => {
 
   return (
     <>
-      <nav data-state={props.menuState} id="portal-menu">
+      <nav
+        data-state={props.menuState}
+        hx-boost="true"
+        hx-select="main"
+        hx-swap="outerHTML"
+        hx-target="main"
+        id="portal-menu"
+      >
         <div class="flex flex-col">
           <header class="text-white font-bold px-2 py-1 flex">
             <span class="portal-menu-icon"><Cross /></span>

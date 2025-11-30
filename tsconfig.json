@@ -34,6 +34,7 @@
     { "path": "./database/assignment" },
     { "path": "./database/authorisation" },
     { "path": "./database/payment" },
+    { "path": "./database/sessions" },
     { "path": "./database/user" },
     { "path": "./library/authorisation" },
     { "path": "./library/configs" },
@@ -42,8 +43,10 @@
     { "path": "./library/encryption" },
     { "path": "./library/logger" },
     { "path": "./library/middleware" },
+    { "path": "./library/script" },
     { "path": "./library/secrets" },
     { "path": "./library/service" },
+    { "path": "./library/sessions" },
     { "path": "./library/types" },
     { "path": "./library/uikit" },
     { "path": "./library/user" },
@@ -57,6 +60,7 @@
     { "path": "./service/user" },
     { "path": "./tool/certificate" },
     { "path": "./tool/migrate" },
+    { "path": "./worker/sessions-queue" },
     { "path": "./worker/user-queue" },
   ]
 }

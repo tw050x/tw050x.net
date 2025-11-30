@@ -3,6 +3,8 @@
   "author": "tw050x (Richard Kielty)",
   "dependencies": {
     "@kitajs/html": "^4.2.9",
+    "@tw050x.net.library/configs": "workspace:*",
+    "@tw050x.net.library/script": "workspace:*",
     "@tw050x.net.library/utility": "workspace:*",
     "terser": "^5.44.0"
   },
@@ -29,6 +31,7 @@
     "./document/BadRequest": "./artifact/document/BadRequest.js",
     "./document/Forbidden": "./artifact/document/Forbidden.js",
     "./document/NotFound": "./artifact/document/NotFound.js",
+    "./document/Unauthorised": "./artifact/document/Unauthorised.js",
     "./document/Unrecoverable": "./artifact/document/Unrecoverable.js",
     "./svg/Account": "./artifact/svg/Account.js",
     "./svg/AccountSwitch": "./artifact/svg/AccountSwitch.js",
@@ -55,8 +58,7 @@
     "./svg/Settings": "./artifact/svg/Settings.js",
     "./svg/Thankful": "./artifact/svg/Thankful.js",
     "./svg/Users": "./artifact/svg/Users.js",
-    "./svg/Warning": "./artifact/svg/Warning.js",
-    "./read-script": "./artifact/read-script.js"
+    "./svg/Warning": "./artifact/svg/Warning.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/uikit",

@@ -6,6 +6,7 @@ group "default" {
     "marketing",
     "navigation",
     "portal",
+    "sessions-queue",
     "user",
     "user-queue",
   ]
@@ -51,6 +52,12 @@ target "portal" {
   dockerfile = "Dockerfile"
   target = "portal"
   tags = ["tw050x.net.service/portal:latest"]
+}
+
+target "sessions-queue" {
+  dockerfile = "Dockerfile"
+  target = "sessions-queue"
+  tags = ["tw050x.net.worker/sessions-queue:latest"]
 }
 
 target "user" {

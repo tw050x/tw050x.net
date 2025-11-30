@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "outDir": "./artifact",
+    "rootDir": "./src",
+    "types": [
+      "@types/node",
+      "@kitajs/html/htmx.d.ts"
+    ],
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "../../types/env.worker.user-queue.d.ts",
+    "src/event-handler/session-activity.ts",
+    "src/healthcheck.ts",
+    "src/run.ts",
+  ],
+  "references": [
+    { "path": "../../database/sessions" },
+    { "path": "../../library/configs" },
+    { "path": "../../library/logger" },
+    { "path": "../../library/service" },
+  ]
+}

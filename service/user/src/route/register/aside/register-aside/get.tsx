@@ -3,27 +3,18 @@ import { logger } from "@tw050x.net.library/logger";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../../../middleware/use-registration-enabled-gate.js";
-import { generateRegisterFormNonce } from '../../../../helper/generate-register-form-nonce.js';
-import { default as RegisterAside } from "../../../../template/component/RegisterAside.js";
+import { generateRegisterFormNonce } from "@tw050x.net.library/user/helper/generate-register-form-nonce";
+import { useRegistrationEnabledGate } from "@tw050x.net.library/user/middleware/use-registration-enabled-gate";
+import { default as RegisterAside } from "@tw050x.net.library/user/template/component/RegisterAside";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST'],
 }
 
-const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {
-  getResponseHtml: async () => (
-    <RegisterAside
-      disabled={true}
-      message="Registration is currently disabled."
-    />
-  )
-}
-
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useRegistrationEnabledGate(useRegistrationEnabledGateOptions),
+  useRegistrationEnabledGate(),
 
   // Render the login aside
   async (context) => {

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "./artifact",
+    "rootDir": "./src",
+  },
+  "exclude": [],
+  "extends": "../../tsconfig.json",
+  "files": [
+    "../../types/env.database.user.d.ts",
+    "src/client.ts",
+    "src/index.ts",
+  ]
+}

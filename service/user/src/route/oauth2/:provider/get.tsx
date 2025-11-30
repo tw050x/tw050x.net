@@ -1,6 +1,3 @@
-import { useAccessTokenCookie } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
-import { useLoginStateCookie } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
-import { useRefreshTokenCookie } from "@tw050x.net.library/user/middleware/use-refresh-token-cookie";
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { encrypt } from "@tw050x.net.library/encryption";
@@ -9,10 +6,11 @@ import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { read as readSecret } from "@tw050x.net.library/secrets";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { useLoginEnabled } from "@tw050x.net.library/user/middleware/use-login-enabled";
+import { useLoginEnabledGate } from "@tw050x.net.library/user/middleware/use-login-enabled-gate";
+import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
+import { googleAuthorisationURL } from "@tw050x.net.library/user/helper/oauth2/google";
 import { randomBytes } from 'node:crypto';
-import { default as googleAuthorisationURL } from '../../../helper/oauth2/provider/google/authorisation-url.js';
-import { useLoginEnabledGate } from "../../../middleware/use-login-enabled-gate.js";
-import { useRefreshTokenGate } from "../../../middleware/use-refresh-token-gate.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'OPTIONS'],
@@ -21,17 +19,9 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
+  useLoginEnabled(),
   useLoginEnabledGate(),
-  useAccessTokenCookie(),
-  useLoginStateCookie(),
-  useRefreshTokenCookie(),
-
-  // check if the user has a valid access token
-  // async (context) => {
-  // TODO: implement access token check
-  // },
-
-  useRefreshTokenGate(),
+  useLoginState(),
 
   // user is not authenticated and does not have a valid refresh token
   async (context) => {
@@ -39,7 +29,7 @@ export default defineServiceMiddleware([
 
     const state = JSON.stringify({
       attempt: 1,
-      returnUrl: context.incomingMessage.loginStateCookie.payload?.returnUrl ?? new URL('/', `https://${readConfig('service.*.host')}`),
+      returnUrl: context.incomingMessage.loginState.cookie.payload?.returnUrl ?? new URL('/', `https://${readConfig('service.*.host')}`),
       salt: randomBytes(16).toString('hex'),
     })
 

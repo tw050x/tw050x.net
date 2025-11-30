@@ -34,6 +34,7 @@
     "database/assignment",
     "database/authorisation",
     "database/payment",
+    "database/sessions",
     "database/user",
     "library/authorisation",
     "library/configs",
@@ -43,8 +44,10 @@
     "library/logger",
     "library/middleware",
     "library/queue",
+    "library/script",
     "library/secrets",
     "library/service",
+    "library/sessions",
     "library/types",
     "library/uikit",
     "library/user",
@@ -60,6 +63,7 @@
     "service/user",
     "tool/certificate",
     "tool/migrate",
+    "worker/sessions-queue",
     "worker/user-queue"
   ]
 }

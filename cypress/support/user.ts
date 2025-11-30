@@ -20,7 +20,7 @@ export const createUser = async (email: string, password: string): Promise<null>
     passwordHash,
     uuid,
   });
-  await mongoClient.db(process.env.USER_DATABASE_NAME).collection(process.env.USER_DATABASE_PROFILE_COLLECTION_NAME).insertOne({
+  await mongoClient.db(process.env.USER_DATABASE_NAME).collection(process.env.USER_DATABASE_PROFILES_COLLECTION_NAME).insertOne({
     createdAt,
     updatedAt,
     uuid,

@@ -1,7 +1,7 @@
 
 services:
   error:
-    command: [ "yarn", "workspace", "@tw050x.net.service/error", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/serve.js" ]
+    command: [ "yarn", "workspace", "@tw050x.net.service/error", "exec", "node", "--inspect=0.0.0.0:9229", "--watch", "artifact/serve.js" ]
     depends_on:
       assets:
         condition: service_healthy

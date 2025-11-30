@@ -1,25 +1,18 @@
 import { database as accountDatabase } from "@tw050x.net.database/account";
 import { database as assignmentDatabase } from "@tw050x.net.database/assignment";
-import { useAccessTokenCookie } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
-import { useLoginStateCookie } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
-import { read as readConfig } from "@tw050x.net.library/configs";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { read as readSecret } from "@tw050x.net.library/secrets";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
+import { useSession } from "@tw050x.net.library/sessions/middleware/use-session";
+import { useSessionGate } from "@tw050x.net.library/sessions/middleware/use-session-gate";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { default as Account } from "@tw050x.net.library/uikit/svg/Account";
-import { default as AccountSwitch } from "@tw050x.net.library/uikit/svg/AccountSwitch";
-import { default as Assignment } from "@tw050x.net.library/uikit/svg/Assignment";
 import { default as Brands } from "@tw050x.net.library/uikit/svg/Brands";
 import { default as Dashboard } from "@tw050x.net.library/uikit/svg/Dashboard";
 import { default as Products } from "@tw050x.net.library/uikit/svg/Products";
-import { default as Profile } from "@tw050x.net.library/uikit/svg/Profile";
-import { default as Users } from "@tw050x.net.library/uikit/svg/Users";
+import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
 import { default as Cookies } from "cookies";
-import { useAuthGate } from "../../../middleware/use-auth-gate.js";
 import { default as PortalMenu, Props as PortalMenuProps } from "../../../template/component/PortalMenu.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
@@ -29,9 +22,11 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookie(),
-  useLoginStateCookie(),
-  useAuthGate(),
+  useLoginState(),
+  useSession({
+    activity: 'get-navigation-portal-menu-route',
+  }),
+  useSessionGate(),
 
   //
   async (context) => {
@@ -42,8 +37,8 @@ export default defineServiceMiddleware([
     try {
       incompleteAssignmentDocuments = await assignmentDatabase.task.countDocuments(
         sanitizeMongoDBFilterOrPipeline({
-          userProfileUuid: context.incomingMessage.accessTokenCookie.payload.sub,
           completed: false,
+          userProfileUuid: context.incomingMessage.session.userProfileUuid,
         })
       );
     }
@@ -57,7 +52,7 @@ export default defineServiceMiddleware([
       hasActiveBillingAccount = (
         await accountDatabase.billing.countDocuments(
           sanitizeMongoDBFilterOrPipeline({
-            userProfileId: context.incomingMessage.accessTokenCookie.payload.sub,
+            userProfileUuid: context.incomingMessage.session.userProfileUuid,
             expiresAt: { $gt: new Date() },
           })
         )

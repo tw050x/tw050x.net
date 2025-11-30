@@ -1,21 +1,20 @@
-import { useAccessTokenCookie } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
-import { useLoginStateCookie } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
-import { useRefreshTokenCookie } from "@tw050x.net.library/user/middleware/use-refresh-token-cookie";
 import { database as userDatabase } from "@tw050x.net.database/user";
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { logger } from "@tw050x.net.library/logger";
-import { read as readSecret } from "@tw050x.net.library/secrets";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
+import { useSession } from "@tw050x.net.library/sessions/middleware/use-session";
+import { useSessionInitialiser } from "@tw050x.net.library/sessions/middleware/use-session-initialiser";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { generateLoginFormNonce } from "@tw050x.net.library/user/helper/generate-login-form-nonce";
+import { useLoginEnabled } from "@tw050x.net.library/user/middleware/use-login-enabled";
+import { useLoginEnabledGate } from "@tw050x.net.library/user/middleware/use-login-enabled-gate";
+import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
+import { default as LoginForm } from "@tw050x.net.library/user/template/component/LoginWithPasswordForm";
 import { compare } from "bcryptjs";
-import { default as jwt, SignOptions } from "jsonwebtoken";
 import { default as validator } from "validator";
 import { default as zod, ZodError } from "zod";
-import { generateLoginFormNonce } from "../../helper/generate-login-form-nonce.js";
-import { useLoginEnabledGate } from "../../middleware/use-login-enabled-gate.js";
-import { default as LoginForm } from "../../template/component/LoginWithPasswordForm.js";
 
 const postLoginFormDataSchema = zod.object({
   email: zod.string().email('An email address is required'),
@@ -29,10 +28,13 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookie(),
-  useLoginStateCookie(),
-  useRefreshTokenCookie(),
+  useLoginEnabled(),
   useLoginEnabledGate(),
+  useLoginState(),
+  useSession({
+    activity: 'post-user-login-route',
+  }),
+  useSessionInitialiser(),
 
   // Handle the login form submission
   async (context) => {
@@ -73,7 +75,7 @@ export default defineServiceMiddleware([
     // if it doesnt exist then return an error
     let userProfileDocument;
     try {
-      userProfileDocument = await userDatabase.profile.findOne({ email });
+      userProfileDocument = await userDatabase.profiles.findOne({ email });
     }
     catch (error) {
       logger.error(error);
@@ -95,7 +97,7 @@ export default defineServiceMiddleware([
     let credentialDocument;
     try {
       credentialDocument = await userDatabase.credentials.findOne({
-        userProfileId: userProfileDocument._id,
+        userProfileUuid: userProfileDocument.uuid,
         type: 'password',
       });
     }
@@ -139,38 +141,25 @@ export default defineServiceMiddleware([
       );
     }
 
-    const jwtSecretKey = readSecret('jwt.secret-key');
-    if (jwtSecretKey === undefined) {
-      logger.error('JWT secret key is undefined');
-      return void context.serverResponse.sendInternalServerErrorHTMLResponse(<Unrecoverable />);
+    // initialise the authentication token cookies
+    try {
+      await context.serverResponse.sessionInitialiser.initialise(userProfileDocument.uuid);
+    }
+    catch (error) {
+      logger.error(error);
+      logger.debug('failed to initialise authentication token cookies');
+
+      return void context.serverResponse.sendInternalServerErrorHTMLResponse(
+        <Unrecoverable />
+      );
     }
 
-    // generate a new access token
-    const accessTokenOptions: SignOptions = {
-      expiresIn: '1d',
-    };
-    const accessTokenPayload = {
-      sub: userProfileDocument.uuid
-    };
-    const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
-
-    // generate a new refresh token
-    const refreshTokenOptions: SignOptions = {
-      expiresIn: '4w',
-    };
-    const refreshTokenPayload = {
-      sub: userProfileDocument.uuid
-    };
-    const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
-
-    // set the cookies on the response and clear the login state cookie
-    context.serverResponse.refreshTokenCookie.set(refreshToken);
-    context.serverResponse.accessTokenCookie.set(accessToken);
-    context.serverResponse.loginStateCookie.clear();
+    // clear the login state cookie
+    context.serverResponse.loginState.cookie.clear();
 
     // redirect to the return url or the home page;
     return void context.serverResponse.sendSeeOtherRedirect(
-      context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${readConfig('service.*.host')}`)
+      context.incomingMessage.loginState.cookie.payload?.returnUrl || new URL('/', `https://${readConfig('service.*.host')}`)
     )
   },
 ])

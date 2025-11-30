@@ -1,25 +1,22 @@
-import { useAccessTokenCookie } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
-import { useLoginStateCookie } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
-import { useRefreshTokenCookie } from "@tw050x.net.library/user/middleware/use-refresh-token-cookie";
 import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { logger } from "@tw050x.net.library/logger";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/middleware";
-import { read as readSecret } from "@tw050x.net.library/secrets";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
+import { useSession } from "@tw050x.net.library/sessions/middleware/use-session";
+import { useSessionInitialiser } from "@tw050x.net.library/sessions/middleware/use-session-initialiser";
 import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { generateRegisterFormNonce } from "@tw050x.net.library/user/helper/generate-register-form-nonce";
+import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
+import { useRegistrationEnabledGate } from "@tw050x.net.library/user/middleware/use-registration-enabled-gate";
+import { userEventQueue } from "@tw050x.net.library/user/queue/user-event-queue";
+import { default as RegisterForm } from "@tw050x.net.library/user/template/component/RegisterForm";
 import { normaliseEmailAddress } from "@tw050x.net.library/utility/normalise-email-address";
 import { randomUUID } from "node:crypto";
 import { hash } from "bcryptjs";
-import { default as jwt, SignOptions } from "jsonwebtoken";
 import { default as zod, ZodError } from "zod";
-import { generateRegisterFormNonce } from "../../helper/generate-register-form-nonce.js";
-import { RegistrationEnabledGateOptions, useRegistrationEnabledGate } from "../../middleware/use-registration-enabled-gate.js";
-import { default as RegisterDocument } from "../../template/document/RegisterDocument.js";
-import { default as RegisterForm } from "../../template/component/RegisterForm.js";
-import { userEventQueue } from "../../queue/user-event-queue.js";
 
 const postRegisterFormDataSchema = zod
   .object({
@@ -39,24 +36,15 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ["GET", "OPTIONS", "POST"],
 };
 
-const useRegistrationEnabledGateOptions: RegistrationEnabledGateOptions = {
-  getResponseHtml: async () => (
-    <RegisterDocument
-      registerAsideProps={{
-        disabled: true,
-        message: "Registration is currently disabled.",
-      }}
-    />
-  ),
-};
-
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
-  useAccessTokenCookie(),
-  useLoginStateCookie(),
-  useRefreshTokenCookie(),
-  useRegistrationEnabledGate(useRegistrationEnabledGateOptions),
+  useRegistrationEnabledGate(),
+  useLoginState(),
+  useSession({
+    activity: 'post-user-register-route',
+  }),
+  useSessionInitialiser(),
 
   // Handle the registration form submission
   async (context) => {
@@ -126,7 +114,7 @@ export default defineServiceMiddleware([
     //
     let userProfileDocument;
     try {
-      userProfileDocument = await userDatabase.profile.findOne(
+      userProfileDocument = await userDatabase.profiles.findOne(
         sanitizeMongoDBFilterOrPipeline({
           emailNormalised: normalisedEmailAddress,
         })
@@ -183,7 +171,7 @@ export default defineServiceMiddleware([
     do {
       userProfileUuid = randomUUID();
       try {
-        userProfileDocument = await userDatabase.profile.findOne({
+        userProfileDocument = await userDatabase.profiles.findOne({
           uuid: userProfileUuid,
         });
       }
@@ -197,14 +185,13 @@ export default defineServiceMiddleware([
     while (userProfileDocument !== null);
 
     // start the user database session
-    let userDatabaseSession = userDatabaseClient.startSession();
+    const userDatabaseSession = userDatabaseClient.startSession();
 
     // Create the user and credentials documents in the database
     // return an error if there is a problem
-    let userProfileId;
     userDatabaseSession.startTransaction();
     try {
-      const profile = await userDatabase.profile.insertOne({
+      await userDatabase.profiles.insertOne({
         createdAt: new Date(),
         updatedAt: new Date(),
         email: emailFieldValue,
@@ -216,10 +203,9 @@ export default defineServiceMiddleware([
         updatedAt: new Date(),
         passwordHash,
         type: "password",
-        userProfileId: profile.insertedId,
+        userProfileUuid,
       });
       await userDatabaseSession.commitTransaction();
-      userProfileId = profile.insertedId;
     }
     catch (error) {
       logger.error(error);
@@ -236,56 +222,30 @@ export default defineServiceMiddleware([
     // send a message to the event queue indicating a new user has registered
     // log any errors but do not fail the registration
     try {
-      await userEventQueue.add(
-        'UserRegistered',
-        { userProfileId, userProfileUuid }
-      );
+      await userEventQueue.add('UserRegistered', {
+        userProfileUuid
+      });
     }
     catch (error) {
       // We can survive a failure to send the message, so just log it
       logger.error(error);
     }
 
-    // read the JWT secret key
-    // return an error if there is a problem
-    const jwtSecretKey = readSecret("jwt.secret-key");
-    if (jwtSecretKey === undefined) {
-      logger.error("JWT secret key is undefined");
+    // Initialize the session token cookie for the user
+    try {
+      await context.serverResponse.sessionInitialiser.initialise(userProfileUuid);
+    }
+    catch (error) {
+      logger.error(error);
       return void context.serverResponse.sendInternalServerErrorHTMLResponse(
         <UnrecoverableDocument />
       );
     }
 
-    // generate refresh token
-    const refreshTokenOptions: SignOptions = {
-      expiresIn: "4w",
-    };
-    const refreshTokenPayload = {
-      sub: userProfileUuid,
-    };
-    const refreshToken = jwt.sign(
-      refreshTokenPayload,
-      jwtSecretKey,
-      refreshTokenOptions
-    );
+    // Clear the login state cookie
+    context.serverResponse.loginState.cookie.clear();
 
-    // generate access token
-    const accessTokenOptions: SignOptions = {
-      expiresIn: "1d",
-    };
-    const accessTokenPayload = {
-      sub: userProfileUuid,
-    };
-    const accessToken = jwt.sign(
-      accessTokenPayload,
-      jwtSecretKey,
-      accessTokenOptions
-    );
-
-    context.serverResponse.refreshTokenCookie.set(refreshToken);
-    context.serverResponse.accessTokenCookie.set(accessToken);
-    context.serverResponse.loginStateCookie.clear();
-
+    // Redirect the user to the portal
     return void context.serverResponse.sendSeeOtherRedirect(
       new URL(
         "/portal",

@@ -9,6 +9,7 @@
     "@tw050x.net.library/logger": "workspace:*",
     "@tw050x.net.library/middleware": "workspace:*",
     "@tw050x.net.library/service": "workspace:*",
+    "@tw050x.net.library/sessions": "workspace:*",
     "@tw050x.net.library/uikit": "workspace:*",
     "@tw050x.net.library/user": "workspace:*"
   },

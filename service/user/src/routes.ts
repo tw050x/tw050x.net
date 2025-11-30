@@ -16,10 +16,6 @@ import { default as registerOptions } from "./route/register/options.js";
 import { default as registerPost } from "./route/register/post.js";
 import { default as registerAsideRegisterAsideGet } from "./route/register/aside/register-aside/get.js";
 import { default as registerAsideRegisterAsideOptions } from "./route/register/aside/register-aside/options.js";
-import { default as tokenRefreshOptions } from "./route/token/refresh/options.js";
-import { default as tokenRefreshPost } from "./route/token/refresh/post.js";
-import { default as tokenRefreshAvailabilityOptions } from "./route/token/refresh/availability/options.js";
-import { default as tokenRefreshAvailabilityPost } from "./route/token/refresh/availability/post.js";
 
 // Define and export the routes
 export default {
@@ -57,12 +53,4 @@ export default {
   // register aside register-aside
   'GET /register/aside/register-aside': registerAsideRegisterAsideGet,
   'OPTIONS /register/aside/register-aside': registerAsideRegisterAsideOptions,
-
-  // token refresh
-  'OPTIONS /token/refresh': tokenRefreshOptions,
-  'POST /token/refresh': tokenRefreshPost,
-
-  // token refresh availability
-  'OPTIONS /token/refresh/availability': tokenRefreshAvailabilityOptions,
-  'POST /token/refresh/availability': tokenRefreshAvailabilityPost,
 }

@@ -1,6 +1,6 @@
 import { Component } from "@kitajs/html";
+import { readScript } from "@tw050x.net.library/script";
 import { assertUnreachable } from "@tw050x.net.library/utility/assert-unreachable";
-import { default as readScript } from "../read-script.js";
 
 /**
  * Props for the `<AnchoredBar />` component.
@@ -33,7 +33,9 @@ const AnchoredBar: Component<Props> = (props) => {
   //
   let anchoredBarEventListenerScript;
   try {
-    anchoredBarEventListenerScript = readScript("anchored-bar-event-listener");
+    anchoredBarEventListenerScript = readScript("anchored-bar-event-listener", {
+      ID: props.id
+    });
   }
   catch (error) {
     console.debug("Failed to load anchored-bar-event-listener script");
@@ -50,7 +52,7 @@ const AnchoredBar: Component<Props> = (props) => {
         {props.children}
       </div>
       <script>
-        {anchoredBarEventListenerScript?.replace('{{ID_TO_REPLACE}}', props.id)}
+        {anchoredBarEventListenerScript}
       </script>
     </div>
   )

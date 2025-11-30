@@ -161,20 +161,25 @@ Then to run the services locally use `docker compose`.
 
 ```bash
 docker compose up --detach
-docker compose watch # for auto reloading (optional)
 ```
 
 > The build command could take a while. Go make a drink. Take a walk.
 
 ### Typescript
 
-You will also need to run `tsc` on your machine for the proiject you are working on.
+You will also need to run `tsc` on your machine for the proiject you are working on. The first time you run this this you must use the first option to build all projects.
 
 ```bash
 yarn tsc --build
 ```
 
 This should run compilation for that project and all dependencies. In turn that should restart the server in the docker container (assuming you used `docker compose up` as described above).
+
+```bash
+yarn tsc --build --watch
+```
+
+This will run `tsc` in watch mode for the repository.
 
 ### Styles
 

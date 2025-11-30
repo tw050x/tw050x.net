@@ -3,9 +3,10 @@ import { logger } from "@tw050x.net.library/logger";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { generateLoginFormNonce } from '../../../../helper/generate-login-form-nonce.js';
-import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
-import { default as LoginWithPasswordAside } from "../../../../template/component/LoginWithPasswordAside.js";
+import { generateLoginFormNonce } from "@tw050x.net.library/user/helper/generate-login-form-nonce";
+import { useLoginEnabled } from "@tw050x.net.library/user/middleware/use-login-enabled";
+import { useLoginEnabledGate } from "@tw050x.net.library/user/middleware/use-login-enabled-gate";
+import { default as LoginWithPasswordAside } from "@tw050x.net.library/user/template/component/LoginWithPasswordAside";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST'],
@@ -14,6 +15,7 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
+  useLoginEnabled(),
   useLoginEnabledGate(),
 
   // Render the login aside

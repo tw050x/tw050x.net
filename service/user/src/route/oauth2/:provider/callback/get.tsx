@@ -1,7 +1,4 @@
 import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
-import { useAccessTokenCookie } from "@tw050x.net.library/user/middleware/use-access-token-cookie";
-import { useLoginStateCookie } from "@tw050x.net.library/user/middleware/use-login-state-cookie";
-import { useRefreshTokenCookie } from "@tw050x.net.library/user/middleware/use-refresh-token-cookie";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { read as readConfig } from "@tw050x.net.library/configs";
 import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
@@ -10,18 +7,17 @@ import { logger } from "@tw050x.net.library/logger";
 import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
 import { read as readSecret } from "@tw050x.net.library/secrets";
 import { defineServiceMiddleware } from "@tw050x.net.library/service";
+import { useSession } from "@tw050x.net.library/sessions/middleware/use-session";
+import { useSessionInitialiser } from "@tw050x.net.library/sessions/middleware/use-session-initialiser";
 import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
+import { useLoginEnabled } from "@tw050x.net.library/user/middleware/use-login-enabled";
+import { useLoginEnabledGate } from "@tw050x.net.library/user/middleware/use-login-enabled-gate";
+import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
+import { googleAuthorisationURL, googleOAuth2ExchangeCodeForAccessTokenAndScope, googleFetchUserProfile, googleInsertUserOAuthCredentials } from "@tw050x.net.library/user/helper/oauth2/google";
+import { default as OAuthCallback } from "@tw050x.net.library/user/template/document/OAuthCallback";
+import { userEventQueue } from "@tw050x.net.library/user/queue/user-event-queue";
 import { normaliseEmailAddress } from "@tw050x.net.library/utility/normalise-email-address";
 import { randomUUID } from "node:crypto"
-import { default as jwt, SignOptions } from "jsonwebtoken";
-import { default as googleAuthorisationURL } from '../../../../helper/oauth2/provider/google/authorisation-url.js';
-import { default as googleOAuth2ExchangeCodeForAccessTokenAndScope } from '../../../../helper/oauth2/provider/google/exchange-code-for-access-token-and-scopes.js';
-import { default as googleFetchUserProfile } from '../../../../helper/oauth2/provider/google/fetch-user-profile.js';
-import { default as googleInsertUserOAuthCredentials } from '../../../../helper/oauth2/provider/google/insert-user-oauth-credentials.js';
-import { useLoginEnabledGate } from "../../../../middleware/use-login-enabled-gate.js";
-import { useRefreshTokenGate } from "../../../../middleware/use-refresh-token-gate.js";
-import { default as OAuthCallback } from "../../../../template/document/OAuthCallback.js";
-import { userEventQueue } from "../../../../queue/user-event-queue.js";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST', 'OPTIONS'],
@@ -30,17 +26,13 @@ const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
 export default defineServiceMiddleware([
   useLogRequest(),
   useCorsHeaders(useCorsHeadersOptions),
+  useLoginEnabled(),
   useLoginEnabledGate(),
-  useAccessTokenCookie(),
-  useLoginStateCookie(),
-  useRefreshTokenCookie(),
-
-  // check if the user has a valid access token
-  // async (context) => {
-  // TODO: implement access token check
-  // },
-
-  useRefreshTokenGate(),
+  useLoginState(),
+  useSession({
+    activity: 'get-user-oauth2-callback-route',
+  }),
+  useSessionInitialiser(),
 
   // user is not authenticated and does not have a valid refresh token
   async (context) => {
@@ -146,7 +138,7 @@ export default defineServiceMiddleware([
           }
 
           try {
-            userProfileDocument = await userDatabase.profile.findOne(
+            userProfileDocument = await userDatabase.profiles.findOne(
               sanitizeMongoDBFilterOrPipeline({ emailNormalised: normalisedGoogleUserProfileEmailAddress })
             );
           }
@@ -163,7 +155,7 @@ export default defineServiceMiddleware([
             do {
               userProfileUuid = randomUUID();
               try {
-                userProfileDocumentByUuid = await userDatabase.profile.findOne({
+                userProfileDocumentByUuid = await userDatabase.profiles.findOne({
                   uuid: userProfileUuid
                 });
               }
@@ -178,20 +170,18 @@ export default defineServiceMiddleware([
             logger.debug('credential document not found, creating a new user', { email: googleUserProfile.email });
 
             // create a new user profile and credential document within a transaction
-            let userDatabaseSession = userDatabaseClient.startSession();
-            let userProfileId;
+            const userDatabaseSession = userDatabaseClient.startSession();
             userDatabaseSession.startTransaction();
             try {
-              const profile = await userDatabase.profile.insertOne({
+              const profile = await userDatabase.profiles.insertOne({
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 email: googleUserProfile.email,
                 emailNormalised: normalisedGoogleUserProfileEmailAddress,
                 uuid: userProfileUuid,
               });
-              await googleInsertUserOAuthCredentials(profile.insertedId);
+              await googleInsertUserOAuthCredentials(userProfileUuid);
               await userDatabaseSession.commitTransaction();
-              userProfileId = profile.insertedId;
             }
             catch (error) {
               logger.error(error);
@@ -208,10 +198,9 @@ export default defineServiceMiddleware([
             // send a message to the event queue indicating a new user has registered
             // log any errors but do not fail the registration
             try {
-              await userEventQueue.add(
-                'UserRegistered',
-                { userProfileId, userProfileUuid }
-              );
+              await userEventQueue.add('UserRegistered', {
+                userProfileUuid
+              });
             }
             catch (error) {
               // We can survive a failure to send the message, so just log it
@@ -219,8 +208,8 @@ export default defineServiceMiddleware([
             }
 
             try {
-              userProfileDocument = await userDatabase.profile.findOne({
-                _id: userProfileId
+              userProfileDocument = await userDatabase.profiles.findOne({
+                uuid: userProfileUuid
               });
             }
             catch (error) {
@@ -244,7 +233,7 @@ export default defineServiceMiddleware([
             try {
               userOAuthCredentialDocument = await userDatabase.credentials.findOne(
                 sanitizeMongoDBFilterOrPipeline({
-                  userProfileId: userProfileDocument._id,
+                  userProfileUuid: userProfileDocument.uuid,
                   provider: 'google',
                   type: 'oauth2',
                 })
@@ -260,7 +249,7 @@ export default defineServiceMiddleware([
             if (userOAuthCredentialDocument === null) {
               logger.debug('OAuth2 credential document not found for existing user, creating a new credential document', { email: googleUserProfile.email });
               try {
-                await googleInsertUserOAuthCredentials(userProfileDocument._id);
+                await googleInsertUserOAuthCredentials(userProfileDocument.uuid);
               }
               catch (error) {
                 logger.error(error);
@@ -279,37 +268,24 @@ export default defineServiceMiddleware([
           )
       }
 
-      // read the JWT secret key
-      // return an error if there is a problem
-      const jwtSecretKey = readSecret('jwt.secret-key');
-      if (jwtSecretKey === undefined) {
-        logger.error('JWT secret key is undefined');
+      // initialise authentication token cookies
+      try {
+        await context.serverResponse.sessionInitialiser.initialise(userProfileDocument.uuid);
+      }
+      catch (error) {
+        logger.error(error);
+        logger.debug('failed to initialise authentication token cookies');
+
         return void context.serverResponse.sendInternalServerErrorHTMLResponse(
           <Unrecoverable />
         );
       }
 
-      // generate JWT tokens and set cookies
-      const refreshTokenOptions: SignOptions = {
-        expiresIn: '4w',
-      };
-      const refreshTokenPayload = {
-        sub: userProfileDocument.uuid
-      };
-      const accessTokenOptions: SignOptions = {
-        expiresIn: '1d',
-      };
-      const accessTokenPayload = {
-        sub: userProfileDocument.uuid
-      };
-      const refreshToken = jwt.sign(refreshTokenPayload, jwtSecretKey, refreshTokenOptions);
-      const accessToken = jwt.sign(accessTokenPayload, jwtSecretKey, accessTokenOptions);
-      context.serverResponse.refreshTokenCookie.set(refreshToken);
-      context.serverResponse.accessTokenCookie.set(accessToken);
-      context.serverResponse.loginStateCookie.clear();
+      // clear the login state cookie
+      context.serverResponse.loginState.cookie.clear();
 
       return context.serverResponse.sendSeeOtherRedirect(
-        context.incomingMessage.loginStateCookie.payload?.returnUrl || new URL('/', `https://${readConfig('service.*.host')}`)
+        context.incomingMessage.loginState.cookie.payload?.returnUrl || new URL('/', `https://${readConfig('service.*.host')}`)
       )
     }
 

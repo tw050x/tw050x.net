@@ -1,5 +1,4 @@
 import { DatabaseDocument } from "@tw050x.net.library/types"
-import { ObjectId } from "mongodb";
 import { mongoClient } from "./client.js";
 
 interface AssignmentTaskDocumentBase extends DatabaseDocument {
@@ -9,7 +8,6 @@ interface AssignmentTaskDocumentBase extends DatabaseDocument {
   description: string;
   label: string;
   reason: string;
-  userProfileId: ObjectId;
   userProfileUuid: string;
 }
 
