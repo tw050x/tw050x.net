@@ -17,6 +17,8 @@
     "src/serve.ts",
   ],
   "references": [
-    { "path": "../../library/service" },
+    { "path": "../../library/database" },
+    { "path": "../../library/platform" },
+    { "path": "../../library/static" },
   ]
 }

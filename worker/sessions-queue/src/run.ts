@@ -1,5 +1,5 @@
-import { read as readConfig } from "@tw050x.net.library/configs";
-import { logger } from "@tw050x.net.library/logger";
+import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
+import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { writeFileSync } from "node:fs";
 import { Job, Worker, WorkerOptions } from "bullmq";
 import { default as handleUserRegisteredEvent } from "./event-handler/session-activity.js";
@@ -14,7 +14,7 @@ const workerOptions: WorkerOptions = {
 };
 
 const worker = new Worker(
-  readConfig('service.user.event-queue-name'),
+  readConfig('service.sessions.event-queue-name'),
   async (job: Job) => {
     switch (job.name) {
       case 'UserRegistered':

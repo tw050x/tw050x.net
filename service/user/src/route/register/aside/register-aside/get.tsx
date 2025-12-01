@@ -1,11 +1,11 @@
-import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
-import { logger } from "@tw050x.net.library/logger";
-import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { generateRegisterFormNonce } from "@tw050x.net.library/user/helper/generate-register-form-nonce";
-import { useRegistrationEnabledGate } from "@tw050x.net.library/user/middleware/use-registration-enabled-gate";
-import { default as RegisterAside } from "@tw050x.net.library/user/template/component/RegisterAside";
+import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { logger } from "@tw050x.net.library/platform/helper/logger";
+import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
+import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
+import { default as UnrecoverableDocument } from "@tw050x.net.library/platform/template/document/Unrecoverable";
+import { generateRegisterFormNonce } from "@tw050x.net.library/platform/helper/user/generate-register-form-nonce";
+import { useRegistrationEnabledGate } from "@tw050x.net.library/platform/middleware/use-registration-enabled-gate";
+import { default as RegisterAside } from "@tw050x.net.library/platform/template/component/RegisterAside";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST'],

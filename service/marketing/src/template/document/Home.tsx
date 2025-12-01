@@ -1,5 +1,5 @@
 import { Component } from "@kitajs/html";
-import { default as Head } from "@tw050x.net.library/uikit/component/Head";
+import { default as Head } from "@tw050x.net.library/platform/template/component/Head";
 
 /**
  * Props for the `<Home />` component.

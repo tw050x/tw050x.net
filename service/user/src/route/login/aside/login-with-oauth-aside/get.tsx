@@ -1,12 +1,12 @@
-import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
-import { logger } from "@tw050x.net.library/logger";
-import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { default as UnrecoverableDocument } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { generateLoginFormNonce } from "@tw050x.net.library/user/helper/generate-login-form-nonce";
-import { useLoginEnabled } from "@tw050x.net.library/user/middleware/use-login-enabled";
-import { useLoginEnabledGate } from "@tw050x.net.library/user/middleware/use-login-enabled-gate";
-import { default as LoginWithOAuthAside } from "@tw050x.net.library/user/template/component/LoginWithOAuthAside";
+import { generateLoginFormNonce } from "@tw050x.net.library/platform/helper/authentication/generate-login-form-nonce";
+import { useLoginEnabled } from "@tw050x.net.library/platform/middleware/use-login-enabled";
+import { useLoginEnabledGate } from "@tw050x.net.library/platform/middleware/use-login-enabled-gate";
+import { default as LoginWithOAuthAside } from "@tw050x.net.library/platform/template/component/LoginWithOAuthAside";
+import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { logger } from "@tw050x.net.library/platform/helper/logger";
+import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
+import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
+import { default as UnrecoverableDocument } from "@tw050x.net.library/platform/template/document/Unrecoverable";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST'],

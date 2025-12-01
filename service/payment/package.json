@@ -4,8 +4,8 @@
   "description": "The Payment Service project for tw050x.net",
   "dependencies": {
     "@kitajs/html": "^4.2.9",
-    "@tw050x.net.library/logger": "workspace:*",
-    "@tw050x.net.library/service": "workspace:*"
+    "@tw050x.net.library/database": "workspace:*",
+    "@tw050x.net.library/platform": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",

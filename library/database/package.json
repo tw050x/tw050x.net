@@ -11,7 +11,14 @@
   },
   "exports": {
     ".": "./artifact/index.js",
-    "./helper": "./artifact/helper.js"
+    "./helper": "./artifact/helper.js",
+    "./client/account": "./artifact/client/account/index.js",
+    "./client/assignment": "./artifact/client/assignment/index.js",
+    "./client/authentication": "./artifact/client/authentication/index.js",
+    "./client/authorisation": "./artifact/client/authorisation/index.js",
+    "./client/payments": "./artifact/client/payments/index.js",
+    "./client/sessions": "./artifact/client/sessions/index.js",
+    "./client/users": "./artifact/client/users/index.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/database",

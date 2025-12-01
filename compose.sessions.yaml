@@ -27,10 +27,6 @@ services:
     depends_on:
       mongo-primary:
         condition: service_healthy
-    develop:
-      watch:
-        - path: ./worker/sessions-queue/artifact
-          action: restart
     environment:
       - LOGS_LEVEL=info
       - LOGS_DIRECTORY=/log
@@ -64,9 +60,6 @@ services:
         type: bind
       - source: ./.secrets
         target: /srv/.secrets
-        type: bind
-      - source: ./database
-        target: /srv/database
         type: bind
       - source: ./library
         target: /srv/library

@@ -1,12 +1,12 @@
-import { read as readConfig } from "@tw050x.net.library/configs";
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
-import { logger } from "@tw050x.net.library/logger";
-import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useLoginEnabled } from "@tw050x.net.library/user/middleware/use-login-enabled";
-import { useLoginEnabledGate } from "@tw050x.net.library/user/middleware/use-login-enabled-gate";
-import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
-import { default as LoginWithOAuth } from "@tw050x.net.library/user/template/document/LoginWithOAuth";
+import { useLoginEnabled } from "@tw050x.net.library/platform/middleware/use-login-enabled";
+import { useLoginEnabledGate } from "@tw050x.net.library/platform/middleware/use-login-enabled-gate";
+import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
+import { default as LoginWithOAuth } from "@tw050x.net.library/platform/template/document/LoginWithOAuth";
+import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { logger } from "@tw050x.net.library/platform/helper/logger";
+import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
+import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
   allowedMethods: ['GET', 'POST', 'OPTIONS'],

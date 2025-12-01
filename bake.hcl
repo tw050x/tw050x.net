@@ -1,22 +1,24 @@
 group "default" {
   targets = [
+
+    # Services
     "assets",
     "authorisation",
     "error",
     "marketing",
     "navigation",
     "portal",
-    "sessions-queue",
     "user",
+
+    # Workers
+    "sessions-queue",
     "user-queue",
   ]
 }
 
-group "development" {
-  targets = [
-    "assets",
-  ]
-}
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Services                                                  #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 target "assets" {
   dockerfile = "Dockerfile"
@@ -54,16 +56,20 @@ target "portal" {
   tags = ["tw050x.net.service/portal:latest"]
 }
 
-target "sessions-queue" {
-  dockerfile = "Dockerfile"
-  target = "sessions-queue"
-  tags = ["tw050x.net.worker/sessions-queue:latest"]
-}
-
 target "user" {
   dockerfile = "Dockerfile"
   target = "user"
   tags = ["tw050x.net.service/user:latest"]
+}
+
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# Workers                                                   #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+target "sessions-queue" {
+  dockerfile = "Dockerfile"
+  target = "sessions-queue"
+  tags = ["tw050x.net.worker/sessions-queue:latest"]
 }
 
 target "user-queue" {

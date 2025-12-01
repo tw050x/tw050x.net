@@ -1,5 +1,5 @@
-import { logger } from "@tw050x.net.library/logger";
-import { defineServer } from "@tw050x.net.library/service";
+import { logger } from "@tw050x.net.library/platform/helper/logger";
+import { default as defineServer } from "@tw050x.net.library/platform/service";
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 import { default as healthcheck } from "./healthcheck.js";

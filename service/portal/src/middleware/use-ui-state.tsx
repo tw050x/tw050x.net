@@ -1,6 +1,7 @@
-import { read as readConfig } from "@tw050x.net.library/configs";
-import { Middleware, ServiceRequestContext } from "@tw050x.net.library/service";
-import { updateJSON } from "@tw050x.net.library/utility/update-json";
+import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
+import { Middleware } from "@tw050x.net.library/platform/middleware";
+import { ServiceRequestContext } from "@tw050x.net.library/platform/types";
+import { updateJSON } from "@tw050x.net.library/platform/utility/update-json";
 import { default as Cookies } from "cookies";
 import { addHours, differenceInSeconds } from "date-fns";
 

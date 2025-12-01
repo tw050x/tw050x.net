@@ -1,4 +1,4 @@
-import { logger } from "@tw050x.net.library/logger";
+import { logger } from "@tw050x.net.library/platform/helper/logger";
 
 /**
  * Handles a UserRegistered event message.

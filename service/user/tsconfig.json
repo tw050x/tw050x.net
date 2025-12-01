@@ -37,16 +37,8 @@
     "src/serve.ts",
   ],
   "references": [
-    { "path": "../../database/user" },
-    { "path": "../../library/configs" },
-    { "path": "../../library/cors" },
     { "path": "../../library/database" },
-    { "path": "../../library/logger" },
-    { "path": "../../library/middleware" },
-    { "path": "../../library/secrets" },
-    { "path": "../../library/service" },
-    { "path": "../../library/uikit" },
-    { "path": "../../library/user" },
-    { "path": "../../library/utility" },
+    { "path": "../../library/platform" },
+    { "path": "../../library/static" },
   ]
 }

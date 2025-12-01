@@ -1,6 +1,6 @@
 import { Component } from "@kitajs/html";
-import { default as ChevronDown } from "@tw050x.net.library/uikit/svg/ChevronDown";
-import { default as Cross } from "@tw050x.net.library/uikit/svg/Cross";
+import { default as ChevronDown } from "@tw050x.net.library/platform/template/svg/ChevronDown";
+import { default as Cross } from "@tw050x.net.library/platform/template/svg/Cross";
 
 /**
  * Props for the `<UserTableTools />` component.

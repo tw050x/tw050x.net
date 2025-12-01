@@ -1,5 +1,5 @@
 import { Component } from "@kitajs/html";
-import { default as Table, Column, Row } from "@tw050x.net.library/uikit/component/Table";
+import { default as Table, Column, Row } from "@tw050x.net.library/platform/template/component/Table";
 
 export type AssignmentTaskWithTemplate = {
   template: {

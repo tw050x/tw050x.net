@@ -1,5 +1,5 @@
-import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.database/assignment";
-import { logger } from "@tw050x.net.library/logger";
+import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.library/database/client/assignment";
+import { logger } from "@tw050x.net.library/platform/helper/logger";
 
 /**
  * Handles a UserRegistered event message.

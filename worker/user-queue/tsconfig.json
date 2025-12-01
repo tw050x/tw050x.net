@@ -18,9 +18,7 @@
     "src/run.ts",
   ],
   "references": [
-    { "path": "../../database/user" },
-    { "path": "../../library/configs" },
-    { "path": "../../library/logger" },
-    { "path": "../../library/service" },
+    { "path": "../../library/database" },
+    { "path": "../../library/platform" },
   ]
 }

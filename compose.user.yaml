@@ -81,9 +81,6 @@ services:
       - source: ./certificates
         target: /srv/certificates
         type: bind
-      - source: ./database
-        target: /srv/database
-        type: bind
       - source: ./library
         target: /srv/library
         type: bind
@@ -123,10 +120,6 @@ services:
     depends_on:
       mongo-primary:
         condition: service_healthy
-    develop:
-      watch:
-        - path: ./worker/user-queue/artifact
-          action: restart
     environment:
       - ASSIGNMENT_DATABASE_NAME=assignments
       - ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME=tasks
@@ -165,9 +158,6 @@ services:
         type: bind
       - source: ./.secrets
         target: /srv/.secrets
-        type: bind
-      - source: ./database
-        target: /srv/database
         type: bind
       - source: ./library
         target: /srv/library

@@ -1,22 +1,22 @@
-import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.database/user";
+import { client as usersDatabaseClient, database as usersDatabase } from "@tw050x.net.library/database/client/users";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
-import { read as readConfig } from "@tw050x.net.library/configs";
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
-import { decrypt, encrypt } from "@tw050x.net.library/encryption";
-import { logger } from "@tw050x.net.library/logger";
-import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { read as readSecret } from "@tw050x.net.library/secrets";
-import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useSession } from "@tw050x.net.library/sessions/middleware/use-session";
-import { useSessionInitialiser } from "@tw050x.net.library/sessions/middleware/use-session-initialiser";
-import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { useLoginEnabled } from "@tw050x.net.library/user/middleware/use-login-enabled";
-import { useLoginEnabledGate } from "@tw050x.net.library/user/middleware/use-login-enabled-gate";
-import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
-import { googleAuthorisationURL, googleOAuth2ExchangeCodeForAccessTokenAndScope, googleFetchUserProfile, googleInsertUserOAuthCredentials } from "@tw050x.net.library/user/helper/oauth2/google";
-import { default as OAuthCallback } from "@tw050x.net.library/user/template/document/OAuthCallback";
-import { userEventQueue } from "@tw050x.net.library/user/queue/user-event-queue";
-import { normaliseEmailAddress } from "@tw050x.net.library/utility/normalise-email-address";
+import { googleAuthorisationURL, googleOAuth2ExchangeCodeForAccessTokenAndScope, googleFetchUserProfile } from "@tw050x.net.library/platform/helper/authentication/oauth2/provider/google";
+import { useLoginEnabled } from "@tw050x.net.library/platform/middleware/use-login-enabled";
+import { useLoginEnabledGate } from "@tw050x.net.library/platform/middleware/use-login-enabled-gate";
+import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
+import { default as LoginWithOAuthCallback } from "@tw050x.net.library/platform/template/document/LoginWithOAuthCallback";
+import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { decrypt, encrypt } from "@tw050x.net.library/platform/helper/encrypt";
+import { logger } from "@tw050x.net.library/platform/helper/logger";
+import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
+import { read as readSecret } from "@tw050x.net.library/platform/helper/secrets";
+import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
+import { useSession } from "@tw050x.net.library/platform/middleware/use-session";
+import { useSessionInitialiser } from "@tw050x.net.library/platform/middleware/use-session-initialiser";
+import { default as Unrecoverable } from "@tw050x.net.library/platform/template/document/Unrecoverable";
+import { userEventQueue } from "@tw050x.net.library/platform/queue/user-event-queue";
+import { normaliseEmailAddress } from "@tw050x.net.library/platform/utility/normalise-email-address";
 import { randomUUID } from "node:crypto"
 
 const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
@@ -66,7 +66,7 @@ export default defineServiceMiddleware([
       if (code === undefined) {
         logger.debug('Missing OAuth2 code in callback');
         return context.serverResponse.sendBadRequestHTMLResponse(
-          <OAuthCallback error="missing_oauth2_code" provider={provider} />
+          <LoginWithOAuthCallback error="missing_oauth2_code" provider={provider} />
         )
       }
 
@@ -81,7 +81,7 @@ export default defineServiceMiddleware([
             logger.error(error);
             logger.debug('Failed to exchange OAuth2 code for access token', { provider });
             return context.serverResponse.sendBadRequestHTMLResponse(
-              <OAuthCallback error="failed_to_exchange_oauth2_code_for_token" provider={provider} />
+              <LoginWithOAuthCallback error="failed_to_exchange_oauth2_code_for_token" provider={provider} />
             )
           }
 
@@ -89,13 +89,13 @@ export default defineServiceMiddleware([
           if (oauthAccessTokenAndScope.scope === null) {
             logger.debug('OAuth2 access token scope is null', { provider });
             return context.serverResponse.sendBadRequestHTMLResponse(
-              <OAuthCallback error="insufficient_oauth2_scopes" provider={provider} />
+              <LoginWithOAuthCallback error="insufficient_oauth2_scopes" provider={provider} />
             )
           }
           if (oauthAccessTokenAndScope.scope.includes('https://www.googleapis.com/auth/userinfo.email') === false) {
             logger.debug('OAuth2 access token missing required email scope', { provider, scopes: oauthAccessTokenAndScope.scope });
             return context.serverResponse.sendBadRequestHTMLResponse(
-              <OAuthCallback error="insufficient_oauth2_scopes" provider={provider} />
+              <LoginWithOAuthCallback error="insufficient_oauth2_scopes" provider={provider} />
             )
           }
 
@@ -108,20 +108,20 @@ export default defineServiceMiddleware([
             logger.error(error);
             logger.debug('Failed to fetch user profile from OAuth2 provider', { provider });
             return context.serverResponse.sendBadRequestHTMLResponse(
-              <OAuthCallback error="failed_to_fetch_oauth2_user_profile" provider={provider} />
+              <LoginWithOAuthCallback error="failed_to_fetch_oauth2_user_profile" provider={provider} />
             )
           }
 
           if (('email' in googleUserProfile) === false) {
             logger.debug('OAuth2 user profile missing email', { provider });
             return context.serverResponse.sendBadRequestHTMLResponse(
-              <OAuthCallback error="oauth2_user_profile_missing_email" provider={provider} />
+              <LoginWithOAuthCallback error="oauth2_user_profile_missing_email" provider={provider} />
             )
           }
           if (typeof googleUserProfile.email !== 'string') {
             logger.debug('OAuth2 user profile email is not a string', { provider });
             return context.serverResponse.sendBadRequestHTMLResponse(
-              <OAuthCallback error="oauth2_user_profile_missing_email" provider={provider} />
+              <LoginWithOAuthCallback error="oauth2_user_profile_missing_email" provider={provider} />
             )
           }
 
@@ -138,7 +138,7 @@ export default defineServiceMiddleware([
           }
 
           try {
-            userProfileDocument = await userDatabase.profiles.findOne(
+            userProfileDocument = await usersDatabase.profiles.findOne(
               sanitizeMongoDBFilterOrPipeline({ emailNormalised: normalisedGoogleUserProfileEmailAddress })
             );
           }
@@ -155,7 +155,7 @@ export default defineServiceMiddleware([
             do {
               userProfileUuid = randomUUID();
               try {
-                userProfileDocumentByUuid = await userDatabase.profiles.findOne({
+                userProfileDocumentByUuid = await usersDatabase.profiles.findOne({
                   uuid: userProfileUuid
                 });
               }
@@ -170,17 +170,23 @@ export default defineServiceMiddleware([
             logger.debug('credential document not found, creating a new user', { email: googleUserProfile.email });
 
             // create a new user profile and credential document within a transaction
-            const userDatabaseSession = userDatabaseClient.startSession();
+            const userDatabaseSession = usersDatabaseClient.startSession();
             userDatabaseSession.startTransaction();
             try {
-              const profile = await userDatabase.profiles.insertOne({
+              await usersDatabase.profiles.insertOne({
                 createdAt: new Date(),
                 updatedAt: new Date(),
                 email: googleUserProfile.email,
                 emailNormalised: normalisedGoogleUserProfileEmailAddress,
                 uuid: userProfileUuid,
               });
-              await googleInsertUserOAuthCredentials(userProfileUuid);
+              await usersDatabase.credentials.insertOne({
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                provider: 'google',
+                type: 'oauth2',
+                userProfileUuid,
+              });
               await userDatabaseSession.commitTransaction();
             }
             catch (error) {
@@ -208,7 +214,7 @@ export default defineServiceMiddleware([
             }
 
             try {
-              userProfileDocument = await userDatabase.profiles.findOne({
+              userProfileDocument = await usersDatabase.profiles.findOne({
                 uuid: userProfileUuid
               });
             }
@@ -231,7 +237,7 @@ export default defineServiceMiddleware([
 
             let userOAuthCredentialDocument;
             try {
-              userOAuthCredentialDocument = await userDatabase.credentials.findOne(
+              userOAuthCredentialDocument = await usersDatabase.credentials.findOne(
                 sanitizeMongoDBFilterOrPipeline({
                   userProfileUuid: userProfileDocument.uuid,
                   provider: 'google',
@@ -249,7 +255,13 @@ export default defineServiceMiddleware([
             if (userOAuthCredentialDocument === null) {
               logger.debug('OAuth2 credential document not found for existing user, creating a new credential document', { email: googleUserProfile.email });
               try {
-                await googleInsertUserOAuthCredentials(userProfileDocument.uuid);
+                await usersDatabase.credentials.insertOne({
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                  provider: 'google',
+                  type: 'oauth2',
+                  userProfileUuid: userProfileDocument.uuid,
+                });
               }
               catch (error) {
                 logger.error(error);
@@ -310,7 +322,7 @@ export default defineServiceMiddleware([
     if (attempt >= 3) {
       logger.debug(`OAuth2 authentication attempt ${attempt} failed for provider ${provider}, exceeding retry limit`);
       return context.serverResponse.sendBadRequestHTMLResponse(
-        <OAuthCallback error="retry_limit_exceeded" provider={provider} />
+        <LoginWithOAuthCallback error="retry_limit_exceeded" provider={provider} />
       );
     }
 
@@ -338,7 +350,7 @@ export default defineServiceMiddleware([
       default:
         logger.debug('OAuth2 callback returned error that is not handled:', { provider, error });
         return context.serverResponse.sendBadRequestHTMLResponse(
-          <OAuthCallback error={error} provider={provider} />
+          <LoginWithOAuthCallback error={error} provider={provider} />
         )
     }
   }

@@ -1,4 +1,4 @@
-import { defineHealthcheck } from "@tw050x.net.library/service";
+import { default as defineHealthcheck } from "@tw050x.net.library/platform/healthcheck";
 
 export default defineHealthcheck({
   filePath: '/healthcheck',

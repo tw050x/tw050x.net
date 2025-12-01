@@ -1,7 +1,7 @@
 import { Component } from "@kitajs/html";
-import { default as AnchoredBar } from "@tw050x.net.library/uikit/component/AnchoredBar";
-import { default as Header } from "@tw050x.net.library/uikit/component/Header";
-import { default as Head } from "@tw050x.net.library/uikit/component/Head";
+import { default as AnchoredBar } from "@tw050x.net.library/platform/template/component/AnchoredBar";
+import { default as Header } from "@tw050x.net.library/platform/template/component/Header";
+import { default as Head } from "@tw050x.net.library/platform/template/component/Head";
 import { default as MenuInitiator, Props as MenuInitiatorProps } from "../component/MenuInitiator.js";
 import { default as AssignmentTaskTable, Props as AssignmentTaskTableProps } from "../component/AssignmentTaskTable.js";
 

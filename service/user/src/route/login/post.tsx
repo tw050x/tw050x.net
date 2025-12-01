@@ -1,17 +1,17 @@
-import { database as userDatabase } from "@tw050x.net.database/user";
-import { read as readConfig } from "@tw050x.net.library/configs";
-import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/cors/use-cors-headers";
-import { useLogRequest } from "@tw050x.net.library/middleware/use-log-request";
-import { logger } from "@tw050x.net.library/logger";
-import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useSession } from "@tw050x.net.library/sessions/middleware/use-session";
-import { useSessionInitialiser } from "@tw050x.net.library/sessions/middleware/use-session-initialiser";
-import { default as Unrecoverable } from "@tw050x.net.library/uikit/document/Unrecoverable";
-import { generateLoginFormNonce } from "@tw050x.net.library/user/helper/generate-login-form-nonce";
-import { useLoginEnabled } from "@tw050x.net.library/user/middleware/use-login-enabled";
-import { useLoginEnabledGate } from "@tw050x.net.library/user/middleware/use-login-enabled-gate";
-import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
-import { default as LoginForm } from "@tw050x.net.library/user/template/component/LoginWithPasswordForm";
+import { database as usersDatabase } from "@tw050x.net.library/database/client/users";
+import { generateLoginFormNonce } from "@tw050x.net.library/platform/helper/authentication/generate-login-form-nonce";
+import { useLoginEnabled } from "@tw050x.net.library/platform/middleware/use-login-enabled";
+import { useLoginEnabledGate } from "@tw050x.net.library/platform/middleware/use-login-enabled-gate";
+import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
+import { default as LoginForm } from "@tw050x.net.library/platform/template/component/Form/LoginWithPassword";
+import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
+import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
+import { logger } from "@tw050x.net.library/platform/helper/logger";
+import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
+import { useSession } from "@tw050x.net.library/platform/middleware/use-session";
+import { useSessionInitialiser } from "@tw050x.net.library/platform/middleware/use-session-initialiser";
+import { default as Unrecoverable } from "@tw050x.net.library/platform/template/document/Unrecoverable";
 import { compare } from "bcryptjs";
 import { default as validator } from "validator";
 import { default as zod, ZodError } from "zod";
@@ -75,7 +75,7 @@ export default defineServiceMiddleware([
     // if it doesnt exist then return an error
     let userProfileDocument;
     try {
-      userProfileDocument = await userDatabase.profiles.findOne({ email });
+      userProfileDocument = await usersDatabase.profiles.findOne({ email });
     }
     catch (error) {
       logger.error(error);
@@ -96,7 +96,7 @@ export default defineServiceMiddleware([
     // if it doesnt exist then return an error
     let credentialDocument;
     try {
-      credentialDocument = await userDatabase.credentials.findOne({
+      credentialDocument = await usersDatabase.credentials.findOne({
         userProfileUuid: userProfileDocument.uuid,
         type: 'password',
       });

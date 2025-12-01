@@ -1,12 +1,12 @@
 import { Component } from "@kitajs/html";
-import { readScript } from "@tw050x.net.library/script";
-import { default as Account } from "@tw050x.net.library/uikit/svg/Account";
-import { default as AccountSwitch } from "@tw050x.net.library/uikit/svg/AccountSwitch";
-import { default as ChevronLeft } from "@tw050x.net.library/uikit/svg/ChevronLeft";
-import { default as ChevronRight } from "@tw050x.net.library/uikit/svg/ChevronRight";
-import { default as Cross } from "@tw050x.net.library/uikit/svg/Cross";
-import { default as Logout } from "@tw050x.net.library/uikit/svg/Logout";
-import { default as Settings } from "@tw050x.net.library/uikit/svg/Settings";
+import { readScript } from "@tw050x.net.library/static";
+import { default as Account } from "@tw050x.net.library/platform/template/svg/Account";
+import { default as AccountSwitch } from "@tw050x.net.library/platform/template/svg/AccountSwitch";
+import { default as ChevronLeft } from "@tw050x.net.library/platform/template/svg/ChevronLeft";
+import { default as ChevronRight } from "@tw050x.net.library/platform/template/svg/ChevronRight";
+import { default as Cross } from "@tw050x.net.library/platform/template/svg/Cross";
+import { default as Logout } from "@tw050x.net.library/platform/template/svg/Logout";
+import { default as Settings } from "@tw050x.net.library/platform/template/svg/Settings";
 
 /**
  * Props for the `<PortalMenu />` component.

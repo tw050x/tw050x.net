@@ -1,7 +1,7 @@
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/cors/use-cors-headers";
-import { useLogRequest } from "@tw050x.net.library/middleware";
-import { defineServiceMiddleware } from "@tw050x.net.library/service";
-import { useLoginState } from "@tw050x.net.library/user/middleware/use-login-state";
+import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
+import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
+import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
 import { useUIStateCookie } from "../../../middleware/use-ui-state.js";
 import { default as Brands, Props as BrandsDocumentProps } from "../../../template/document/Brands.js";
 

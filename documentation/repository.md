@@ -152,7 +152,7 @@ mongodb://mongo-primary:27017,mongo-secondary-a:27017
 First you will need to create a custom builder instance using the config in the root directory.
 
 ```bash
-yarn docker:build
+yarn build
 ```
 
 > This build command will take a while. Go make a drink. Take a walk.
