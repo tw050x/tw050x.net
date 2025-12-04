@@ -1,5 +1,5 @@
 describe('As a user I want to register an account', () => {
-  it('should allow a user to enter their details, register an account and be redirected to the assignment page', () => {
+  it('should allow a user to enter their details, register an account and be redirected to the dashboard', () => {
     const timestamp = Date.now();
     const email = `test.user.${timestamp}@example.com`;
     const password = 'Password123!';
@@ -8,18 +8,18 @@ describe('As a user I want to register an account', () => {
     cy.get('input[name="password"]').type(password);
     cy.get('input[name="password-confirmation"]').type(password);
     cy.get('button[type="submit"]').click();
-    cy.url().should('eq', `${Cypress.config().baseUrl}/portal/assignment`);
+    cy.url().should('eq', `${Cypress.config().baseUrl}/portal/dashboard`);
   });
 
-  it('should allow a user to enter their details, register an account and be redirected to the assignment page, ignoring the login state cookie', () => {
+  it('should allow a user to enter their details, register an account and be redirected to the assignment page, following the login state cookie', () => {
     const timestamp = Date.now();
     const email = `test.user.${timestamp}@example.com`;
     const password = 'Password123!';
     const loginStateCookieContent = {
-      returnUrl: `${Cypress.config().baseUrl}/portal/dashboard`
+      returnUrl: `${Cypress.config().baseUrl}/portal/settings`
     }
     cy.task<string>('createEncryptedLoginCookieValue', loginStateCookieContent).then((loginStateCookieValue) => {
-      cy.setCookie('login.state', loginStateCookieValue, {
+      cy.setCookie('user.auth-state.login', loginStateCookieValue, {
         domain: 'tw050x.dev',
         path: '/',
         secure: true,
@@ -31,7 +31,7 @@ describe('As a user I want to register an account', () => {
     cy.get('input[name="password"]').type(password);
     cy.get('input[name="password-confirmation"]').type(password);
     cy.get('button[type="submit"]').click();
-    cy.url().should('eq', `${Cypress.config().baseUrl}/portal/assignment`);
+    cy.url().should('eq', `${Cypress.config().baseUrl}/portal/settings`);
   });
 
   it('should show validation errors if the form is submitted with no data', () => {

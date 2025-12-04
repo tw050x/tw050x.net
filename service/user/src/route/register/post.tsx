@@ -259,7 +259,7 @@ export default defineServiceMiddleware([
 
     // redirect to the defaul route
     return void context.serverResponse.sendSeeOtherRedirect(
-      new URL(`https://${readConfig("service.*.host")}`)
+      new URL(`https://${readConfig("service.*.host")}/portal/dashboard`)
     );
   },
 ]);
