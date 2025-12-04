@@ -1,4 +1,4 @@
-import { database as sessionsDatabase } from '@tw050x.net.library/database/client/sessions';
+import { database as sessionsDatabase } from '@tw050x.net.library/database/collections/sessions';
 import { randomBytes } from "node:crypto";
 
 /**

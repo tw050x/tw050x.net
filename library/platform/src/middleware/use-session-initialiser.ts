@@ -1,4 +1,4 @@
-import { client as sessionsDatabaseClient, database as sessionsDatabase } from "@tw050x.net.library/database/client/sessions";
+import { client as sessionsDatabaseClient, database as sessionsDatabase } from "@tw050x.net.library/database/collections/sessions";
 import { randomUUID } from "node:crypto";
 import { default as Cookies } from "cookies";
 import { addHours, differenceInSeconds } from "date-fns";

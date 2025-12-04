@@ -24,7 +24,8 @@
     "certificate": "certificate",
     "e2e": "cypress open",
     "migrate": "migrate",
-    "scan": "xss-scan"
+    "scan": "xss-scan",
+    "watch": "tsc --build --watch"
   },
   "type": "module",
   "version": "0.0.0",

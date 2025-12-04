@@ -1,1 +1,1 @@
-export { default as sanitizeMongoDBFilterOrPipeline } from "./helper/sanitize-mongodb-filter-or-pipeline.js"
+export { default as sanitizeMongoDBFilterOrPipeline, trusted } from "./helper/sanitize-mongodb-filter-or-pipeline.js"

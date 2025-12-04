@@ -34,6 +34,13 @@ type Factory = () => Middleware<
 export const useSessionGate: Factory = () => async (context) => {
   if (context.incomingMessage.session.userProfileUuid === undefined) {
     logger.debug('No valid session found, redirecting to login page');
+    let returnUrl = new URL(context.incomingMessage.url || '/', `https://${readConfig('service.*.host')}`);
+    context.serverResponse.loginState.cookie.set(
+      JSON.stringify({
+        returnUrl: returnUrl.toString(),
+      })
+    )
+
     return void context.serverResponse.sendSeeOtherRedirect(
       new URL('/login', `https://${readConfig('service.*.host')}`),
     )

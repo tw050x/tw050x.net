@@ -1,11 +1,11 @@
-import { database as usersDatabase } from "@tw050x.net.library/database/client/users";
+import { database as usersDatabase } from "@tw050x.net.library/database/collections/users";
 import { generateLoginFormNonce } from "@tw050x.net.library/platform/helper/authentication/generate-login-form-nonce";
 import { useLoginEnabled } from "@tw050x.net.library/platform/middleware/use-login-enabled";
 import { useLoginEnabledGate } from "@tw050x.net.library/platform/middleware/use-login-enabled-gate";
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
 import { default as LoginForm } from "@tw050x.net.library/platform/template/component/Form/LoginWithPassword";
 import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
-import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
@@ -21,13 +21,11 @@ const postLoginFormDataSchema = zod.object({
   password: zod.string().nonempty('A password is required'),
 });
 
-const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ['GET', 'OPTIONS', 'POST'],
-}
-
 export default defineServiceMiddleware([
   useLogRequest(),
-  useCorsHeaders(useCorsHeadersOptions),
+  useCorsHeaders({
+    allowedMethods: ['GET', 'OPTIONS', 'POST'],
+  }),
   useLoginEnabled(),
   useLoginEnabledGate(),
   useLoginState(),

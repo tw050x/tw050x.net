@@ -1,4 +1,4 @@
-import { database as authenticationDatabase } from '@tw050x.net.library/database/client/authentication';
+import { database as authenticationDatabase } from '@tw050x.net.library/database/collections/authentication';
 import { randomBytes } from "node:crypto";
 
 /**

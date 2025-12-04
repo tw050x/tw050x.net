@@ -7,23 +7,7 @@ services:
         condition: service_healthy
       traefik:
         condition: service_healthy
-    develop:
-      watch:
-        - action: restart
-          include:
-            - "**/*.js"
-          path: ./library/
-        - action: restart
-          include:
-            - "**/*.js"
-          path: ./service/authorisation/artifact
     environment:
-      - LOGS_LEVEL=info
-      - LOGS_DIRECTORY=/log
-      - MONGO_CLIENT_AUTH_PASSWORD=password
-      - MONGO_CLIENT_AUTH_USERNAME=root
-      - MONGO_CLIENT_REPLICA_SET=rs0
-      - MONGO_CLIENT_URI=mongodb://mongo-primary:27017,mongo-secondary-a:27017
       - NODE_ENV=development
     healthcheck:
       test: ["CMD-SHELL", "test -f /healthcheck && grep -q '^healthy$' /healthcheck"]

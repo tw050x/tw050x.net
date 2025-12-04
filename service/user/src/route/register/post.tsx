@@ -1,8 +1,8 @@
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database/helper";
-import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.library/database/client/users";
+import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.library/database/collections/users";
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
 import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
 import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
@@ -32,13 +32,11 @@ const postRegisterFormDataSchema = zod
     message: "Passwords do not match",
   });
 
-const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ["GET", "OPTIONS", "POST"],
-};
-
 export default defineServiceMiddleware([
   useLogRequest(),
-  useCorsHeaders(useCorsHeadersOptions),
+  useCorsHeaders({
+    allowedMethods: ["GET", "OPTIONS", "POST"],
+  }),
   useRegistrationEnabledGate(),
   useLoginState(),
   useSession({
@@ -245,12 +243,23 @@ export default defineServiceMiddleware([
     // Clear the login state cookie
     context.serverResponse.loginState.cookie.clear();
 
-    // Redirect the user to the portal
+    // if no return URL is specified, redirect to the portal home
+    redirectGuard: {
+      if (context.incomingMessage.loginState.cookie.payload === undefined) {
+        break redirectGuard;
+      }
+      if (context.incomingMessage.loginState.cookie.payload.returnUrl === undefined) {
+        break redirectGuard;
+      }
+
+      return void context.serverResponse.sendSeeOtherRedirect(
+        context.incomingMessage.loginState.cookie.payload.returnUrl
+      );
+    }
+
+    // redirect to the defaul route
     return void context.serverResponse.sendSeeOtherRedirect(
-      new URL(
-        "/portal",
-        `https://${readConfig("service.*.host")}`
-      )
+      new URL(`https://${readConfig("service.*.host")}`)
     );
   },
 ]);

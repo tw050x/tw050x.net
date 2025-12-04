@@ -3,7 +3,7 @@ import { useLoginEnabledGate } from "@tw050x.net.library/platform/middleware/use
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
 import { googleAuthorisationURL } from "@tw050x.net.library/platform/helper/authentication/oauth2/provider/google";
 import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
 import { encrypt } from "@tw050x.net.library/platform/helper/encrypt";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
@@ -12,13 +12,11 @@ import { default as defineServiceMiddleware } from "@tw050x.net.library/platform
 import { default as Unrecoverable } from "@tw050x.net.library/platform/template/document/Unrecoverable";
 import { randomBytes } from 'node:crypto';
 
-const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ['GET', 'OPTIONS'],
-}
-
 export default defineServiceMiddleware([
   useLogRequest(),
-  useCorsHeaders(useCorsHeadersOptions),
+  useCorsHeaders({
+    allowedMethods: ['GET', 'OPTIONS'],
+  }),
   useLoginEnabled(),
   useLoginEnabledGate(),
   useLoginState(),
@@ -35,7 +33,7 @@ export default defineServiceMiddleware([
 
     let encryptedState;
     try {
-      encryptedState = encrypt(state, readSecret('encrypter.secret-key'))
+      encryptedState = encrypt(state, readSecret('encryption.cipher.secret-key'))
     }
     catch (error) {
       logger.error(error);

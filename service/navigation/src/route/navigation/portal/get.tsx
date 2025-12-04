@@ -1,5 +1,5 @@
-import { database as accountDatabase } from "@tw050x.net.library/database/client/account";
-import { database as assignmentDatabase } from "@tw050x.net.library/database/client/assignment";
+import { database as accountDatabase } from "@tw050x.net.library/database/collections/account";
+import { database as assignmentDatabase } from "@tw050x.net.library/database/collections/assignment";
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
@@ -35,7 +35,7 @@ export default defineServiceMiddleware([
     // Fetch assignments to determine if there are any pending ones
     let incompleteAssignmentDocuments;
     try {
-      incompleteAssignmentDocuments = await assignmentDatabase.task.countDocuments(
+      incompleteAssignmentDocuments = await assignmentDatabase.tasks.countDocuments(
         sanitizeMongoDBFilterOrPipeline({
           completed: false,
           userProfileUuid: context.incomingMessage.session.userProfileUuid,

@@ -1,4 +1,4 @@
-import { database as usersDatabase } from '@tw050x.net.library/database/client/users';
+import { database as usersDatabase } from '@tw050x.net.library/database/collections/users';
 import { randomBytes } from "node:crypto";
 
 /**

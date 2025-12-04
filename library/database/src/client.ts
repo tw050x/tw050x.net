@@ -1,16 +1,21 @@
+import { read as readConfig } from "./helper/configs.js";
+import { read as readSecret } from "./helper/secrets.js";
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
 // Define MongoClientOptions configuration
 const configuration: MongoClientOptions = {}
 
+// retrieve the client URI from config
+const clientURI = await readConfig('mongo.client.uri');
+
 // Ensure that MONGO_CLIENT_URI is defined
-if (process.env.MONGO_CLIENT_URI === undefined) {
+if (clientURI === undefined) {
   throw new Error('MONGO_CLIENT_URI is not defined')
 }
 
 // Only assign auth username & password if they exist
-const authPassword = process.env.MONGO_CLIENT_AUTH_PASSWORD;
-const authUsername = process.env.MONGO_CLIENT_AUTH_USERNAME;
+const authPassword = await readSecret('mongo.client.auth-password');
+const authUsername = await readConfig('mongo.client.auth-username');
 authGuard: {
   if (authPassword === undefined) break authGuard;
   if (authPassword === '') break authGuard;
@@ -23,24 +28,11 @@ authGuard: {
 }
 
 // Only assign replicaSet if it exists
-const replicaSet = process.env.MONGO_CLIENT_REPLICA_SET;
+const replicaSet = await readConfig('mongo.server.replica-set');
 replicaSetGuard: {
   if (replicaSet === undefined) break replicaSetGuard;
   if (replicaSet === '') break replicaSetGuard;
   configuration.replicaSet = replicaSet;
 }
 
-export const mongoClient = new MongoClient(process.env.MONGO_CLIENT_URI, configuration);
-
-process.on('SIGINT', async () => {
-  await mongoClient.close();
-});
-
-process.on('SIGTERM', async () => {
-  await mongoClient.close();
-});
-
-process.on('uncaughtException', async (error) => {
-  console.error('Uncaught Exception:', error);
-  await mongoClient.close();
-});
+export const mongoClient = new MongoClient(clientURI, configuration);

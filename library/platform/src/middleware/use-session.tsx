@@ -1,5 +1,5 @@
-import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database/helper";
-import { database as sessionsDatabase } from "@tw050x.net.library/database/client/sessions";
+import { sanitizeMongoDBFilterOrPipeline, trusted } from "@tw050x.net.library/database/helper";
+import { database as sessionsDatabase } from "@tw050x.net.library/database/collections/sessions";
 import { default as Cookies } from "cookies";
 import { read as readConfig } from "../helper/configs.js";
 import { logger } from "../helper/logger.js";
@@ -72,7 +72,7 @@ export const useSession: Factory = (options) => async (context) => {
     try {
       record = await sessionsDatabase.logins.findOne(
         sanitizeMongoDBFilterOrPipeline({
-          expiredAt: { $exists: false },
+          expiredAt: trusted({ $exists: false }),
           id,
         })
       );

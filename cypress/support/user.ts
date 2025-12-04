@@ -1,5 +1,11 @@
+import { readFileSync } from "node:fs";
 import { hash } from "bcryptjs";
 import { mongoClient } from "./mongo-client";
+import { resolve } from "node:path";
+
+const userDatabaseName = readFileSync(resolve(__dirname, '..', '..', '.configs', 'database.users.name'), 'utf-8').trim();
+const userDatabaseCredentialsCollectionName = readFileSync(resolve(__dirname, '..', '..', '.configs', 'database.users-credentials-collection.name'), 'utf-8').trim();
+const userDatabaseProfilesCollectionName = readFileSync(resolve(__dirname, '..', '..', '.configs', 'database.users-profiles-collection.name'), 'utf-8').trim();
 
 /**
  * Create a user directly in the database for testing purposes.
@@ -13,17 +19,19 @@ export const createUser = async (email: string, password: string): Promise<null>
   const updatedAt = new Date();
   const passwordHash = await hash(password, 10);
   const uuid = crypto.randomUUID();
-  await mongoClient.db(process.env.USER_DATABASE_NAME).collection(process.env.USER_DATABASE_CREDENTIALS_COLLECTION_NAME).insertOne({
+  await mongoClient.db(userDatabaseName).collection(userDatabaseProfilesCollectionName).insertOne({
     createdAt,
     updatedAt,
     email,
-    passwordHash,
+    emailNormalised: email,
     uuid,
   });
-  await mongoClient.db(process.env.USER_DATABASE_NAME).collection(process.env.USER_DATABASE_PROFILES_COLLECTION_NAME).insertOne({
+  await mongoClient.db(userDatabaseName).collection(userDatabaseCredentialsCollectionName).insertOne({
     createdAt,
     updatedAt,
-    uuid,
+    passwordHash,
+    type: "password",
+    userProfileUuid: uuid,
   });
   return null
 }

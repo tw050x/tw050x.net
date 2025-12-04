@@ -1,4 +1,4 @@
-import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
 import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
@@ -7,13 +7,11 @@ import { generateRegisterFormNonce } from "@tw050x.net.library/platform/helper/u
 import { useRegistrationEnabledGate } from "@tw050x.net.library/platform/middleware/use-registration-enabled-gate";
 import { default as RegisterAside } from "@tw050x.net.library/platform/template/component/RegisterAside";
 
-const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ['GET', 'POST'],
-}
-
 export default defineServiceMiddleware([
   useLogRequest(),
-  useCorsHeaders(useCorsHeadersOptions),
+  useCorsHeaders({
+    allowedMethods: ['GET', 'POST'],
+  }),
   useRegistrationEnabledGate(),
 
   // Render the login aside

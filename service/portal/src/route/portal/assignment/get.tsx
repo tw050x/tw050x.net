@@ -1,4 +1,4 @@
-import { database as assignmentDatabase } from "@tw050x.net.library/database/client/assignment";
+import { database as assignmentDatabase } from "@tw050x.net.library/database/collections/assignment";
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
 import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
@@ -39,7 +39,7 @@ export default defineServiceMiddleware([
 
     let assignmentTasks;
     try {
-      assignmentTasks = await assignmentDatabase.task.aggregate<AssignmentTaskWithTemplate>(
+      assignmentTasks = await assignmentDatabase.tasks.aggregate<AssignmentTaskWithTemplate>(
         sanitizeMongoDBFilterOrPipeline([
           {
             $match: {

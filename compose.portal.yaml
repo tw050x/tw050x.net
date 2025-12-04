@@ -12,24 +12,7 @@ services:
       traefik:
         condition: service_healthy
     environment:
-      - ASSIGNMENT_DATABASE_NAME=assignments
-      - ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME=tasks
-      - ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME=task-templates
-      - LOGS_LEVEL=info
-      - LOGS_DIRECTORY=/log
-      - MONGO_CLIENT_AUTH_PASSWORD=password
-      - MONGO_CLIENT_AUTH_USERNAME=root
-      - MONGO_CLIENT_REPLICA_SET=rs0
-      - MONGO_CLIENT_URI=mongodb://mongo-primary:27017,mongo-secondary-a:27017
       - NODE_ENV=development
-      - SESSIONS_DATABASE_NAME=sessions
-      - SESSIONS_DATABASE_ACTIVITY_COLLECTION_NAME=activity
-      - SESSIONS_DATABASE_LOGINS_COLLECTION_NAME=logins
-      - USER_DATABASE_NAME=users
-      - USER_DATABASE_CREDENTIALS_COLLECTION_NAME=credentials
-      - USER_DATABASE_NONCES_COLLECTION_NAME=nonces
-      - USER_DATABASE_PERMISSIONS_COLLECTION_NAME=permissions
-      - USER_DATABASE_PROFILES_COLLECTION_NAME=profiles
     healthcheck:
       test: ["CMD-SHELL", "test -f /healthcheck && grep -q '^healthy$' /healthcheck"]
       interval: 1m30s

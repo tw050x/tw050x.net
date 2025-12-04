@@ -2,7 +2,8 @@
   "$schema": "https://json.schemastore.org/package",
   "author": "tw050x (Richard Kielty)",
   "dependencies": {
-    "mongodb": "^6.12.0"
+    "mongodb": "^6.12.0",
+    "winston": "^3.17.0"
   },
   "description": "The @tw050x.net.library/database package project",
   "devDependencies": {
@@ -11,14 +12,15 @@
   },
   "exports": {
     ".": "./artifact/index.js",
-    "./helper": "./artifact/helper.js",
-    "./client/account": "./artifact/client/account/index.js",
-    "./client/assignment": "./artifact/client/assignment/index.js",
-    "./client/authentication": "./artifact/client/authentication/index.js",
-    "./client/authorisation": "./artifact/client/authorisation/index.js",
-    "./client/payments": "./artifact/client/payments/index.js",
-    "./client/sessions": "./artifact/client/sessions/index.js",
-    "./client/users": "./artifact/client/users/index.js"
+    "./collections/account": "./artifact/collections/account.js",
+    "./collections/assignment": "./artifact/collections/assignment.js",
+    "./collections/authentication": "./artifact/collections/authentication.js",
+    "./collections/authorisation": "./artifact/collections/authorisation.js",
+    "./collections/payments": "./artifact/collections/payments.js",
+    "./collections/sessions": "./artifact/collections/sessions.js",
+    "./collections/users": "./artifact/collections/users.js",
+    "./client": "./artifact/client.js",
+    "./helper": "./artifact/helper.js"
   },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/database",

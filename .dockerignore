@@ -2,7 +2,6 @@
 # Directories
 .github/
 .vscode/
-artifact/
 configuration/
 coverage/
 documentation/
@@ -10,6 +9,7 @@ infrastructure/
 log/
 playground/
 script/
+service/**/artifact/
 service/**/data/
 service/**/migration/
 service/traefik/certificate-authorities/

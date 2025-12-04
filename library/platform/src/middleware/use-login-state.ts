@@ -50,7 +50,7 @@ type Factory = () => Middleware<
  */
 export const useLoginState: Factory = () => async (context) => {
   const cookieDomain = readConfig('cookie.*.domain');
-  const encrypterSecretKey = readSecret('encrypter.secret-key');
+  const encrypterSecretKey = readSecret('encryption.cipher.secret-key');
 
   // read the cookie
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {
@@ -59,39 +59,59 @@ export const useLoginState: Factory = () => async (context) => {
   const cookie = cookies.get(loginStateCookieName)
 
   // parse the cookie
-  let loginStateCookiePayload: LoginStatePayload | undefined
+  let loginStateCookiePayload: LoginStatePayload = {
+    returnUrl: undefined
+  };
   payloadGuard: {
     if (cookie === undefined) {
       break payloadGuard;
     }
+    let parseLoginStateCookiePayload: unknown;
     try {
       const parsedCookie = JSON.parse(cookie);
       const decipher = createDecipheriv(stateCipherAlgorithm, Buffer.from(encrypterSecretKey, 'hex'), Buffer.from(parsedCookie.iv, 'hex'));
       let decrypted = decipher.update(parsedCookie.content, 'hex', 'utf8');
       decrypted += decipher.final('utf8');
-      loginStateCookiePayload = JSON.parse(decrypted);
+      parseLoginStateCookiePayload = JSON.parse(decrypted);
     }
     catch (error) {
       logger.error(error);
       break payloadGuard;
     }
     // ensure login state is an object with a returnUrl property
-    if (loginStateCookiePayload === undefined) {
+    if (parseLoginStateCookiePayload === undefined) {
       logger.debug('Login state cookie payload is undefined');
       break payloadGuard;
     }
-    if (loginStateCookiePayload === null) {
+    if (parseLoginStateCookiePayload === null) {
       logger.debug('Login state cookie payload is null');
       break payloadGuard;
     }
-    if (typeof loginStateCookiePayload !== 'object') {
+    if (typeof parseLoginStateCookiePayload !== 'object') {
       logger.debug('Login state cookie payload is not an object');
       break payloadGuard;
     }
-    if ('returnUrl' in loginStateCookiePayload === false) {
+    if ('returnUrl' in parseLoginStateCookiePayload === false) {
       logger.debug('Login state cookie payload does not have a returnUrl property');
       break payloadGuard;
     }
+    if (typeof parseLoginStateCookiePayload.returnUrl !== 'string') {
+      logger.debug('Login state cookie payload returnUrl property is not a string');
+      break payloadGuard;
+    }
+
+    // parse the returnUrl property as a URL
+    let returnUrl: URL;
+    try {
+      returnUrl = new URL(parseLoginStateCookiePayload.returnUrl);
+    }
+    catch (error) {
+      logger.error(error);
+      break payloadGuard;
+    }
+
+    // assign the returnUrl to the login state cookie payload
+    loginStateCookiePayload.returnUrl = returnUrl;
   }
   // initialize the cookies object on the incoming message
   context.incomingMessage.loginState = {

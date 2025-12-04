@@ -47,7 +47,7 @@ type Factory = () => Middleware<
  */
 export const useRegistrationState: Factory = () => async (context) => {
   const cookieDomain = readConfig('cookie.*.domain');
-  const encrypterSecretKey = readSecret('encrypter.secret-key');
+  const encrypterSecretKey = readSecret('encryption.cipher.secret-key');
 
   // read the cookie
   const cookies = new Cookies(context.incomingMessage, context.serverResponse, {

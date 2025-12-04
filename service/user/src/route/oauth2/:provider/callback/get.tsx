@@ -1,4 +1,4 @@
-import { client as usersDatabaseClient, database as usersDatabase } from "@tw050x.net.library/database/client/users";
+import { client as usersDatabaseClient, database as usersDatabase } from "@tw050x.net.library/database/collections/users";
 import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
 import { googleAuthorisationURL, googleOAuth2ExchangeCodeForAccessTokenAndScope, googleFetchUserProfile } from "@tw050x.net.library/platform/helper/authentication/oauth2/provider/google";
 import { useLoginEnabled } from "@tw050x.net.library/platform/middleware/use-login-enabled";
@@ -6,7 +6,7 @@ import { useLoginEnabledGate } from "@tw050x.net.library/platform/middleware/use
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
 import { default as LoginWithOAuthCallback } from "@tw050x.net.library/platform/template/document/LoginWithOAuthCallback";
 import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
 import { decrypt, encrypt } from "@tw050x.net.library/platform/helper/encrypt";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
@@ -19,13 +19,12 @@ import { userEventQueue } from "@tw050x.net.library/platform/queue/user-event-qu
 import { normaliseEmailAddress } from "@tw050x.net.library/platform/utility/normalise-email-address";
 import { randomUUID } from "node:crypto"
 
-const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ['GET', 'POST', 'OPTIONS'],
-}
 
 export default defineServiceMiddleware([
   useLogRequest(),
-  useCorsHeaders(useCorsHeadersOptions),
+  useCorsHeaders({
+    allowedMethods: ['GET', 'POST', 'OPTIONS'],
+}),
   useLoginEnabled(),
   useLoginEnabledGate(),
   useLoginState(),
@@ -48,7 +47,7 @@ export default defineServiceMiddleware([
 
     let decryptedState;
     try {
-      decryptedState = decrypt(state, readSecret('encrypter.secret-key'));
+      decryptedState = decrypt(state, readSecret('encryption.cipher.secret-key'));
     }
     catch (error) {
       logger.error(error);
@@ -335,7 +334,7 @@ export default defineServiceMiddleware([
         ...decryptedState,
         attempt,
       }),
-      readSecret('encrypter.secret-key')
+      readSecret('encryption.cipher.secret-key')
     );
 
     switch (`${provider}__${error}`) {

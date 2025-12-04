@@ -1,5 +1,6 @@
-import { DatabaseDocument } from "../../types.js"
-import { mongoClient } from "./client.js";
+import { read as readConfig } from "../helper/configs.js";
+import { DatabaseDocument } from "../types.js"
+import { mongoClient } from "../client.js";
 
 interface AssignmentTaskDocumentBase extends DatabaseDocument {
   actions: Array<string>;
@@ -35,37 +36,39 @@ export type AssignmentTaskTemplateDocument = {
  *
  */
 export const collectionMeta = {
-  get task() {
+  get tasks() {
     return {
-      name: process.env.ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME
+      name: readConfig('database.assignments-tasks-collection.name'),
     };
   },
-  get taskTemplate() {
+  get tasksTemplates() {
     return {
-      name: process.env.ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME
+      name: readConfig('database.assignments-tasks-templates-collection.name'),
     };
-  }
+  },
 }
 
 /**
  * Database object
  */
 export const database = {
-  get task() {
-    const taskCollectionName = collectionMeta.task.name;
+  get tasks() {
+    const databaseName = readConfig('database.assignments.name');
+    const taskCollectionName = collectionMeta.tasks.name;
     guard: {
       if (taskCollectionName === '') break guard;
-      return mongoClient.db(process.env.ASSIGNMENT_DATABASE_NAME).collection<AssignmentTaskDocument>(taskCollectionName);
+      return mongoClient.db(databaseName).collection<AssignmentTaskDocument>(taskCollectionName);
     }
-    throw new Error(`Missing environment variable: ASSIGNMENT_DATABASE_TASK_COLLECTION_NAME`);
+    throw new Error(`Missing config file missing: database.assignments-tasks-collection.name`);
   },
-  get taskTemplate() {
-    const taskTemplateCollectionName = collectionMeta.taskTemplate.name;
+  get tasksTemplates() {
+    const databaseName = readConfig('database.assignments.name');
+    const taskTemplateCollectionName = collectionMeta.tasksTemplates.name;
     guard: {
       if (taskTemplateCollectionName === '') break guard;
-      return mongoClient.db(process.env.ASSIGNMENT_DATABASE_NAME).collection<AssignmentTaskTemplateDocument>(taskTemplateCollectionName);
+      return mongoClient.db(databaseName).collection<AssignmentTaskTemplateDocument>(taskTemplateCollectionName);
     }
-    throw new Error(`Missing environment variable: ASSIGNMENT_DATABASE_TASK_TEMPLATE_COLLECTION_NAME`);
+    throw new Error(`Missing config file missing: database.assignments-tasks-templates-collection.name`);
   }
 }
 

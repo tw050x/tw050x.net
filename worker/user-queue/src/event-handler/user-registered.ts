@@ -1,4 +1,4 @@
-import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.library/database/client/assignment";
+import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.library/database/collections/assignment";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 
 /**
@@ -22,7 +22,7 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
   // Fetch the latest task templates for the assignment
   let taskTemplates
   try {
-    taskTemplates = await assignmentDatabase.taskTemplate.find({
+    taskTemplates = await assignmentDatabase.tasksTemplates.find({
       assignment,
       replaces: null
     }).toArray();
@@ -54,7 +54,7 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
     throw new Error(`No task templates found for assignment: ${assignment}, skipping task creation`);
   }
 
-  await assignmentDatabase.task.insertMany(tasks);
+  await assignmentDatabase.tasks.insertMany(tasks);
 
   logger.debug(`Created ${tasks.length} assignment tasks for userProfileId: ${messageBody.userProfileId}`);
 }

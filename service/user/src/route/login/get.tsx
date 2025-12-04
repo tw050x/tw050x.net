@@ -3,18 +3,16 @@ import { useLoginEnabledGate } from "@tw050x.net.library/platform/middleware/use
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
 import { default as LoginWithOAuth } from "@tw050x.net.library/platform/template/document/LoginWithOAuth";
 import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
-import { UseCorsHeadersFactoryOptions, useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
+import { useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
 import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";
 
-const useCorsHeadersOptions: UseCorsHeadersFactoryOptions = {
-  allowedMethods: ['GET', 'POST', 'OPTIONS'],
-}
-
 export default defineServiceMiddleware([
   useLogRequest(),
-  useCorsHeaders(useCorsHeadersOptions),
+  useCorsHeaders({
+    allowedMethods: ['GET', 'POST', 'OPTIONS'],
+  }),
   useLoginEnabled(),
   useLoginEnabledGate(),
   useLoginState(),
@@ -32,7 +30,10 @@ export default defineServiceMiddleware([
 
     // return the login page
     logger.debug('Rendering login page');
-    const returnUrl = context.incomingMessage.loginState.cookie.payload?.returnUrl || new URL('/', `https://${readConfig('service.*.host')}`);
+    let returnUrl = context.incomingMessage.loginState.cookie.payload?.returnUrl
+    if (returnUrl === undefined) {
+      returnUrl = new URL('/', `https://${readConfig('service.*.host')}`);
+    }
     context.serverResponse.loginState.cookie.set(
       JSON.stringify({
         returnUrl: returnUrl.toString()

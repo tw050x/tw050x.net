@@ -2,7 +2,6 @@
   "compilerOptions": {
     "outDir": "./artifact",
     "rootDir": "./src",
-    "sourceMap": false,
     "types": [
       "@kitajs/html/htmx.d.ts",
       "@types/node",
