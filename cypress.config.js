@@ -6,8 +6,14 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       on('task', {
         async createUser({ email, password }) {
-          const { createUser } = require('./cypress/support/user');
+          const { createUser } = require('./cypress/support/users');
           return await createUser(email, password);
+        },
+        async createUserAndSession({ email, password }) {
+          const { createUser } = require('./cypress/support/users');
+          const { createSession } = require('./cypress/support/sessions');
+          const { uuid } = await createUser(email, password);
+          return await createSession(uuid);
         },
         async createEncryptedLoginCookieValue(content) {
           const { createEncryptedLoginCookieValue } = require('./cypress/support/cookie');

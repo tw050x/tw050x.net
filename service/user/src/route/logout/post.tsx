@@ -24,7 +24,7 @@ export default defineServiceMiddleware([
 
     // redirect to the home page;
     return void context.serverResponse.sendSeeOtherRedirect(
-      new URL('/', `https://${readConfig('service.*.host')}`)
+      new URL('/login', `https://${readConfig('service.*.host')}`)
     )
   },
 ])

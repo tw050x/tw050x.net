@@ -1,6 +1,7 @@
 import { sanitizeMongoDBFilterOrPipeline, trusted } from "@tw050x.net.library/database/helper";
 import { database as sessionsDatabase } from "@tw050x.net.library/database/collections/sessions";
 import { default as Cookies } from "cookies";
+import { addHours, differenceInSeconds } from "date-fns";
 import { read as readConfig } from "../helper/configs.js";
 import { logger } from "../helper/logger.js";
 import { sessionsEventQueue } from "../queue/sessions-event-queue.js";
@@ -108,6 +109,22 @@ export const useSession: Factory = (options) => async (context) => {
       logger.debug('Failed to log user session activity');
       // not a fatal error so continue
     }
+
+    // Calculate expiry - 12 hours from now
+    const currentDate = new Date();
+    const expiryDate = addHours(currentDate, 12);
+    const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
+    const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
+
+    // refresh the cookie
+    cookies.set(sessionCookieName, id, {
+      domain: readConfig('cookie.*.domain'),
+      httpOnly: true,
+      maxAge: maxAgeInMilliseconds,
+      path: '/',
+      sameSite: 'lax',
+      secure: true,
+    });
   }
 
   //

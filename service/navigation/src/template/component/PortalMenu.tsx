@@ -107,7 +107,10 @@ const PortalMenu: Component<Props> = (props) => {
           </div>
         </div>
         <div class="flex flex-col">
-          <a class="text-white text-left cursor-pointer hover:no-underline px-2 py-1 flex-1" hx-post="/logout">
+          <a
+            class="text-white text-left cursor-pointer hover:no-underline px-2 py-1 flex-1"
+            hx-post="/logout"
+          >
             <span class="portal-menu-icon"><Logout /></span>
             <span class="portal-menu-text hidden-when-w-16 text-xs">Logout</span>
           </a>
