@@ -14,7 +14,7 @@
     "typescript": "^5.7.2"
   },
   "license": "UNLICENSED",
-  "name": "@tw050x.net.worker/user-queue",
+  "name": "@tw050x.net.worker/users-queue",
   "private": true,
   "scripts": {
     "tsc": "tsc"

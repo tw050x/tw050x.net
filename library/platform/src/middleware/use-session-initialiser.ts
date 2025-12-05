@@ -67,8 +67,8 @@ export const useSessionInitialiser: Factory = () => async (context) => {
     await sessionsDatabaseSession.commitTransaction();
     sessionsDatabaseSession.endSession();
 
-    // Calculate expiry - 12 hours from now
-    const expiryDate = addHours(currentDate, 12);
+    // Calculate expiry - 24 hours from now
+    const expiryDate = addHours(currentDate, 24 * 30);
     const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
     const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
 

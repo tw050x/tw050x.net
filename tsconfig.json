@@ -39,10 +39,11 @@
     { "path": "./service/navigation" },
     { "path": "./service/payment" },
     { "path": "./service/portal" },
-    { "path": "./service/user" },
+    { "path": "./service/users" },
     { "path": "./tool/certificate" },
     { "path": "./tool/migrate" },
     { "path": "./worker/sessions-queue" },
-    { "path": "./worker/user-queue" },
+    { "path": "./worker/sessions-scheduler" },
+    { "path": "./worker/users-queue" },
   ]
 }

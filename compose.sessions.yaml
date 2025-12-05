@@ -41,7 +41,7 @@ services:
       sessions:
         aliases:
           - sessions.internal
-      user: {}
+      users: {}
     ports:
       - "9301:9229"
     pull_policy: never

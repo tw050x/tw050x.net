@@ -12,7 +12,7 @@
   "exclude": [],
   "extends": "../../tsconfig.json",
   "files": [
-    "../../types/env.worker.user-queue.d.ts",
+    "../../types/env.worker.users-queue.d.ts",
     "src/event-handler/user-registered.ts",
     "src/healthcheck.ts",
     "src/run.ts",

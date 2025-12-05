@@ -3,11 +3,11 @@ import { Queue, QueueOptions } from "bullmq";
 
 const queueOptions: QueueOptions = {
   connection: {
-    host: 'user-redis.internal',
+    host: 'users-redis.internal',
   },
 };
 
 export const userEventQueue = new Queue(
-  readConfig('service.user.event-queue-name'),
+  readConfig('service.users.event-queue-name'),
   queueOptions
 );

@@ -8,11 +8,12 @@ group "default" {
     "marketing",
     "navigation",
     "portal",
-    "user",
+    "users",
 
     # Workers
     "sessions-queue",
-    "user-queue",
+    "sessions-scheduler",
+    "users-queue",
   ]
 }
 
@@ -56,10 +57,10 @@ target "portal" {
   tags = ["tw050x.net.service/portal:latest"]
 }
 
-target "user" {
+target "users" {
   dockerfile = "Dockerfile"
-  target = "user"
-  tags = ["tw050x.net.service/user:latest"]
+  target = "users"
+  tags = ["tw050x.net.service/users:latest"]
 }
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -72,8 +73,14 @@ target "sessions-queue" {
   tags = ["tw050x.net.worker/sessions-queue:latest"]
 }
 
-target "user-queue" {
+target "sessions-scheduler" {
   dockerfile = "Dockerfile"
-  target = "user-queue"
-  tags = ["tw050x.net.worker/user-queue:latest"]
+  target = "sessions-scheduler"
+  tags = ["tw050x.net.worker/sessions-scheduler:latest"]
+}
+
+target "users-queue" {
+  dockerfile = "Dockerfile"
+  target = "users-queue"
+  tags = ["tw050x.net.worker/users-queue:latest"]
 }

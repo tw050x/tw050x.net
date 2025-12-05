@@ -9,7 +9,7 @@ include:
   - compose.portal.yaml
   - compose.sessions.yaml
   - compose.traefik.yaml
-  - compose.user.yaml
+  - compose.users.yaml
 
 networks:
   mongo:
@@ -24,9 +24,9 @@ networks:
   traefik:
     driver: bridge
     name: traefiks
-  user:
+  users:
     driver: bridge
-    name: user
+    name: users
   services:
     driver: bridge
     name: services

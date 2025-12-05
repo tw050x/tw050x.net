@@ -9,12 +9,12 @@ let unrecoverableErrorOccured = false;
 
 const workerOptions: WorkerOptions = {
   connection: {
-    host: 'user-redis.internal',
+    host: 'users-redis.internal',
   },
 };
 
 const worker = new Worker(
-  readConfig('service.user.event-queue-name'),
+  readConfig('service.users.event-queue-name'),
   async (job: Job) => {
     switch (job.name) {
       case 'UserRegistered':

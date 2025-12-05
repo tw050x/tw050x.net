@@ -8,9 +8,9 @@ const configuration: MongoClientOptions = {}
 // retrieve the client URI from config
 const clientURI = await readConfig('mongo.client.uri');
 
-// Ensure that MONGO_CLIENT_URI is defined
+// Ensure that mongo.client.uri file exists
 if (clientURI === undefined) {
-  throw new Error('MONGO_CLIENT_URI is not defined')
+  throw new Error('MongoDB client URI is not defined in configuration');
 }
 
 // Only assign auth username & password if they exist

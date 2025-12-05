@@ -42,10 +42,11 @@
     "service/payment",
     "service/portal",
     "service/traefik",
-    "service/user",
+    "service/users",
     "tool/certificate",
     "tool/migrate",
     "worker/sessions-queue",
-    "worker/user-queue"
+    "worker/sessions-scheduler",
+    "worker/users-queue"
   ]
 }

@@ -1,42 +1,30 @@
-import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
+import { sessionsEventQueue } from "@tw050x.net.library/platform/queue/sessions-event-queue";
 import { writeFileSync } from "node:fs";
-import { Job, Worker, WorkerOptions } from "bullmq";
-import { default as handleUserRegisteredEvent } from "./event-handler/session-activity.js";
+import { schedule } from "node-cron";
 import { default as healthcheck } from "./healthcheck.js";
 
 let unrecoverableErrorOccured = false;
 
-const workerOptions: WorkerOptions = {
-  connection: {
-    host: 'users-redis.internal',
-  },
-};
+// Expressions
+const every10Minutes = '*/10 * * * *';
 
-const worker = new Worker(
-  readConfig('service.sessions.event-queue-name'),
-  async (job: Job) => {
-    switch (job.name) {
-      case 'UserRegistered':
-        return await handleUserRegisteredEvent(job.data);
-      default:
-        throw new Error(`Unknown message type: ${job.name}`);
-    }
-  },
-  workerOptions,
-);
+// Tasks
+const expireInactiveSessions = schedule(every10Minutes, async () => {
+  try {
+    // TODO: add job to expire inactive sessions
+    // sessionsEventQueue.add()
+  }
+  catch (error) {
+    logger.error(error);
+    logger.debug('An error occured while expiring inactive sessions.');
+  }
+});
 
 const cleanup =  () => {
   healthcheck.stop();
-  worker.close();
+  expireInactiveSessions.stop();
 }
-
-worker.on('error', (error) => {
-  cleanup();
-  logger.error(error);
-  logger.debug('Worker error occurred, shutting down...');
-  process.exit(1);
-});
 
 process.on('SIGINT', () => {
   cleanup();

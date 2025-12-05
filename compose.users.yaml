@@ -1,7 +1,7 @@
 
 services:
-  user:
-    command: [ "yarn", "workspace", "@tw050x.net.service/user", "exec", "node", "--inspect=0.0.0.0:9229", "--watch", "artifact/serve.js" ]
+  users:
+    command: [ "yarn", "workspace", "@tw050x.net.service/users", "exec", "node", "--inspect=0.0.0.0:9229", "--watch", "artifact/serve.js" ]
     depends_on:
       assets:
         condition: service_healthy
@@ -20,23 +20,23 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net.service/user:latest
+    image: tw050x.net.service/users:latest
     labels:
       - traefik.docker.network=services
       - traefik.enable=true
-      - traefik.http.routers.user.entrypoints=websecure
-      - traefik.http.routers.user.middlewares=http-request-not-found-error@file
-      - traefik.http.routers.user.rule=Host(`tw050x.dev`) && (Path(`/logout`) || Path(`/register`) || PathPrefix(`/login`) || PathPrefix(`/token/`) || PathPrefix(`/oauth2/`))
-      - traefik.http.routers.user.tls=true
-      - traefik.http.services.user.loadbalancer.server.port=3000
-      - traefik.http.services.user.loadbalancer.server.scheme=https
-      - traefik.http.services.user.loadbalancer.serversTransport=secure@file
+      - traefik.http.routers.users.entrypoints=websecure
+      - traefik.http.routers.users.middlewares=http-request-not-found-error@file
+      - traefik.http.routers.users.rule=Host(`tw050x.dev`) && (Path(`/logout`) || Path(`/register`) || PathPrefix(`/login`) || PathPrefix(`/token/`) || PathPrefix(`/oauth2/`))
+      - traefik.http.routers.users.tls=true
+      - traefik.http.services.users.loadbalancer.server.port=3000
+      - traefik.http.services.users.loadbalancer.server.scheme=https
+      - traefik.http.services.users.loadbalancer.serversTransport=secure@file
     mem_limit: 512mb
     networks:
       mongo: {}
       sessions: {}
       services: {}
-      user: {}
+      users: {}
     ports:
       - "9206:9229"
     pull_policy: never
@@ -56,17 +56,17 @@ services:
       - source: ./library
         target: /srv/library
         type: bind
-      - source: ./log/service/user
+      - source: ./log/service/users
         target: /log
         type: bind
-      - source: ./service/user
-        target: /srv/service/user
+      - source: ./service/users
+        target: /srv/service/users
         type: bind
       - source: ./tsconfig.json
         target: /srv/tsconfig.json
         type: bind
 
-  user-redis:
+  users-redis:
     command: [ "redis-server", "--save", "", "--appendonly", "no" ]
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
@@ -77,18 +77,18 @@ services:
     image: redis:8.0.5-alpine
     mem_limit: 256mb
     networks:
-      user:
+      users:
         aliases:
-          - user-redis.internal
+          - users-redis.internal
     ports:
       - "6481:6379"
     volumes:
-      - source: ./log/service/user-redis
+      - source: ./log/service/users-redis
         target: /log
         type: bind
 
-  user-queue:
-    command: [ "yarn", "workspace", "@tw050x.net.worker/user-queue", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/run.js" ]
+  users-queue:
+    command: [ "yarn", "workspace", "@tw050x.net.worker/users-queue", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/run.js" ]
     depends_on:
       mongo-primary:
         condition: service_healthy
@@ -100,13 +100,13 @@ services:
       timeout: 30s
       retries: 5
       start_period: 30s
-    image: tw050x.net.worker/user-queue:latest
+    image: tw050x.net.worker/users-queue:latest
     mem_limit: 512mb
     networks:
       mongo:
         aliases:
           - mongo.internal
-      user: {}
+      users: {}
     ports:
       - "9401:9229"
     pull_policy: never
@@ -120,11 +120,11 @@ services:
       - source: ./library
         target: /srv/library
         type: bind
-      - source: ./log/worker/user-queue
+      - source: ./log/worker/users-queue
         target: /log
         type: bind
-      - source: ./worker/user-queue
-        target: /srv/worker/user-queue
+      - source: ./worker/users-queue
+        target: /srv/worker/users-queue
         type: bind
       - source: ./tsconfig.json
         target: /srv/tsconfig.json

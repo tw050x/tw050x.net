@@ -20,9 +20,10 @@ RUN yarn workspaces foreach \
   --from @tw050x.net.service/marketing \
   --from @tw050x.net.service/navigation \
   --from @tw050x.net.service/portal \
-  --from @tw050x.net.service/user \
+  --from @tw050x.net.service/users \
+  --from @tw050x.net.worker/sessions-events \
   --from @tw050x.net.worker/sessions-queue \
-  --from @tw050x.net.worker/user-queue \
+  --from @tw050x.net.worker/users-queue \
   --recursive \
   --topological \
   run tsc
@@ -107,14 +108,14 @@ COPY --from=build /build/service/portal/package.json /srv/service/portal/package
 RUN yarn workspaces focus @tw050x.net.service/portal --production
 CMD [ "node", "service/portal/artifact/serve.js" ]
 
-FROM node:23.11.1-alpine3.22 AS user
+FROM node:23.11.1-alpine3.22 AS users
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
-COPY --from=build /build/service/user/artifact /srv/service/user/artifact
-COPY --from=build /build/service/user/package.json /srv/service/user/package.json
-RUN yarn workspaces focus @tw050x.net.service/user --production
-CMD [ "node", "service/user/artifact/serve.js" ]
+COPY --from=build /build/service/users/artifact /srv/service/users/artifact
+COPY --from=build /build/service/users/package.json /srv/service/users/package.json
+RUN yarn workspaces focus @tw050x.net.service/users --production
+CMD [ "node", "service/users/artifact/serve.js" ]
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Workers                                                   #
@@ -129,11 +130,20 @@ COPY --from=build /build/worker/sessions-queue/package.json /srv/worker/sessions
 RUN yarn workspaces focus @tw050x.net.worker/sessions-queue --production
 CMD [ "node", "worker/sessions-queue/artifact/run.js" ]
 
-FROM node:23.11.1-alpine3.22 AS user-queue
+FROM node:23.11.1-alpine3.22 AS sessions-scheduler
 WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
-COPY --from=build /build/worker/user-queue/artifact /srv/worker/user-queue/artifact
-COPY --from=build /build/worker/user-queue/package.json /srv/worker/user-queue/package.json
-RUN yarn workspaces focus @tw050x.net.worker/user-queue --production
-CMD [ "node", "worker/user-queue/artifact/run.js" ]
+COPY --from=build /build/worker/sessions-scheduler/artifact /srv/worker/sessions-scheduler/artifact
+COPY --from=build /build/worker/sessions-scheduler/package.json /srv/worker/sessions-scheduler/package.json
+RUN yarn workspaces focus @tw050x.net.worker/sessions-scheduler --production
+CMD [ "node", "worker/sessions-scheduler/artifact/run.js" ]
+
+FROM node:23.11.1-alpine3.22 AS users-queue
+WORKDIR /srv
+COPY --from=dependencies /srv /srv
+COPY --from=library /srv/library /srv/library
+COPY --from=build /build/worker/users-queue/artifact /srv/worker/users-queue/artifact
+COPY --from=build /build/worker/users-queue/package.json /srv/worker/users-queue/package.json
+RUN yarn workspaces focus @tw050x.net.worker/users-queue --production
+CMD [ "node", "worker/users-queue/artifact/run.js" ]

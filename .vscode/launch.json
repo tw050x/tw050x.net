@@ -76,11 +76,11 @@
       "type": "node",
     },
 
-    // User Service
+    // Users Service
     {
       "address": "localhost",
       "localRoot": "${workspaceFolder}",
-      "name": "Attach to User Service",
+      "name": "Attach to Users Service",
       "port": 9206,
       "request": "attach",
       "restart": true,
@@ -94,11 +94,11 @@
     // Workers
     // # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    // User Service Queue Worker
+    // Users Service Queue Worker
     {
       "address": "localhost",
       "localRoot": "${workspaceFolder}",
-      "name": "Attach to User Service Queue Worker",
+      "name": "Attach to Users Service Queue Worker",
       "port": 9301,
       "request": "attach",
       "restart": true,

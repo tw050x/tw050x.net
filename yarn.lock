@@ -774,9 +774,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.service/user@workspace:service/user":
+"@tw050x.net.service/users@workspace:service/users":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.service/user@workspace:service/user"
+  resolution: "@tw050x.net.service/users@workspace:service/users"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/database": "workspace:*"
@@ -833,9 +833,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.worker/user-queue@workspace:worker/user-queue":
+"@tw050x.net.worker/sessions-scheduler@workspace:worker/sessions-scheduler":
   version: 0.0.0-use.local
-  resolution: "@tw050x.net.worker/user-queue@workspace:worker/user-queue"
+  resolution: "@tw050x.net.worker/sessions-scheduler@workspace:worker/sessions-scheduler"
+  dependencies:
+    "@kitajs/html": "npm:^4.2.9"
+    "@tw050x.net.library/database": "workspace:*"
+    "@tw050x.net.library/platform": "workspace:*"
+    "@types/node": "npm:^22.10.2"
+    bullmq: "npm:5.63.2"
+    mongodb: "npm:^6.12.0"
+    node-cron: "npm:^4.2.1"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
+
+"@tw050x.net.worker/users-queue@workspace:worker/users-queue":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net.worker/users-queue@workspace:worker/users-queue"
   dependencies:
     "@kitajs/html": "npm:^4.2.9"
     "@tw050x.net.library/database": "workspace:*"
@@ -3396,6 +3411,13 @@ __metadata:
   dependencies:
     node-gyp: "npm:latest"
   checksum: 10c0/fb32a206276d608037fa1bcd7e9921e177fe992fc610d098aa3128baca3c0050fc1e014fa007e9b3874cf865ddb4f5bd9f43ccb7cbbbe4efaff6a83e920b17e9
+  languageName: node
+  linkType: hard
+
+"node-cron@npm:^4.2.1":
+  version: 4.2.1
+  resolution: "node-cron@npm:4.2.1"
+  checksum: 10c0/804df01df230e96fd2f8ffcde004f4d5af953bccdf3ccf993dc450526dd65f553a2f2ad4bc0faf55c90c38cbc99c9ddbb88ee16cba3fc6bc74e606da6efb249e
   languageName: node
   linkType: hard
 
