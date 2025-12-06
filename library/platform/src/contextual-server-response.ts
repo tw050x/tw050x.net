@@ -14,14 +14,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
    */
   constructor(request: ContextualIncomingMessage) {
     super(request);
-    // TODO: consider only storing specific headers like the 'hx-request' header
-    this._incomingMessageHeaders = request.headers;
   }
-
-  /**
-   * The headers from the incoming message.
-   */
-  private _incomingMessageHeaders: ContextualIncomingMessage['headers'];
 
   /**
    * Indicates whether the server response is currently being sent or has already been sent.
@@ -95,7 +88,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
     this.statusCode = 302;
     this.setHeader('Content-Type', 'text/plain');
     this.setHeader(
-      this._incomingMessageHeaders['hx-request'] === 'true' ? 'HX-Redirect' : 'Location',
+      this.req.headers['hx-request'] === 'true' ? 'HX-Redirect' : 'Location',
       url.toString()
     );
     this.end('Redirecting...');
@@ -172,7 +165,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
     this.statusCode = 301;
     this.setHeader('Content-Type', 'text/plain');
     this.setHeader(
-      this._incomingMessageHeaders['hx-request'] === 'true' ? 'HX-Redirect' : 'Location',
+      this.req.headers['hx-request'] === 'true' ? 'HX-Redirect' : 'Location',
       url.toString()
     );
     this.end(`Moved Permanently to ${url.toString()}`);
@@ -188,7 +181,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
     this.statusCode = 302;
     this.setHeader('Content-Type', 'text/plain');
     this.setHeader(
-      this._incomingMessageHeaders['hx-request'] === 'true' ? 'HX-Redirect' : 'Location',
+      this.req.headers['hx-request'] === 'true' ? 'HX-Redirect' : 'Location',
       url.toString()
     );
     this.end(`Moved Temporarily to ${url.toString()}`);
@@ -290,7 +283,7 @@ export default class ContextualServerResponse extends ServerResponse<ContextualI
     this.statusCode = 303;
     this.setHeader('Content-Type', 'text/plain');
     this.setHeader(
-      this._incomingMessageHeaders['hx-request'] === 'true' ? 'HX-Redirect' : 'Location',
+      this.req.headers['hx-request'] === 'true' ? 'HX-Redirect' : 'Location',
       url.toString()
     );
     this.end('Redirecting...');

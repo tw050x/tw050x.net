@@ -154,9 +154,8 @@ export const createRequestHandler = (options: CreateRequestHandlerOptions) => (i
     filter(key => key.startsWith(`${method} `)).
     sort((a, b) => getSegmentCount(b) - getSegmentCount(a));
 
-  // TODO: the below loop does not account for multiple parameters in the same route
-  // e.g., "/users/:id/:action"
-  // currently only the first parameter is matched against
+  // pre-split the url path into segments for parameter matching
+  const splitUrlPath = urlPath.split('/');
 
   // match either a wildcard or parameter pattern to the available routes using the sorted list
   let matchedRequestWithParametersRouteKey;
@@ -164,16 +163,13 @@ export const createRequestHandler = (options: CreateRequestHandlerOptions) => (i
     const route = []
     const routeSegments = routeKey.split(' ')[1].split('/');
 
-    let parameters = new Map<string, string>();
     for (const routeSegment of routeSegments) {
       if (routeSegment.startsWith(':') === false) {
         route.push(routeSegment);
         continue;
       }
 
-      const paramName = routeSegment.slice(1);
-      const paramValue = urlPath.split('/')[routeSegments.indexOf(routeSegment)];
-      parameters.set(paramName, paramValue);
+      const paramValue = splitUrlPath[routeSegments.indexOf(routeSegment)];
       route.push(paramValue);
     }
 

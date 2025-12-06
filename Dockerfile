@@ -40,13 +40,10 @@ FROM node:23.11.1-alpine3.22 AS library
 WORKDIR /srv
 COPY --from=build /build/library/database/artifact /srv/library/database/artifact
 COPY --from=build /build/library/database/package.json /srv/library/database/package.json
-COPY --from=build /build/library/database/tsconfig.json /srv/library/database/tsconfig.json
 COPY --from=build /build/library/platform/artifact /srv/library/platform/artifact
 COPY --from=build /build/library/platform/package.json /srv/library/platform/package.json
-COPY --from=build /build/library/platform/tsconfig.json /srv/library/platform/tsconfig.json
 COPY --from=build /build/library/static/artifact /srv/library/static/artifact
 COPY --from=build /build/library/static/package.json /srv/library/static/package.json
-COPY --from=build /build/library/static/tsconfig.json /srv/library/static/tsconfig.json
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Services                                                  #

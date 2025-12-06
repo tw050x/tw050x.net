@@ -1,6 +1,8 @@
 {
   // Chat
   "chat.agent.enabled": true,
+  // Database Client (plugin)
+  "database-client.telemetry.usesOnlineServices": false,
   // Editor
   "editor.formatOnSave": false,
   // Explorer
@@ -15,6 +17,10 @@
   "files.insertFinalNewline": true,
   // Jest
   "jest.runMode": "on-demand",
+  // Redhat Telementry
+  "redhat.telemetry.enabled": false,
+  // Telemetry (general)
+  "telemetry.feedback.enabled": false,
   // Testing
   "testing.automaticallyOpenTestResults": "neverOpen",
   // MarkDown

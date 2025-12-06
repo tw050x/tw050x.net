@@ -1,7 +1,5 @@
 import { read as readConfig } from "../helper/configs.js";
 import { logger } from "../helper/logger.js";
-import { isAllowedHeaders } from "../utility/is-allowed-headers.js";
-import { isAllowedMethod } from "../utility/is-allowed-method.js";
 import { HttpMethod, isHttpMethod } from "../utility/is-http-method.js";
 import { isArrayOfHeaders } from "../utility/is-array-of-headers.js";
 import { isArrayOfHttpMethods } from "../utility/is-array-of-http-methods.js";
@@ -117,8 +115,7 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
 
   // Set the allowed methods header
   // 1. If wildcard is allowed, set the header to '*'
-  // 2. If specific methods are allowed, set the header to those methods
-  // TODO: review implementation. do we need to check allowed methods to set the header?
+  // 2. Otherwise set the header to the allowed methods
   allowedMethodsGuard: {
     if (allowedMethods === '*') {
       headers.push({
@@ -127,25 +124,16 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
       });
       break allowedMethodsGuard;
     }
-    if (
-      isAllowedMethod(
-        context.incomingMessage.method,
-        allowedMethods
-      )
-    ) {
-      headers.push({
-        key: 'Access-Control-Allow-Methods',
-        value: allowedMethods.join(', ')
-      });
-      break allowedMethodsGuard;
-    }
+    headers.push({
+      key: 'Access-Control-Allow-Methods',
+      value: allowedMethods.join(', ')
+    });
   }
 
   // Set allowed headers header
   // 1. If this is not a pre flight request, we can skip this header
   // 2. If a wildcard is allowed, we can set the header to '*'
-  // 3. If specific headers are allowed, we can set the header to those headers
-  // TODO: review implementation. do we need to check allowed headers to set the header?
+  // 3. Otherwise set the header to the allowed headers
   const isPreflight = context.incomingMessage.method === 'OPTIONS' && context.incomingMessage.headers['access-control-request-method'] !== undefined;
   allowedHeadersGuard: {
     if (isPreflight === false) {
@@ -158,17 +146,10 @@ export const useCorsHeaders: Factory = (options) => async (context) => {
       });
       break allowedHeadersGuard;
     }
-    if (
-      isAllowedHeaders(
-        context.incomingMessage.headers['access-control-request-headers'],
-        allowedHeaders
-      )
-    ) {
-      headers.push({
-        key: 'Access-Control-Allow-Headers',
-        value: allowedHeaders.join(', ')
-      });
-    }
+    headers.push({
+      key: 'Access-Control-Allow-Headers',
+      value: allowedHeaders.join(', ')
+    });
   }
 
   // Set the CORS headers on the response
