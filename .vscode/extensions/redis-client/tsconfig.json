@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "es6"
+    ],
+    "module": "commonjs",
+    "outDir": "artifact",
+    "rootDir": "src",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es6"
+  },
+  "exclude": [
+    "artifact/"
+  ]
+}

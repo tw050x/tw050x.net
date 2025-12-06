@@ -25,6 +25,7 @@
     "e2e": "cypress open",
     "migrate": "migrate",
     "scan": "xss-scan",
+    "tsc": "tsc --build",
     "watch": "tsc --build --watch"
   },
   "type": "module",

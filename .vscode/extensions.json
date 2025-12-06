@@ -1,6 +1,5 @@
 {
   "recommendations": [
     "arcanis.vscode-zipfs",
-    "cweijan.vscode-redis-client"
   ]
 }

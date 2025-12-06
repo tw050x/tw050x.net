@@ -1,0 +1,130 @@
+{
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "redis.addConnection",
+        "icon": "$(add)",
+        "title": "Add Connection"
+      },
+      {
+        "command": "redis.connectToConnection",
+        "icon": "$(plug)",
+        "title": "Connect"
+      },
+      {
+        "command": "redis.editConnection",
+        "icon": "$(edit)",
+        "title": "Edit Connection"
+      },
+      {
+        "command": "redis.deleteConnection",
+        "icon": "$(trash)",
+        "title": "Delete Connection"
+      },
+      {
+        "command": "redis.refresh",
+        "icon": "$(refresh)",
+        "title": "Refresh"
+      },
+      {
+        "command": "redis.openEntry",
+        "icon": "$(go-to-file)",
+        "title": "Open Entry"
+      },
+      {
+        "command": "redis.editEntry",
+        "icon": "$(edit)",
+        "title": "Edit Entry"
+      },
+      {
+        "command": "redis.deleteEntry",
+        "icon": "$(trash)",
+        "title": "Delete Entry"
+      }
+    ],
+    "menus": {
+      "view/item/context": [
+        {
+          "command": "redis.connectToConnection",
+          "when": "view == redisKeys && viewItem == connection",
+          "group": "inline"
+        },
+        {
+          "command": "redis.editConnection",
+          "when": "view == redisKeys && viewItem == connection",
+          "group": "inline"
+        },
+        {
+          "command": "redis.deleteConnection",
+          "when": "view == redisKeys && viewItem == connection",
+          "group": "inline"
+        },
+        {
+          "command": "redis.openEntry",
+          "when": "view == redisKeys && viewItem == key",
+          "group": "inline"
+        },
+        {
+          "command": "redis.deleteEntry",
+          "when": "view == redisKeys && viewItem == key",
+          "group": "inline"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "redis.addConnection",
+          "group": "navigation",
+          "when": "view == redisKeys"
+        },
+        {
+          "command": "redis.refresh",
+          "group": "navigation",
+          "when": "view == redisKeys"
+        }
+      ]
+    },
+    "views": {
+      "redis-explorer": [
+        {
+          "id": "redisKeys",
+          "name": "Keys"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "icon": "$(database)",
+          "id": "redis-explorer",
+          "title": "Redis"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "ioredis": "^5.3.0"
+  },
+  "description": "A simple Redis client for VS Code",
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.0.0"
+  },
+  "displayName": "@tw050x.net.extension/redis-client",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "main": "./artifact/extension.js",
+  "name": "@tw050x.net.extension/redis-client",
+  "publisher": "tw050x",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "version": "0.0.1"
+}
