@@ -1,34 +1,24 @@
-import Redis from 'ioredis';
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
+const Redis = require('ioredis');
+const vscode = require('vscode');
+const fs = require('fs');
+const path = require('path');
 
-export interface Connection {
-    id: string;
-    name: string;
-    host: string;
-    port: number;
-    username?: string;
-    password?: string;
-}
+class RedisClient {
+    constructor() {
+        this.clients = new Map();
+        this.connections = [];
+        this.dataPath = undefined;
+        this.initialized = false;
+    }
 
-export class RedisClient {
-    private static instance: RedisClient;
-    private clients: Map<string, Redis> = new Map();
-    private connections: Connection[] = [];
-    private dataPath: string | undefined;
-    private initialized = false;
-
-    private constructor() {}
-
-    public static getInstance(): RedisClient {
+    static getInstance() {
         if (!RedisClient.instance) {
             RedisClient.instance = new RedisClient();
         }
         return RedisClient.instance;
     }
 
-    public initialize(context: vscode.ExtensionContext): void {
+    initialize(context) {
         if (this.initialized) {
             return;
         }
@@ -42,12 +32,12 @@ export class RedisClient {
         this.initialized = true;
     }
 
-    private loadConnections(candidateLegacyPaths: string[] = []): void {
+    loadConnections(candidateLegacyPaths = []) {
         if (!this.dataPath) {
             return;
         }
 
-        const tryLoad = (file: string): Connection[] | undefined => {
+        const tryLoad = (file) => {
             if (!fs.existsSync(file)) {
                 return undefined;
             }
@@ -55,7 +45,7 @@ export class RedisClient {
             if (!raw) {
                 return [];
             }
-            return JSON.parse(raw) as Connection[];
+            return JSON.parse(raw);
         };
 
         try {
@@ -80,7 +70,7 @@ export class RedisClient {
         }
     }
 
-    private saveConnections(): void {
+    saveConnections() {
         if (!this.dataPath) {
             return;
         }
@@ -91,44 +81,44 @@ export class RedisClient {
         }
     }
 
-    public getConnections(): Connection[] {
+    getConnections() {
         return this.connections;
     }
 
-    public addConnection(connection: Omit<Connection, 'id'>): void {
+    addConnection(connection) {
         const id = Date.now().toString();
         this.connections.push({ ...connection, id });
         this.saveConnections();
     }
 
-    public updateConnection(id: string, connection: Omit<Connection, 'id'>): void {
-        const index = this.connections.findIndex(c => c.id === id);
+    updateConnection(id, connection) {
+        const index = this.connections.findIndex((c) => c.id === id);
         if (index !== -1) {
             this.connections[index] = { ...connection, id };
             this.saveConnections();
         }
     }
 
-    public deleteConnection(id: string): void {
-        this.connections = this.connections.filter(c => c.id !== id);
+    deleteConnection(id) {
+        this.connections = this.connections.filter((c) => c.id !== id);
         this.disconnect(id);
         this.saveConnections();
     }
 
-    public async connect(id: string): Promise<void> {
-        const connection = this.connections.find(c => c.id === id);
+    async connect(id) {
+        const connection = this.connections.find((c) => c.id === id);
         if (!connection) {
             throw new Error('Connection not found');
         }
 
         if (this.clients.has(id)) {
-            this.clients.get(id)!.disconnect();
+            this.clients.get(id).disconnect();
         }
 
-        const options: any = {
+        const options = {
             host: connection.host,
             port: connection.port,
-            retryStrategy: () => false,  // Disable all retries
+            retryStrategy: () => false,
             maxRetriesPerRequest: 0
         };
 
@@ -156,18 +146,18 @@ export class RedisClient {
         });
     }
 
-    public disconnect(id: string): void {
+    disconnect(id) {
         if (this.clients.has(id)) {
-            this.clients.get(id)!.disconnect();
+            this.clients.get(id).disconnect();
             this.clients.delete(id);
         }
     }
 
-    public getClient(id: string): Redis | undefined {
+    getClient(id) {
         return this.clients.get(id);
     }
 
-    public async getKeys(id: string, pattern: string = '*'): Promise<string[]> {
+    async getKeys(id, pattern = '*') {
         const client = this.clients.get(id);
         if (!client) {
             return [];
@@ -175,7 +165,7 @@ export class RedisClient {
         return client.keys(pattern);
     }
 
-    public async getType(id: string, key: string): Promise<string | null> {
+    async getType(id, key) {
         const client = this.clients.get(id);
         if (!client) {
             return null;
@@ -183,7 +173,7 @@ export class RedisClient {
         return client.type(key);
     }
 
-    public async get(id: string, key: string): Promise<string | null> {
+    async get(id, key) {
         const client = this.clients.get(id);
         if (!client) {
             return null;
@@ -191,7 +181,7 @@ export class RedisClient {
         return client.get(key);
     }
 
-    public async getHash(id: string, key: string): Promise<Record<string, string> | null> {
+    async getHash(id, key) {
         const client = this.clients.get(id);
         if (!client) {
             return null;
@@ -200,7 +190,7 @@ export class RedisClient {
         return Object.keys(result).length === 0 ? {} : result;
     }
 
-    public async getList(id: string, key: string): Promise<string[] | null> {
+    async getList(id, key) {
         const client = this.clients.get(id);
         if (!client) {
             return null;
@@ -208,7 +198,7 @@ export class RedisClient {
         return client.lrange(key, 0, -1);
     }
 
-    public async getSet(id: string, key: string): Promise<string[] | null> {
+    async getSet(id, key) {
         const client = this.clients.get(id);
         if (!client) {
             return null;
@@ -216,20 +206,20 @@ export class RedisClient {
         return client.smembers(key);
     }
 
-    public async getZSet(id: string, key: string): Promise<Array<{ member: string; score: number }> | null> {
+    async getZSet(id, key) {
         const client = this.clients.get(id);
         if (!client) {
             return null;
         }
         const entries = await client.zrange(key, 0, -1, 'WITHSCORES');
-        const result: Array<{ member: string; score: number }> = [];
+        const result = [];
         for (let i = 0; i < entries.length; i += 2) {
             result.push({ member: entries[i], score: Number(entries[i + 1]) });
         }
         return result;
     }
 
-    public async set(id: string, key: string, value: string): Promise<void> {
+    async set(id, key, value) {
         const client = this.clients.get(id);
         if (!client) {
             return;
@@ -237,7 +227,7 @@ export class RedisClient {
         await client.set(key, value);
     }
 
-    public async setHash(id: string, key: string, value: Record<string, string>): Promise<void> {
+    async setHash(id, key, value) {
         const client = this.clients.get(id);
         if (!client) {
             return;
@@ -251,7 +241,7 @@ export class RedisClient {
         await pipeline.exec();
     }
 
-    public async setList(id: string, key: string, values: string[]): Promise<void> {
+    async setList(id, key, values) {
         const client = this.clients.get(id);
         if (!client) {
             return;
@@ -264,7 +254,7 @@ export class RedisClient {
         await pipeline.exec();
     }
 
-    public async setSet(id: string, key: string, values: string[]): Promise<void> {
+    async setSet(id, key, values) {
         const client = this.clients.get(id);
         if (!client) {
             return;
@@ -277,7 +267,7 @@ export class RedisClient {
         await pipeline.exec();
     }
 
-    public async setZSet(id: string, key: string, values: Array<{ member: string; score: number }>): Promise<void> {
+    async setZSet(id, key, values) {
         const client = this.clients.get(id);
         if (!client) {
             return;
@@ -285,7 +275,7 @@ export class RedisClient {
         const pipeline = client.pipeline();
         pipeline.del(key);
         if (values.length > 0) {
-            const flattened: (string | number)[] = [];
+            const flattened = [];
             values.forEach(({ member, score }) => {
                 flattened.push(score, member);
             });
@@ -294,7 +284,7 @@ export class RedisClient {
         await pipeline.exec();
     }
 
-    public async del(id: string, key: string): Promise<void> {
+    async del(id, key) {
         const client = this.clients.get(id);
         if (!client) {
             return;
@@ -302,3 +292,5 @@ export class RedisClient {
         await client.del(key);
     }
 }
+
+module.exports = { RedisClient };

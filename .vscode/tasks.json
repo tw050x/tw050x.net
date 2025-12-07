@@ -1,27 +1,11 @@
 {
   "tasks": [
     {
-      "label": "extension: redis-client install",
+      "label": "extension: redis-client install dependencies",
       "type": "shell",
       "command": "yarn",
       "args": [
         "install"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}/.vscode/extensions/redis-client"
-      },
-      "presentation": {
-        "reveal": "never",
-        "panel": "shared"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "extension: redis-client tsc",
-      "type": "shell",
-      "command": "yarn",
-      "args": [
-        "tsc"
       ],
       "options": {
         "cwd": "${workspaceFolder}/.vscode/extensions/redis-client"

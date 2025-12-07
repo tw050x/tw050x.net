@@ -1,17 +1,17 @@
-import * as vscode from 'vscode';
-import { RedisClient } from './redisClient';
+const vscode = require('vscode');
 
-export class RedisFileSystemProvider implements vscode.FileSystemProvider {
-    private readonly emitter = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
-    public readonly onDidChangeFile: vscode.Event<vscode.FileChangeEvent[]> = this.emitter.event;
+class RedisFileSystemProvider {
+    constructor(client) {
+        this.client = client;
+        this.emitter = new vscode.EventEmitter();
+        this.onDidChangeFile = this.emitter.event;
+    }
 
-    constructor(private readonly client: RedisClient) {}
-
-    watch(): vscode.Disposable {
+    watch() {
         return new vscode.Disposable(() => undefined);
     }
 
-    async stat(uri: vscode.Uri): Promise<vscode.FileStat> {
+    async stat(uri) {
         const value = await this.readContent(uri);
         return {
             type: vscode.FileType.File,
@@ -21,20 +21,20 @@ export class RedisFileSystemProvider implements vscode.FileSystemProvider {
         };
     }
 
-    readDirectory(): [string, vscode.FileType][] {
+    readDirectory() {
         return [];
     }
 
-    createDirectory(): void {
+    createDirectory() {
         // No-op: Redis keys are not directory-backed.
     }
 
-    async readFile(uri: vscode.Uri): Promise<Uint8Array> {
+    async readFile(uri) {
         const value = await this.readContent(uri);
         return Buffer.from(value, 'utf8');
     }
 
-    async writeFile(uri: vscode.Uri, content: Uint8Array): Promise<void> {
+    async writeFile(uri, content) {
         const { connectionId, key } = this.parseUri(uri);
         const text = Buffer.from(content).toString('utf8');
         const type = (await this.client.getType(connectionId, key)) ?? 'string';
@@ -71,14 +71,13 @@ export class RedisFileSystemProvider implements vscode.FileSystemProvider {
         this.emitter.fire([{ type: vscode.FileChangeType.Changed, uri }]);
     }
 
-    async delete(uri: vscode.Uri): Promise<void> {
+    async delete(uri) {
         const { connectionId, key } = this.parseUri(uri);
         await this.client.del(connectionId, key);
         this.emitter.fire([{ type: vscode.FileChangeType.Deleted, uri }]);
     }
 
-    rename(oldUri: vscode.Uri, newUri: vscode.Uri): void | Thenable<void> {
-        // Rename by copying then deleting to keep implementation simple.
+    rename(oldUri, newUri) {
         return (async () => {
             const value = await this.readContent(oldUri);
             const { connectionId: newConnectionId, key: newKey } = this.parseUri(newUri);
@@ -92,7 +91,7 @@ export class RedisFileSystemProvider implements vscode.FileSystemProvider {
         })();
     }
 
-    private parseUri(uri: vscode.Uri): { connectionId: string; key: string } {
+    parseUri(uri) {
         const connectionId = uri.authority || '';
         const pathPart = uri.path.replace(/^\//, '');
         if (!connectionId || !pathPart) {
@@ -102,10 +101,10 @@ export class RedisFileSystemProvider implements vscode.FileSystemProvider {
         return { connectionId, key };
     }
 
-    private async readContent(uri: vscode.Uri): Promise<string> {
+    async readContent(uri) {
         const { connectionId, key } = this.parseUri(uri);
 
-        const readByType = async (redisType: string): Promise<string> => {
+        const readByType = async (redisType) => {
             switch (redisType) {
                 case 'string': {
                     const value = await this.client.get(connectionId, key);
@@ -143,7 +142,6 @@ export class RedisFileSystemProvider implements vscode.FileSystemProvider {
                     return JSON.stringify(value, null, 2);
                 }
                 case 'stream': {
-                    // Read first 100 entries to avoid huge payloads.
                     const client = this.client.getClient(connectionId);
                     if (!client) {
                         throw vscode.FileSystemError.FileNotFound(uri);
@@ -161,7 +159,7 @@ export class RedisFileSystemProvider implements vscode.FileSystemProvider {
         const initialType = (await this.client.getType(connectionId, key)) ?? 'none';
         try {
             return await readByType(initialType);
-        } catch (error: any) {
+        } catch (error) {
             if (typeof error?.message === 'string' && error.message.includes('WRONGTYPE')) {
                 const retryType = (await this.client.getType(connectionId, key)) ?? 'none';
                 if (retryType !== initialType) {
@@ -172,48 +170,50 @@ export class RedisFileSystemProvider implements vscode.FileSystemProvider {
         }
     }
 
-    private parseJsonObject(text: string, uri: vscode.Uri): Record<string, string> {
+    parseJsonObject(text) {
         try {
             const value = JSON.parse(text);
             if (value && typeof value === 'object' && !Array.isArray(value)) {
-                const entries = Object.entries(value).reduce<Record<string, string>>((acc, [k, v]) => {
+                const entries = Object.entries(value).reduce((acc, [k, v]) => {
                     acc[k] = v === undefined || v === null ? '' : String(v);
                     return acc;
                 }, {});
                 return entries;
             }
-        } catch (error) {
-            // Fall through to throw below.
+        } catch (_error) {
+            // Fall through
         }
         throw vscode.FileSystemError.Unavailable('Expected JSON object for hash');
     }
 
-    private parseJsonArray(text: string, uri: vscode.Uri): string[] {
+    parseJsonArray(text) {
         try {
             const value = JSON.parse(text);
             if (Array.isArray(value)) {
-                return value.map(item => (item === undefined || item === null ? '' : String(item)));
+                return value.map((item) => (item === undefined || item === null ? '' : String(item)));
             }
-        } catch (error) {
-            // Fall through to throw below.
+        } catch (_error) {
+            // Fall through
         }
         throw vscode.FileSystemError.Unavailable('Expected JSON array');
     }
 
-    private parseZSetArray(text: string, uri: vscode.Uri): Array<{ member: string; score: number }> {
+    parseZSetArray(text) {
         try {
             const value = JSON.parse(text);
             if (Array.isArray(value)) {
-                return value.map(item => {
+                return value.map((item) => {
                     if (item && typeof item === 'object' && 'member' in item && 'score' in item) {
-                        return { member: String((item as any).member), score: Number((item as any).score) };
+                        return { member: String(item.member), score: Number(item.score) };
                     }
                     throw new Error('Invalid zset entry');
                 });
             }
-        } catch (error) {
-            // Fall through to throw below.
+        } catch (_error) {
+            // Fall through
         }
         throw vscode.FileSystemError.Unavailable('Expected JSON array of { member, score }');
     }
 }
+
+module.exports = { RedisFileSystemProvider };

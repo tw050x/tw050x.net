@@ -1,11 +1,12 @@
-import * as vscode from 'vscode';
-import { RedisClient, Connection } from './redisClient';
-import { RedisTreeDataProvider, ConnectionItem, KeyItem } from './redisTreeDataProvider';
-import { RedisFileSystemProvider } from './redisFileSystemProvider';
+const vscode = require('vscode');
+const { RedisClient } = require('./redisClient');
+const { RedisTreeDataProvider } = require('./redisTreeDataProvider');
+const { RedisFileSystemProvider } = require('./redisFileSystemProvider');
 
-let treeDataProvider: RedisTreeDataProvider;
+let treeDataProvider;
+let lastOpen;
 
-export function activate(context: vscode.ExtensionContext) {
+function activate(context) {
     const redisClient = RedisClient.getInstance();
     redisClient.initialize(context);
 
@@ -27,21 +28,21 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('redis.connectToConnection', async (item: ConnectionItem) => {
+        vscode.commands.registerCommand('redis.connectToConnection', async (item) => {
             if (!item || item.contextValue !== 'connection') {
                 return;
             }
             try {
                 await redisClient.connect(item.connection.id);
                 treeDataProvider.refresh();
-            } catch (error) {
-                // Error handled in client
+            } catch (_error) {
+                // Errors are surfaced by the client.
             }
         })
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('redis.editConnection', (item: ConnectionItem) => {
+        vscode.commands.registerCommand('redis.editConnection', (item) => {
             if (!item || item.contextValue !== 'connection') {
                 return;
             }
@@ -50,7 +51,7 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('redis.deleteConnection', async (item: ConnectionItem) => {
+        vscode.commands.registerCommand('redis.deleteConnection', async (item) => {
             if (!item || item.contextValue !== 'connection') {
                 return;
             }
@@ -74,11 +75,27 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('redis.editEntry', async (item: KeyItem) => {
+        vscode.commands.registerCommand('redis.setFilter', async () => {
+            const value = await vscode.window.showInputBox({
+                prompt: 'Filter keys (case-insensitive substring). Leave empty to clear.',
+                value: treeDataProvider.filterText ?? ''
+            });
+            treeDataProvider.setFilter(value ?? '');
+        })
+    );
+
+    // Auto-refresh the tree so new keys appear without manual action.
+    const autoRefresh = setInterval(() => {
+        treeDataProvider.refresh();
+    }, 1000);
+    context.subscriptions.push({ dispose: () => clearInterval(autoRefresh) });
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('redis.editEntry', async (item) => {
             if (!item || item.contextValue !== 'key') {
                 return;
             }
-            const key = item.label;
+            const key = item.key;
             const type = (await redisClient.getType(item.connectionId, key)) ?? 'string';
 
             if (type !== 'string' && type !== 'none') {
@@ -115,18 +132,18 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('redis.openEntry', async (item: KeyItem) => {
+        vscode.commands.registerCommand('redis.openEntry', async (item) => {
             if (!item || item.contextValue !== 'key') {
                 return;
             }
             if (!redisClient.getClient(item.connectionId)) {
                 try {
                     await redisClient.connect(item.connectionId);
-                } catch (error) {
+                } catch (_error) {
                     return;
                 }
             }
-            const uri = vscode.Uri.parse(`redis://${item.connectionId}/${encodeURIComponent(item.label)}`);
+            const uri = vscode.Uri.parse(`redis://${item.connectionId}/${encodeURIComponent(item.key)}`);
             const document = await vscode.workspace.openTextDocument(uri);
             const shouldPin = isDoubleClick(uri.toString());
             await vscode.window.showTextDocument(document, { preview: !shouldPin });
@@ -134,11 +151,11 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('redis.deleteEntry', async (item: KeyItem) => {
+        vscode.commands.registerCommand('redis.deleteEntry', async (item) => {
             if (!item || item.contextValue !== 'key') {
                 return;
             }
-            const key = item.label;
+            const key = item.key;
             const answer = await vscode.window.showWarningMessage(
                 `Are you sure you want to delete ${key}?`,
                 'Yes',
@@ -154,7 +171,7 @@ export function activate(context: vscode.ExtensionContext) {
     );
 }
 
-function openConnectionForm(context: vscode.ExtensionContext, connection?: Connection) {
+function openConnectionForm(context, connection) {
     const panel = vscode.window.createWebviewPanel(
         'redisConnectionForm',
         connection ? 'Edit Connection' : 'Add Connection',
@@ -168,9 +185,9 @@ function openConnectionForm(context: vscode.ExtensionContext, connection?: Conne
     panel.webview.html = getWebviewContent(connection);
 
     panel.webview.onDidReceiveMessage(
-        async message => {
+        async (message) => {
             switch (message.command) {
-                case 'saveConnection':
+                case 'saveConnection': {
                     const redisClient = RedisClient.getInstance();
                     try {
                         if (connection) {
@@ -181,9 +198,12 @@ function openConnectionForm(context: vscode.ExtensionContext, connection?: Conne
                         treeDataProvider.refresh();
                         panel.dispose();
                         vscode.window.showInformationMessage('Connection saved successfully');
-                    } catch (error) {
+                    } catch (_error) {
                         vscode.window.showErrorMessage('Failed to save connection');
                     }
+                    return;
+                }
+                default:
                     return;
             }
         },
@@ -192,12 +212,12 @@ function openConnectionForm(context: vscode.ExtensionContext, connection?: Conne
     );
 }
 
-function getWebviewContent(connection?: Connection): string {
-    const name = connection?.name || '';
-    const host = connection?.host || 'localhost';
-    const port = connection?.port || 6379;
-    const username = connection?.username || '';
-    const password = connection?.password || '';
+function getWebviewContent(connection) {
+    const name = (connection === null || connection === undefined ? '' : connection.name) || '';
+    const host = (connection === null || connection === undefined ? 'localhost' : connection.host) || 'localhost';
+    const port = (connection === null || connection === undefined ? 6379 : connection.port) || 6379;
+    const username = (connection === null || connection === undefined ? '' : connection.username) || '';
+    const password = (connection === null || connection === undefined ? '' : connection.password) || '';
 
     return `
         <!DOCTYPE html>
@@ -282,7 +302,7 @@ function getWebviewContent(connection?: Connection): string {
                     const data = {
                         name: document.getElementById('name').value,
                         host: document.getElementById('host').value,
-                        port: parseInt(document.getElementById('port').value),
+                        port: parseInt(document.getElementById('port').value, 10),
                         username: document.getElementById('username').value || undefined,
                         password: document.getElementById('password').value || undefined
                     };
@@ -294,11 +314,9 @@ function getWebviewContent(connection?: Connection): string {
     `;
 }
 
-export function deactivate() {}
+function deactivate() {}
 
-let lastOpen: { uri: string; time: number } | undefined;
-
-function isDoubleClick(uri: string): boolean {
+function isDoubleClick(uri) {
     const now = Date.now();
     if (lastOpen && lastOpen.uri === uri && now - lastOpen.time < 400) {
         lastOpen = undefined;
@@ -307,3 +325,5 @@ function isDoubleClick(uri: string): boolean {
     lastOpen = { uri, time: now };
     return false;
 }
+
+module.exports = { activate, deactivate };

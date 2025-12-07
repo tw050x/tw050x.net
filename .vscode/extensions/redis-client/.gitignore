@@ -1,16 +1,9 @@
 
-# Artifacts
-artifact/
-*.js
-
 # Data
 .data/
 
 # Node modules
 node_modules/
-
-# Typescript
-tsconfig.tsbuildinfo
 
 # Yarn
 .pnp.*
