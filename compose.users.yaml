@@ -12,8 +12,7 @@ services:
       traefik:
         condition: service_healthy
     environment:
-      - ASSIGNMENT_TEMPLATE_UUID_ENTER_YOUR_NAME_TASK=8c79f0b4-60ef-4971-824c-957d228d9d8b
-      - ASSIGNMENT_TEMPLATE_UUID_VERIFY_EMAIL_TASK=fd1a13de-1a7f-448e-8bc5-a4eb458ed850
+      - NODE_ENV=development
     healthcheck:
       test: ["CMD-SHELL", "test -f /healthcheck && grep -q '^healthy$' /healthcheck"]
       interval: 1m30s

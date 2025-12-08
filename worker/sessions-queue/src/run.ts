@@ -2,7 +2,8 @@ import { read as readConfig } from "@tw050x.net.library/platform/helper/configs"
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { writeFileSync } from "node:fs";
 import { Job, Worker, WorkerOptions } from "bullmq";
-import { default as handleUserRegisteredEvent } from "./event-handler/session-activity.js";
+import { default as handleExpireInactiveSessionsEvent } from "./event-handler/expire-inactive-sessions.js";
+import { default as handleSessionActivityEvent } from "./event-handler/session-activity.js";
 import { default as healthcheck } from "./healthcheck.js";
 
 let unrecoverableErrorOccured = false;
@@ -17,8 +18,8 @@ const worker = new Worker(
   readConfig('service.sessions.event-queue-name'),
   async (job: Job) => {
     switch (job.name) {
-      case 'UserRegistered':
-        return await handleUserRegisteredEvent(job.data);
+      case 'ExpireInactiveSessions': return await handleExpireInactiveSessionsEvent(job.data);
+      case 'SessionActivity': return await handleSessionActivityEvent(job.data);
       default:
         throw new Error(`Unknown message type: ${job.name}`);
     }

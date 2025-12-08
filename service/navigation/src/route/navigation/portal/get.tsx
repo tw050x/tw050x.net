@@ -72,19 +72,16 @@ export default defineServiceMiddleware([
       IconComponent: Dashboard,
       href: '/portal/dashboard',
       label: 'Dashboard',
-      disabled: hasActiveBillingAccount === false,
     });
     serviceMenuItems.push({
       IconComponent: Brands,
       href: '/portal/brands',
       label: 'Brands',
-      disabled: hasActiveBillingAccount === false,
     });
     serviceMenuItems.push({
       IconComponent: Products,
       href: '/portal/products',
       label: 'Products',
-      disabled: hasActiveBillingAccount === false,
     });
 
     // Determine menu state from cookie

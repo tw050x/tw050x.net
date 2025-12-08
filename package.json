@@ -20,7 +20,7 @@
   "private": true,
   "repository": "git@gitlab.com:tw050x.net/platform.git",
   "scripts": {
-    "build": "docker buildx bake --builder tw050x.net.builder --file bake.hcl --load",
+    "bake": "docker buildx bake --builder tw050x.net.builder --file bake.hcl --load",
     "certificate": "certificate",
     "e2e": "cypress open",
     "migrate": "migrate",

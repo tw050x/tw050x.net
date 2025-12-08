@@ -38,9 +38,7 @@ services:
     image: tw050x.net.worker/sessions-queue:latest
     mem_limit: 512mb
     networks:
-      sessions:
-        aliases:
-          - sessions.internal
+      sessions: {}
       users: {}
     ports:
       - "9301:9229"
@@ -60,6 +58,46 @@ services:
         type: bind
       - source: ./worker/sessions-queue
         target: /srv/worker/sessions-queue
+        type: bind
+      - source: ./tsconfig.json
+        target: /srv/tsconfig.json
+        type: bind
+
+  sessions-scheduler:
+    command: [ "yarn", "workspace", "@tw050x.net.worker/sessions-scheduler", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/run.js" ]
+    depends_on:
+      mongo-primary:
+        condition: service_healthy
+    environment:
+      - NODE_ENV=development
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /healthcheck && grep -q '^healthy$' /healthcheck"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    image: tw050x.net.worker/sessions-scheduler:latest
+    mem_limit: 512mb
+    networks:
+      sessions: {}
+    ports:
+      - "9311:9229"
+    pull_policy: never
+    volumes:
+      - source: ./.configs
+        target: /srv/.configs
+        type: bind
+      - source: ./.secrets
+        target: /srv/.secrets
+        type: bind
+      - source: ./library
+        target: /srv/library
+        type: bind
+      - source: ./log/worker/sessions-scheduler
+        target: /log
+        type: bind
+      - source: ./worker/sessions-scheduler
+        target: /srv/worker/sessions-scheduler
         type: bind
       - source: ./tsconfig.json
         target: /srv/tsconfig.json

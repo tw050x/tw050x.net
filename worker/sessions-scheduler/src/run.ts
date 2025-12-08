@@ -12,8 +12,8 @@ const every10Minutes = '*/10 * * * *';
 // Tasks
 const expireInactiveSessions = schedule(every10Minutes, async () => {
   try {
-    // TODO: add job to expire inactive sessions
-    // sessionsEventQueue.add()
+    logger.debug('Expiring inactive sessions...');
+    sessionsEventQueue.add('ExpireInactiveSessions', {});
   }
   catch (error) {
     logger.error(error);
