@@ -17,8 +17,7 @@ const worker = new Worker(
   readConfig('service.users.event-queue-name'),
   async (job: Job) => {
     switch (job.name) {
-      case 'UserRegistered':
-        return await handleUserRegisteredEvent(job.data);
+      case 'UserRegistered': return await handleUserRegisteredEvent(job.data);
       default:
         throw new Error(`Unknown message type: ${job.name}`);
     }

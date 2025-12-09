@@ -4,6 +4,7 @@ import { mongoClient } from "../client.js";
 //
 export type ActivityDocument = {
   activity: string;
+  activityAt: Date;
   createdAt: Date;
   loginUuid: string;
   userProfileUuid: string;

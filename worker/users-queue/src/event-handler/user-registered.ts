@@ -1,5 +1,11 @@
 import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.net.library/database/collections/assignment";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
+import { z } from "zod";
+
+//
+const messageBodySchema = z.object({
+  userProfileUuid: z.string(),
+})
 
 /**
  * Handles a UserRegistered event message.
@@ -9,12 +15,15 @@ import { logger } from "@tw050x.net.library/platform/helper/logger";
 export default async function handleUserRegisteredEvent(messageBody: Record<string, unknown>): Promise<void> {
   logger.debug('Handling UserRegistered message');
 
-  if (('userProfileUuid' in messageBody) === false) {
-    throw new Error('userProfileUuid is missing in UserRegistered event message body');
+  let userProfileUuid;
+  try {
+    const result = messageBodySchema.parse(messageBody);
+    userProfileUuid = result.userProfileUuid;
   }
-
-  if (typeof messageBody.userProfileUuid !== 'string') {
-    throw new Error('userProfileUuid is not a string in UserRegistered event message body');
+  catch (error) {
+    logger.error(error);
+    logger.debug('Invalid UserRegistered message body', { messageBody });
+    throw new Error('Invalid UserRegistered message body');
   }
 
   const assignment = 'complete-registration';
@@ -46,7 +55,7 @@ export default async function handleUserRegisteredEvent(messageBody: Record<stri
       description: template.description,
       label: template.label,
       reason: template.reason,
-      userProfileUuid: messageBody.userProfileUuid
+      userProfileUuid,
     })
   }
 

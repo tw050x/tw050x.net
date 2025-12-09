@@ -830,6 +830,7 @@ __metadata:
     bullmq: "npm:5.63.2"
     mongodb: "npm:^6.12.0"
     typescript: "npm:^5.7.2"
+    zod: "npm:^3.24.2"
   languageName: unknown
   linkType: soft
 
@@ -859,6 +860,7 @@ __metadata:
     bullmq: "npm:5.63.2"
     mongodb: "npm:^6.12.0"
     typescript: "npm:^5.7.2"
+    zod: "npm:^3.24.2"
   languageName: unknown
   linkType: soft
 
