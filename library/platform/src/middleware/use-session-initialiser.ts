@@ -36,6 +36,9 @@ export const useSessionInitialiser: Factory = () => async (context) => {
     secure: true,
   });
 
+  // Get the initial IP address from the X-Forwarded-For header
+  const xForwardedForHeader = context.incomingMessage.headers['x-forwarded-for'];
+
   // define the set function
   const initialise = async (userProfileUuid: string) => {
     const currentDate = new Date();
@@ -52,12 +55,14 @@ export const useSessionInitialiser: Factory = () => async (context) => {
     await sessionsDatabase.logins.insertOne({
       createdAt: currentDate,
       id,
-      initialIpAddress: 'unknown',
+      initialIpAddress: (Array.isArray(xForwardedForHeader) ? xForwardedForHeader[0] : xForwardedForHeader) || 'unknown',
+      lastAuthenticatedAt: currentDate,
       userProfileUuid,
       uuid,
     });
     await sessionsDatabase.activity.insertOne({
       activity: 'session-created',
+      activityAt: currentDate,
       createdAt: currentDate,
       loginUuid: uuid,
       userProfileUuid

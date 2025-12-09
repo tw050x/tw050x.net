@@ -18,7 +18,7 @@ const worker = new Worker(
   readConfig('service.sessions.event-queue-name'),
   async (job: Job) => {
     switch (job.name) {
-      case 'ExpireInactiveSessions': return await handleExpireInactiveSessionsEvent(job.data);
+      case 'ExpireInactiveSessions': return await handleExpireInactiveSessionsEvent();
       case 'SessionActivity': return await handleSessionActivityEvent(job.data);
       default:
         throw new Error(`Unknown message type: ${job.name}`);

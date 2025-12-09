@@ -16,6 +16,7 @@ export type LoginsDocument = {
   expiredAt?: Date;
   id: string;
   initialIpAddress: string;
+  lastAuthenticatedAt: Date;
   userProfileUuid: string;
   uuid: string;
 }
