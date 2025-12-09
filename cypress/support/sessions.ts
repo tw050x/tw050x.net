@@ -17,6 +17,7 @@ export const createSession = async (userProfileUuid: string) => {
   const updatedAt = new Date();
   const initialIpAddress = 'unknown';
   const sessionId = randomUUID();
+  const sessionUuid = randomUUID();
 
   await mongoClient.db(sessionsDatabaseName).collection(sessionsLoginsCollectionName).insertOne({
     createdAt,
@@ -24,6 +25,7 @@ export const createSession = async (userProfileUuid: string) => {
     initialIpAddress,
     id: sessionId,
     userProfileUuid,
+    uuid: sessionUuid,
   });
 
   return { id: sessionId };

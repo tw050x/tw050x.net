@@ -38,6 +38,9 @@ services:
     image: tw050x.net.worker/sessions-queue:latest
     mem_limit: 512mb
     networks:
+      mongo:
+        aliases:
+          - mongo.internal
       sessions: {}
       users: {}
     ports:
