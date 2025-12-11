@@ -87,7 +87,7 @@ services:
         type: bind
 
   users-queue:
-    command: [ "yarn", "workspace", "@tw050x.net.worker/users-queue", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/run.js" ]
+    command: [ "yarn", "workspace", "@tw050x.net.worker/users-queue", "exec", "node", "--inspect=0.0.0.0:9229", "--watch", "artifact/run.js" ]
     depends_on:
       mongo-primary:
         condition: service_healthy

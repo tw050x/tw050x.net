@@ -23,7 +23,7 @@ services:
         type: bind
 
   sessions-queue:
-    command: [ "yarn", "workspace", "@tw050x.net.worker/sessions-queue", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/run.js" ]
+    command: [ "yarn", "workspace", "@tw050x.net.worker/sessions-queue", "exec", "node", "--inspect=0.0.0.0:9229", "--watch", "artifact/run.js" ]
     depends_on:
       mongo-primary:
         condition: service_healthy
@@ -67,7 +67,7 @@ services:
         type: bind
 
   sessions-scheduler:
-    command: [ "yarn", "workspace", "@tw050x.net.worker/sessions-scheduler", "exec", "node", "--inspect=0.0.0.0:9229", "artifact/run.js" ]
+    command: [ "yarn", "workspace", "@tw050x.net.worker/sessions-scheduler", "exec", "node", "--inspect=0.0.0.0:9229", "--watch", "artifact/run.js" ]
     depends_on:
       mongo-primary:
         condition: service_healthy

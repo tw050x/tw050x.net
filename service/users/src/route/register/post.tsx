@@ -1,4 +1,4 @@
-import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database/helper";
+import { sanitizeFilter } from "@tw050x.net.library/database/helper";
 import { client as userDatabaseClient, database as userDatabase } from "@tw050x.net.library/database/collections/users";
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
 import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
@@ -113,7 +113,7 @@ export default defineServiceMiddleware([
     let userProfileDocument;
     try {
       userProfileDocument = await userDatabase.profiles.findOne(
-        sanitizeMongoDBFilterOrPipeline({
+        sanitizeFilter({
           emailNormalised: normalisedEmailAddress,
         })
       );

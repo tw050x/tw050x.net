@@ -1,7 +1,7 @@
 import { database as accountDatabase } from "@tw050x.net.library/database/collections/account";
 import { database as assignmentDatabase } from "@tw050x.net.library/database/collections/assignment";
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
-import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
+import { sanitizeFilter } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { useCorsHeaders, UseCorsHeadersFactoryOptions } from "@tw050x.net.library/platform/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
@@ -36,7 +36,7 @@ export default defineServiceMiddleware([
     let incompleteAssignmentDocuments;
     try {
       incompleteAssignmentDocuments = await assignmentDatabase.tasks.countDocuments(
-        sanitizeMongoDBFilterOrPipeline({
+        sanitizeFilter({
           completed: false,
           userProfileUuid: context.incomingMessage.session.userProfileUuid,
         })
@@ -51,7 +51,7 @@ export default defineServiceMiddleware([
     try {
       hasActiveBillingAccount = (
         await accountDatabase.billing.countDocuments(
-          sanitizeMongoDBFilterOrPipeline({
+          sanitizeFilter({
             userProfileUuid: context.incomingMessage.session.userProfileUuid,
             expiresAt: { $gt: new Date() },
           })

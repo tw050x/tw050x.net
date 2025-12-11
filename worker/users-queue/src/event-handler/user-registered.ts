@@ -2,7 +2,7 @@ import { AssignmentTaskDocument, database as assignmentDatabase } from "@tw050x.
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { z } from "zod";
 
-//
+// Message body schema
 const messageBodySchema = z.object({
   userProfileUuid: z.string(),
 })

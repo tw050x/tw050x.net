@@ -1,5 +1,5 @@
 import { client as usersDatabaseClient, database as usersDatabase } from "@tw050x.net.library/database/collections/users";
-import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
+import { sanitizeFilter } from "@tw050x.net.library/database";
 import { googleAuthorisationURL, googleOAuth2ExchangeCodeForAccessTokenAndScope, googleFetchUserProfile } from "@tw050x.net.library/platform/helper/authentication/oauth2/provider/google";
 import { useLoginEnabled } from "@tw050x.net.library/platform/middleware/use-login-enabled";
 import { useLoginEnabledGate } from "@tw050x.net.library/platform/middleware/use-login-enabled-gate";
@@ -138,7 +138,7 @@ export default defineServiceMiddleware([
 
           try {
             userProfileDocument = await usersDatabase.profiles.findOne(
-              sanitizeMongoDBFilterOrPipeline({ emailNormalised: normalisedGoogleUserProfileEmailAddress })
+              sanitizeFilter({ emailNormalised: normalisedGoogleUserProfileEmailAddress })
             );
           }
           catch (error) {
@@ -237,7 +237,7 @@ export default defineServiceMiddleware([
             let userOAuthCredentialDocument;
             try {
               userOAuthCredentialDocument = await usersDatabase.credentials.findOne(
-                sanitizeMongoDBFilterOrPipeline({
+                sanitizeFilter({
                   userProfileUuid: userProfileDocument.uuid,
                   provider: 'google',
                   type: 'oauth2',

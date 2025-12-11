@@ -17,7 +17,7 @@
     "src/collections/users.ts",
     "src/helper/configs.ts",
     "src/helper/logger.ts",
-    "src/helper/sanitize-mongodb-filter-or-pipeline.ts",
+    "src/helper/mongodb.ts",
     "src/helper/secrets.ts",
     "src/client.ts",
     "src/helper.ts",

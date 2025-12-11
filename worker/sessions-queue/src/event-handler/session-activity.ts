@@ -2,7 +2,7 @@ import { database as sessionsDatabase } from "@tw050x.net.library/database/colle
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { z } from "zod";
 
-//
+// Message body schema
 const messageBodySchema = z.object({
   activity: z.string(),
   activityAt: z.coerce.date(),
@@ -32,7 +32,7 @@ export default async function handleSessionActivityEvent(messageBody: Record<str
   }
   catch (error) {
     logger.error(error);
-    logger.debug('Invalid SessionActivity message body', { messageBody });
+    logger.debug('Invalid SessionActivity message body');
     throw new Error('Invalid SessionActivity message body');
   }
   logger.debug(`Recording activity for session login UUID: ${sessionsLoginsUuid}`);
@@ -49,7 +49,7 @@ export default async function handleSessionActivityEvent(messageBody: Record<str
   }
   catch (error) {
     logger.error(error);
-    logger.debug('Failed to record session activity', { sessionsLoginsUuid, userProfileUuid, activity, activityAt });
+    logger.debug('Failed to record session activity');
     throw new Error('Failed to record session activity');
   }
 }

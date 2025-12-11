@@ -2,7 +2,7 @@ import { client as sessionsDatabaseClient, database as sessionsDatabase } from "
 import { randomUUID } from "node:crypto";
 import { default as Cookies } from "cookies";
 import { addHours, differenceInSeconds } from "date-fns";
-import { generateSessionId } from "..//helper/sessions/generate-session-id.js";
+import { generateSessionId } from "../helper/sessions/generate-session-id.js";
 import { read as readConfig } from "../helper/configs.js";
 import { logger } from "../helper/logger.js";
 import { Middleware } from "../middleware.js";
@@ -47,6 +47,9 @@ export const useSessionInitialiser: Factory = () => async (context) => {
     const id = await generateSessionId();
     const uuid = randomUUID();
 
+    // Calculate session expiry date - 30 days from now
+    const sessionExpiryDate = addHours(currentDate, 24 * 30);
+
     // Start a database session and transaction
     const sessionsDatabaseSession = await sessionsDatabaseClient.startSession()
     sessionsDatabaseSession.startTransaction();
@@ -54,6 +57,7 @@ export const useSessionInitialiser: Factory = () => async (context) => {
     // Create a new session in the database
     await sessionsDatabase.logins.insertOne({
       createdAt: currentDate,
+      expiresAt: sessionExpiryDate,
       id,
       initialIpAddress: (Array.isArray(xForwardedForHeader) ? xForwardedForHeader[0] : xForwardedForHeader) || 'unknown',
       lastAuthenticatedAt: currentDate,
@@ -73,15 +77,14 @@ export const useSessionInitialiser: Factory = () => async (context) => {
     sessionsDatabaseSession.endSession();
 
     // Calculate expiry - 24 hours from now
-    const expiryDate = addHours(currentDate, 24 * 30);
-    const maxAgeInSeconds = differenceInSeconds(expiryDate, currentDate);
-    const maxAgeInMilliseconds = maxAgeInSeconds * 1000;
+    const maxCookieAgeInSeconds = differenceInSeconds(sessionExpiryDate, currentDate);
+    const maxCookieAgeInMilliseconds = maxCookieAgeInSeconds * 1000;
 
     // Set the cookie
     cookies.set(context.incomingMessage.session.cookie.name, id, {
       domain: readConfig('cookie.*.domain'),
       httpOnly: false,
-      maxAge: maxAgeInMilliseconds,
+      maxAge: maxCookieAgeInMilliseconds,
       path: '/',
       sameSite: 'lax',
       secure: true,

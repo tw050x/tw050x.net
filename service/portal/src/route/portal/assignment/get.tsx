@@ -1,7 +1,7 @@
 import { database as assignmentDatabase } from "@tw050x.net.library/database/collections/assignment";
 import { useLoginState } from "@tw050x.net.library/platform/middleware/use-login-state";
 import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
-import { sanitizeMongoDBFilterOrPipeline } from "@tw050x.net.library/database";
+import { sanitizePipeline } from "@tw050x.net.library/database";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
 import { UsePaginationQueryParametersOptions, usePaginationQueryParameters } from "@tw050x.net.library/platform/middleware/use-pagination-query-parameters";
@@ -40,7 +40,7 @@ export default defineServiceMiddleware([
     let assignmentTasks;
     try {
       assignmentTasks = await assignmentDatabase.tasks.aggregate<AssignmentTaskWithTemplate>(
-        sanitizeMongoDBFilterOrPipeline([
+        sanitizePipeline([
           {
             $match: {
               completed: false,

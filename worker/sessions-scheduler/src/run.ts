@@ -7,13 +7,13 @@ import { default as healthcheck } from "./healthcheck.js";
 let unrecoverableErrorOccured = false;
 
 // Expressions
-const every10Minutes = '*/10 * * * *';
+const everyMinute = '* * * * *';
 
 // Tasks
-const expireInactiveSessions = schedule(every10Minutes, async () => {
+const ExpireSessions = schedule(everyMinute, async () => {
   try {
     logger.debug('Expiring inactive sessions...');
-    sessionsEventQueue.add('ExpireInactiveSessions', {});
+    sessionsEventQueue.add('ExpireSessions', {});
   }
   catch (error) {
     logger.error(error);
@@ -23,7 +23,7 @@ const expireInactiveSessions = schedule(every10Minutes, async () => {
 
 const cleanup =  () => {
   healthcheck.stop();
-  expireInactiveSessions.stop();
+  ExpireSessions.stop();
 }
 
 process.on('SIGINT', () => {

@@ -9,11 +9,11 @@ export default defineConfig({
           const { createUser } = require('./cypress/support/users');
           return await createUser(email, password);
         },
-        async createUserAndSession({ email, password }) {
+        async createUserAndSession({ email, password, sessionOverrides }) {
           const { createUser } = require('./cypress/support/users');
           const { createSession } = require('./cypress/support/sessions');
           const { uuid } = await createUser(email, password);
-          return await createSession(uuid);
+          return await createSession(uuid, sessionOverrides);
         },
         async createEncryptedLoginCookieValue(content) {
           const { createEncryptedLoginCookieValue } = require('./cypress/support/cookie');

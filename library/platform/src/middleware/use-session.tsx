@@ -1,4 +1,4 @@
-import { sanitizeMongoDBFilterOrPipeline, trusted } from "@tw050x.net.library/database/helper";
+import { sanitizeFilter, trusted } from "@tw050x.net.library/database/helper";
 import { database as sessionsDatabase } from "@tw050x.net.library/database/collections/sessions";
 import { default as Cookies } from "cookies";
 import { addHours, differenceInSeconds } from "date-fns";
@@ -72,7 +72,7 @@ export const useSession: Factory = (options) => async (context) => {
     let record;
     try {
       record = await sessionsDatabase.logins.findOne(
-        sanitizeMongoDBFilterOrPipeline({
+        sanitizeFilter({
           expiredAt: trusted({ $exists: false }),
           id,
         })

@@ -1,4 +1,9 @@
 describe('As a user when I am logged in, I want my session to refresh with activity', () => {
+  it('should redirect to the login page when there is no active session',  () => {
+    cy.visit('/portal/dashboard');
+    cy.url().should('eq', `${Cypress.config().baseUrl}/login`);
+  });
+
   it('should refresh session every time there is activity from me', () => {
     const timestamp = Date.now();
     const email = `test.user.${timestamp}@example.com`;
@@ -59,7 +64,33 @@ describe('As a user when I am logged in, I want my session to refresh with activ
       });
   });
 
-  it('should redirect to the login page when there is no active session',  () => {
+  it('should end the session after expiry time has been reached', () => {
+    const timestamp = Date.now();
+    const email = `test.user.${timestamp}@example.com`;
+    const password = 'Password123!';
+    const sessionOverrides = {
+      expiresAt: new Date(Date.now() + (60 * 1000)), // session expires in 1 minute
+    };
+    cy.task<{ id: string }>('createUserAndSession', { email, password, sessionOverrides }).then((session) => {
+      cy.setCookie('user.session', session.id, {
+        domain: 'tw050x.dev',
+        httpOnly: false,
+        expiry: Math.floor(Date.now() / 1000) + 3600,
+        path: '/',
+        sameSite: 'lax',
+        secure: true,
+      });
+    });
+
+    cy.intercept('GET', '/portal/dashboard').as('dashboardPageLoad');
+    cy.visit('/portal/dashboard');
+
+    cy.wait('@dashboardPageLoad').then((interception) => {
+      expect(interception.response?.statusCode).to.eq(200);
+    });
+
+    cy.wait(120_000); // wait for 2 minutes to ensure background job (which runs every minute) have run to expire the session
+
     cy.visit('/portal/dashboard');
     cy.url().should('eq', `${Cypress.config().baseUrl}/login`);
   });
