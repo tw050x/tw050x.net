@@ -15,10 +15,10 @@ export type LoginsDocument = {
   createdAt: Date;
   expiredAt?: Date;
   expiredReason?: 'forced-logout' | 'timeout-logout' | 'user-logout';
-  expiresAt: Date;
   id: string;
   initialIpAddress: string;
   lastAuthenticatedAt: Date;
+  timeoutAt: Date;
   userProfileUuid: string;
   uuid: string;
 }

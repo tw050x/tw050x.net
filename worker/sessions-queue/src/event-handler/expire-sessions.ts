@@ -22,7 +22,7 @@ export default async function handleExpireSessionsEvent(): Promise<void> {
       sanitizeFilter({
         $and: [
           { expiredAt: trusted({ $exists: false }) },
-          { expiresAt: trusted({ $lt: currentDate }) }
+          { timeoutAt: trusted({ $lt: currentDate }) }
         ]
       }),
       {

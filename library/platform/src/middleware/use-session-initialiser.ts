@@ -57,10 +57,10 @@ export const useSessionInitialiser: Factory = () => async (context) => {
     // Create a new session in the database
     await sessionsDatabase.logins.insertOne({
       createdAt: currentDate,
-      expiresAt: sessionExpiryDate,
       id,
       initialIpAddress: (Array.isArray(xForwardedForHeader) ? xForwardedForHeader[0] : xForwardedForHeader) || 'unknown',
       lastAuthenticatedAt: currentDate,
+      timeoutAt: sessionExpiryDate,
       userProfileUuid,
       uuid,
     });

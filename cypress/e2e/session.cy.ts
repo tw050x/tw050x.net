@@ -69,7 +69,7 @@ describe('As a user when I am logged in, I want my session to refresh with activ
     const email = `test.user.${timestamp}@example.com`;
     const password = 'Password123!';
     const sessionOverrides = {
-      expiresAt: new Date(Date.now() + (60 * 1000)), // session expires in 1 minute
+      timeoutAt: new Date(Date.now() + (60 * 1000)), // session expires in 1 minute
     };
     cy.task<{ id: string }>('createUserAndSession', { email, password, sessionOverrides }).then((session) => {
       cy.setCookie('user.session', session.id, {

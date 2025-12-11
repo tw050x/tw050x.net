@@ -8,9 +8,9 @@ const sessionsLoginsCollectionName = readFileSync(resolve(__dirname, '..', '..',
 
 type CreateSessionOverrides = {
   createdAt?: string;
-  expiresAt?: string;
   initialIpAddress?: string;
   lastAuthenticatedAt?: string;
+  timeoutAt?: string;
 }
 
 /**
@@ -23,18 +23,18 @@ export const createSession = async (userProfileUuid: string, overrides?: CreateS
   const currentDate = new Date();
 
   const createdAt = overrides?.createdAt ?? currentDate;
-  const expiresAt = overrides?.expiresAt ? new Date(overrides.expiresAt) : new Date(currentDate.getTime() + (15 * 60 * 1000)); // default to 15 minutes from now
   const initialIpAddress = overrides?.initialIpAddress ?? 'unknown';
   const lastAuthenticatedAt = overrides?.lastAuthenticatedAt ?? currentDate;
   const sessionId = randomBytes(32).toString('hex');
   const sessionUuid = randomUUID();
+  const timeoutAt = overrides?.timeoutAt ? new Date(overrides.timeoutAt) : new Date(currentDate.getTime() + (15 * 60 * 1000)); // default to 15 minutes from now
 
   await mongoClient.db(sessionsDatabaseName).collection(sessionsLoginsCollectionName).insertOne({
     createdAt,
-    expiresAt,
     id: sessionId,
     initialIpAddress,
     lastAuthenticatedAt,
+    timeoutAt,
     userProfileUuid,
     uuid: sessionUuid,
   });
