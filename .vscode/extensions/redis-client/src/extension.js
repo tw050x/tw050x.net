@@ -5,10 +5,11 @@ const { RedisFileSystemProvider } = require('./redisFileSystemProvider');
 
 let treeDataProvider;
 let lastOpen;
+const AUTO_REFRESH_INTERVAL_MS = 5000;
 
-function activate(context) {
+async function activate(context) {
     const redisClient = RedisClient.getInstance();
-    redisClient.initialize(context);
+    await redisClient.initialize(context);
 
     treeDataProvider = new RedisTreeDataProvider(redisClient);
 
@@ -19,11 +20,12 @@ function activate(context) {
         })
     );
 
-    vscode.window.registerTreeDataProvider('redisKeys', treeDataProvider);
+    const treeView = vscode.window.createTreeView('redisKeys', { treeDataProvider });
+    context.subscriptions.push(treeView);
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('redis.addConnection', () => {
-            openConnectionForm(context, undefined);
+        vscode.commands.registerCommand('redis.addConnection', async () => {
+            await openConnectionForm(context, undefined);
         })
     );
 
@@ -42,11 +44,11 @@ function activate(context) {
     );
 
     context.subscriptions.push(
-        vscode.commands.registerCommand('redis.editConnection', (item) => {
+        vscode.commands.registerCommand('redis.editConnection', async (item) => {
             if (!item || item.contextValue !== 'connection') {
                 return;
             }
-            openConnectionForm(context, item.connection);
+            await openConnectionForm(context, item.connection);
         })
     );
 
@@ -62,7 +64,7 @@ function activate(context) {
             );
 
             if (answer === 'Yes') {
-                redisClient.deleteConnection(item.connection.id);
+                await redisClient.deleteConnection(item.connection.id);
                 treeDataProvider.refresh();
             }
         })
@@ -77,18 +79,13 @@ function activate(context) {
     context.subscriptions.push(
         vscode.commands.registerCommand('redis.setFilter', async () => {
             const value = await vscode.window.showInputBox({
-                prompt: 'Filter keys (case-insensitive substring). Leave empty to clear.',
+                prompt:
+                    'Filter keys by name, or prefix with "content:" to inspect values (case-insensitive). Leave empty to clear.',
                 value: treeDataProvider.filterText ?? ''
             });
             treeDataProvider.setFilter(value ?? '');
         })
     );
-
-    // Auto-refresh the tree so new keys appear without manual action.
-    const autoRefresh = setInterval(() => {
-        treeDataProvider.refresh();
-    }, 1000);
-    context.subscriptions.push({ dispose: () => clearInterval(autoRefresh) });
 
     context.subscriptions.push(
         vscode.commands.registerCommand('redis.editEntry', async (item) => {
@@ -169,9 +166,12 @@ function activate(context) {
             }
         })
     );
+
+    const autoRefresh = new AutoRefreshScheduler(redisClient, treeDataProvider, treeView);
+    context.subscriptions.push(autoRefresh);
 }
 
-function openConnectionForm(context, connection) {
+async function openConnectionForm(context, connection) {
     const panel = vscode.window.createWebviewPanel(
         'redisConnectionForm',
         connection ? 'Edit Connection' : 'Add Connection',
@@ -182,7 +182,11 @@ function openConnectionForm(context, connection) {
         }
     );
 
-    panel.webview.html = getWebviewContent(connection);
+    const redisClient = RedisClient.getInstance();
+    const hydrated = connection?.id ? await redisClient.getConnectionWithSecrets(connection.id) : connection;
+    const targetConnection = hydrated ?? connection;
+
+    panel.webview.html = getWebviewContent(targetConnection);
 
     panel.webview.onDidReceiveMessage(
         async (message) => {
@@ -190,10 +194,10 @@ function openConnectionForm(context, connection) {
                 case 'saveConnection': {
                     const redisClient = RedisClient.getInstance();
                     try {
-                        if (connection) {
-                            redisClient.updateConnection(connection.id, message.data);
+                        if (targetConnection?.id) {
+                            await redisClient.updateConnection(targetConnection.id, message.data);
                         } else {
-                            redisClient.addConnection(message.data);
+                            await redisClient.addConnection(message.data);
                         }
                         treeDataProvider.refresh();
                         panel.dispose();
@@ -324,6 +328,44 @@ function isDoubleClick(uri) {
     }
     lastOpen = { uri, time: now };
     return false;
+}
+
+class AutoRefreshScheduler {
+    constructor(client, treeDataProvider, treeView) {
+        this.client = client;
+        this.treeDataProvider = treeDataProvider;
+        this.treeView = treeView;
+        this.timer = setInterval(() => {
+            if (this.shouldRefresh()) {
+                this.treeDataProvider.refresh();
+            }
+        }, AUTO_REFRESH_INTERVAL_MS);
+        this.disposables = [];
+        this.disposables.push(
+            treeView.onDidChangeVisibility((event) => {
+                if (event.visible) {
+                    this.treeDataProvider.refresh();
+                }
+            }),
+            vscode.window.onDidChangeWindowState((state) => {
+                if (state.focused && this.shouldRefresh()) {
+                    this.treeDataProvider.refresh();
+                }
+            })
+        );
+    }
+
+    shouldRefresh() {
+        return this.treeView.visible && vscode.window.state.focused && this.client.hasConnectedClients();
+    }
+
+    dispose() {
+        if (this.timer) {
+            clearInterval(this.timer);
+            this.timer = undefined;
+        }
+        this.disposables.forEach((d) => d.dispose());
+    }
 }
 
 module.exports = { activate, deactivate };

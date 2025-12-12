@@ -107,7 +107,7 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "icon": "$(database)",
+          "icon": "media/redis-activitybar-dark.svg",
           "id": "redis-explorer",
           "title": "Redis"
         }

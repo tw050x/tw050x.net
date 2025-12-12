@@ -2,6 +2,7 @@ const Redis = require('ioredis');
 const vscode = require('vscode');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 class RedisClient {
     constructor() {
@@ -9,6 +10,8 @@ class RedisClient {
         this.connections = [];
         this.dataPath = undefined;
         this.initialized = false;
+        this.context = undefined;
+        this.passwordSecretPrefix = 'redisConnectionPassword:';
     }
 
     static getInstance() {
@@ -18,21 +21,22 @@ class RedisClient {
         return RedisClient.instance;
     }
 
-    initialize(context) {
+    async initialize(context) {
         if (this.initialized) {
             return;
         }
 
+        this.context = context;
         const storageFolder = context.globalStorageUri.fsPath;
         fs.mkdirSync(storageFolder, { recursive: true });
         this.dataPath = path.join(storageFolder, 'connections.json');
         const legacyPath = path.join(context.extensionUri.fsPath, '.data', 'connections.json');
         const compiledLegacyPath = path.join(__dirname, '..', '.data', 'connections.json');
-        this.loadConnections([legacyPath, compiledLegacyPath]);
+        await this.loadConnections([legacyPath, compiledLegacyPath]);
         this.initialized = true;
     }
 
-    loadConnections(candidateLegacyPaths = []) {
+    async loadConnections(candidateLegacyPaths = []) {
         if (!this.dataPath) {
             return;
         }
@@ -50,21 +54,47 @@ class RedisClient {
 
         try {
             const fromData = tryLoad(this.dataPath);
-            if (fromData && fromData.length > 0) {
+            if (Array.isArray(fromData)) {
                 this.connections = fromData;
-                return;
-            }
-
-            for (const legacyPath of candidateLegacyPaths) {
-                const fromLegacy = tryLoad(legacyPath);
-                if (fromLegacy && fromLegacy.length >= 0) {
-                    this.connections = fromLegacy;
-                    this.saveConnections();
-                    return;
+            } else {
+                for (const legacyPath of candidateLegacyPaths) {
+                    const fromLegacy = tryLoad(legacyPath);
+                    if (Array.isArray(fromLegacy)) {
+                        this.connections = fromLegacy;
+                        break;
+                    }
                 }
             }
 
-            this.connections = fromData ?? [];
+            if (!Array.isArray(this.connections)) {
+                this.connections = [];
+            }
+
+            let migratedPasswords = false;
+            for (const connection of this.connections) {
+                if (connection.password) {
+                    await this.storePassword(connection.id, connection.password);
+                    delete connection.password;
+                    migratedPasswords = true;
+                }
+            }
+
+            let normalizedConnections = false;
+            this.connections = this.connections.map((connection) => {
+                const sanitized = this.toStoredConnection(connection);
+                const id = connection.id || this.generateConnectionId();
+                if (!connection.id) {
+                    normalizedConnections = true;
+                }
+                sanitized.id = id;
+                return sanitized;
+            });
+
+            if (migratedPasswords || normalizedConnections) {
+                this.saveConnections();
+            } else if (!fs.existsSync(this.dataPath)) {
+                this.saveConnections();
+            }
         } catch (error) {
             console.error('Failed to load connections:', error);
         }
@@ -82,26 +112,45 @@ class RedisClient {
     }
 
     getConnections() {
-        return this.connections;
+        return this.connections.map((connection) => ({ ...connection }));
     }
 
-    addConnection(connection) {
-        const id = Date.now().toString();
-        this.connections.push({ ...connection, id });
+    async getConnectionWithSecrets(id) {
+        const connection = this.connections.find((c) => c.id === id);
+        if (!connection) {
+            return undefined;
+        }
+        const password = await this.getPassword(id);
+        return { ...connection, password: password ?? undefined };
+    }
+
+    async addConnection(connection) {
+        const next = this.toStoredConnection(connection);
+        next.id = this.generateConnectionId();
+        this.connections.push(next);
+        await this.storePassword(next.id, connection.password);
+        this.saveConnections();
+        return { ...next };
+    }
+
+    async updateConnection(id, connection) {
+        const index = this.connections.findIndex((c) => c.id === id);
+        if (index === -1) {
+            return;
+        }
+        const updated = this.toStoredConnection(connection);
+        updated.id = id;
+        this.connections[index] = updated;
+        await this.storePassword(id, connection.password);
         this.saveConnections();
     }
 
-    updateConnection(id, connection) {
-        const index = this.connections.findIndex((c) => c.id === id);
-        if (index !== -1) {
-            this.connections[index] = { ...connection, id };
-            this.saveConnections();
-        }
-    }
-
-    deleteConnection(id) {
+    async deleteConnection(id) {
         this.connections = this.connections.filter((c) => c.id !== id);
         this.disconnect(id);
+        if (this.context?.secrets) {
+            await this.context.secrets.delete(this.passwordKey(id));
+        }
         this.saveConnections();
     }
 
@@ -110,6 +159,8 @@ class RedisClient {
         if (!connection) {
             throw new Error('Connection not found');
         }
+
+        const password = await this.getPassword(id);
 
         if (this.clients.has(id)) {
             this.clients.get(id).disconnect();
@@ -126,8 +177,8 @@ class RedisClient {
             options.username = connection.username;
         }
 
-        if (connection.password) {
-            options.password = connection.password;
+        if (password) {
+            options.password = password;
         }
 
         const client = new Redis(options);
@@ -157,12 +208,28 @@ class RedisClient {
         return this.clients.get(id);
     }
 
-    async getKeys(id, pattern = '*') {
+    hasConnectedClients() {
+        return this.clients.size > 0;
+    }
+
+    async scanKeys(id, { pattern = '*', batchSize = 500, signal } = {}) {
         const client = this.clients.get(id);
         if (!client) {
             return [];
         }
-        return client.keys(pattern);
+        const keys = [];
+        let cursor = '0';
+        do {
+            if (signal?.aborted) {
+                const abortError = new Error('Scan aborted');
+                abortError.name = 'AbortError';
+                throw abortError;
+            }
+            const [nextCursor, batch] = await client.scan(cursor, 'MATCH', pattern, 'COUNT', batchSize);
+            keys.push(...batch);
+            cursor = nextCursor;
+        } while (cursor !== '0');
+        return keys;
     }
 
     async getType(id, key) {
@@ -290,6 +357,49 @@ class RedisClient {
             return;
         }
         await client.del(key);
+    }
+
+    toStoredConnection(connection) {
+        const sanitized = {
+            name: connection.name?.trim() || 'Redis',
+            host: connection.host?.trim() || 'localhost',
+            port: typeof connection.port === 'number' ? connection.port : Number(connection.port) || 6379,
+            username: connection.username?.trim() || undefined
+        };
+        if (!sanitized.username) {
+            delete sanitized.username;
+        }
+        return sanitized;
+    }
+
+    generateConnectionId() {
+        if (crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+        return `${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    }
+
+    passwordKey(id) {
+        return `${this.passwordSecretPrefix}${id}`;
+    }
+
+    async storePassword(id, password) {
+        if (!this.context?.secrets) {
+            return;
+        }
+        const key = this.passwordKey(id);
+        if (password === undefined || password === '') {
+            await this.context.secrets.delete(key);
+            return;
+        }
+        await this.context.secrets.store(key, password);
+    }
+
+    async getPassword(id) {
+        if (!this.context?.secrets) {
+            return undefined;
+        }
+        return this.context.secrets.get(this.passwordKey(id));
     }
 }
 
