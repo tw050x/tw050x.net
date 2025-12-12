@@ -57,7 +57,10 @@ module "manager" {
     image   = "docker-20-04"
     primary = true
     size    = "s-1vcpu-1gb" # can handle up to 30 nodes
-    tags    = ["role:manager"]
+    tags    = [
+      "name:newton",
+      "role:manager"
+    ]
   }
   digitalocean_infrastructure_droplet_metadata_url = "http://169.254.169.254/metadata/v1"
   digitalocean_infrastructure_region = "lon1"

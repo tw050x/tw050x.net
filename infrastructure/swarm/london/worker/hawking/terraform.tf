@@ -50,6 +50,7 @@ module "worker" {
     primary = true
     size    = "s-1vcpu-1gb" # can handle up to 30 nodes
     tags    = [
+      "name:hawking",
       "requires:database",
       "role:worker"
     ]
