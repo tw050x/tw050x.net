@@ -1,8 +1,6 @@
 {
   // Chat
   "chat.agent.enabled": true,
-  // Database Client (plugin)
-  "database-client.telemetry.usesOnlineServices": false,
   // Editor
   "editor.formatOnSave": false,
   // Explorer

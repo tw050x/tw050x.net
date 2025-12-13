@@ -17,6 +17,22 @@
       "problemMatcher": []
     },
     {
+      "label": "extension: mongo-client install dependencies",
+      "type": "shell",
+      "command": "yarn",
+      "args": [
+        "install"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/.vscode/extensions/mongo-client"
+      },
+      "presentation": {
+        "reveal": "never",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
       "label": "tsc: clean build caches",
       "type": "shell",
       "command": "find",

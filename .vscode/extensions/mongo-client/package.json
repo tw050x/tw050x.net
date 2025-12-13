@@ -1,0 +1,138 @@
+{
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "mongo.addConnection",
+        "icon": "$(add)",
+        "title": "Add Connection"
+      },
+      {
+        "command": "mongo.connectToConnection",
+        "icon": "$(plug)",
+        "title": "Connect"
+      },
+      {
+        "command": "mongo.editConnection",
+        "icon": "$(edit)",
+        "title": "Edit Connection"
+      },
+      {
+        "command": "mongo.deleteConnection",
+        "icon": "$(trash)",
+        "title": "Delete Connection"
+      },
+      {
+        "command": "mongo.refresh",
+        "icon": "$(refresh)",
+        "title": "Refresh"
+      },
+      {
+        "command": "mongo.openDocument",
+        "icon": "$(go-to-file)",
+        "title": "Open Document"
+      },
+      {
+        "command": "mongo.insertDocument",
+        "icon": "$(new-file)",
+        "title": "Insert Document"
+      },
+      {
+        "command": "mongo.deleteDocument",
+        "icon": "$(trash)",
+        "title": "Delete Document"
+      },
+      {
+        "command": "mongo.showMetadata",
+        "icon": "$(info)",
+        "title": "Show Metadata"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "mongo.addConnection",
+          "group": "navigation",
+          "when": "view == mongoExplorer"
+        },
+        {
+          "command": "mongo.refresh",
+          "group": "navigation",
+          "when": "view == mongoExplorer"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "mongo.connectToConnection",
+          "when": "view == mongoExplorer && viewItem == connection",
+          "group": "inline"
+        },
+        {
+          "command": "mongo.editConnection",
+          "when": "view == mongoExplorer && viewItem == connection",
+          "group": "inline"
+        },
+        {
+          "command": "mongo.deleteConnection",
+          "when": "view == mongoExplorer && viewItem == connection",
+          "group": "inline"
+        },
+        {
+          "command": "mongo.showMetadata",
+          "when": "view == mongoExplorer && (viewItem == database || viewItem == collection || viewItem == document)",
+          "group": "inline"
+        },
+        {
+          "command": "mongo.insertDocument",
+          "when": "view == mongoExplorer && viewItem == collection",
+          "group": "inline"
+        },
+        {
+          "command": "mongo.openDocument",
+          "when": "view == mongoExplorer && viewItem == document",
+          "group": "inline"
+        },
+        {
+          "command": "mongo.deleteDocument",
+          "when": "view == mongoExplorer && viewItem == document",
+          "group": "inline"
+        }
+      ]
+    },
+    "views": {
+      "mongo-explorer": [
+        {
+          "id": "mongoExplorer",
+          "name": "Explorer"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "icon": "media/mongo-activitybar-dark.svg",
+          "id": "mongo-explorer",
+          "title": "Mongo"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "bson": "^6.10.4",
+    "mongodb": "^6.16.0"
+  },
+  "description": "A simple MongoDB client for VS Code",
+  "displayName": "@tw050x.net.extension/mongo-client",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "main": "./src/extension.js",
+  "name": "@tw050x.net.extension/mongo-client",
+  "publisher": "tw050x",
+  "version": "0.0.1"
+}
