@@ -10,6 +10,16 @@
         "title": "Add Connection"
       },
       {
+        "command": "mongo.searchDocuments",
+        "icon": "$(search)",
+        "title": "Search"
+      },
+      {
+        "command": "mongo.clearSearchDocuments",
+        "icon": "$(clear-all)",
+        "title": "Clear Search"
+      },
+      {
         "command": "mongo.connectToConnection",
         "icon": "$(plug)",
         "title": "Connect"
@@ -51,10 +61,30 @@
       }
     ],
     "menus": {
+      "commandPalette": [
+        {
+          "command": "mongo.searchDocuments",
+          "when": "false"
+        },
+        {
+          "command": "mongo.clearSearchDocuments",
+          "when": "false"
+        }
+      ],
       "view/title": [
         {
           "command": "mongo.addConnection",
           "group": "navigation",
+          "when": "view == mongoExplorer"
+        },
+        {
+          "command": "mongo.searchDocuments",
+          "group": "navigation@10",
+          "when": "view == mongoExplorer"
+        },
+        {
+          "command": "mongo.clearSearchDocuments",
+          "group": "navigation@11",
           "when": "view == mongoExplorer"
         },
         {
@@ -83,6 +113,16 @@
           "command": "mongo.showMetadata",
           "when": "view == mongoExplorer && (viewItem == database || viewItem == collection || viewItem == document)",
           "group": "inline"
+        },
+        {
+          "command": "mongo.searchDocuments",
+          "when": "view == mongoExplorer && viewItem == collection",
+          "group": "inline@10"
+        },
+        {
+          "command": "mongo.clearSearchDocuments",
+          "when": "view == mongoExplorer && viewItem == collection",
+          "group": "inline@11"
         },
         {
           "command": "mongo.insertDocument",

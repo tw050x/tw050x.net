@@ -259,14 +259,15 @@ class MongoConnectionsClient {
         }
     }
 
-    async findDocuments(connectionId, dbName, collectionName, { limit = 50 } = {}) {
+    async findDocuments(connectionId, dbName, collectionName, { filter = {}, limit = 50 } = {}) {
         const client = this.clients.get(connectionId);
         if (!client) {
             return [];
         }
         const db = client.db(dbName);
         const col = db.collection(collectionName);
-        const docs = await col.find({}, { limit }).toArray();
+        const safeFilter = filter && typeof filter === 'object' && !Array.isArray(filter) ? filter : {};
+        const docs = await col.find(safeFilter, { limit }).toArray();
         return docs;
     }
 

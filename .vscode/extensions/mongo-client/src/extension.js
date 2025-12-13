@@ -3,7 +3,7 @@ const { MongoConnectionsClient, sanitizeMongoUri } = require('./mongoClient');
 const { MongoTreeDataProvider } = require('./mongoTreeDataProvider');
 const { MongoFileSystemProvider } = require('./mongoFileSystemProvider');
 const { MongoMetaFileSystemProvider } = require('./mongoMetaFileSystemProvider');
-const { EJSON } = require('bson');
+const { EJSON, ObjectId } = require('bson');
 
 let treeDataProvider;
 let lastOpen;
@@ -81,6 +81,40 @@ async function activate(context) {
     context.subscriptions.push(
         vscode.commands.registerCommand('mongo.refresh', () => {
             treeDataProvider.refresh();
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('mongo.searchDocuments', async (item) => {
+            const collectionItem = resolveSelectedCollectionItem(item, treeView);
+            if (!collectionItem) {
+                void vscode.window.showInformationMessage('Select a collection in the Mongo Explorer to search.');
+                return;
+            }
+
+            if (!mongoClient.getClient(collectionItem.connectionId)) {
+                try {
+                    await mongoClient.connect(collectionItem.connectionId);
+                } catch (_error) {
+                    return;
+                }
+            }
+            await openSearchPanel(context, mongoClient, collectionItem);
+        })
+    );
+
+    context.subscriptions.push(
+        vscode.commands.registerCommand('mongo.clearSearchDocuments', async (item) => {
+            const collectionItem = resolveSelectedCollectionItem(item, treeView);
+            if (!collectionItem) {
+                void vscode.window.showInformationMessage('Select a collection in the Mongo Explorer to clear search.');
+                return;
+            }
+            treeDataProvider.clearCollectionSearch(
+                collectionItem.connectionId,
+                collectionItem.dbName,
+                collectionItem.collectionName
+            );
         })
     );
 
@@ -403,3 +437,270 @@ function isDoubleClick(uriString) {
 }
 
 module.exports = { activate };
+
+function resolveSelectedCollectionItem(item, treeView) {
+    if (item && item.contextValue === 'collection') {
+        return item;
+    }
+    const selected = Array.isArray(treeView?.selection) ? treeView.selection[0] : undefined;
+    if (selected && selected.contextValue === 'collection') {
+        return selected;
+    }
+    return null;
+}
+
+async function openSearchPanel(context, mongoClient, collectionItem) {
+    const title = `Search: ${collectionItem.dbName}.${collectionItem.collectionName}`;
+    const panel = vscode.window.createWebviewPanel(
+        'mongoSearch',
+        title,
+        vscode.ViewColumn.One,
+        {
+            enableScripts: true,
+            localResourceRoots: []
+        }
+    );
+
+    panel.webview.html = getSearchWebviewContent({
+        dbName: collectionItem.dbName,
+        collectionName: collectionItem.collectionName
+    });
+
+    panel.webview.onDidReceiveMessage(
+        async (message) => {
+            if (!message || typeof message.command !== 'string') {
+                return;
+            }
+
+            if (message.command === 'applySearch') {
+                const term = typeof message.term === 'string' ? message.term.trim() : '';
+                const limit = typeof message.limit === 'number' && Number.isFinite(message.limit) ? message.limit : undefined;
+
+                if (!term) {
+                    treeDataProvider.clearCollectionSearch(
+                        collectionItem.connectionId,
+                        collectionItem.dbName,
+                        collectionItem.collectionName
+                    );
+                    panel.dispose();
+                    return;
+                }
+
+                try {
+                    const { filter, label } = await buildMongoFilterFromTerm(mongoClient, collectionItem, term);
+                    treeDataProvider.setCollectionSearch(
+                        collectionItem.connectionId,
+                        collectionItem.dbName,
+                        collectionItem.collectionName,
+                        { filter, limit, label }
+                    );
+                    panel.dispose();
+                } catch (error) {
+                    vscode.window.showErrorMessage(error?.message ?? 'Failed to apply search');
+                }
+                return;
+            }
+
+            if (message.command === 'clearSearch') {
+                treeDataProvider.clearCollectionSearch(
+                    collectionItem.connectionId,
+                    collectionItem.dbName,
+                    collectionItem.collectionName
+                );
+                panel.dispose();
+                return;
+            }
+        },
+        undefined,
+        context.subscriptions
+    );
+}
+
+function getSearchWebviewContent({ dbName, collectionName }) {
+    return `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>MongoDB Search</title>
+            <style>
+                body {
+                    font-family: var(--vscode-font-family);
+                    font-size: var(--vscode-font-size);
+                    background-color: var(--vscode-editor-background);
+                    color: var(--vscode-editor-foreground);
+                    padding: 20px;
+                    margin: 0;
+                }
+                .form-group { margin-bottom: 15px; }
+                label {
+                    display: block;
+                    margin-bottom: 5px;
+                    color: var(--vscode-input-foreground);
+                }
+                input {
+                    width: 100%;
+                    padding: 8px;
+                    box-sizing: border-box;
+                    background-color: var(--vscode-input-background);
+                    color: var(--vscode-input-foreground);
+                    border: 1px solid var(--vscode-input-border);
+                    border-radius: 3px;
+                }
+                input:focus {
+                    outline: 1px solid var(--vscode-focusBorder);
+                }
+                button {
+                    background-color: var(--vscode-button-background);
+                    color: var(--vscode-button-foreground);
+                    border: none;
+                    padding: 10px 15px;
+                    cursor: pointer;
+                    border-radius: 3px;
+                    margin-right: 8px;
+                }
+                button:hover {
+                    background-color: var(--vscode-button-hoverBackground);
+                }
+                .hint {
+                    color: var(--vscode-descriptionForeground);
+                    margin-top: 6px;
+                    font-size: 0.9em;
+                    line-height: 1.35;
+                }
+                code { font-family: var(--vscode-editor-font-family); }
+            </style>
+        </head>
+        <body>
+            <h2>Search ${escapeHtml(dbName)}.${escapeHtml(collectionName)}</h2>
+            <div class="form-group">
+                <label for="term">Search</label>
+                <input type="text" id="term" placeholder="e.g. shipped OR \"john smith\"" />
+                <div class="hint">
+                    Enter a search term. If the collection has a text index, this uses <code>$text</code> search.
+                    Otherwise it does a case-insensitive substring match across detected string fields.
+                    You can also paste an Extended JSON filter object (e.g. <code>{ &quot;status&quot;: &quot;active&quot; }</code>).
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="limit">Limit (optional)</label>
+                <input type="text" id="limit" placeholder="50" />
+            </div>
+            <button onclick="applySearch()">Apply</button>
+            <button onclick="clearSearch()">Clear</button>
+
+            <script>
+                const vscode = acquireVsCodeApi();
+
+                function applySearch() {
+                    const term = document.getElementById('term').value;
+                    const limitRaw = (document.getElementById('limit').value || '').trim();
+                    let limit = undefined;
+                    if (limitRaw) {
+                        const n = Number(limitRaw);
+                        if (Number.isFinite(n) && n > 0) {
+                            limit = Math.floor(n);
+                        }
+                    }
+                    vscode.postMessage({ command: 'applySearch', term, limit });
+                }
+
+                function clearSearch() {
+                    vscode.postMessage({ command: 'clearSearch' });
+                }
+            </script>
+        </body>
+        </html>
+    `;
+}
+
+async function buildMongoFilterFromTerm(mongoClient, collectionItem, term) {
+    const trimmed = (term ?? '').trim();
+    if (!trimmed) {
+        return { filter: {}, label: '' };
+    }
+
+    // If user pasted an Extended JSON filter, use it directly.
+    if (trimmed.startsWith('{') && trimmed.endsWith('}')) {
+        try {
+            const parsed = EJSON.parse(trimmed);
+            if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+                throw new Error('Expected an object filter');
+            }
+            return { filter: parsed, label: 'filter' };
+        } catch (error) {
+            throw new Error(error?.message ?? 'Invalid Extended JSON filter');
+        }
+    }
+
+    const indexes = await mongoClient.getCollectionIndexes(
+        collectionItem.connectionId,
+        collectionItem.dbName,
+        collectionItem.collectionName
+    );
+
+    const hasTextIndex = Array.isArray(indexes)
+        ? indexes.some((idx) => {
+              const key = idx && typeof idx === 'object' ? idx.key : undefined;
+              if (!key || typeof key !== 'object' || Array.isArray(key)) {
+                  return false;
+              }
+              // Text indexes usually have one or more fields mapped to the string 'text'.
+              return Object.values(key).some((v) => v === 'text');
+          })
+        : false;
+
+    if (hasTextIndex) {
+        return { filter: { $text: { $search: trimmed } }, label: `search: ${trimForLabel(trimmed)}` };
+    }
+
+    // Fallback: substring match across the collection's string fields (best-effort).
+    try {
+        const sampleDocs = await mongoClient.findDocuments(
+            collectionItem.connectionId,
+            collectionItem.dbName,
+            collectionItem.collectionName,
+            { limit: 1 }
+        );
+        const sample = Array.isArray(sampleDocs) ? sampleDocs[0] : undefined;
+        const stringFields = [];
+        if (sample && typeof sample === 'object' && !Array.isArray(sample)) {
+            for (const [key, value] of Object.entries(sample)) {
+                if (typeof key === 'string' && typeof value === 'string') {
+                    stringFields.push(key);
+                }
+            }
+        }
+
+        if (stringFields.length > 0) {
+            const escaped = escapeRegex(trimmed);
+            const predicate = { $regex: escaped, $options: 'i' };
+            return {
+                filter: { $or: stringFields.map((field) => ({ [field]: predicate })) },
+                label: `contains: ${trimForLabel(trimmed)}`
+            };
+        }
+    } catch (_error) {
+        // ignore and fall back to _id matching
+    }
+
+    // Final fallback: match _id.
+    if (/^[a-fA-F0-9]{24}$/.test(trimmed)) {
+        try {
+            return { filter: { _id: new ObjectId(trimmed) }, label: `id: ${trimForLabel(trimmed)}` };
+        } catch (_error) {
+            // ignore
+        }
+    }
+    return { filter: { _id: trimmed }, label: `id: ${trimForLabel(trimmed)}` };
+}
+
+function trimForLabel(value) {
+    const s = String(value);
+    return s.length > 32 ? `${s.slice(0, 29)}...` : s;
+}
+
+function escapeRegex(value) {
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}

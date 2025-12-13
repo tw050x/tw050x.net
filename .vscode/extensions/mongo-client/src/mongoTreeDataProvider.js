@@ -7,10 +7,38 @@ class MongoTreeDataProvider {
         this.emitter = new vscode.EventEmitter();
         this.onDidChangeTreeData = this.emitter.event;
         this.docLimitByCollectionKey = new Map();
+        this.docFilterByCollectionKey = new Map();
+        this.collectionSearchLabelByKey = new Map();
     }
 
     refresh() {
         this.emitter.fire();
+    }
+
+    setCollectionSearch(connectionId, dbName, collectionName, { filter, limit, label }) {
+        const key = `${connectionId}/${dbName}/${collectionName}`;
+        if (typeof limit === 'number' && Number.isFinite(limit) && limit > 0) {
+            this.docLimitByCollectionKey.set(key, Math.floor(limit));
+        }
+        if (filter && typeof filter === 'object' && !Array.isArray(filter)) {
+            this.docFilterByCollectionKey.set(key, filter);
+        } else {
+            this.docFilterByCollectionKey.delete(key);
+        }
+        const safeLabel = typeof label === 'string' ? label.trim() : '';
+        if (safeLabel) {
+            this.collectionSearchLabelByKey.set(key, safeLabel);
+        } else {
+            this.collectionSearchLabelByKey.delete(key);
+        }
+        this.refresh();
+    }
+
+    clearCollectionSearch(connectionId, dbName, collectionName) {
+        const key = `${connectionId}/${dbName}/${collectionName}`;
+        this.docFilterByCollectionKey.delete(key);
+        this.collectionSearchLabelByKey.delete(key);
+        this.refresh();
     }
 
     getTreeItem(element) {
@@ -83,6 +111,18 @@ class MongoTreeDataProvider {
             item.dbName = dbName;
             item.collectionName = collectionName;
             item.iconPath = new vscode.ThemeIcon('list-unordered');
+
+            const key = `${connectionId}/${dbName}/${collectionName}`;
+            const limit = this.docLimitByCollectionKey.get(key);
+            const hasFilter = this.docFilterByCollectionKey.has(key);
+            const label = this.collectionSearchLabelByKey.get(key);
+            if (hasFilter || typeof limit === 'number') {
+                const bits = [];
+                if (label) bits.push(label);
+                else if (hasFilter) bits.push('filtered');
+                if (typeof limit === 'number') bits.push(`limit ${limit}`);
+                item.description = bits.join(', ');
+            }
             return item;
         });
     }
@@ -91,8 +131,9 @@ class MongoTreeDataProvider {
         const { connectionId, dbName, collectionName } = collectionItem;
         const key = `${connectionId}/${dbName}/${collectionName}`;
         const limit = this.docLimitByCollectionKey.get(key) ?? 50;
+        const filter = this.docFilterByCollectionKey.get(key) ?? {};
 
-        const docs = await this.client.findDocuments(connectionId, dbName, collectionName, { limit });
+        const docs = await this.client.findDocuments(connectionId, dbName, collectionName, { filter, limit });
 
         const items = docs.map((doc) => {
             const idLabel = formatIdForLabel(doc?._id);
@@ -114,14 +155,6 @@ class MongoTreeDataProvider {
 
         return items;
     }
-}
-
-function makeActionItem(label, command, arg, iconId) {
-    const item = new vscode.TreeItem(label, vscode.TreeItemCollapsibleState.None);
-    item.contextValue = 'action';
-    item.iconPath = new vscode.ThemeIcon(iconId);
-    item.command = { command, title: label, arguments: [arg] };
-    return item;
 }
 
 function formatIdForLabel(idValue) {
