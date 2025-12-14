@@ -79,8 +79,9 @@ yarn certificate create-ca --dir="./ca/authorisation"
 yarn certificate create-ca --dir="./ca/error"
 yarn certificate create-ca --dir="./ca/marketing"
 yarn certificate create-ca --dir="./ca/navigation"
+yarn certificate create-ca --dir="./ca/payments"
 yarn certificate create-ca --dir="./ca/portal"
-yarn certificate create-ca --dir="./ca/user"
+yarn certificate create-ca --dir="./ca/users"
 ```
 
 > Ensure you follow the instructions to install/trust the CA on your system. This should be printed as output of the `create-ca` command
@@ -92,19 +93,28 @@ yarn certificate create-cert --ca-dir="./ca/authorisation" --cert-dir="./certifi
 yarn certificate create-cert --ca-dir="./ca/error" --cert-dir="./certificates" --name="error" --domains="error.service.internal"
 yarn certificate create-cert --ca-dir="./ca/marketing" --cert-dir="./certificates" --name="marketing" --domains="marketing.service.internal"
 yarn certificate create-cert --ca-dir="./ca/navigation" --cert-dir="./certificates" --name="navigation" --domains="navigation.service.internal"
+yarn certificate create-cert --ca-dir="./ca/payments" --cert-dir="./certificates" --name="payments" --domains="payments.service.internal"
 yarn certificate create-cert --ca-dir="./ca/portal" --cert-dir="./certificates" --name="portal" --domains="portal.service.internal"
-yarn certificate create-cert --ca-dir="./ca/user" --cert-dir="./certificates" --name="user" --domains="user.service.internal"
+yarn certificate create-cert --ca-dir="./ca/users" --cert-dir="./certificates" --name="users" --domains="users.service.internal"
 ```
 
 ## Setup MongoDB Replica Set
 
 This repo requires a MongoDB replica set to be running. The `docker compose` file will create the necessary containers for you. However you will need to connect to the primary instance and run the replica set initiation command.
 
+First start the primary and one secondary mongo instances:
+
+```bash
+docker compose up -d mongo-primary mongo-secondary-a
+```
+
 > You should only have to do this once. Unless you delete the volume directories in the `./service/mongo/data` directory.
+
+Next connect to the primary instance using `mongosh` in the container:
 
 ```bash
 # Connect to the primary MongoDB instance
-docker exec -it master-mongo-primary-1 mongosh --username root --password password --authenticationDatabase admin
+docker compose exec -it mongo-primary mongosh --username root --password password --authenticationDatabase admin
 ```
 
 Once connected run the following command to initiate the replica set:
@@ -127,6 +137,8 @@ You can check the status of the replica set using:
 rs.status()
 ```
 
+> You should see both instances listed as members of the replica set. And one of them should be marked as PRIMARY. The rest as SECONDARY.
+
 To add more instances to the replica set, connect to the primary instance (shown above) and run `rs.add("mongo-secondary-b:27017")`.
 
 Be sure to add the DNS names of the new instances to you hosts file:
@@ -136,6 +148,14 @@ Be sure to add the DNS names of the new instances to you hosts file:
 ```
 
 > This is necessary as connectiong via Compass will start with `localhost` but will be redirected to the replica set members DNS names. If you cannot access those replica sets via the DNS names used on the docker network, the connection will fail.
+
+To cleanup the mongo replica set you can stop and remove the containers and delete the volume data.
+
+```bash
+docker compose down
+```
+
+> If you ever delete the volume data in `./service/mongo/data` you will need to re-initiate the replica set as shown above.
 
 ### Connections
 
@@ -149,15 +169,23 @@ mongodb://root:password@localhost:27017,localhost:27018/?replicaSet=rs0&authSour
 
 #### Docker
 
-This should be used in the `.env.<type>.mongo-client` file for the services that need to connect to MongoDB.
+This should be used in the `.configs/mongo.client.uri` file for the services that need to connect to MongoDB.
 
 ```
 mongodb://mongo-primary:27017,mongo-secondary-a:27017
 ```
 
+See the [configs.md](./documentation/configs.md) file for details on the configuration files used in this project.
+
 ## Development Servers
 
 First you will need to create a custom builder instance using the config in the root directory.
+
+```bash
+yarn docker buildx create --use --name tw050x.net.builder
+```
+
+Then you can build the docker images for the services using `yarn bake`.
 
 ```bash
 yarn bake
