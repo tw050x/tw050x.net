@@ -32,14 +32,6 @@ Begin by installing the tool's dependencies:
 yarn install
 ```
 
-### Mongo Keyfile
-
-You will need to ensure the mongo-keyfile file permissions are set correctly for the mongo replica set to work.
-
-```bash
-chmod 600 service/mongo/mongo-keyfile
-```
-
 ### Local Domain Certificate
 
 This certificate is used for local development with the `tw050x.dev` domain. This allows you to run the platform locally with HTTPS.
@@ -99,6 +91,16 @@ yarn certificate create-cert --ca-dir="./ca/users" --cert-dir="./certificates" -
 ```
 
 ## Setup MongoDB Replica Set
+
+### Mongo Keyfile
+
+You will need to ensure the mongo-keyfile file permissions are set correctly for the mongo replica set to work.
+
+```bash
+chmod 600 service/mongo/mongo-keyfile
+```
+
+### Mongo Replica Set
 
 This repo requires a MongoDB replica set to be running. The `docker compose` file will create the necessary containers for you. However you will need to connect to the primary instance and run the replica set initiation command.
 
