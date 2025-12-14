@@ -9,6 +9,9 @@
     "@tailwindcss/cli": "^4.1.12",
     "tailwindcss": "^4.0.12"
   },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
   "license": "UNLICENSED",
   "name": "@tw050x.net.service/assets",
   "private": true,

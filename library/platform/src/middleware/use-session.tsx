@@ -92,6 +92,9 @@ export const useSession: Factory = (options) => async (context) => {
       break sessionGuard;
     }
 
+    // Get the initial IP address from the X-Forwarded-For header
+  const xForwardedForHeader = context.incomingMessage.headers['x-forwarded-for'];
+
     // session is valid so set the user profile UUID
     userProfileUuid = record.userProfileUuid;
 
@@ -101,7 +104,7 @@ export const useSession: Factory = (options) => async (context) => {
         activity: options.activity,
         activityAt: new Date(),
         sessionsLoginsUuid: record.uuid,
-        requestIpAddress: context.incomingMessage.headers['x-forwarded-for'],
+        requestIpAddress: (Array.isArray(xForwardedForHeader) ? xForwardedForHeader[0] : xForwardedForHeader) || 'unknown',
         userProfileUuid,
       });
     }

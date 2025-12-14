@@ -39,10 +39,13 @@ COPY yarn.lock /srv/yarn.lock
 FROM node:23.11.1-alpine3.22 AS library
 WORKDIR /srv
 COPY --from=build /build/library/database/artifact /srv/library/database/artifact
+COPY --from=build /build/library/database/node_modules /srv/library/database/node_modules
 COPY --from=build /build/library/database/package.json /srv/library/database/package.json
 COPY --from=build /build/library/platform/artifact /srv/library/platform/artifact
+COPY --from=build /build/library/platform/node_modules /srv/library/platform/node_modules
 COPY --from=build /build/library/platform/package.json /srv/library/platform/package.json
 COPY --from=build /build/library/static/artifact /srv/library/static/artifact
+COPY --from=build /build/library/static/node_modules /srv/library/static/node_modules
 COPY --from=build /build/library/static/package.json /srv/library/static/package.json
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -65,6 +68,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
 COPY --from=build /build/service/authorisation/artifact /srv/service/authorisation/artifact
+COPY --from=build /build/service/authorisation/node_modules /srv/service/authorisation/node_modules
 COPY --from=build /build/service/authorisation/package.json /srv/service/authorisation/package.json
 RUN yarn workspaces focus @tw050x.net.service/authorisation --production
 CMD [ "node", "service/authorisation/artifact/serve.js" ]
@@ -74,6 +78,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
 COPY --from=build /build/service/error/artifact /srv/service/error/artifact
+COPY --from=build /build/service/error/node_modules /srv/service/error/node_modules
 COPY --from=build /build/service/error/package.json /srv/service/error/package.json
 RUN yarn workspaces focus @tw050x.net.service/error --production
 CMD [ "node", "service/error/artifact/serve.js" ]
@@ -83,6 +88,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
 COPY --from=build /build/service/marketing/artifact /srv/service/marketing/artifact
+COPY --from=build /build/service/marketing/node_modules /srv/service/marketing/node_modules
 COPY --from=build /build/service/marketing/package.json /srv/service/marketing/package.json
 RUN yarn workspaces focus @tw050x.net.service/marketing --production
 CMD [ "node", "service/marketing/artifact/serve.js" ]
@@ -92,6 +98,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
 COPY --from=build /build/service/navigation/artifact /srv/service/navigation/artifact
+COPY --from=build /build/service/navigation/node_modules /srv/service/navigation/node_modules
 COPY --from=build /build/service/navigation/package.json /srv/service/navigation/package.json
 RUN yarn workspaces focus @tw050x.net.service/navigation --production
 CMD [ "node", "service/navigation/artifact/serve.js" ]
@@ -101,6 +108,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
 COPY --from=build /build/service/portal/artifact /srv/service/portal/artifact
+COPY --from=build /build/service/portal/node_modules /srv/service/portal/node_modules
 COPY --from=build /build/service/portal/package.json /srv/service/portal/package.json
 RUN yarn workspaces focus @tw050x.net.service/portal --production
 CMD [ "node", "service/portal/artifact/serve.js" ]
@@ -110,6 +118,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
 COPY --from=build /build/service/users/artifact /srv/service/users/artifact
+COPY --from=build /build/service/users/node_modules /srv/service/users/node_modules
 COPY --from=build /build/service/users/package.json /srv/service/users/package.json
 RUN yarn workspaces focus @tw050x.net.service/users --production
 CMD [ "node", "service/users/artifact/serve.js" ]
@@ -123,6 +132,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
 COPY --from=build /build/worker/sessions-queue/artifact /srv/worker/sessions-queue/artifact
+COPY --from=build /build/worker/sessions-queue/node_modules /srv/worker/sessions-queue/node_modules
 COPY --from=build /build/worker/sessions-queue/package.json /srv/worker/sessions-queue/package.json
 RUN yarn workspaces focus @tw050x.net.worker/sessions-queue --production
 CMD [ "node", "worker/sessions-queue/artifact/run.js" ]
@@ -132,6 +142,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
 COPY --from=build /build/worker/sessions-scheduler/artifact /srv/worker/sessions-scheduler/artifact
+COPY --from=build /build/worker/sessions-scheduler/node_modules /srv/worker/sessions-scheduler/node_modules
 COPY --from=build /build/worker/sessions-scheduler/package.json /srv/worker/sessions-scheduler/package.json
 RUN yarn workspaces focus @tw050x.net.worker/sessions-scheduler --production
 CMD [ "node", "worker/sessions-scheduler/artifact/run.js" ]
@@ -141,6 +152,7 @@ WORKDIR /srv
 COPY --from=dependencies /srv /srv
 COPY --from=library /srv/library /srv/library
 COPY --from=build /build/worker/users-queue/artifact /srv/worker/users-queue/artifact
+COPY --from=build /build/worker/users-queue/node_modules /srv/worker/users-queue/node_modules
 COPY --from=build /build/worker/users-queue/package.json /srv/worker/users-queue/package.json
 RUN yarn workspaces focus @tw050x.net.worker/users-queue --production
 CMD [ "node", "worker/users-queue/artifact/run.js" ]
