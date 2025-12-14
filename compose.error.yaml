@@ -40,14 +40,14 @@ services:
       - source: ./ca
         target: /srv/ca
         type: bind
-      - source: ./certificates
-        target: /srv/certificates
-        type: bind
       - source: ./library
         target: /srv/library
         type: bind
       - source: ./log/service/error
         target: /log
+        type: bind
+      - source: ./node_modules
+        target: /srv/node_modules
         type: bind
       - source: ./service/error
         target: /srv/service/error

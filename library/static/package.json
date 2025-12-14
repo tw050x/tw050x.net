@@ -15,9 +15,6 @@
   "exports": {
     ".": "./artifact/index.js"
   },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/static",
   "scripts": {

@@ -10,7 +10,8 @@
     ],
   },
   "exclude": [
-    "artifact"
+    "artifact",
+    "node_modules",
   ],
   "extends": "../../tsconfig.json",
   "files": [

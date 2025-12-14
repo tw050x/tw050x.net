@@ -49,14 +49,14 @@ services:
       - source: ./ca
         target: /srv/ca
         type: bind
-      - source: ./certificates
-        target: /srv/certificates
-        type: bind
       - source: ./library
         target: /srv/library
         type: bind
       - source: ./log/service/users
         target: /log
+        type: bind
+      - source: ./node_modules
+        target: /srv/node_modules
         type: bind
       - source: ./service/users
         target: /srv/service/users
@@ -78,7 +78,7 @@ services:
     networks:
       users:
         aliases:
-          - users-redis.internal
+          - users.network
     ports:
       - "6481:6379"
     volumes:
@@ -104,7 +104,7 @@ services:
     networks:
       mongo:
         aliases:
-          - mongo.internal
+          - mongo.network
       users: {}
     ports:
       - "9401:9229"
@@ -121,6 +121,9 @@ services:
         type: bind
       - source: ./log/worker/users-queue
         target: /log
+        type: bind
+      - source: ./node_modules
+        target: /srv/node_modules
         type: bind
       - source: ./worker/users-queue
         target: /srv/worker/users-queue

@@ -14,7 +14,7 @@ services:
     networks:
       sessions:
         aliases:
-          - sessions-redis.internal
+          - sessions.internal
     ports:
       - "6381:6379"
     volumes:
@@ -40,7 +40,7 @@ services:
     networks:
       mongo:
         aliases:
-          - mongo.internal
+          - mongo.network
       sessions: {}
       users: {}
     ports:
@@ -58,6 +58,9 @@ services:
         type: bind
       - source: ./log/worker/sessions-queue
         target: /log
+        type: bind
+      - source: ./node_modules
+        target: /srv/node_modules
         type: bind
       - source: ./worker/sessions-queue
         target: /srv/worker/sessions-queue
@@ -98,6 +101,9 @@ services:
         type: bind
       - source: ./log/worker/sessions-scheduler
         target: /log
+        type: bind
+      - source: ./node_modules
+        target: /srv/node_modules
         type: bind
       - source: ./worker/sessions-scheduler
         target: /srv/worker/sessions-scheduler

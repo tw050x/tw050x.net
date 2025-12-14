@@ -32,6 +32,14 @@ Begin by installing the tool's dependencies:
 yarn install
 ```
 
+### Mongo Keyfile
+
+You will need to ensure the mongo-keyfile file permissions are set correctly for the mongo replica set to work.
+
+```bash
+chmod 600 service/mongo/mongo-keyfile
+```
+
 ### Local Domain Certificate
 
 This certificate is used for local development with the `tw050x.dev` domain. This allows you to run the platform locally with HTTPS.

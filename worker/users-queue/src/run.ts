@@ -9,7 +9,7 @@ let unrecoverableErrorOccured = false;
 
 const workerOptions: WorkerOptions = {
   connection: {
-    host: 'users-redis.internal',
+    host: 'users.network',
   },
 };
 

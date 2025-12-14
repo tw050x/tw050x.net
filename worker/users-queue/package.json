@@ -14,9 +14,6 @@
     "@types/node": "^22.10.2",
     "typescript": "^5.7.2"
   },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
   "license": "UNLICENSED",
   "name": "@tw050x.net.worker/users-queue",
   "private": true,

@@ -22,7 +22,7 @@ services:
       - traefik.http.services.assets.loadbalancer.server.port=3000
     mem_limit: 512mb
     networks:
-      - services
+      services: {}
     pull_policy: never
     volumes:
       - source: ./service/assets/public

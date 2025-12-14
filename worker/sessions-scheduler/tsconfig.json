@@ -9,7 +9,10 @@
       "@kitajs/html/htmx.d.ts",
     ],
   },
-  "exclude": [],
+  "exclude": [
+    "artifact",
+    "node_modules",
+  ],
   "extends": "../../tsconfig.json",
   "files": [
     "../../types/env.worker.sessions-scheduler.d.ts",

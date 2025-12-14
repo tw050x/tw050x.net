@@ -3,7 +3,7 @@ import { Queue, QueueOptions } from "bullmq";
 
 const queueOptions: QueueOptions = {
   connection: {
-    host: 'sessions-redis.internal',
+    host: 'sessions.internal',
   },
 };
 

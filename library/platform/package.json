@@ -115,9 +115,6 @@
     "./service": "./artifact/service.js",
     "./types": "./artifact/types.js"
   },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/platform",
   "scripts": {

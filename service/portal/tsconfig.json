@@ -7,7 +7,8 @@
     "types": ["@kitajs/html/htmx.d.ts"],
   },
   "exclude": [
-    "artifact"
+    "artifact",
+    "node_modules",
   ],
   "extends": "../../tsconfig.json",
   "files": [
