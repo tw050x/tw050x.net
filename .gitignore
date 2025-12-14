@@ -22,6 +22,10 @@ tmp/*
 # MacOS
 .DS_Store
 
+# Node
+node_modules/
+**/node_modules/
+
 # Secrets
 .secret/**
 

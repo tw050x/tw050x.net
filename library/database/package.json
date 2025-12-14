@@ -22,6 +22,9 @@
     "./client": "./artifact/client.js",
     "./helper": "./artifact/helper.js"
   },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
   "license": "UNLICENSED",
   "name": "@tw050x.net.library/database",
   "scripts": {

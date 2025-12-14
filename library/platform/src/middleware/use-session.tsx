@@ -101,6 +101,7 @@ export const useSession: Factory = (options) => async (context) => {
         activity: options.activity,
         activityAt: new Date(),
         sessionsLoginsUuid: record.uuid,
+        requestIpAddress: context.incomingMessage.headers['x-forwarded-for'],
         userProfileUuid,
       });
     }
