@@ -1,4 +1,4 @@
-import { read as readConfig } from "../helper/configs.js";
+import { read as readConstant } from "../helper/constants.js";
 import { mongoClient } from "../client.js";
 
 //
@@ -29,12 +29,12 @@ export type LoginsDocument = {
 export const collectionMeta = {
   get activity() {
     return {
-      name: readConfig('database.sessions-activity-collection.name'),
+      name: readConstant('database.sessions-activity-collection.name'),
     };
   },
   get logins() {
     return {
-      name: readConfig('database.sessions-logins-collection.name'),
+      name: readConstant('database.sessions-logins-collection.name'),
     };
   },
 }
@@ -44,7 +44,7 @@ export const collectionMeta = {
  */
 export const database = {
   get activity() {
-    const databaseName = readConfig('database.sessions.name');
+    const databaseName = readConstant('database.sessions.name');
     const activityCollectionName = collectionMeta.activity.name;
     guard: {
       if (activityCollectionName === undefined) break guard;
@@ -54,7 +54,7 @@ export const database = {
     throw new Error(`Missing config: database.sessions-activity-collection.name`);
   },
   get logins() {
-    const databaseName = readConfig('database.sessions.name');
+    const databaseName = readConstant('database.sessions.name');
     const loginsCollectionName = collectionMeta.logins.name;
     guard: {
       if (loginsCollectionName === undefined) break guard;

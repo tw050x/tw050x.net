@@ -17,6 +17,7 @@
     "src/collections/sessions.ts",
     "src/collections/users.ts",
     "src/helper/configs.ts",
+    "src/helper/constants.ts",
     "src/helper/logger.ts",
     "src/helper/mongodb.ts",
     "src/helper/secrets.ts",

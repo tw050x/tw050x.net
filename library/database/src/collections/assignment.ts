@@ -1,4 +1,4 @@
-import { read as readConfig } from "../helper/configs.js";
+import { read as readConstant } from "../helper/constants.js";
 import { DatabaseDocument } from "../types.js"
 import { mongoClient } from "../client.js";
 
@@ -38,12 +38,12 @@ export type AssignmentTaskTemplateDocument = {
 export const collectionMeta = {
   get tasks() {
     return {
-      name: readConfig('database.assignments-tasks-collection.name'),
+      name: readConstant('database.assignments-tasks-collection.name'),
     };
   },
   get tasksTemplates() {
     return {
-      name: readConfig('database.assignments-tasks-templates-collection.name'),
+      name: readConstant('database.assignments-tasks-templates-collection.name'),
     };
   },
 }
@@ -53,7 +53,7 @@ export const collectionMeta = {
  */
 export const database = {
   get tasks() {
-    const databaseName = readConfig('database.assignments.name');
+    const databaseName = readConstant('database.assignments.name');
     const taskCollectionName = collectionMeta.tasks.name;
     guard: {
       if (taskCollectionName === '') break guard;
@@ -62,7 +62,7 @@ export const database = {
     throw new Error(`Missing config file missing: database.assignments-tasks-collection.name`);
   },
   get tasksTemplates() {
-    const databaseName = readConfig('database.assignments.name');
+    const databaseName = readConstant('database.assignments.name');
     const taskTemplateCollectionName = collectionMeta.tasksTemplates.name;
     guard: {
       if (taskTemplateCollectionName === '') break guard;

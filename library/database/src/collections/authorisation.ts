@@ -1,4 +1,4 @@
-import { read as readConfig } from "../helper/configs.js";
+import { read as readConstant } from "../helper/constants.js";
 import { DatabaseDocument } from "../types.js";
 import { mongoClient } from "../client.js";
 
@@ -15,7 +15,7 @@ export interface AuthorisationPermissionsDocument extends DatabaseDocument {
 export const collectionMeta = {
   get permissions() {
     return {
-      name: readConfig('database.authorisation-permissions-collection.name'),
+      name: readConstant('database.authorisation-permissions-collection.name'),
     };
   },
 }
@@ -25,7 +25,7 @@ export const collectionMeta = {
  */
 export const database = {
   get permissions() {
-    const databaseName = readConfig('database.authorisation.name');
+    const databaseName = readConstant('database.authorisation.name');
     const permissionsCollectionName = collectionMeta.permissions.name;
     guard: {
       if (permissionsCollectionName === '') break guard;

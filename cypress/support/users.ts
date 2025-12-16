@@ -4,9 +4,9 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { mongoClient } from "./mongo-client";
 
-const userDatabaseName = readFileSync(resolve(__dirname, '..', '..', '.configs', 'database.users.name'), 'utf-8').trim();
-const userDatabaseCredentialsCollectionName = readFileSync(resolve(__dirname, '..', '..', '.configs', 'database.users-credentials-collection.name'), 'utf-8').trim();
-const userDatabaseProfilesCollectionName = readFileSync(resolve(__dirname, '..', '..', '.configs', 'database.users-profiles-collection.name'), 'utf-8').trim();
+const userDatabaseName = readFileSync(resolve(__dirname, '..', '..', '.constants', 'database.users.name'), 'utf-8').trim();
+const userDatabaseCredentialsCollectionName = readFileSync(resolve(__dirname, '..', '..', '.constants', 'database.users-credentials-collection.name'), 'utf-8').trim();
+const userDatabaseProfilesCollectionName = readFileSync(resolve(__dirname, '..', '..', '.constants', 'database.users-profiles-collection.name'), 'utf-8').trim();
 
 /**
  * Create a user directly in the database for testing purposes.

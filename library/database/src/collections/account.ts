@@ -1,4 +1,4 @@
-import { read as readConfig } from "../helper/configs.js";
+import { read as readConstant } from "../helper/constants.js";
 import { mongoClient } from "../client.js";
 
 //
@@ -49,22 +49,22 @@ export type AcccountTenantsDocument = {
 export const collectionMeta = {
   get billing() {
     return {
-      name: readConfig('database.account-billing-collection.name'),
+      name: readConstant('database.account-billing-collection.name'),
     };
   },
   get invitations() {
     return {
-      name: readConfig('database.account-invitations-collection.name'),
+      name: readConstant('database.account-invitations-collection.name'),
     };
   },
   get memberships() {
     return {
-      name: readConfig('database.account-memberships-collection.name'),
+      name: readConstant('database.account-memberships-collection.name'),
     };
   },
-  get profile() {
+  get profiles() {
     return {
-      name: readConfig('database.account-profile-collection.name'),
+      name: readConstant('database.account-profiles-collection.name'),
     };
   },
 }
@@ -74,8 +74,8 @@ export const collectionMeta = {
  */
 export const database = {
   get billing() {
-    const databaseName = readConfig('database.account.name');
-    const billingCollectionName = readConfig('database.account-billing-collection.name');
+    const databaseName = readConstant('database.account.name');
+    const billingCollectionName = readConstant('database.account-billing-collection.name');
     guard: {
       if (billingCollectionName === undefined) break guard;
       if (billingCollectionName === '') break guard;
@@ -84,8 +84,8 @@ export const database = {
     throw new Error(`Missing config: database.account-billing-collection.name`);
   },
   get invitations() {
-    const databaseName = readConfig('database.account.name');
-    const invitationsCollectionName = readConfig('database.account-invitations-collection.name');
+    const databaseName = readConstant('database.account.name');
+    const invitationsCollectionName = readConstant('database.account-invitations-collection.name');
     guard: {
       if (invitationsCollectionName === undefined) break guard;
       if (invitationsCollectionName === '') break guard;
@@ -94,8 +94,8 @@ export const database = {
     throw new Error(`Missing config: database.account-invitations-collection.name`);
   },
   get memberships() {
-    const databaseName = readConfig('database.account.name');
-    const membershipsCollectionName = readConfig('database.account-memberships-collection.name');
+    const databaseName = readConstant('database.account.name');
+    const membershipsCollectionName = readConstant('database.account-memberships-collection.name');
     guard: {
       if (membershipsCollectionName === undefined) break guard;
       if (membershipsCollectionName === '') break guard;
@@ -104,8 +104,8 @@ export const database = {
     throw new Error(`Missing config: database.account-memberships-collection.name`);
   },
   get profiles() {
-    const databaseName = readConfig('database.account.name');
-    const profilesCollectionName = readConfig('database.account-profiles-collection.name');
+    const databaseName = readConstant('database.account.name');
+    const profilesCollectionName = readConstant('database.account-profiles-collection.name');
     guard: {
       if (profilesCollectionName === undefined) break guard;
       if (profilesCollectionName === '') break guard;

@@ -1,4 +1,3 @@
-import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
 import { useCorsHeaders } from "@tw050x.net.library/platform/middleware/use-cors-headers";
 import { useLogRequest } from "@tw050x.net.library/platform/middleware/use-log-request";
 import { default as defineServiceMiddleware } from "@tw050x.net.library/platform/middleware";;

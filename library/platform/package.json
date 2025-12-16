@@ -25,6 +25,7 @@
     "./helper/user/generate-register-form-nonce": "./artifact/helper/user/generate-register-form-nonce.js",
     "./helper/authentication/generate-login-form-nonce": "./artifact/helper/authentication/generate-login-form-nonce.js",
     "./helper/configs": "./artifact/helper/configs.js",
+    "./helper/constants": "./artifact/helper/constants.js",
     "./helper/encrypt": "./artifact/helper/encrypt.js",
     "./helper/logger": "./artifact/helper/logger.js",
     "./helper/secrets": "./artifact/helper/secrets.js",

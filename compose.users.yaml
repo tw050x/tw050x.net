@@ -43,6 +43,9 @@ services:
       - source: ./.configs
         target: /srv/.configs
         type: bind
+      - source: ./.constants
+        target: /srv/.constants
+        type: bind
       - source: ./.secrets
         target: /srv/.secrets
         type: bind
@@ -112,6 +115,9 @@ services:
     volumes:
       - source: ./.configs
         target: /srv/.configs
+        type: bind
+      - source: ./.constants
+        target: /srv/.constants
         type: bind
       - source: ./.secrets
         target: /srv/.secrets

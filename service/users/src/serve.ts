@@ -12,8 +12,8 @@ const server = defineServer({
   port: 3000,
   routes,
   sslOptions: {
-    crtPath: resolve(__dirname, '..', '..', '..', 'certificates', 'user.crt'),
-    keyPath: resolve(__dirname, '..', '..', '..', 'certificates', 'user.key'),
+    crtPath: resolve(__dirname, '..', '..', '..', 'certificates', 'users.crt'),
+    keyPath: resolve(__dirname, '..', '..', '..', 'certificates', 'users.key'),
   },
 });
 

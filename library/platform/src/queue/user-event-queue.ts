@@ -1,4 +1,4 @@
-import { read as readConfig } from "../helper/configs.js";
+import { read as readConstant } from "../helper/constants.js";
 import { Queue, QueueOptions } from "bullmq";
 
 const queueOptions: QueueOptions = {
@@ -8,6 +8,6 @@ const queueOptions: QueueOptions = {
 };
 
 export const userEventQueue = new Queue(
-  readConfig('service.users.event-queue-name'),
+  readConstant('service.users.event-queue-name'),
   queueOptions
 );

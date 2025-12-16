@@ -1,4 +1,4 @@
-import { read as readConfig } from "@tw050x.net.library/platform/helper/configs";
+import { read as readConstant } from "@tw050x.net.library/platform/helper/constants";
 import { logger } from "@tw050x.net.library/platform/helper/logger";
 import { writeFileSync } from "node:fs";
 import { Job, Worker, WorkerOptions } from "bullmq";
@@ -14,7 +14,7 @@ const workerOptions: WorkerOptions = {
 };
 
 const worker = new Worker(
-  readConfig('service.users.event-queue-name'),
+  readConstant('service.users.event-queue-name'),
   async (job: Job) => {
     switch (job.name) {
       case 'UserRegistered': return await handleUserRegisteredEvent(job.data);

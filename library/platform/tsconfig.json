@@ -25,6 +25,7 @@
     "src/helper/sessions/generate-session-id.ts",
     "src/helper/user/generate-register-form-nonce.ts",
     "src/helper/configs.ts",
+    "src/helper/constants.ts",
     "src/helper/encrypt.ts",
     "src/helper/logger.ts",
     "src/helper/secrets.ts",

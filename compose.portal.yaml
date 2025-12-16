@@ -42,11 +42,17 @@ services:
       - source: ./.configs
         target: /srv/.configs
         type: bind
+      - source: ./.constants
+        target: /srv/.constants
+        type: bind
       - source: ./.secrets
         target: /srv/.secrets
         type: bind
       - source: ./ca
         target: /srv/ca
+        type: bind
+      - source: ./certificates
+        target: /srv/certificates
         type: bind
       - source: ./library
         target: /srv/library

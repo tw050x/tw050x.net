@@ -1,4 +1,4 @@
-import { read as readConfig } from "../helper/configs.js";
+import { read as readConstant } from "../helper/constants.js";
 import { mongoClient } from "../client.js";
 
 //
@@ -14,7 +14,7 @@ export type NoncesDocument = {
 export const collectionMeta = {
   get nonces() {
     return {
-      name: readConfig('database.payments-nonces-collection.name'),
+      name: readConstant('database.payments-nonces-collection.name'),
     };
   },
 }
@@ -24,7 +24,7 @@ export const collectionMeta = {
  */
 export const database = {
   get nonces() {
-    const databaseName = readConfig('database.payments.name');
+    const databaseName = readConstant('database.payments.name');
     const noncesCollectionName = collectionMeta.nonces.name
     guard: {
       if (noncesCollectionName === undefined) break guard;

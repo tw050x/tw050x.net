@@ -3,8 +3,8 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { mongoClient } from "./mongo-client";
 
-const sessionsDatabaseName = readFileSync(resolve(__dirname, '..', '..', '.configs', 'database.sessions.name'), 'utf-8').trim();
-const sessionsLoginsCollectionName = readFileSync(resolve(__dirname, '..', '..', '.configs', 'database.sessions-logins-collection.name'), 'utf-8').trim();
+const sessionsDatabaseName = readFileSync(resolve(__dirname, '..', '..', '.constants', 'database.sessions.name'), 'utf-8').trim();
+const sessionsLoginsCollectionName = readFileSync(resolve(__dirname, '..', '..', '.constants', 'database.sessions-logins-collection.name'), 'utf-8').trim();
 
 type CreateSessionOverrides = {
   createdAt?: string;

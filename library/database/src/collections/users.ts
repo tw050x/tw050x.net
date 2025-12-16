@@ -1,4 +1,4 @@
-import { read as readConfig } from "../helper/configs.js";
+import { read as readConstant } from "../helper/constants.js";
 import { mongoClient } from "../client.js";
 
 //
@@ -60,22 +60,22 @@ export type ProfileDocument = {
 export const collectionMeta = {
   get credentials() {
     return {
-      name: readConfig('database.users-credentials-collection.name'),
+      name: readConstant('database.users-credentials-collection.name'),
     };
   },
   get nonces() {
     return {
-      name: readConfig('database.users-nonces-collection.name'),
+      name: readConstant('database.users-nonces-collection.name'),
     };
   },
   get permissions() {
     return {
-      name: readConfig('database.users-permissions-collection.name'),
+      name: readConstant('database.users-permissions-collection.name'),
     };
   },
   get profiles() {
     return {
-      name: readConfig('database.users-profiles-collection.name'),
+      name: readConstant('database.users-profiles-collection.name'),
     };
   },
 }
@@ -85,8 +85,8 @@ export const collectionMeta = {
  */
 export const database = {
   get credentials() {
-    const databaseName = readConfig('database.users.name');
-    const credentialsCollectionName = readConfig('database.users-credentials-collection.name');
+    const databaseName = readConstant('database.users.name');
+    const credentialsCollectionName = readConstant('database.users-credentials-collection.name');
     guard: {
       if (credentialsCollectionName === undefined) break guard;
       if (credentialsCollectionName === '') break guard;
@@ -95,8 +95,8 @@ export const database = {
     throw new Error(`Missing config file: database.users-credentials-collection.name`);
   },
   get nonces() {
-    const databaseName = readConfig('database.users.name');
-    const noncesCollectionName = readConfig('database.users-nonces-collection.name');
+    const databaseName = readConstant('database.users.name');
+    const noncesCollectionName = readConstant('database.users-nonces-collection.name');
     guard: {
       if (noncesCollectionName === undefined) break guard;
       if (noncesCollectionName === '') break guard;
@@ -105,8 +105,8 @@ export const database = {
     throw new Error(`Missing config file: database.users-nonces-collection.name`);
   },
   get permissions() {
-    const databaseName = readConfig('database.users.name');
-    const permissionsCollectionName = readConfig('database.users-permissions-collection.name');
+    const databaseName = readConstant('database.users.name');
+    const permissionsCollectionName = readConstant('database.users-permissions-collection.name');
     guard: {
       if (permissionsCollectionName === undefined) break guard;
       if (permissionsCollectionName === '') break guard;
@@ -115,8 +115,8 @@ export const database = {
     throw new Error(`Missing config file: database.users-permissions-collection.name`);
   },
   get profiles() {
-    const databaseName = readConfig('database.users.name');
-    const profilesCollectionName = readConfig('database.users-profiles-collection.name');
+    const databaseName = readConstant('database.users.name');
+    const profilesCollectionName = readConstant('database.users-profiles-collection.name');
     guard: {
       if (profilesCollectionName === undefined) break guard;
       if (profilesCollectionName === '') break guard;
