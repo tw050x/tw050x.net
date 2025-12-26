@@ -1,0 +1,69 @@
+{
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "certificate-manager.createConfig",
+        "title": "Certificate Manager: Create .certificates.json"
+      },
+      {
+        "command": "certificate-manager.loadConfigurations",
+        "title": "Certificate Manager: Load Configurations"
+      },
+      {
+        "command": "certificate-manager.loadConfigurations",
+        "title": "Certificate Manager: Reload Configurations"
+      },
+      {
+        "command": "certificate-manager.openConfiguration",
+        "title": "Certificate Manager: Open Configuration"
+      }
+    ],
+    "configuration": {
+      "title": "Certificate Manager",
+      "properties": {
+        "@tw050x.net/certificate-manager.sidebar.workspaceFolderNameDepth": {
+          "type": "number",
+          "default": 1,
+          "minimum": 1,
+          "description": "Number of path segments from the workspace folder to show in the sidebar. This is a reverse count from the end of the path. For example, a value of 1 shows only the folder name, while a value of 2 includes the parent folder. This primarily exists to help with users of git worktrees where folder names may be branch names rather than repository names."
+        }
+      }
+    },
+    "views": {
+      "certificate-manager--sidebar": [
+        {
+          "icon": "media/sidebar.svg",
+          "id": "certificate-manager--sidebar",
+          "name": "Certificate Manager"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "icon": "media/activitybar.svg",
+          "id": "certificate-manager--sidebar",
+          "title": "Certificate Manager"
+        }
+      ]
+    }
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.107.0",
+    "typescript": "^5.7.2"
+  },
+  "description": "Create local development certificates from inside VS Code.",
+  "displayName": "@tw050x.net/certificate-manager",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "extensionKind": ["ui"],
+  "license": "UNLICENSED",
+  "main": "./artifact/extension.js",
+  "name": "@tw050x.net/certificate-manager",
+  "publisher": "tw050x",
+  "version": "0.0.6"
+}

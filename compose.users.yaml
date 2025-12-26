@@ -52,6 +52,9 @@ services:
       - source: ./ca
         target: /srv/ca
         type: bind
+      - source: ./certificates
+        target: /srv/certificates
+        type: bind
       - source: ./library
         target: /srv/library
         type: bind

@@ -1,4 +1,6 @@
 {
+  // @tw050x.net/certificate-manager
+  "@tw050x.net/certificate-manager.sidebar.workspaceFolderNameDepth": 3,
   // Chat
   "chat.agent.enabled": true,
   // Editor

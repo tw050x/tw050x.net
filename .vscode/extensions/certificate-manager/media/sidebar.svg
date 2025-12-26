@@ -1,0 +1,8 @@
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield + list icon for Certificate Authorities explorer view -->
+  <path d="M8 1.25 L3 3.25 V7.25 C3 10.55 5 13.2 8 14.5 C11 13.2 13 10.55 13 7.25 V3.25 L8 1.25 Z"
+        fill="none" stroke="#C5C5C5" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M5.3 6.0 H10.7" fill="none" stroke="#C5C5C5" stroke-width="1" stroke-linecap="round"/>
+  <path d="M5.3 8.0 H10.7" fill="none" stroke="#C5C5C5" stroke-width="1" stroke-linecap="round"/>
+  <path d="M5.3 10.0 H9.6" fill="none" stroke="#C5C5C5" stroke-width="1" stroke-linecap="round"/>
+</svg>

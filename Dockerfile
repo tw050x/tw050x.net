@@ -30,6 +30,7 @@ RUN yarn workspaces foreach \
 
 FROM node:23.11.1-alpine3.22 AS dependencies
 WORKDIR /srv
+COPY .constants /srv/.constants
 COPY .yarn /srv/.yarn
 COPY .yarnrc.yml /srv/.yarnrc.yml
 COPY package.json /srv/package.json

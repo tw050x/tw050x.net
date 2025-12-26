@@ -107,26 +107,20 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "icon": "media/redis-activitybar-dark.svg",
+          "icon": "media/redis-activitybar.svg",
           "id": "redis-explorer",
           "title": "Redis"
         }
       ]
     }
   },
-  "dependencies": {
-    "ioredis": "^5.3.0"
-  },
   "description": "A simple Redis client for VS Code",
-  "displayName": "@tw050x.net.extension/redis-client",
+  "displayName": "@tw050x.net.extension/redis",
   "engines": {
     "vscode": "^1.80.0"
   },
-  "installConfig": {
-    "hoistingLimits": "workspaces"
-  },
   "main": "./src/extension.js",
-  "name": "@tw050x.net.extension/redis-client",
+  "name": "@tw050x.net.extension/redis",
   "publisher": "tw050x",
   "version": "0.0.1"
 }

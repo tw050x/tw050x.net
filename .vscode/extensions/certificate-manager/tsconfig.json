@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "jsxImportSource": "@kitajs/html",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "./artifact",
+    "plugins": [
+      { "name": "@kitajs/ts-html-plugin" }
+    ],
+    "rootDir": "./src",
+    "sourceMap": true,
+    "strict": true,
+    "target": "ES2024",
+  },
+  "exclude": [],
+  "files": [
+    "src/command/create-configuration.ts",
+    "src/command/load-configurations.ts",
+    "src/command/open-configuration.ts",
+    "src/command/open-documentation.ts",
+    "src/provider/SidebarTreeItem/ActionTreeItem.ts",
+    "src/provider/SidebarTreeItem/DirectoryTreeItem.ts",
+    "src/provider/SidebarTreeItem/EmptyTreeItem.ts",
+    "src/provider/SidebarTreeItem/TypedTreeItem.ts",
+    "src/provider/SidebarTreeDataProvider.tsx",
+    "src/extension.ts",
+    "src/types.ts",
+  ]
+}
