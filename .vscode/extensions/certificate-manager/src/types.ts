@@ -6,10 +6,12 @@ import { TreeItem } from "vscode";
  */
 export type TypedTreeItemType =
   | "create-configuration-file"
+  | "load-configuration-file"
   | "open-configuration-file"
   | "open-documentation"
   | "no-configuration"
   | "no-workspaces"
+  | "refresh-configuration-files"
   | "workspace"
   | "workspaces"
 

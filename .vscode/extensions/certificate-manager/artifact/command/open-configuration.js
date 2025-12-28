@@ -13,8 +13,8 @@ exports.commandId = "certificate-manager.openConfiguration";
  * @param folder
  * @returns
  */
-async function openConfigurationFile(uri) {
-    const document = await vscode_1.workspace.openTextDocument(vscode_1.Uri.joinPath(uri, ".certificates.json"));
+async function openConfigurationFile(workspaceFolder) {
+    const document = await vscode_1.workspace.openTextDocument(vscode_1.Uri.joinPath(workspaceFolder.uri, ".certificates.json"));
     await vscode_1.window.showTextDocument(document);
 }
 /**
@@ -24,17 +24,17 @@ async function openConfigurationFile(uri) {
  * @returns
  */
 function registerOpenConfigurationCommand(context) {
-    const handler = async (uri) => {
-        if (uri === undefined) {
+    const handler = async (workspaceFolder) => {
+        if (workspaceFolder === undefined) {
             const folder = await vscode_1.window.showWorkspaceFolderPick({
                 placeHolder: "Select a workspace folder to open .certificates.json",
             });
-            if (!folder) {
+            if (folder === undefined) {
                 return;
             }
-            uri = folder.uri;
+            workspaceFolder = folder;
         }
-        await openConfigurationFile(uri);
+        await openConfigurationFile(workspaceFolder);
     };
     context.subscriptions.push(vscode_1.commands.registerCommand(exports.commandId, handler));
 }

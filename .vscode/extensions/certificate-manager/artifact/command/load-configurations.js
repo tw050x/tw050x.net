@@ -3,14 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.commandId = void 0;
 exports.registerLoadConfigurationsCommand = registerLoadConfigurationsCommand;
 const vscode_1 = require("vscode");
+const cache_1 = require("../cache");
 /**
  *
  */
 exports.commandId = "certificate-manager.loadConfigurations";
-/**
- * Configuration storage.
- */
-const configurations = new Map();
 /**
  * Loads .certificates.json config files from all workspace folders.
  */
@@ -18,7 +15,7 @@ async function loadConfigurations() {
     if (vscode_1.workspace.workspaceFolders === undefined || vscode_1.workspace.workspaceFolders.length === 0) {
         return void vscode_1.window.showWarningMessage("No workspace folder is open. Certificate Manager cannot load configuration.");
     }
-    configurations.clear();
+    cache_1.configurations.clear();
     let loadedCount = 0;
     for (const folder of vscode_1.workspace.workspaceFolders) {
         const configFileUri = vscode_1.Uri.joinPath(folder.uri, ".certificates.json");
@@ -36,7 +33,7 @@ async function loadConfigurations() {
             const fileContent = Buffer.from(fileData).toString("utf8");
             const config = JSON.parse(fileContent);
             loadedCount++;
-            configurations.set(configFilePath, config);
+            cache_1.configurations.set(configFilePath, config);
         }
         catch (error) {
             vscode_1.window.showWarningMessage(`Could not read configuration file at ${configFilePath}. Reason: ${error}`);

@@ -1,6 +1,5 @@
 import { EventEmitter, ThemeIcon, TreeDataProvider, TreeItemCollapsibleState, Uri, WorkspaceFolder, workspace } from "vscode";
 import { commandId as createConfigurationCommandId } from "../command/create-configuration";
-import { commandId as loadConfigurationCommandId } from "../command/load-configuration";
 import { commandId as loadConfigurationsCommandId } from "../command/load-configurations";
 import { commandId as openConfigurationCommandId } from "../command/open-configuration";
 import { commandId as openDocumentationCommandId } from "../command/open-documentation";
@@ -11,7 +10,6 @@ import { TypedTreeItem } from "./SidebarTreeItem/TypedTreeItem";
 
 type SidebarTreeItem =
   | ActionTreeItem<"create-configuration-file">
-  | ActionTreeItem<"load-configuration-file">
   | ActionTreeItem<"open-configuration-file">
   | ActionTreeItem<"open-documentation">
   | ActionTreeItem<"refresh-configuration-files">
@@ -189,26 +187,14 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
     const configFileUri = Uri.joinPath(element.uri, ".certificates.json");
     try {
       await workspace.fs.stat(configFileUri);
-
-      // Action: Open Configuration File
       const openConfigurationTreeItem = new ActionTreeItem<"open-configuration-file">("open-configuration-file", "Open Configuration File");
       openConfigurationTreeItem.setCommand({
-        arguments: [element],
+        arguments: [element.uri],
         command: openConfigurationCommandId,
         title: "Open Certificate Configuration File",
       });
       openConfigurationTreeItem.setIconPath(new ThemeIcon("json"));
       children.push(openConfigurationTreeItem);
-
-      // Action: Load Configuration File
-      const refreshConfigurationTreeItem = new ActionTreeItem<"load-configuration-file">("load-configuration-file", "Refresh Configuration File");
-      refreshConfigurationTreeItem.setCommand({
-        arguments: [element],
-        command: loadConfigurationCommandId,
-        title: "Refresh Configuration File",
-      });
-      refreshConfigurationTreeItem.setIconPath(new ThemeIcon("refresh"));
-      children.push(refreshConfigurationTreeItem);
     }
     catch {
       const createConfigurationTreeItem = new ActionTreeItem<"create-configuration-file">("create-configuration-file", "Create Configuration File");

@@ -9,12 +9,12 @@
         "title": "Certificate Manager: Create .certificates.json"
       },
       {
-        "command": "certificate-manager.loadConfigurations",
-        "title": "Certificate Manager: Load Configurations"
+        "command": "certificate-manager.loadConfiguration",
+        "title": "Certificate Manager: Load Configuration"
       },
       {
         "command": "certificate-manager.loadConfigurations",
-        "title": "Certificate Manager: Reload Configurations"
+        "title": "Certificate Manager: Load Configurations"
       },
       {
         "command": "certificate-manager.openConfiguration",

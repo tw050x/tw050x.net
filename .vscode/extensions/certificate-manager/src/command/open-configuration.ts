@@ -11,8 +11,8 @@ export const commandId = "certificate-manager.openConfiguration";
  * @param folder
  * @returns
  */
-async function openConfigurationFile(uri: Uri): Promise<void> {
-  const document = await workspace.openTextDocument(Uri.joinPath(uri, ".certificates.json"));
+async function openConfigurationFile(workspaceFolder: WorkspaceFolder): Promise<void> {
+  const document = await workspace.openTextDocument(Uri.joinPath(workspaceFolder.uri, ".certificates.json"));
   await window.showTextDocument(document);
 }
 
@@ -23,19 +23,19 @@ async function openConfigurationFile(uri: Uri): Promise<void> {
  * @returns
  */
 export function registerOpenConfigurationCommand(context: ExtensionContext) {
-  const handler = async (uri?: Uri) => {
-    if (uri === undefined) {
+  const handler = async (workspaceFolder?: WorkspaceFolder) => {
+    if (workspaceFolder === undefined) {
       const folder = await window.showWorkspaceFolderPick({
         placeHolder: "Select a workspace folder to open .certificates.json",
       });
 
-      if (!folder) {
+      if (folder === undefined) {
         return;
       }
 
-      uri = folder.uri;
+      workspaceFolder = folder;
     }
-    await openConfigurationFile(uri);
+    await openConfigurationFile(workspaceFolder);
   }
 
   context.subscriptions.push(

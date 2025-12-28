@@ -17,6 +17,7 @@
   "exclude": [],
   "files": [
     "src/command/create-configuration.ts",
+    "src/command/load-configuration.ts",
     "src/command/load-configurations.ts",
     "src/command/open-configuration.ts",
     "src/command/open-documentation.ts",
@@ -25,6 +26,7 @@
     "src/provider/SidebarTreeItem/EmptyTreeItem.ts",
     "src/provider/SidebarTreeItem/TypedTreeItem.ts",
     "src/provider/SidebarTreeDataProvider.tsx",
+    "src/cache.ts",
     "src/extension.ts",
     "src/types.ts",
   ]

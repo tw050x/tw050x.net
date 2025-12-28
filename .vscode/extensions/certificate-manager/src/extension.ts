@@ -1,6 +1,6 @@
-import * as path from "node:path";
-import { ExtensionContext, Uri, commands, window, workspace } from "vscode";
+import { ExtensionContext, commands, window, workspace } from "vscode";
 import { registerCreateConfigurationCommand } from "./command/create-configuration";
+import { registerLoadConfigurationCommand } from "./command/load-configuration";
 import { commandId as loadConfigurationsCommandId, registerLoadConfigurationsCommand } from "./command/load-configurations";
 import { registerOpenConfigurationCommand } from "./command/open-configuration";
 import { registerOpenDocumentationCommand } from "./command/open-documentation";
@@ -46,6 +46,7 @@ async function activate(context: ExtensionContext) {
 
   // Register commands
   registerCreateConfigurationCommand(context, sidebarTreeDataProvider);
+  registerLoadConfigurationCommand(context);
   registerLoadConfigurationsCommand(context);
   registerOpenConfigurationCommand(context);
   registerOpenDocumentationCommand(context);

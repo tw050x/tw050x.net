@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
 const create_configuration_1 = require("../command/create-configuration");
+const load_configuration_1 = require("../command/load-configuration");
+const load_configurations_1 = require("../command/load-configurations");
 const open_configuration_1 = require("../command/open-configuration");
 const open_documentation_1 = require("../command/open-documentation");
 const ActionTreeItem_1 = require("./SidebarTreeItem/ActionTreeItem");
@@ -87,6 +89,13 @@ class SidebarTreeDataProvider {
     async getRootTreeItems() {
         // Group: Workspaces
         const workspacesTreeItem = new TypedTreeItem_1.TypedTreeItem('workspaces', 'Workspaces', vscode_1.TreeItemCollapsibleState.Collapsed);
+        // Action: Refresh Configuration
+        const refreshConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("refresh-configuration-files", "Refresh Configuration Files");
+        refreshConfigurationTreeItem.setCommand({
+            command: load_configurations_1.commandId,
+            title: "Refresh Certificate Configurations",
+        });
+        refreshConfigurationTreeItem.setIconPath(new vscode_1.ThemeIcon("refresh"));
         // Action: Open Documentation
         const openDocumentationTreeItem = new ActionTreeItem_1.ActionTreeItem("open-documentation", "Read Documentation");
         openDocumentationTreeItem.setCommand({
@@ -96,6 +105,7 @@ class SidebarTreeDataProvider {
         openDocumentationTreeItem.setIconPath(new vscode_1.ThemeIcon("book"));
         return [
             workspacesTreeItem,
+            refreshConfigurationTreeItem,
             openDocumentationTreeItem,
         ];
     }
@@ -139,14 +149,24 @@ class SidebarTreeDataProvider {
         const configFileUri = vscode_1.Uri.joinPath(element.uri, ".certificates.json");
         try {
             await vscode_1.workspace.fs.stat(configFileUri);
+            // Action: Open Configuration File
             const openConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("open-configuration-file", "Open Configuration File");
             openConfigurationTreeItem.setCommand({
-                arguments: [element.uri],
+                arguments: [element],
                 command: open_configuration_1.commandId,
                 title: "Open Certificate Configuration File",
             });
             openConfigurationTreeItem.setIconPath(new vscode_1.ThemeIcon("json"));
             children.push(openConfigurationTreeItem);
+            // Action: Load Configuration File
+            const refreshConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("load-configuration-file", "Refresh Configuration File");
+            refreshConfigurationTreeItem.setCommand({
+                arguments: [element],
+                command: load_configuration_1.commandId,
+                title: "Refresh Configuration File",
+            });
+            refreshConfigurationTreeItem.setIconPath(new vscode_1.ThemeIcon("refresh"));
+            children.push(refreshConfigurationTreeItem);
         }
         catch {
             const createConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("create-configuration-file", "Create Configuration File");

@@ -1,21 +1,10 @@
 import { ExtensionContext, Uri, commands, window, workspace } from "vscode";
+import { Configuration, configurations } from "../cache";
 
 /**
  *
  */
 export const commandId = "certificate-manager.loadConfigurations";
-
-/**
- * Configuration type.
- */
-type Configuration = {
-
-};
-
-/**
- * Configuration storage.
- */
-const configurations = new Map<string, Configuration>();
 
 /**
  * Loads .certificates.json config files from all workspace folders.
