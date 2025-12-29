@@ -35,19 +35,17 @@ async function createConfigurationFile(folder) {
  * @param options
  * @returns
  */
-function registerCreateConfigurationCommand(context, sidebarTreeDataProvider) {
+function registerCreateConfigurationCommand(context, callback) {
     const handler = async () => {
         const folder = await vscode_1.window.showWorkspaceFolderPick({
             placeHolder: "Select a workspace folder to create .certificates.json",
         });
-        if (!folder) {
-            return;
+        if (folder === undefined) {
+            return void vscode_1.window.showWarningMessage("No workspace folder selected. Cannot create .certificates.json file.");
         }
         await createConfigurationFile(folder);
-        sidebarTreeDataProvider.refresh();
         await vscode_1.commands.executeCommand(load_configurations_1.commandId);
-        const doc = await vscode_1.workspace.openTextDocument(vscode_1.Uri.joinPath(folder.uri, ".certificates.json"));
-        await vscode_1.window.showTextDocument(doc);
+        await callback(folder);
     };
     context.subscriptions.push(vscode_1.commands.registerCommand(exports.commandId, handler));
 }

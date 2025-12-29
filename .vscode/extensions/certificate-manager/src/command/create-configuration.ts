@@ -1,6 +1,5 @@
 import { ExtensionContext, Uri, WorkspaceFolder, commands, window, workspace } from "vscode";
 import { commandId as loadConfigurationsCommandId } from "./load-configurations";
-import { type default as SidebarTreeDataProvider } from "../provider/SidebarTreeDataProvider";
 
 /**
  *
@@ -43,23 +42,20 @@ async function createConfigurationFile(folder: WorkspaceFolder): Promise<void> {
  * @param options
  * @returns
  */
-export function registerCreateConfigurationCommand(context: ExtensionContext, sidebarTreeDataProvider: SidebarTreeDataProvider) {
+export function registerCreateConfigurationCommand(context: ExtensionContext, callback: (workspaceFolder: WorkspaceFolder) => Promise<void>) {
   const handler = async () => {
     const folder = await window.showWorkspaceFolderPick({
       placeHolder: "Select a workspace folder to create .certificates.json",
     });
 
-    if (!folder) {
-      return;
+    if (folder === undefined) {
+      return void window.showWarningMessage(
+        "No workspace folder selected. Cannot create .certificates.json file."
+      );
     }
-
     await createConfigurationFile(folder);
-
-    sidebarTreeDataProvider.refresh();
     await commands.executeCommand(loadConfigurationsCommandId);
-
-    const doc = await workspace.openTextDocument(Uri.joinPath(folder.uri, ".certificates.json"));
-    await window.showTextDocument(doc);
+    await callback(folder);
   }
 
   context.subscriptions.push(

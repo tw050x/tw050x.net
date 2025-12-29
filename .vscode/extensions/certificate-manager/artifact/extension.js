@@ -40,7 +40,11 @@ async function activate(context) {
         }
     }));
     // Register commands
-    (0, create_configuration_1.registerCreateConfigurationCommand)(context, sidebarTreeDataProvider);
+    (0, create_configuration_1.registerCreateConfigurationCommand)(context, async (workspaceFolder) => {
+        refreshSidebarTreeDataProvider();
+        const doc = await vscode_1.workspace.openTextDocument(vscode_1.Uri.joinPath(workspaceFolder.uri, ".certificates.json"));
+        await vscode_1.window.showTextDocument(doc);
+    });
     (0, load_configuration_1.registerLoadConfigurationCommand)(context);
     (0, load_configurations_1.registerLoadConfigurationsCommand)(context);
     (0, open_create_certificate_authority_form_1.registerOpenCreateCertificateAuthorityFormCommand)(context);

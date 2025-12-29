@@ -1,4 +1,4 @@
-import { ExtensionContext, commands, window, workspace } from "vscode";
+import { ExtensionContext, Uri, commands, window, workspace } from "vscode";
 import { registerCreateConfigurationCommand } from "./command/create-configuration";
 import { registerLoadConfigurationCommand } from "./command/load-configuration";
 import { commandId as loadConfigurationsCommandId, registerLoadConfigurationsCommand } from "./command/load-configurations";
@@ -46,7 +46,11 @@ async function activate(context: ExtensionContext) {
   );
 
   // Register commands
-  registerCreateConfigurationCommand(context, sidebarTreeDataProvider);
+  registerCreateConfigurationCommand(context, async (workspaceFolder) => {
+    refreshSidebarTreeDataProvider();
+    const doc = await workspace.openTextDocument(Uri.joinPath(workspaceFolder.uri, ".certificates.json"));
+    await window.showTextDocument(doc);
+  });
   registerLoadConfigurationCommand(context);
   registerLoadConfigurationsCommand(context);
   registerOpenCreateCertificateAuthorityFormCommand(context);
