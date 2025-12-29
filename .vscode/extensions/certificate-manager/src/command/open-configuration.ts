@@ -30,7 +30,9 @@ export function registerOpenConfigurationCommand(context: ExtensionContext) {
       });
 
       if (folder === undefined) {
-        return;
+        return void window.showWarningMessage(
+          "No workspace folder selected. Cannot open .certificates.json file."
+        );
       }
 
       workspaceFolder = folder;

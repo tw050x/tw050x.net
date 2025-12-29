@@ -47,10 +47,14 @@ async function loadConfigurations(): Promise<void> {
   }
 
   if (loadedCount === 0) {
-    return void window.showWarningMessage("No configuration files were found in the workspace folders.");
+    return void window.showWarningMessage(
+      "No configuration files were found in the workspace folders."
+    );
   }
 
-  window.showInformationMessage(`Certificate Manager loaded ${loadedCount} configuration file(s).`);
+  window.showInformationMessage(
+    `Certificate Manager loaded ${loadedCount} configuration file(s).`
+  );
 }
 
 /**

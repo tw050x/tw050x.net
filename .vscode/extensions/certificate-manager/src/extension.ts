@@ -2,6 +2,7 @@ import { ExtensionContext, commands, window, workspace } from "vscode";
 import { registerCreateConfigurationCommand } from "./command/create-configuration";
 import { registerLoadConfigurationCommand } from "./command/load-configuration";
 import { commandId as loadConfigurationsCommandId, registerLoadConfigurationsCommand } from "./command/load-configurations";
+import { registerOpenCreateCertificateAuthorityFormCommand } from "./command/open-create-certificate-authority-form";
 import { registerOpenConfigurationCommand } from "./command/open-configuration";
 import { registerOpenDocumentationCommand } from "./command/open-documentation";
 import { default as SidebarTreeDataProvider } from "./provider/SidebarTreeDataProvider";
@@ -48,6 +49,7 @@ async function activate(context: ExtensionContext) {
   registerCreateConfigurationCommand(context, sidebarTreeDataProvider);
   registerLoadConfigurationCommand(context);
   registerLoadConfigurationsCommand(context);
+  registerOpenCreateCertificateAuthorityFormCommand(context);
   registerOpenConfigurationCommand(context);
   registerOpenDocumentationCommand(context);
 

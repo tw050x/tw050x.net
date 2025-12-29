@@ -9,6 +9,7 @@ const vscode_1 = require("vscode");
 const create_configuration_1 = require("./command/create-configuration");
 const load_configuration_1 = require("./command/load-configuration");
 const load_configurations_1 = require("./command/load-configurations");
+const open_create_certificate_authority_form_1 = require("./command/open-create-certificate-authority-form");
 const open_configuration_1 = require("./command/open-configuration");
 const open_documentation_1 = require("./command/open-documentation");
 const SidebarTreeDataProvider_1 = __importDefault(require("./provider/SidebarTreeDataProvider"));
@@ -42,6 +43,7 @@ async function activate(context) {
     (0, create_configuration_1.registerCreateConfigurationCommand)(context, sidebarTreeDataProvider);
     (0, load_configuration_1.registerLoadConfigurationCommand)(context);
     (0, load_configurations_1.registerLoadConfigurationsCommand)(context);
+    (0, open_create_certificate_authority_form_1.registerOpenCreateCertificateAuthorityFormCommand)(context);
     (0, open_configuration_1.registerOpenConfigurationCommand)(context);
     (0, open_documentation_1.registerOpenDocumentationCommand)(context);
     // Initial load of configurations

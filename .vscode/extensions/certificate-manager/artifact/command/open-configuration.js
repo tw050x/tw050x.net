@@ -30,7 +30,7 @@ function registerOpenConfigurationCommand(context) {
                 placeHolder: "Select a workspace folder to open .certificates.json",
             });
             if (folder === undefined) {
-                return;
+                return void vscode_1.window.showWarningMessage("No workspace folder selected. Cannot open .certificates.json file.");
             }
             workspaceFolder = folder;
         }
