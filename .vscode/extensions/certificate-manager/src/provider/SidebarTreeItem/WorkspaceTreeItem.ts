@@ -3,10 +3,10 @@ import { TypedTreeItem } from "./TypedTreeItem";
 import { TypedTreeItemType } from "../../types";
 
 /**
- * Directory Tree Item
+ * Workspace Tree Item
  *
  */
-export class DirectoryTreeItem<T extends TypedTreeItemType> extends TypedTreeItem<T> {
+export class WorkspaceTreeItem<T extends TypedTreeItemType> extends TypedTreeItem<T> {
 
   /**
    * Defines the type of tree item.

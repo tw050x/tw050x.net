@@ -16,20 +16,14 @@
   },
   "exclude": [],
   "files": [
-    "src/command/create-configuration.ts",
-    "src/command/load-configuration.ts",
-    "src/command/load-configurations.ts",
-    "src/command/open-create-certificate-authority-form.tsx",
-    "src/command/open-configuration.ts",
-    "src/command/open-documentation.ts",
     "src/component/CreateCertificateAuthorityForm.tsx",
     "src/provider/SidebarTreeItem/ActionTreeItem.ts",
-    "src/provider/SidebarTreeItem/DirectoryTreeItem.ts",
     "src/provider/SidebarTreeItem/EmptyTreeItem.ts",
     "src/provider/SidebarTreeItem/TypedTreeItem.ts",
+    "src/provider/SidebarTreeItem/WorkspaceTreeItem.ts",
     "src/provider/SidebarTreeDataProvider.tsx",
     "src/cache.ts",
-    "src/extension.ts",
+    "src/extension.tsx",
     "src/types.ts",
   ]
 }

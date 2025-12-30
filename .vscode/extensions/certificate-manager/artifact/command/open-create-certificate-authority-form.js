@@ -13,6 +13,7 @@ exports.commandsId = "certificate-manager.openCreateCertificateAuthorityForm";
  *
  */
 async function openCreateCertificateAuthorityForm() {
+    // TODO: move to a class so that the panel can be stored in a central locations to avoid multiple being created.
     const panel = vscode_1.window.createWebviewPanel('certificateAuthorityForm', 'Certificate Authority Form', vscode_1.ViewColumn.Active);
     panel.webview.html = await (0, jsx_runtime_1.jsx)(CreateCertificateAuthorityForm_1.CreateCertificateAuthorityForm, {});
 }

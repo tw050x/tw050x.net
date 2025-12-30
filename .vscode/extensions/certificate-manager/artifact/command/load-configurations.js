@@ -7,7 +7,7 @@ const cache_1 = require("../cache");
 /**
  *
  */
-exports.commandId = "certificate-manager.loadConfigurations";
+exports.commandId = "certificate-manager.loadConfigurationFiles";
 /**
  * Loads .certificates.json config files from all workspace folders.
  */

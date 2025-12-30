@@ -1,15 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const vscode_1 = require("vscode");
-const create_configuration_1 = require("../command/create-configuration");
-const load_configuration_1 = require("../command/load-configuration");
-const load_configurations_1 = require("../command/load-configurations");
-const open_configuration_1 = require("../command/open-configuration");
-const open_documentation_1 = require("../command/open-documentation");
 const ActionTreeItem_1 = require("./SidebarTreeItem/ActionTreeItem");
-const DirectoryTreeItem_1 = require("./SidebarTreeItem/DirectoryTreeItem");
 const EmptyTreeItem_1 = require("./SidebarTreeItem/EmptyTreeItem");
 const TypedTreeItem_1 = require("./SidebarTreeItem/TypedTreeItem");
+const WorkspaceTreeItem_1 = require("./SidebarTreeItem/WorkspaceTreeItem");
 /**
  * SidebarTreeDataProvider for the Certificate Authorities view.
  */
@@ -92,14 +87,14 @@ class SidebarTreeDataProvider {
         // Action: Refresh Configuration
         const refreshConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("refresh-configuration-files", "Refresh Configuration Files");
         refreshConfigurationTreeItem.setCommand({
-            command: load_configurations_1.commandId,
+            command: 'certificate-manager.loadConfigurationFiles',
             title: "Refresh Certificate Configurations",
         });
         refreshConfigurationTreeItem.setIconPath(new vscode_1.ThemeIcon("refresh"));
         // Action: Open Documentation
         const openDocumentationTreeItem = new ActionTreeItem_1.ActionTreeItem("open-documentation", "Read Documentation");
         openDocumentationTreeItem.setCommand({
-            command: open_documentation_1.commandId,
+            command: 'certificate-manager.openDocumentation',
             title: "Open Certificate Manager Documentation",
         });
         openDocumentationTreeItem.setIconPath(new vscode_1.ThemeIcon("book"));
@@ -128,7 +123,7 @@ class SidebarTreeDataProvider {
             // If it does, return a ConfigurationTreeItem
             // If not, return an EmptyTreeItem prompting to create one
             const label = configFileUri.fsPath.split("/").slice(0, -1).slice(-workspaceFolderNameDepth).join("/");
-            const workspaceTreeItem = new DirectoryTreeItem_1.DirectoryTreeItem('workspace', label, vscode_1.TreeItemCollapsibleState.Collapsed);
+            const workspaceTreeItem = new WorkspaceTreeItem_1.WorkspaceTreeItem('workspace', label, vscode_1.TreeItemCollapsibleState.Collapsed);
             workspaceTreeItem.setUri(folder.uri);
             return workspaceTreeItem;
         });
@@ -153,7 +148,7 @@ class SidebarTreeDataProvider {
             const openConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("open-configuration-file", "Open Configuration File");
             openConfigurationTreeItem.setCommand({
                 arguments: [element],
-                command: open_configuration_1.commandId,
+                command: 'certificate-manager.openConfigurationFile',
                 title: "Open Certificate Configuration File",
             });
             openConfigurationTreeItem.setIconPath(new vscode_1.ThemeIcon("json"));
@@ -162,7 +157,7 @@ class SidebarTreeDataProvider {
             const refreshConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("load-configuration-file", "Refresh Configuration File");
             refreshConfigurationTreeItem.setCommand({
                 arguments: [element],
-                command: load_configuration_1.commandId,
+                command: 'certificate-manager.loadConfigurationFile',
                 title: "Refresh Configuration File",
             });
             refreshConfigurationTreeItem.setIconPath(new vscode_1.ThemeIcon("refresh"));
@@ -171,7 +166,7 @@ class SidebarTreeDataProvider {
         catch {
             const createConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("create-configuration-file", "Create Configuration File");
             createConfigurationTreeItem.setCommand({
-                command: create_configuration_1.commandId,
+                command: 'certificate-manager.createConfigurationFile',
                 title: "Create Certificate Configuration File",
             });
             children.push(createConfigurationTreeItem);

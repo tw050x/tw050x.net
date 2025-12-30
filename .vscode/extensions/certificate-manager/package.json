@@ -5,7 +5,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "certificate-manager.createConfig",
+        "command": "certificate-manager.createConfigurationFile",
         "title": "Certificate Manager: Create .certificates.json"
       },
       {
@@ -13,16 +13,20 @@
         "title": "Certificate Manager: Create Certificate Authority"
       },
       {
-        "command": "certificate-manager.loadConfiguration",
+        "command": "certificate-manager.loadConfigurationFile",
         "title": "Certificate Manager: Load Configuration"
       },
       {
-        "command": "certificate-manager.loadConfigurations",
+        "command": "certificate-manager.loadConfigurationFiles",
         "title": "Certificate Manager: Load Configurations"
       },
       {
-        "command": "certificate-manager.openConfiguration",
-        "title": "Certificate Manager: Open Configuration"
+        "command": "certificate-manager.openConfigurationFile",
+        "title": "Certificate Manager: Open Configuration File"
+      },
+      {
+        "command": "certificate-manager.openDocumentation",
+        "title": "Certificate Manager: Open Documentation"
       }
     ],
     "configuration": {

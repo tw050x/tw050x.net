@@ -1,13 +1,8 @@
 import { EventEmitter, ThemeIcon, TreeDataProvider, TreeItemCollapsibleState, Uri, WorkspaceFolder, workspace } from "vscode";
-import { commandId as createConfigurationCommandId } from "../command/create-configuration";
-import { commandId as loadConfigurationCommandId } from "../command/load-configuration";
-import { commandId as loadConfigurationsCommandId } from "../command/load-configurations";
-import { commandId as openConfigurationCommandId } from "../command/open-configuration";
-import { commandId as openDocumentationCommandId } from "../command/open-documentation";
 import { ActionTreeItem } from "./SidebarTreeItem/ActionTreeItem";
-import { DirectoryTreeItem } from "./SidebarTreeItem/DirectoryTreeItem";
 import { EmptyTreeItem } from "./SidebarTreeItem/EmptyTreeItem";
 import { TypedTreeItem } from "./SidebarTreeItem/TypedTreeItem";
+import { WorkspaceTreeItem } from "./SidebarTreeItem/WorkspaceTreeItem";
 
 type SidebarTreeItem =
   | ActionTreeItem<"create-configuration-file">
@@ -15,10 +10,10 @@ type SidebarTreeItem =
   | ActionTreeItem<"open-configuration-file">
   | ActionTreeItem<"open-documentation">
   | ActionTreeItem<"refresh-configuration-files">
-  | DirectoryTreeItem<"workspace">
   | EmptyTreeItem<"error">
   | EmptyTreeItem<"no-workspaces">
   | TypedTreeItem<"workspaces">
+  | WorkspaceTreeItem<"workspace">
   ;
 
 /**
@@ -120,7 +115,7 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
     // Action: Refresh Configuration
     const refreshConfigurationTreeItem = new ActionTreeItem<"refresh-configuration-files">("refresh-configuration-files", "Refresh Configuration Files");
     refreshConfigurationTreeItem.setCommand({
-      command: loadConfigurationsCommandId,
+      command: 'certificate-manager.loadConfigurationFiles',
       title: "Refresh Certificate Configurations",
     });
     refreshConfigurationTreeItem.setIconPath(new ThemeIcon("refresh"));
@@ -128,7 +123,7 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
     // Action: Open Documentation
     const openDocumentationTreeItem = new ActionTreeItem<"open-documentation">("open-documentation", "Read Documentation");
     openDocumentationTreeItem.setCommand({
-      command: openDocumentationCommandId,
+      command: 'certificate-manager.openDocumentation',
       title: "Open Certificate Manager Documentation",
     });
     openDocumentationTreeItem.setIconPath(new ThemeIcon("book"));
@@ -164,7 +159,7 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
       // If it does, return a ConfigurationTreeItem
       // If not, return an EmptyTreeItem prompting to create one
       const label = configFileUri.fsPath.split("/").slice(0, -1).slice(-workspaceFolderNameDepth).join("/")
-      const workspaceTreeItem = new DirectoryTreeItem('workspace', label, TreeItemCollapsibleState.Collapsed);
+      const workspaceTreeItem = new WorkspaceTreeItem('workspace', label, TreeItemCollapsibleState.Collapsed);
       workspaceTreeItem.setUri(folder.uri)
       return workspaceTreeItem;
     })
@@ -174,7 +169,7 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
    * Gets tree items for a specific workspace.
    *
    */
-  async getWorkspaceTreeItems(element: DirectoryTreeItem<"workspace">): Promise<Array<SidebarTreeItem>> {
+  async getWorkspaceTreeItems(element: WorkspaceTreeItem<"workspace">): Promise<Array<SidebarTreeItem>> {
 
     // Guard: Ensure URI is defined
     if (element.uri === undefined) {
@@ -194,7 +189,7 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
       const openConfigurationTreeItem = new ActionTreeItem<"open-configuration-file">("open-configuration-file", "Open Configuration File");
       openConfigurationTreeItem.setCommand({
         arguments: [element],
-        command: openConfigurationCommandId,
+        command: 'certificate-manager.openConfigurationFile',
         title: "Open Certificate Configuration File",
       });
       openConfigurationTreeItem.setIconPath(new ThemeIcon("json"));
@@ -204,7 +199,7 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
       const refreshConfigurationTreeItem = new ActionTreeItem<"load-configuration-file">("load-configuration-file", "Refresh Configuration File");
       refreshConfigurationTreeItem.setCommand({
         arguments: [element],
-        command: loadConfigurationCommandId,
+        command: 'certificate-manager.loadConfigurationFile',
         title: "Refresh Configuration File",
       });
       refreshConfigurationTreeItem.setIconPath(new ThemeIcon("refresh"));
@@ -213,7 +208,7 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
     catch {
       const createConfigurationTreeItem = new ActionTreeItem<"create-configuration-file">("create-configuration-file", "Create Configuration File");
       createConfigurationTreeItem.setCommand({
-        command: createConfigurationCommandId,
+        command: 'certificate-manager.createConfigurationFile',
         title: "Create Certificate Configuration File",
       });
       children.push(createConfigurationTreeItem);
