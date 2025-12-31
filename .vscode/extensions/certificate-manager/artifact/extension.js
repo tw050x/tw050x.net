@@ -44,9 +44,19 @@ async function activate(context) {
     const configurationChangeDisposable = vscode_1.workspace.onDidChangeConfiguration(onDidChangeConfiguration);
     context.subscriptions.push(configurationChangeDisposable);
     // Register open create certificate authority form command
+    let openCreateCertificateAuthorityFormWebviewPanel = undefined;
+    const clearOpenCreateCertificateAuthorityFormWebviewPanel = () => {
+        openCreateCertificateAuthorityFormWebviewPanel = undefined;
+    };
     const openCreateCertificateAuthorityFormHandler = async () => {
-        const panel = vscode_1.window.createWebviewPanel('certificateAuthorityForm', 'Certificate Authority Form', vscode_1.ViewColumn.Active);
-        panel.webview.html = await (0, jsx_runtime_1.jsx)(CreateCertificateAuthorityForm_1.CreateCertificateAuthorityForm, {});
+        if (openCreateCertificateAuthorityFormWebviewPanel === undefined) {
+            openCreateCertificateAuthorityFormWebviewPanel = vscode_1.window.createWebviewPanel('certificateAuthorityForm', 'Certificate Authority Form', vscode_1.ViewColumn.Active);
+            openCreateCertificateAuthorityFormWebviewPanel.webview.html = await (0, jsx_runtime_1.jsx)(CreateCertificateAuthorityForm_1.CreateCertificateAuthorityForm, {});
+            openCreateCertificateAuthorityFormWebviewPanel.onDidDispose(clearOpenCreateCertificateAuthorityFormWebviewPanel);
+        }
+        if (openCreateCertificateAuthorityFormWebviewPanel.visible === false) {
+            openCreateCertificateAuthorityFormWebviewPanel.reveal(vscode_1.ViewColumn.Active);
+        }
     };
     const openCreateCertificateAuthorityFormDisposable = vscode_1.commands.registerCommand('certificate-manager.openCreateCertificateAuthorityForm', openCreateCertificateAuthorityFormHandler);
     context.subscriptions.push(openCreateCertificateAuthorityFormDisposable);
@@ -176,7 +186,7 @@ async function activate(context) {
     // Register open documentation command
     const openDocumentationHandler = async () => {
         const documentationUri = createDocumentationFileUri();
-        await vscode_1.commands.executeCommand('markdown.showPreviewToSide', documentationUri);
+        await vscode_1.commands.executeCommand('markdown.showPreview', documentationUri);
     };
     const openDocumentationDisposable = vscode_1.commands.registerCommand('certificate-manager.openDocumentation', openDocumentationHandler);
     context.subscriptions.push(openDocumentationDisposable);

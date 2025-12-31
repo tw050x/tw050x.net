@@ -1,4 +1,4 @@
-import { ConfigurationChangeEvent, ExtensionContext, Uri, ViewColumn, WorkspaceFolder, commands, window, workspace } from "vscode";
+import { ConfigurationChangeEvent, ExtensionContext, Uri, ViewColumn, WebviewPanel, WorkspaceFolder, commands, window, workspace } from "vscode";
 import { CreateCertificateAuthorityForm } from "./component/CreateCertificateAuthorityForm";
 import { default as SidebarTreeDataProvider } from "./provider/SidebarTreeDataProvider";
 import { Configuration, configurations } from "./cache";
@@ -42,13 +42,23 @@ async function activate(context: ExtensionContext) {
   context.subscriptions.push(configurationChangeDisposable);
 
   // Register open create certificate authority form command
+  let openCreateCertificateAuthorityFormWebviewPanel: WebviewPanel | undefined = undefined;
+  const clearOpenCreateCertificateAuthorityFormWebviewPanel = () => {
+    openCreateCertificateAuthorityFormWebviewPanel = undefined;
+  }
   const openCreateCertificateAuthorityFormHandler = async () => {
-    const panel = window.createWebviewPanel(
-      'certificateAuthorityForm',
-      'Certificate Authority Form',
-      ViewColumn.Active
-    );
-    panel.webview.html = await <CreateCertificateAuthorityForm />;
+    if (openCreateCertificateAuthorityFormWebviewPanel === undefined) {
+      openCreateCertificateAuthorityFormWebviewPanel = window.createWebviewPanel(
+        'certificateAuthorityForm',
+        'Certificate Authority Form',
+        ViewColumn.Active
+      );
+      openCreateCertificateAuthorityFormWebviewPanel.webview.html = await <CreateCertificateAuthorityForm />;
+      openCreateCertificateAuthorityFormWebviewPanel.onDidDispose(clearOpenCreateCertificateAuthorityFormWebviewPanel);
+    }
+    if (openCreateCertificateAuthorityFormWebviewPanel.visible === false) {
+      openCreateCertificateAuthorityFormWebviewPanel.reveal(ViewColumn.Active);
+    }
   }
   const openCreateCertificateAuthorityFormDisposable = commands.registerCommand('certificate-manager.openCreateCertificateAuthorityForm', openCreateCertificateAuthorityFormHandler)
   context.subscriptions.push(openCreateCertificateAuthorityFormDisposable);
@@ -224,7 +234,7 @@ async function activate(context: ExtensionContext) {
   // Register open documentation command
   const openDocumentationHandler = async () => {
     const documentationUri = createDocumentationFileUri();
-    await commands.executeCommand('markdown.showPreviewToSide', documentationUri);
+    await commands.executeCommand('markdown.showPreview', documentationUri);
   }
   const openDocumentationDisposable = commands.registerCommand(
     'certificate-manager.openDocumentation',
