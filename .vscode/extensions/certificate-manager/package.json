@@ -77,7 +77,9 @@
   "engines": {
     "vscode": "^1.80.0"
   },
-  "extensionKind": ["ui"],
+  "extensionKind": [
+    "ui"
+  ],
   "license": "UNLICENSED",
   "main": "./artifact/extension.js",
   "name": "@tw050x.net/certificate-manager",

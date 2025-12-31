@@ -623,15 +623,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.extension/certificate-manager@workspace:.vscode/extensions/certificate-manager":
-  version: 0.0.0-use.local
-  resolution: "@tw050x.net.extension/certificate-manager@workspace:.vscode/extensions/certificate-manager"
-  dependencies:
-    "@types/vscode": "npm:^1.107.0"
-    typescript: "npm:^5.7.2"
-  languageName: unknown
-  linkType: soft
-
 "@tw050x.net.extension/mongo@workspace:.vscode/extensions/mongo":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.extension/mongo@workspace:.vscode/extensions/mongo"
@@ -882,6 +873,15 @@ __metadata:
     mongodb: "npm:^6.12.0"
     typescript: "npm:^5.7.2"
     zod: "npm:^3.24.2"
+  languageName: unknown
+  linkType: soft
+
+"@tw050x.net/certificate-manager@workspace:.vscode/extensions/certificate-manager":
+  version: 0.0.0-use.local
+  resolution: "@tw050x.net/certificate-manager@workspace:.vscode/extensions/certificate-manager"
+  dependencies:
+    "@types/vscode": "npm:^1.107.0"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 

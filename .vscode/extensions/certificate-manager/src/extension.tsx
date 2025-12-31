@@ -61,11 +61,33 @@ async function activate(context: ExtensionContext) {
     | { type: 'confirmResetInitial' }
     | { type: 'confirmResetInitialResult'; ok: boolean };
 
-  const openCreateCertificateAuthorityFormMessageHandler = async (message?: CertificateAuthorityMessage) => {
+  type CertificateAuthorityFormSubmitPayload = {
+    storageUseDefaultLocation: boolean;
+    storageDirectoryPath: string;
+    certificateCommonName: string;
+    certificateOrganization: string;
+    certificateOrganizationalUnit: string;
+    certificateLocality: string;
+    certificateStateOrProvince: string;
+    certificateCountry: string;
+    certificateEmailAddress: string;
+  };
+
+  type CertificateAuthorityFormSubmitMessage = {
+    type: 'submitCertificateAuthorityForm';
+    payload: CertificateAuthorityFormSubmitPayload;
+  };
+
+  const openCreateCertificateAuthorityFormMessageHandler = async (message?: CertificateAuthorityMessage | CertificateAuthorityFormSubmitMessage) => {
     if (message === undefined) {
       return void window.showInformationMessage(
         'No message received from Certificate Authority Form webview.'
       );
+    }
+
+    if (message.type === 'submitCertificateAuthorityForm') {
+      console.log('certificate-manager: submitCertificateAuthorityForm', message.payload);
+      return;
     }
 
     if (message.type === 'confirmResetInitial') {
@@ -80,7 +102,6 @@ async function activate(context: ExtensionContext) {
         ok,
       } satisfies CertificateAuthorityMessage);
     }
-
   }
   const openCreateCertificateAuthorityFormHandler = async () => {
     if (openCreateCertificateAuthorityFormWebviewPanel === undefined) {
@@ -115,7 +136,10 @@ async function activate(context: ExtensionContext) {
       openCreateCertificateAuthorityFormWebviewPanel.reveal(ViewColumn.Active);
     }
   }
-  const openCreateCertificateAuthorityFormDisposable = commands.registerCommand('certificate-manager.openCreateCertificateAuthorityForm', openCreateCertificateAuthorityFormHandler)
+  const openCreateCertificateAuthorityFormDisposable = commands.registerCommand(
+    'certificate-manager.openCreateCertificateAuthorityForm',
+    openCreateCertificateAuthorityFormHandler
+  )
   context.subscriptions.push(openCreateCertificateAuthorityFormDisposable);
 
   // Helper to ensure workspaceFolder parameter is provided to command handlers

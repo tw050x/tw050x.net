@@ -164,7 +164,6 @@ class SidebarTreeDataProvider {
             // Action: Open Create Certificate Authority Form
             const openCreateCertificateAuthorityTreeItem = new ActionTreeItem_1.ActionTreeItem("create-certificate-authority", "Create Certificate Authority");
             openCreateCertificateAuthorityTreeItem.setCommand({
-                arguments: [element],
                 command: 'certificate-manager.openCreateCertificateAuthorityForm',
                 title: "Create Certificate Authority",
             });

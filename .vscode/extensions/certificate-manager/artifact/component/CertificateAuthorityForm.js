@@ -27,12 +27,20 @@ const CertificateAuthorityForm = (props) => {
                 justify-self: start;
                 text-align: left;
               }
-            ` })] }), (0, jsx_runtime_1.jsxs)("body", { children: [(0, jsx_runtime_1.jsx)("h1", { children: "Create Certificate Authority" }), (0, jsx_runtime_1.jsx)("hr", {}), (0, jsx_runtime_1.jsxs)("form", { id: "certificateAuthorityForm", children: [(0, jsx_runtime_1.jsxs)("fieldset", { children: [(0, jsx_runtime_1.jsx)("legend", { children: "Storage" }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("input", { id: "storageUseDefaultLocation", type: "checkbox", name: "storageUseDefaultLocation", "data-default-checked": String(formDefaultValues?.storageUseDefaultLocation === true), "data-initial-checked": String(formInitialValues?.storageUseDefaultLocation === true) }), (0, jsx_runtime_1.jsx)("label", { for: "storageUseDefaultLocation", children: "Use default location" })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "storageDirectoryPath", children: "Directory Path" }), (0, jsx_runtime_1.jsx)("input", { id: "storageDirectoryPath", type: "text", name: "storageDirectoryPath", "data-default-value": formDefaultValues?.storageDirectoryPath ?? '', "data-initial-value": formInitialValues?.storageDirectoryPath ?? '' })] })] }), (0, jsx_runtime_1.jsxs)("fieldset", { children: [(0, jsx_runtime_1.jsx)("legend", { children: "Certificate" }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateCommonName", children: "Common Name" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateCommonName", type: "text", name: "certificateCommonName", "data-default-value": formDefaultValues?.certificateCommonName ?? '', "data-initial-value": formInitialValues?.certificateCommonName ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateOrganization", children: "Organization" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateOrganization", type: "text", name: "certificateOrganization", "data-default-value": formDefaultValues?.certificateOrganization ?? '', "data-initial-value": formInitialValues?.certificateOrganization ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateOrganizationalUnit", children: "Organizational Unit" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateOrganizationalUnit", type: "text", name: "certificateOrganizationalUnit", "data-default-value": formDefaultValues?.certificateOrganizationalUnit ?? '', "data-initial-value": formInitialValues?.certificateOrganizationalUnit ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateLocality", children: "Locality / City" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateLocality", type: "text", name: "certificateLocality", "data-default-value": formDefaultValues?.certificateLocality ?? '', "data-initial-value": formInitialValues?.certificateLocality ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateStateOrProvince", children: "State / Province" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateStateOrProvince", type: "text", name: "certificateStateOrProvince", "data-default-value": formDefaultValues?.certificateStateOrProvince ?? '', "data-initial-value": formInitialValues?.certificateStateOrProvince ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateCountry", children: "Country" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateCountry", type: "text", name: "certificateCountry", "data-default-value": formDefaultValues?.certificateCountry ?? '', "data-initial-value": formInitialValues?.certificateCountry ?? '', maxlength: "2" })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateEmailAddress", children: "Email" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateEmailAddress", type: "email", name: "certificateEmailAddress", "data-default-value": formDefaultValues?.certificateEmailAddress ?? '', "data-initial-value": formInitialValues?.certificateEmailAddress ?? '' })] })] })] }), (0, jsx_runtime_1.jsxs)("aside", { role: "group", "aria-label": "Form actions", children: [(0, jsx_runtime_1.jsx)("button", { type: "button", "data-action": "reset", children: "Reset" }), (0, jsx_runtime_1.jsx)("button", { type: "submit", form: "certificateAuthorityForm", children: "Submit" })] }), (0, jsx_runtime_1.jsx)("script", { children: `
+            ` })] }), (0, jsx_runtime_1.jsxs)("body", { children: [(0, jsx_runtime_1.jsx)("h1", { children: "Create Certificate Authority" }), (0, jsx_runtime_1.jsx)("hr", {}), (0, jsx_runtime_1.jsxs)("form", { id: "certificateAuthorityForm", children: [(0, jsx_runtime_1.jsxs)("fieldset", { children: [(0, jsx_runtime_1.jsx)("legend", { children: "Storage" }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "storageDirectoryPath", children: "Directory Path" }), (0, jsx_runtime_1.jsx)("input", { id: "storageDirectoryPath", type: "text", name: "storageDirectoryPath", value: formInitialValues?.storageDirectoryPath ?? formDefaultValues?.storageDirectoryPath ?? '', "data-default-value": formDefaultValues?.storageDirectoryPath ?? '', "data-initial-value": formInitialValues?.storageDirectoryPath ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("input", { id: "storageUseDefaultLocation", type: "checkbox", name: "storageUseDefaultLocation", checked: formInitialValues?.storageUseDefaultLocation === true, "data-initial-checked": String(formInitialValues?.storageUseDefaultLocation === true) }), (0, jsx_runtime_1.jsx)("label", { for: "storageUseDefaultLocation", children: "Use default location" })] })] }), (0, jsx_runtime_1.jsxs)("fieldset", { children: [(0, jsx_runtime_1.jsx)("legend", { children: "Certificate" }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateCommonName", children: "Common Name" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateCommonName", type: "text", name: "certificateCommonName", "data-initial-value": formInitialValues?.certificateCommonName ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateOrganization", children: "Organization" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateOrganization", type: "text", name: "certificateOrganization", "data-initial-value": formInitialValues?.certificateOrganization ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateOrganizationalUnit", children: "Organizational Unit" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateOrganizationalUnit", type: "text", name: "certificateOrganizationalUnit", "data-initial-value": formInitialValues?.certificateOrganizationalUnit ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateLocality", children: "Locality / City" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateLocality", type: "text", name: "certificateLocality", "data-initial-value": formInitialValues?.certificateLocality ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateStateOrProvince", children: "State / Province" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateStateOrProvince", type: "text", name: "certificateStateOrProvince", "data-initial-value": formInitialValues?.certificateStateOrProvince ?? '' })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateCountry", children: "Country" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateCountry", type: "text", name: "certificateCountry", "data-initial-value": formInitialValues?.certificateCountry ?? '', maxlength: "2" })] }), (0, jsx_runtime_1.jsxs)("div", { children: [(0, jsx_runtime_1.jsx)("label", { for: "certificateEmailAddress", children: "Email" }), (0, jsx_runtime_1.jsx)("input", { id: "certificateEmailAddress", type: "email", name: "certificateEmailAddress", "data-initial-value": formInitialValues?.certificateEmailAddress ?? '' })] })] })] }), (0, jsx_runtime_1.jsxs)("aside", { role: "group", "aria-label": "Form actions", children: [(0, jsx_runtime_1.jsx)("button", { type: "button", "data-action": "reset", children: "Reset" }), (0, jsx_runtime_1.jsx)("button", { type: "submit", form: "certificateAuthorityForm", children: "Submit" })] }), (0, jsx_runtime_1.jsx)("script", { children: `
               const vscode = (typeof acquireVsCodeApi === 'function') ? acquireVsCodeApi() : undefined;
               const form = document.getElementById('certificateAuthorityForm');
               const checkbox = document.getElementById('storageUseDefaultLocation');
               const storageDirectoryPathInput = document.getElementById('storageDirectoryPath');
               const resetButton = document.querySelector('aside button[data-action="reset"]');
+
+              const getInputValue = (id) => {
+                const element = document.getElementById(id);
+                if (element instanceof HTMLInputElement) {
+                  return element.value;
+                }
+                return '';
+              };
 
               if (form instanceof HTMLFormElement && checkbox instanceof HTMLInputElement && storageDirectoryPathInput instanceof HTMLInputElement) {
                 // Ensure form.reset() restores INITIAL values
@@ -86,10 +94,12 @@ const CertificateAuthorityForm = (props) => {
                     }
                     storageDirectoryPathInput.value = defaultStorageDirectoryPath;
                     storageDirectoryPathInput.disabled = true;
+                    storageDirectoryPathInput.setAttribute('disabled', '');
                     return;
                   }
 
                   storageDirectoryPathInput.disabled = false;
+                  storageDirectoryPathInput.removeAttribute('disabled');
                   if (hasPreviousManualStoragePath === true) {
                     storageDirectoryPathInput.value = previousManualStoragePath;
                     hasPreviousManualStoragePath = false;
@@ -117,6 +127,24 @@ const CertificateAuthorityForm = (props) => {
                   hasPreviousManualStoragePath = false;
                   form.reset();
                   sync();
+                });
+
+                form.addEventListener('submit', (event) => {
+                  event.preventDefault();
+
+                  const payload = {
+                    storageUseDefaultLocation: checkbox.checked === true,
+                    storageDirectoryPath: storageDirectoryPathInput.value,
+                    certificateCommonName: getInputValue('certificateCommonName'),
+                    certificateOrganization: getInputValue('certificateOrganization'),
+                    certificateOrganizationalUnit: getInputValue('certificateOrganizationalUnit'),
+                    certificateLocality: getInputValue('certificateLocality'),
+                    certificateStateOrProvince: getInputValue('certificateStateOrProvince'),
+                    certificateCountry: getInputValue('certificateCountry'),
+                    certificateEmailAddress: getInputValue('certificateEmailAddress'),
+                  };
+
+                  vscode?.postMessage({ type: 'submitCertificateAuthorityForm', payload });
                 });
               }
             ` })] })] })] }));

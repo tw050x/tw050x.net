@@ -124,8 +124,17 @@ button {
   cursor: pointer;
 }
 
+body > aside button[data-action="reset"] {
+  color: var(--vscode-button-secondaryForeground);
+  background-color: var(--vscode-button-secondaryBackground);
+}
+
 button:hover {
   background-color: var(--vscode-button-hoverBackground);
+}
+
+body > aside button[data-action="reset"]:hover {
+  background-color: var(--vscode-button-secondaryHoverBackground);
 }
 
 a {

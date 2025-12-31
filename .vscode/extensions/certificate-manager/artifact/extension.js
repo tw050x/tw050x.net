@@ -62,6 +62,10 @@ async function activate(context) {
         if (message === undefined) {
             return void vscode_1.window.showInformationMessage('No message received from Certificate Authority Form webview.');
         }
+        if (message.type === 'submitCertificateAuthorityForm') {
+            console.log('certificate-manager: submitCertificateAuthorityForm', message.payload);
+            return;
+        }
         if (message.type === 'confirmResetInitial') {
             const selection = await vscode_1.window.showWarningMessage('Reset all fields to their initial values?', { modal: true }, 'Reset');
             const ok = selection === 'Reset';

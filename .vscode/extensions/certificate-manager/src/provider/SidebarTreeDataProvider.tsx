@@ -211,7 +211,6 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
         "Create Certificate Authority"
       );
       openCreateCertificateAuthorityTreeItem.setCommand({
-        arguments: [element],
         command: 'certificate-manager.openCreateCertificateAuthorityForm',
         title: "Create Certificate Authority",
       });
