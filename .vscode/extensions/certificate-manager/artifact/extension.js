@@ -82,10 +82,10 @@ async function activate(context) {
             openCreateCertificateAuthorityFormWebviewPanel = vscode_1.window.createWebviewPanel(viewType, title, showOptions, options);
             const defaultStoragePath = getDefaultStoragePath();
             openCreateCertificateAuthorityFormWebviewPanel.webview.html = await ((0, jsx_runtime_1.jsx)(CertificateAuthorityForm_1.CertificateAuthorityForm, { formDefaultValues: {
-                    storagePath: defaultStoragePath,
+                    storageDirectoryPath: defaultStoragePath,
                 }, formInitialValues: {
                     storageUseDefaultLocation: true,
-                    storagePath: defaultStoragePath,
+                    storageDirectoryPath: defaultStoragePath,
                 } }));
             openCreateCertificateAuthorityFormWebviewPanel.webview.onDidReceiveMessage(openCreateCertificateAuthorityFormMessageHandler);
             openCreateCertificateAuthorityFormWebviewPanel.onDidDispose(clearOpenCreateCertificateAuthorityFormWebviewPanel);

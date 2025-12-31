@@ -100,11 +100,11 @@ async function activate(context: ExtensionContext) {
       openCreateCertificateAuthorityFormWebviewPanel.webview.html = await (
         <CertificateAuthorityForm
           formDefaultValues={{
-            storagePath: defaultStoragePath,
+            storageDirectoryPath: defaultStoragePath,
           }}
           formInitialValues={{
             storageUseDefaultLocation: true,
-            storagePath: defaultStoragePath,
+            storageDirectoryPath: defaultStoragePath,
           }}
         />
       );

@@ -23,7 +23,7 @@ type Props = {
     certificateOrganizationalUnit?: string;
     certificateEmailAddress?: string;
     storageUseDefaultLocation?: boolean;
-    storagePath?: string;
+    storageDirectoryPath?: string;
   }
   formInitialValues?: {
     certificateCommonName?: string;
@@ -34,7 +34,7 @@ type Props = {
     certificateOrganizationalUnit?: string;
     certificateEmailAddress?: string;
     storageUseDefaultLocation?: boolean;
-    storagePath?: string;
+    storageDirectoryPath?: string;
   };
 };
 
@@ -59,7 +59,7 @@ export const CertificateAuthorityForm: Component<Props> = (props) => {
 
           <style>
             {`
-              form label[for="storagePath"]::after,
+              form label[for="storageDirectoryPath"]::after,
               form label[for="certificateCommonName"]::after {
                 content: " *";
                 color: var(--vscode-errorForeground);
@@ -90,13 +90,13 @@ export const CertificateAuthorityForm: Component<Props> = (props) => {
               </div>
 
               <div>
-                <label for="storagePath">Path</label>
+                <label for="storageDirectoryPath">Directory Path</label>
                 <input
-                  id="storagePath"
+                  id="storageDirectoryPath"
                   type="text"
-                  name="storagePath"
-                  data-default-value={formDefaultValues?.storagePath ?? ''}
-                  data-initial-value={formInitialValues?.storagePath ?? ''}
+                  name="storageDirectoryPath"
+                  data-default-value={formDefaultValues?.storageDirectoryPath ?? ''}
+                  data-initial-value={formInitialValues?.storageDirectoryPath ?? ''}
                 />
               </div>
             </fieldset>
@@ -193,10 +193,10 @@ export const CertificateAuthorityForm: Component<Props> = (props) => {
               const vscode = (typeof acquireVsCodeApi === 'function') ? acquireVsCodeApi() : undefined;
               const form = document.getElementById('certificateAuthorityForm');
               const checkbox = document.getElementById('storageUseDefaultLocation');
-              const storagePathInput = document.getElementById('storagePath');
+              const storageDirectoryPathInput = document.getElementById('storageDirectoryPath');
               const resetButton = document.querySelector('aside button[data-action="reset"]');
 
-              if (form instanceof HTMLFormElement && checkbox instanceof HTMLInputElement && storagePathInput instanceof HTMLInputElement) {
+              if (form instanceof HTMLFormElement && checkbox instanceof HTMLInputElement && storageDirectoryPathInput instanceof HTMLInputElement) {
                 // Ensure form.reset() restores INITIAL values
                 for (const element of Array.from(form.elements)) {
                   if (!(element instanceof HTMLElement)) {
@@ -236,24 +236,24 @@ export const CertificateAuthorityForm: Component<Props> = (props) => {
                   }
                 }
 
-                const defaultStoragePath = storagePathInput.dataset.defaultValue ?? '';
+                const defaultStorageDirectoryPath = storageDirectoryPathInput.dataset.defaultValue ?? '';
                 let previousManualStoragePath = '';
                 let hasPreviousManualStoragePath = false;
 
                 const sync = () => {
                   if (checkbox.checked === true) {
                     if (hasPreviousManualStoragePath === false) {
-                      previousManualStoragePath = storagePathInput.value;
+                      previousManualStoragePath = storageDirectoryPathInput.value;
                       hasPreviousManualStoragePath = true;
                     }
-                    storagePathInput.value = defaultStoragePath;
-                    storagePathInput.disabled = true;
+                    storageDirectoryPathInput.value = defaultStorageDirectoryPath;
+                    storageDirectoryPathInput.disabled = true;
                     return;
                   }
 
-                  storagePathInput.disabled = false;
+                  storageDirectoryPathInput.disabled = false;
                   if (hasPreviousManualStoragePath === true) {
-                    storagePathInput.value = previousManualStoragePath;
+                    storageDirectoryPathInput.value = previousManualStoragePath;
                     hasPreviousManualStoragePath = false;
                   }
                 };
