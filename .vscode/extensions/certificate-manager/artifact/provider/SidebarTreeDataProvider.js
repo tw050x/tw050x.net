@@ -86,16 +86,20 @@ class SidebarTreeDataProvider {
         // Group: Workspaces
         const workspacesTreeItem = new TypedTreeItem_1.TypedTreeItem('workspaces', 'Workspaces', vscode_1.TreeItemCollapsibleState.Collapsed);
         items.push(workspacesTreeItem);
-        const hasAtleastOneWorkspaceConfigurationFile = Boolean(vscode_1.workspace.workspaceFolders?.reduce((accumulator, workspaceFolder) => {
-            const configFileUri = vscode_1.Uri.joinPath(workspaceFolder.uri, ".certificates.json");
-            try {
-                vscode_1.workspace.fs.stat(configFileUri);
-                return accumulator++;
+        const hasAtleastOneWorkspaceConfigurationFile = await (async () => {
+            const folders = vscode_1.workspace.workspaceFolders ?? [];
+            for (const workspaceFolder of folders) {
+                const configFileUri = vscode_1.Uri.joinPath(workspaceFolder.uri, ".certificates.json");
+                try {
+                    await vscode_1.workspace.fs.stat(configFileUri);
+                    return true;
+                }
+                catch {
+                    // File does not exist (or is inaccessible) in this folder; keep checking.
+                }
             }
-            catch {
-                return accumulator;
-            }
-        }, 0));
+            return false;
+        })();
         // Action: Refresh Configuration
         if (hasAtleastOneWorkspaceConfigurationFile === true) {
             const refreshConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("refresh-configuration-files", "Refresh Configuration Files");

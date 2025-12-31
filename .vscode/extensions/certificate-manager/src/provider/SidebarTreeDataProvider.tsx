@@ -115,21 +115,20 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
     const workspacesTreeItem = new TypedTreeItem<"workspaces">('workspaces', 'Workspaces', TreeItemCollapsibleState.Collapsed);
     items.push(workspacesTreeItem);
 
-    const hasAtleastOneWorkspaceConfigurationFile = Boolean(
-      workspace.workspaceFolders?.reduce(
-        (accumulator, workspaceFolder) => {
-          const configFileUri = Uri.joinPath(workspaceFolder.uri, ".certificates.json");
-          try {
-            workspace.fs.stat(configFileUri);
-            return accumulator++;
-          }
-          catch {
-            return accumulator;
-          }
-        },
-        0
-      )
-    );
+    const hasAtleastOneWorkspaceConfigurationFile = await (async () => {
+      const folders = workspace.workspaceFolders ?? [];
+      for (const workspaceFolder of folders) {
+        const configFileUri = Uri.joinPath(workspaceFolder.uri, ".certificates.json");
+        try {
+          await workspace.fs.stat(configFileUri);
+          return true;
+        }
+        catch {
+          // File does not exist (or is inaccessible) in this folder; keep checking.
+        }
+      }
+      return false;
+    })();
 
     // Action: Refresh Configuration
     if (hasAtleastOneWorkspaceConfigurationFile === true) {
