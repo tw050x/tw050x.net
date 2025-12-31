@@ -82,15 +82,30 @@ class SidebarTreeDataProvider {
      *
      */
     async getRootTreeItems() {
+        const items = [];
         // Group: Workspaces
         const workspacesTreeItem = new TypedTreeItem_1.TypedTreeItem('workspaces', 'Workspaces', vscode_1.TreeItemCollapsibleState.Collapsed);
+        items.push(workspacesTreeItem);
+        const hasAtleastOneWorkspaceConfigurationFile = Boolean(vscode_1.workspace.workspaceFolders?.reduce((accumulator, workspaceFolder) => {
+            const configFileUri = vscode_1.Uri.joinPath(workspaceFolder.uri, ".certificates.json");
+            try {
+                vscode_1.workspace.fs.stat(configFileUri);
+                return accumulator++;
+            }
+            catch {
+                return accumulator;
+            }
+        }, 0));
         // Action: Refresh Configuration
-        const refreshConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("refresh-configuration-files", "Refresh Configuration Files");
-        refreshConfigurationTreeItem.setCommand({
-            command: 'certificate-manager.loadConfigurationFiles',
-            title: "Refresh Certificate Configurations",
-        });
-        refreshConfigurationTreeItem.setIconPath(new vscode_1.ThemeIcon("refresh"));
+        if (hasAtleastOneWorkspaceConfigurationFile === true) {
+            const refreshConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("refresh-configuration-files", "Refresh Configuration Files");
+            refreshConfigurationTreeItem.setCommand({
+                command: 'certificate-manager.loadConfigurationFiles',
+                title: "Refresh Certificate Configurations",
+            });
+            refreshConfigurationTreeItem.setIconPath(new vscode_1.ThemeIcon("refresh"));
+            items.push(refreshConfigurationTreeItem);
+        }
         // Action: Open Documentation
         const openDocumentationTreeItem = new ActionTreeItem_1.ActionTreeItem("open-documentation", "Read Documentation");
         openDocumentationTreeItem.setCommand({
@@ -98,11 +113,8 @@ class SidebarTreeDataProvider {
             title: "Open Certificate Manager Documentation",
         });
         openDocumentationTreeItem.setIconPath(new vscode_1.ThemeIcon("book"));
-        return [
-            workspacesTreeItem,
-            refreshConfigurationTreeItem,
-            openDocumentationTreeItem,
-        ];
+        items.push(openDocumentationTreeItem);
+        return items;
     }
     /**
      * Gets a list of certificate configuration files from workspace folders.

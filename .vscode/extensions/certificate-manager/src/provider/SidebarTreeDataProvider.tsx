@@ -109,16 +109,38 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
    */
   async getRootTreeItems(): Promise<Array<SidebarTreeItem>> {
 
+    const items: Array<SidebarTreeItem> = [];
+
     // Group: Workspaces
     const workspacesTreeItem = new TypedTreeItem<"workspaces">('workspaces', 'Workspaces', TreeItemCollapsibleState.Collapsed);
+    items.push(workspacesTreeItem);
+
+    const hasAtleastOneWorkspaceConfigurationFile = Boolean(
+      workspace.workspaceFolders?.reduce(
+        (accumulator, workspaceFolder) => {
+          const configFileUri = Uri.joinPath(workspaceFolder.uri, ".certificates.json");
+          try {
+            workspace.fs.stat(configFileUri);
+            return accumulator++;
+          }
+          catch {
+            return accumulator;
+          }
+        },
+        0
+      )
+    );
 
     // Action: Refresh Configuration
-    const refreshConfigurationTreeItem = new ActionTreeItem<"refresh-configuration-files">("refresh-configuration-files", "Refresh Configuration Files");
-    refreshConfigurationTreeItem.setCommand({
-      command: 'certificate-manager.loadConfigurationFiles',
-      title: "Refresh Certificate Configurations",
-    });
-    refreshConfigurationTreeItem.setIconPath(new ThemeIcon("refresh"));
+    if (hasAtleastOneWorkspaceConfigurationFile === true) {
+      const refreshConfigurationTreeItem = new ActionTreeItem<"refresh-configuration-files">("refresh-configuration-files", "Refresh Configuration Files");
+      refreshConfigurationTreeItem.setCommand({
+        command: 'certificate-manager.loadConfigurationFiles',
+        title: "Refresh Certificate Configurations",
+      });
+      refreshConfigurationTreeItem.setIconPath(new ThemeIcon("refresh"));
+      items.push(refreshConfigurationTreeItem);
+    }
 
     // Action: Open Documentation
     const openDocumentationTreeItem = new ActionTreeItem<"open-documentation">("open-documentation", "Read Documentation");
@@ -127,12 +149,9 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
       title: "Open Certificate Manager Documentation",
     });
     openDocumentationTreeItem.setIconPath(new ThemeIcon("book"));
+    items.push(openDocumentationTreeItem);
 
-    return [
-      workspacesTreeItem,
-      refreshConfigurationTreeItem,
-      openDocumentationTreeItem,
-    ]
+    return items;
   }
 
   /**
