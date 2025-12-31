@@ -16,7 +16,7 @@
   },
   "exclude": [],
   "files": [
-    "src/component/CreateCertificateAuthorityForm.tsx",
+    "src/component/CertificateAuthorityForm.tsx",
     "src/provider/SidebarTreeItem/ActionTreeItem.ts",
     "src/provider/SidebarTreeItem/EmptyTreeItem.ts",
     "src/provider/SidebarTreeItem/TypedTreeItem.ts",

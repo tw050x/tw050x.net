@@ -118,6 +118,7 @@ class SidebarTreeDataProvider {
         });
         openDocumentationTreeItem.setIconPath(new vscode_1.ThemeIcon("book"));
         items.push(openDocumentationTreeItem);
+        // Return the assembled items
         return items;
     }
     /**
@@ -160,6 +161,15 @@ class SidebarTreeDataProvider {
         const configFileUri = vscode_1.Uri.joinPath(element.uri, ".certificates.json");
         try {
             await vscode_1.workspace.fs.stat(configFileUri);
+            // Action: Open Create Certificate Authority Form
+            const openCreateCertificateAuthorityTreeItem = new ActionTreeItem_1.ActionTreeItem("create-certificate-authority", "Create Certificate Authority");
+            openCreateCertificateAuthorityTreeItem.setCommand({
+                arguments: [element],
+                command: 'certificate-manager.openCreateCertificateAuthorityForm',
+                title: "Create Certificate Authority",
+            });
+            openCreateCertificateAuthorityTreeItem.setIconPath(new vscode_1.ThemeIcon("file-add"));
+            children.push(openCreateCertificateAuthorityTreeItem);
             // Action: Open Configuration File
             const openConfigurationTreeItem = new ActionTreeItem_1.ActionTreeItem("open-configuration-file", "Open Configuration File");
             openConfigurationTreeItem.setCommand({

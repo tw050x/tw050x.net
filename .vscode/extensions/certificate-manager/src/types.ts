@@ -5,6 +5,7 @@ import { TreeItem } from "vscode";
  *
  */
 export type TypedTreeItemType =
+  | "create-certificate-authority"
   | "create-configuration-file"
   | "load-configuration-file"
   | "open-configuration-file"

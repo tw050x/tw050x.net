@@ -5,6 +5,10 @@
   "contributes": {
     "commands": [
       {
+        "command": "certificate-manager.createCertificateAuthority",
+        "title": "Certificate Manager: Create Certificate Authority"
+      },
+      {
         "command": "certificate-manager.createConfigurationFile",
         "title": "Certificate Manager: Create .certificates.json"
       },
@@ -37,6 +41,11 @@
           "default": 1,
           "minimum": 1,
           "description": "Number of path segments from the workspace folder to show in the sidebar. This is a reverse count from the end of the path. For example, a value of 1 shows only the folder name, while a value of 2 includes the parent folder. This primarily exists to help with users of git worktrees where folder names may be branch names rather than repository names."
+        },
+        "@tw050x.net/certificate-manager.storageDirectoryPath": {
+          "type": "string",
+          "default": null,
+          "description": "The default storage directory path for generated certificates. If null, the extension will use a directory your home directory."
         }
       }
     },

@@ -1,7 +1,8 @@
 import { ConfigurationChangeEvent, ExtensionContext, Uri, ViewColumn, WebviewPanel, WorkspaceFolder, commands, window, workspace } from "vscode";
-import { CreateCertificateAuthorityForm } from "./component/CreateCertificateAuthorityForm";
+import { CertificateAuthorityForm } from "./component/CertificateAuthorityForm";
 import { default as SidebarTreeDataProvider } from "./provider/SidebarTreeDataProvider";
 import { Configuration, configurations } from "./cache";
+import { homedir } from "node:os";
 
 /**
  * Activate the extension.
@@ -9,6 +10,16 @@ import { Configuration, configurations } from "./cache";
  * @param context
  */
 async function activate(context: ExtensionContext) {
+
+  // Helper to get default storage path
+  const getDefaultStoragePath = (): string => {
+    const config = workspace.getConfiguration('@tw050x.net/certificate-manager');
+    const configuredPath = config.get<string | null>('storageDirectoryPath');
+    if (configuredPath !== null && configuredPath !== undefined && configuredPath.trim() !== '') {
+      return configuredPath;
+    }
+    return Uri.joinPath(Uri.file(homedir()), '.certificates').fsPath;
+  }
 
   // Setup Sidebar
   const sidebarTreeDataProvider = new SidebarTreeDataProvider();
@@ -46,14 +57,58 @@ async function activate(context: ExtensionContext) {
   const clearOpenCreateCertificateAuthorityFormWebviewPanel = () => {
     openCreateCertificateAuthorityFormWebviewPanel = undefined;
   }
+  type CertificateAuthorityMessage =
+    | { type: 'confirmResetInitial' }
+    | { type: 'confirmResetInitialResult'; ok: boolean };
+
+  const openCreateCertificateAuthorityFormMessageHandler = async (message?: CertificateAuthorityMessage) => {
+    if (message === undefined) {
+      return void window.showInformationMessage(
+        'No message received from Certificate Authority Form webview.'
+      );
+    }
+
+    if (message.type === 'confirmResetInitial') {
+      const selection = await window.showWarningMessage(
+        'Reset all fields to their initial values?',
+        { modal: true },
+        'Reset'
+      );
+      const ok = selection === 'Reset';
+      return void await openCreateCertificateAuthorityFormWebviewPanel?.webview.postMessage({
+        type: 'confirmResetInitialResult',
+        ok,
+      } satisfies CertificateAuthorityMessage);
+    }
+
+  }
   const openCreateCertificateAuthorityFormHandler = async () => {
     if (openCreateCertificateAuthorityFormWebviewPanel === undefined) {
+      const viewType = 'certificateAuthorityForm';
+      const title = 'Certificate Authority Form';
+      const showOptions = ViewColumn.Active;
+      const options = {
+        enableScripts: true,
+      };
       openCreateCertificateAuthorityFormWebviewPanel = window.createWebviewPanel(
-        'certificateAuthorityForm',
-        'Certificate Authority Form',
-        ViewColumn.Active
+        viewType,
+        title,
+        showOptions,
+        options
       );
-      openCreateCertificateAuthorityFormWebviewPanel.webview.html = await <CreateCertificateAuthorityForm />;
+      const defaultStoragePath = getDefaultStoragePath();
+      openCreateCertificateAuthorityFormWebviewPanel.webview.html = await (
+        <CertificateAuthorityForm
+          formDefaultValues={{
+            storagePath: defaultStoragePath,
+          }}
+          formInitialValues={{
+            storageUseDefaultLocation: true,
+            storagePath: defaultStoragePath,
+          }}
+        />
+      );
+      openCreateCertificateAuthorityFormWebviewPanel.webview.onDidReceiveMessage(openCreateCertificateAuthorityFormMessageHandler);
       openCreateCertificateAuthorityFormWebviewPanel.onDidDispose(clearOpenCreateCertificateAuthorityFormWebviewPanel);
     }
     if (openCreateCertificateAuthorityFormWebviewPanel.visible === false) {

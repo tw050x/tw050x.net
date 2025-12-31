@@ -6,6 +6,7 @@ import { WorkspaceTreeItem } from "./SidebarTreeItem/WorkspaceTreeItem";
 
 type SidebarTreeItem =
   | ActionTreeItem<"create-configuration-file">
+  | ActionTreeItem<"create-certificate-authority">
   | ActionTreeItem<"load-configuration-file">
   | ActionTreeItem<"open-configuration-file">
   | ActionTreeItem<"open-documentation">
@@ -150,6 +151,7 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
     openDocumentationTreeItem.setIconPath(new ThemeIcon("book"));
     items.push(openDocumentationTreeItem);
 
+    // Return the assembled items
     return items;
   }
 
@@ -203,8 +205,24 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
     try {
       await workspace.fs.stat(configFileUri);
 
+      // Action: Open Create Certificate Authority Form
+      const openCreateCertificateAuthorityTreeItem = new ActionTreeItem<"create-certificate-authority">(
+        "create-certificate-authority",
+        "Create Certificate Authority"
+      );
+      openCreateCertificateAuthorityTreeItem.setCommand({
+        arguments: [element],
+        command: 'certificate-manager.openCreateCertificateAuthorityForm',
+        title: "Create Certificate Authority",
+      });
+      openCreateCertificateAuthorityTreeItem.setIconPath(new ThemeIcon("file-add"));
+      children.push(openCreateCertificateAuthorityTreeItem);
+
       // Action: Open Configuration File
-      const openConfigurationTreeItem = new ActionTreeItem<"open-configuration-file">("open-configuration-file", "Open Configuration File");
+      const openConfigurationTreeItem = new ActionTreeItem<"open-configuration-file">(
+        "open-configuration-file",
+        "Open Configuration File"
+      );
       openConfigurationTreeItem.setCommand({
         arguments: [element],
         command: 'certificate-manager.openConfigurationFile',
@@ -214,7 +232,10 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
       children.push(openConfigurationTreeItem);
 
       // Action: Load Configuration File
-      const refreshConfigurationTreeItem = new ActionTreeItem<"load-configuration-file">("load-configuration-file", "Refresh Configuration File");
+      const refreshConfigurationTreeItem = new ActionTreeItem<"load-configuration-file">(
+        "load-configuration-file",
+        "Refresh Configuration File"
+      );
       refreshConfigurationTreeItem.setCommand({
         arguments: [element],
         command: 'certificate-manager.loadConfigurationFile',
@@ -224,7 +245,10 @@ class SidebarTreeDataProvider implements TreeDataProvider<SidebarTreeItem> {
       children.push(refreshConfigurationTreeItem);
     }
     catch {
-      const createConfigurationTreeItem = new ActionTreeItem<"create-configuration-file">("create-configuration-file", "Create Configuration File");
+      const createConfigurationTreeItem = new ActionTreeItem<"create-configuration-file">(
+        "create-configuration-file",
+        "Create Configuration File"
+      );
       createConfigurationTreeItem.setCommand({
         command: 'certificate-manager.createConfigurationFile',
         title: "Create Certificate Configuration File",

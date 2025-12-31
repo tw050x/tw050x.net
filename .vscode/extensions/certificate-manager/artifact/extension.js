@@ -7,15 +7,25 @@ exports.activate = activate;
 exports.deactivate = deactivate;
 const jsx_runtime_1 = require("@kitajs/html/jsx-runtime");
 const vscode_1 = require("vscode");
-const CreateCertificateAuthorityForm_1 = require("./component/CreateCertificateAuthorityForm");
+const CertificateAuthorityForm_1 = require("./component/CertificateAuthorityForm");
 const SidebarTreeDataProvider_1 = __importDefault(require("./provider/SidebarTreeDataProvider"));
 const cache_1 = require("./cache");
+const node_os_1 = require("node:os");
 /**
  * Activate the extension.
  *
  * @param context
  */
 async function activate(context) {
+    // Helper to get default storage path
+    const getDefaultStoragePath = () => {
+        const config = vscode_1.workspace.getConfiguration('@tw050x.net/certificate-manager');
+        const configuredPath = config.get('storageDirectoryPath');
+        if (configuredPath !== null && configuredPath !== undefined && configuredPath.trim() !== '') {
+            return configuredPath;
+        }
+        return vscode_1.Uri.joinPath(vscode_1.Uri.file((0, node_os_1.homedir)()), '.certificates').fsPath;
+    };
     // Setup Sidebar
     const sidebarTreeDataProvider = new SidebarTreeDataProvider_1.default();
     const sidebarDisposable = vscode_1.window.registerTreeDataProvider('certificate-manager--sidebar', sidebarTreeDataProvider);
@@ -48,10 +58,36 @@ async function activate(context) {
     const clearOpenCreateCertificateAuthorityFormWebviewPanel = () => {
         openCreateCertificateAuthorityFormWebviewPanel = undefined;
     };
+    const openCreateCertificateAuthorityFormMessageHandler = async (message) => {
+        if (message === undefined) {
+            return void vscode_1.window.showInformationMessage('No message received from Certificate Authority Form webview.');
+        }
+        if (message.type === 'confirmResetInitial') {
+            const selection = await vscode_1.window.showWarningMessage('Reset all fields to their initial values?', { modal: true }, 'Reset');
+            const ok = selection === 'Reset';
+            return void await openCreateCertificateAuthorityFormWebviewPanel?.webview.postMessage({
+                type: 'confirmResetInitialResult',
+                ok,
+            });
+        }
+    };
     const openCreateCertificateAuthorityFormHandler = async () => {
         if (openCreateCertificateAuthorityFormWebviewPanel === undefined) {
-            openCreateCertificateAuthorityFormWebviewPanel = vscode_1.window.createWebviewPanel('certificateAuthorityForm', 'Certificate Authority Form', vscode_1.ViewColumn.Active);
-            openCreateCertificateAuthorityFormWebviewPanel.webview.html = await (0, jsx_runtime_1.jsx)(CreateCertificateAuthorityForm_1.CreateCertificateAuthorityForm, {});
+            const viewType = 'certificateAuthorityForm';
+            const title = 'Certificate Authority Form';
+            const showOptions = vscode_1.ViewColumn.Active;
+            const options = {
+                enableScripts: true,
+            };
+            openCreateCertificateAuthorityFormWebviewPanel = vscode_1.window.createWebviewPanel(viewType, title, showOptions, options);
+            const defaultStoragePath = getDefaultStoragePath();
+            openCreateCertificateAuthorityFormWebviewPanel.webview.html = await ((0, jsx_runtime_1.jsx)(CertificateAuthorityForm_1.CertificateAuthorityForm, { formDefaultValues: {
+                    storagePath: defaultStoragePath,
+                }, formInitialValues: {
+                    storageUseDefaultLocation: true,
+                    storagePath: defaultStoragePath,
+                } }));
+            openCreateCertificateAuthorityFormWebviewPanel.webview.onDidReceiveMessage(openCreateCertificateAuthorityFormMessageHandler);
             openCreateCertificateAuthorityFormWebviewPanel.onDidDispose(clearOpenCreateCertificateAuthorityFormWebviewPanel);
         }
         if (openCreateCertificateAuthorityFormWebviewPanel.visible === false) {
