@@ -35,3 +35,11 @@ export interface TypedTreeItem extends TreeItem {
 export interface TypedTreeItemOf<T extends TypedTreeItemType> extends TypedTreeItem {
   type: T;
 }
+
+declare global {
+  namespace JSX {
+    interface HtmlScriptTag {
+      nonce?: undefined | string;
+    }
+  }
+}

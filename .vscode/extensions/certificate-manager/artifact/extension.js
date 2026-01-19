@@ -7,10 +7,12 @@ exports.activate = activate;
 exports.deactivate = deactivate;
 const jsx_runtime_1 = require("@kitajs/html/jsx-runtime");
 const vscode_1 = require("vscode");
+const node_os_1 = require("node:os");
+const node_crypto_1 = require("node:crypto");
 const CertificateAuthorityForm_1 = require("./component/CertificateAuthorityForm");
 const SidebarTreeDataProvider_1 = __importDefault(require("./provider/SidebarTreeDataProvider"));
 const cache_1 = require("./cache");
-const node_os_1 = require("node:os");
+const package_json_1 = __importDefault(require("../package.json"));
 /**
  * Activate the extension.
  *
@@ -18,13 +20,25 @@ const node_os_1 = require("node:os");
  */
 async function activate(context) {
     // Helper to get default storage path
-    const getDefaultStoragePath = () => {
+    const getConfiguredStorageDirectoryPath = () => {
         const config = vscode_1.workspace.getConfiguration('@tw050x.net/certificate-manager');
-        const configuredPath = config.get('storageDirectoryPath');
+        const configuredPath = config.get('storage.directoryPath');
         if (configuredPath !== null && configuredPath !== undefined && configuredPath.trim() !== '') {
             return configuredPath;
         }
         return vscode_1.Uri.joinPath(vscode_1.Uri.file((0, node_os_1.homedir)()), '.certificates').fsPath;
+    };
+    // Helper to get default certificate settings
+    const getConfiguredCertificateKeySize = () => {
+        const config = vscode_1.workspace.getConfiguration('@tw050x.net/certificate-manager');
+        const configuredKeySize = config.get('certificate.keySize');
+        return configuredKeySize ?? package_json_1.default.contributes.configuration.properties['@tw050x.net/certificate-manager.certificate.keySize'].default;
+    };
+    // Helper to get default certificate settings
+    const getConfiguredCertificateValidityDays = () => {
+        const config = vscode_1.workspace.getConfiguration('@tw050x.net/certificate-manager');
+        const configuredValidityDays = config.get('certificate.validityDays');
+        return configuredValidityDays ?? package_json_1.default.contributes.configuration.properties['@tw050x.net/certificate-manager.certificate.validityDays'].default;
     };
     // Setup Sidebar
     const sidebarTreeDataProvider = new SidebarTreeDataProvider_1.default();
@@ -54,52 +68,78 @@ async function activate(context) {
     const configurationChangeDisposable = vscode_1.workspace.onDidChangeConfiguration(onDidChangeConfiguration);
     context.subscriptions.push(configurationChangeDisposable);
     // Register open create certificate authority form command
-    let openCreateCertificateAuthorityFormWebviewPanel = undefined;
-    const clearOpenCreateCertificateAuthorityFormWebviewPanel = () => {
-        openCreateCertificateAuthorityFormWebviewPanel = undefined;
+    let openCertificateAuthorityFormWebviewPanel = undefined;
+    const clearOpenCertificateAuthorityFormWebviewPanel = () => {
+        openCertificateAuthorityFormWebviewPanel = undefined;
     };
-    const openCreateCertificateAuthorityFormMessageHandler = async (message) => {
-        if (message === undefined) {
-            return void vscode_1.window.showInformationMessage('No message received from Certificate Authority Form webview.');
+    const parseJsonObject = (text) => {
+        const parsed = JSON.parse(text);
+        if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+            throw new Error('Expected JSON object at root.');
         }
-        if (message.type === 'submitCertificateAuthorityForm') {
-            console.log('certificate-manager: submitCertificateAuthorityForm', message.payload);
-            return;
-        }
-        if (message.type === 'confirmResetInitial') {
-            const selection = await vscode_1.window.showWarningMessage('Reset all fields to their initial values?', { modal: true }, 'Reset');
-            const ok = selection === 'Reset';
-            return void await openCreateCertificateAuthorityFormWebviewPanel?.webview.postMessage({
-                type: 'confirmResetInitialResult',
-                ok,
-            });
+        return parsed;
+    };
+    const setIfNonEmptyString = (target, key, value) => {
+        const trimmed = value.trim();
+        if (trimmed !== '') {
+            target[key] = trimmed;
         }
     };
-    const openCreateCertificateAuthorityFormHandler = async () => {
-        if (openCreateCertificateAuthorityFormWebviewPanel === undefined) {
-            const viewType = 'certificateAuthorityForm';
-            const title = 'Certificate Authority Form';
-            const showOptions = vscode_1.ViewColumn.Active;
-            const options = {
-                enableScripts: true,
-            };
-            openCreateCertificateAuthorityFormWebviewPanel = vscode_1.window.createWebviewPanel(viewType, title, showOptions, options);
-            const defaultStoragePath = getDefaultStoragePath();
-            openCreateCertificateAuthorityFormWebviewPanel.webview.html = await ((0, jsx_runtime_1.jsx)(CertificateAuthorityForm_1.CertificateAuthorityForm, { formDefaultValues: {
-                    storageDirectoryPath: defaultStoragePath,
-                }, formInitialValues: {
-                    storageUseDefaultLocation: true,
-                    storageDirectoryPath: defaultStoragePath,
-                } }));
-            openCreateCertificateAuthorityFormWebviewPanel.webview.onDidReceiveMessage(openCreateCertificateAuthorityFormMessageHandler);
-            openCreateCertificateAuthorityFormWebviewPanel.onDidDispose(clearOpenCreateCertificateAuthorityFormWebviewPanel);
-        }
-        if (openCreateCertificateAuthorityFormWebviewPanel.visible === false) {
-            openCreateCertificateAuthorityFormWebviewPanel.reveal(vscode_1.ViewColumn.Active);
+    const setIfNumber = (target, key, value) => {
+        if (value !== null && Number.isFinite(value)) {
+            target[key] = value;
         }
     };
-    const openCreateCertificateAuthorityFormDisposable = vscode_1.commands.registerCommand('certificate-manager.openCreateCertificateAuthorityForm', openCreateCertificateAuthorityFormHandler);
-    context.subscriptions.push(openCreateCertificateAuthorityFormDisposable);
+    const isNonEmptyObject = (value) => {
+        return Object.keys(value).length > 0;
+    };
+    const upsertCertificateAuthorityInConfiguration = (configuration, payload) => {
+        const next = { ...configuration };
+        const authoritiesRaw = next.authorities;
+        const authorities = (authoritiesRaw !== undefined && authoritiesRaw !== null && typeof authoritiesRaw === 'object' && !Array.isArray(authoritiesRaw)
+            ? authoritiesRaw
+            : {});
+        const authorityEntry = {};
+        // certificate-subject
+        const certificateSubject = {};
+        setIfNonEmptyString(certificateSubject, 'commonName', payload.certificateCommonName);
+        setIfNonEmptyString(certificateSubject, 'organization', payload.certificateOrganization);
+        setIfNonEmptyString(certificateSubject, 'organizationalUnit', payload.certificateOrganizationalUnit);
+        setIfNonEmptyString(certificateSubject, 'locality', payload.certificateLocality);
+        setIfNonEmptyString(certificateSubject, 'state', payload.certificateStateOrProvince);
+        setIfNonEmptyString(certificateSubject, 'country', payload.certificateCountry);
+        setIfNonEmptyString(certificateSubject, 'email', payload.certificateEmailAddress);
+        if (isNonEmptyObject(certificateSubject)) {
+            authorityEntry['certificateSubject'] = certificateSubject;
+        }
+        // certificate-configuration
+        const certificateConfiguration = {};
+        if (payload.certificateKeySizeUseDefault === false) {
+            setIfNumber(certificateConfiguration, 'keySize', payload.certificateKeySize);
+        }
+        if (isNonEmptyObject(certificateConfiguration)) {
+            authorityEntry['certificateConfiguration'] = certificateConfiguration;
+        }
+        // certificate-validity
+        const certificateValidity = {};
+        if (payload.certificateValidityDaysUseDefault === false) {
+            setIfNumber(certificateValidity, 'days', payload.certificateValidityDays);
+        }
+        if (isNonEmptyObject(certificateValidity)) {
+            authorityEntry['certificateValidity'] = certificateValidity;
+        }
+        // storage
+        const storage = {};
+        if (payload.storageDirectoryPathUseDefault === false) {
+            setIfNonEmptyString(storage, 'directoryPath', payload.storageDirectoryPath);
+        }
+        if (isNonEmptyObject(storage)) {
+            authorityEntry['storage'] = storage;
+        }
+        authorities[payload.uuid] = authorityEntry;
+        next.authorities = authorities;
+        return next;
+    };
     const ensureWorkspaceFolderParameter = (handler) => {
         return async (workspaceFolder) => {
             if (workspaceFolder === undefined) {
@@ -118,6 +158,113 @@ async function activate(context) {
     const createConfigurationFileUri = (workspaceFolder) => {
         return vscode_1.Uri.joinPath(workspaceFolder.uri, ".certificates.json");
     };
+    // Helper to read configuration file
+    const readConfigurationFile = async (configFileUri) => {
+        const fileData = await vscode_1.workspace.fs.readFile(configFileUri);
+        const fileContent = Buffer.from(fileData).toString("utf8");
+        return JSON.parse(fileContent);
+    };
+    // Handler for messages from Certificate Authority Form webview
+    const openCertificateAuthorityFormMessageHandler = async (message) => {
+        if (message === undefined) {
+            return void vscode_1.window.showInformationMessage('No message received from Certificate Authority Form webview.');
+        }
+        if (message.type === 'submitCertificateAuthorityForm') {
+            vscode_1.window.setStatusBarMessage('Saving Certificate Authority…', 2000);
+            try {
+                const selectedWorkspaceFolderUri = message.payload.workspaceFolderUri.trim();
+                const workspaceFolder = vscode_1.workspace.getWorkspaceFolder(vscode_1.Uri.parse(selectedWorkspaceFolderUri));
+                if (workspaceFolder === undefined) {
+                    return void vscode_1.window.showWarningMessage('Selected workspace folder is not available. Cannot save Certificate Authority.');
+                }
+                const configFileUri = createConfigurationFileUri(workspaceFolder);
+                let existing = {};
+                try {
+                    const raw = await vscode_1.workspace.fs.readFile(configFileUri);
+                    const text = Buffer.from(raw).toString('utf8');
+                    existing = parseJsonObject(text);
+                }
+                catch {
+                    // Missing or unreadable config file; create fresh.
+                    existing = {};
+                }
+                const updated = upsertCertificateAuthorityInConfiguration(existing, message.payload);
+                const nextContent = JSON.stringify(updated, null, 2) + '\n';
+                await vscode_1.workspace.fs.writeFile(configFileUri, Buffer.from(nextContent, 'utf8'));
+                await openCertificateAuthorityFormWebviewPanel?.webview.postMessage({
+                    type: 'certificateAuthorityFormValidationResult',
+                    fieldErrors: {},
+                });
+                refreshSidebarTreeDataProvider();
+                return void vscode_1.window.showInformationMessage('Certificate Authority saved to .certificates.json.');
+            }
+            catch (error) {
+                await openCertificateAuthorityFormWebviewPanel?.webview.postMessage({
+                    type: 'certificateAuthorityFormValidationResult',
+                    fieldErrors: {},
+                });
+                return void vscode_1.window.showErrorMessage(`Failed to save Certificate Authority: ${error instanceof Error ? error.message : String(error)}`);
+            }
+        }
+        if (message.type === 'confirmResetInitial') {
+            const selection = await vscode_1.window.showWarningMessage('Reset all fields to their initial values?', { modal: true }, 'Reset');
+            const ok = selection === 'Reset';
+            return void await openCertificateAuthorityFormWebviewPanel?.webview.postMessage({
+                type: 'confirmResetInitialResult',
+                ok,
+            });
+        }
+    };
+    const openCertificateAuthorityFormHandler = async (workspaceFolder, certificateAuthorityUUID) => {
+        if (openCertificateAuthorityFormWebviewPanel === undefined) {
+            const viewType = 'certificateAuthorityForm';
+            const title = 'Certificate Authority Form';
+            const showOptions = vscode_1.ViewColumn.Active;
+            const options = {
+                enableScripts: true,
+            };
+            openCertificateAuthorityFormWebviewPanel = vscode_1.window.createWebviewPanel(viewType, title, showOptions, options);
+            openCertificateAuthorityFormWebviewPanel.webview.onDidReceiveMessage(openCertificateAuthorityFormMessageHandler);
+            openCertificateAuthorityFormWebviewPanel.onDidDispose(clearOpenCertificateAuthorityFormWebviewPanel);
+        }
+        const configuredCertificateKeySize = getConfiguredCertificateKeySize();
+        const configuredCertificateValidityDays = getConfiguredCertificateValidityDays();
+        const configuredStorageDirectoryPath = getConfiguredStorageDirectoryPath();
+        const formInitialValues = {};
+        if (certificateAuthorityUUID !== undefined) {
+            const configFileUri = createConfigurationFileUri(workspaceFolder);
+            const configuration = await readConfigurationFile(configFileUri);
+            formInitialValues['certificateCommonName'] = configuration.authorities?.[certificateAuthorityUUID]?.certificateSubject?.commonName;
+            formInitialValues['uuid'] = certificateAuthorityUUID;
+        }
+        openCertificateAuthorityFormWebviewPanel.webview.html = await ((0, jsx_runtime_1.jsx)(CertificateAuthorityForm_1.CertificateAuthorityForm, { formSelectionOptions: {
+                workspaceFolders: (vscode_1.workspace.workspaceFolders ?? []).map((folder) => ({
+                    uri: folder.uri.toString(),
+                    name: folder.name,
+                })),
+            }, formDefaultValues: {
+                certificateKeySize: configuredCertificateKeySize,
+                certificateValidityDays: configuredCertificateValidityDays,
+                storageDirectoryPath: configuredStorageDirectoryPath,
+            }, formInitialValues: {
+                certificateCommonName: '',
+                certificateCountry: '',
+                certificateEmailAddress: '',
+                certificateKeySize: configuredCertificateKeySize,
+                certificateKeySizeUseDefault: true,
+                certificateValidityDays: configuredCertificateValidityDays,
+                certificateValidityDaysUseDefault: true,
+                storageDirectoryPathUseDefault: true,
+                storageDirectoryPath: configuredStorageDirectoryPath,
+                uuid: certificateAuthorityUUID ?? (0, node_crypto_1.randomUUID)(),
+                workspaceFolderUri: workspaceFolder.uri.toString(),
+            } }));
+        if (openCertificateAuthorityFormWebviewPanel.visible === false) {
+            openCertificateAuthorityFormWebviewPanel.reveal(vscode_1.ViewColumn.Active);
+        }
+    };
+    const openCertificateAuthorityFormDisposable = vscode_1.commands.registerCommand('certificate-manager.openCertificateAuthorityForm', ensureWorkspaceFolderParameter(openCertificateAuthorityFormHandler));
+    context.subscriptions.push(openCertificateAuthorityFormDisposable);
     // Register create configuration file command
     const createConfigurationHandler = async (workspaceFolder) => {
         const configFileUri = createConfigurationFileUri(workspaceFolder);
@@ -148,12 +295,6 @@ async function activate(context) {
     };
     const createConfigurationDisposable = vscode_1.commands.registerCommand('certificate-manager.createConfigurationFile', ensureWorkspaceFolderParameter(createConfigurationHandler));
     context.subscriptions.push(createConfigurationDisposable);
-    // Helper to read configuration file
-    const readConfigurationFile = async (configFileUri) => {
-        const fileData = await vscode_1.workspace.fs.readFile(configFileUri);
-        const fileContent = Buffer.from(fileData).toString("utf8");
-        return JSON.parse(fileContent);
-    };
     // Register load configurations command
     const loadConfigurationHandler = async (workspaceFolder) => {
         const configFileUri = createConfigurationFileUri(workspaceFolder);
@@ -238,6 +379,5 @@ async function activate(context) {
  *
  */
 function deactivate() {
-    console.log('Certificate extension deactivated');
 }
 //# sourceMappingURL=extension.js.map

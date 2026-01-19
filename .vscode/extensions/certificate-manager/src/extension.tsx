@@ -1,8 +1,10 @@
 import { ConfigurationChangeEvent, ExtensionContext, Uri, ViewColumn, WebviewPanel, WorkspaceFolder, commands, window, workspace } from "vscode";
-import { CertificateAuthorityForm } from "./component/CertificateAuthorityForm";
+import { homedir } from "node:os";
+import { randomUUID } from "node:crypto";
+import { CertificateAuthorityForm, Props as CertificateAuthorityFormProps } from "./component/CertificateAuthorityForm";
 import { default as SidebarTreeDataProvider } from "./provider/SidebarTreeDataProvider";
 import { Configuration, configurations } from "./cache";
-import { homedir } from "node:os";
+import { default as pkg } from "../package.json";
 
 /**
  * Activate the extension.
@@ -11,14 +13,29 @@ import { homedir } from "node:os";
  */
 async function activate(context: ExtensionContext) {
 
+
   // Helper to get default storage path
-  const getDefaultStoragePath = (): string => {
+  const getConfiguredStorageDirectoryPath = (): string => {
     const config = workspace.getConfiguration('@tw050x.net/certificate-manager');
-    const configuredPath = config.get<string | null>('storageDirectoryPath');
+    const configuredPath = config.get<string | null>('storage.directoryPath');
     if (configuredPath !== null && configuredPath !== undefined && configuredPath.trim() !== '') {
       return configuredPath;
     }
     return Uri.joinPath(Uri.file(homedir()), '.certificates').fsPath;
+  }
+
+  // Helper to get default certificate settings
+  const getConfiguredCertificateKeySize = (): number => {
+    const config = workspace.getConfiguration('@tw050x.net/certificate-manager');
+    const configuredKeySize = config.get<number>('certificate.keySize');
+    return configuredKeySize ?? pkg.contributes.configuration.properties['@tw050x.net/certificate-manager.certificate.keySize'].default;
+  }
+
+  // Helper to get default certificate settings
+  const getConfiguredCertificateValidityDays = (): number => {
+    const config = workspace.getConfiguration('@tw050x.net/certificate-manager');
+    const configuredValidityDays = config.get<number>('certificate.validityDays');
+    return configuredValidityDays ?? pkg.contributes.configuration.properties['@tw050x.net/certificate-manager.certificate.validityDays'].default;
   }
 
   // Setup Sidebar
@@ -53,24 +70,31 @@ async function activate(context: ExtensionContext) {
   context.subscriptions.push(configurationChangeDisposable);
 
   // Register open create certificate authority form command
-  let openCreateCertificateAuthorityFormWebviewPanel: WebviewPanel | undefined = undefined;
-  const clearOpenCreateCertificateAuthorityFormWebviewPanel = () => {
-    openCreateCertificateAuthorityFormWebviewPanel = undefined;
+  let openCertificateAuthorityFormWebviewPanel: WebviewPanel | undefined = undefined;
+  const clearOpenCertificateAuthorityFormWebviewPanel = () => {
+    openCertificateAuthorityFormWebviewPanel = undefined;
   }
   type CertificateAuthorityMessage =
     | { type: 'confirmResetInitial' }
-    | { type: 'confirmResetInitialResult'; ok: boolean };
+    | { type: 'confirmResetInitialResult'; ok: boolean }
+    | { type: 'certificateAuthorityFormValidationResult'; fieldErrors: Record<string, string[]> };
 
   type CertificateAuthorityFormSubmitPayload = {
-    storageUseDefaultLocation: boolean;
-    storageDirectoryPath: string;
     certificateCommonName: string;
-    certificateOrganization: string;
-    certificateOrganizationalUnit: string;
-    certificateLocality: string;
-    certificateStateOrProvince: string;
     certificateCountry: string;
     certificateEmailAddress: string;
+    certificateKeySize: number | null;
+    certificateKeySizeUseDefault: boolean;
+    certificateLocality: string;
+    certificateOrganization: string;
+    certificateOrganizationalUnit: string;
+    certificateStateOrProvince: string;
+    certificateValidityDays: number | null;
+    certificateValidityDaysUseDefault: boolean;
+    storageDirectoryPathUseDefault: boolean;
+    storageDirectoryPath: string;
+    uuid: string;
+    workspaceFolderUri: string;
   };
 
   type CertificateAuthorityFormSubmitMessage = {
@@ -78,69 +102,119 @@ async function activate(context: ExtensionContext) {
     payload: CertificateAuthorityFormSubmitPayload;
   };
 
-  const openCreateCertificateAuthorityFormMessageHandler = async (message?: CertificateAuthorityMessage | CertificateAuthorityFormSubmitMessage) => {
-    if (message === undefined) {
-      return void window.showInformationMessage(
-        'No message received from Certificate Authority Form webview.'
-      );
-    }
+  type CertificateAuthorityConfigurationCertificateSubjectRecord = {
+    commonName?: string;
+    country?: string;
+    emailAddress?: string;
+    locality?: string;
+    organization?: string;
+    organizationalUnit?: string;
+    stateOrProvince?: string;
+  }
 
-    if (message.type === 'submitCertificateAuthorityForm') {
-      console.log('certificate-manager: submitCertificateAuthorityForm', message.payload);
-      return;
-    }
+  type CertificateAuthorityConfigurationCertificateConfigurationRecord = {
+    keySize?: number;
+  }
 
-    if (message.type === 'confirmResetInitial') {
-      const selection = await window.showWarningMessage(
-        'Reset all fields to their initial values?',
-        { modal: true },
-        'Reset'
-      );
-      const ok = selection === 'Reset';
-      return void await openCreateCertificateAuthorityFormWebviewPanel?.webview.postMessage({
-        type: 'confirmResetInitialResult',
-        ok,
-      } satisfies CertificateAuthorityMessage);
+  type CertificateAuthorityConfigurationCertificateValidityRecord = {
+    validityDays?: number;
+  }
+
+  type CertificateAuthorityConfiguration = {
+    'certificateSubject'?: CertificateAuthorityConfigurationCertificateSubjectRecord;
+    'certificateConfiguration'?: CertificateAuthorityConfigurationCertificateConfigurationRecord;
+    'certificateValidity'?: CertificateAuthorityConfigurationCertificateValidityRecord;
+    storage?: Record<string, unknown>;
+  };
+
+  type CertificatesConfigurationFile = {
+    authorities?: Record<string, CertificateAuthorityConfiguration>;
+  };
+
+  const parseJsonObject = (text: string): Record<string, unknown> => {
+    const parsed: unknown = JSON.parse(text);
+    if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      throw new Error('Expected JSON object at root.');
+    }
+    return parsed as Record<string, unknown>;
+  }
+
+  const setIfNonEmptyString = (target: Record<string, unknown>, key: string, value: string) => {
+    const trimmed = value.trim();
+    if (trimmed !== '') {
+      target[key] = trimmed;
     }
   }
-  const openCreateCertificateAuthorityFormHandler = async () => {
-    if (openCreateCertificateAuthorityFormWebviewPanel === undefined) {
-      const viewType = 'certificateAuthorityForm';
-      const title = 'Certificate Authority Form';
-      const showOptions = ViewColumn.Active;
-      const options = {
-        enableScripts: true,
-      };
-      openCreateCertificateAuthorityFormWebviewPanel = window.createWebviewPanel(
-        viewType,
-        title,
-        showOptions,
-        options
-      );
-      const defaultStoragePath = getDefaultStoragePath();
-      openCreateCertificateAuthorityFormWebviewPanel.webview.html = await (
-        <CertificateAuthorityForm
-          formDefaultValues={{
-            storageDirectoryPath: defaultStoragePath,
-          }}
-          formInitialValues={{
-            storageUseDefaultLocation: true,
-            storageDirectoryPath: defaultStoragePath,
-          }}
-        />
-      );
-      openCreateCertificateAuthorityFormWebviewPanel.webview.onDidReceiveMessage(openCreateCertificateAuthorityFormMessageHandler);
-      openCreateCertificateAuthorityFormWebviewPanel.onDidDispose(clearOpenCreateCertificateAuthorityFormWebviewPanel);
-    }
-    if (openCreateCertificateAuthorityFormWebviewPanel.visible === false) {
-      openCreateCertificateAuthorityFormWebviewPanel.reveal(ViewColumn.Active);
+
+  const setIfNumber = (target: Record<string, unknown>, key: string, value: number | null) => {
+    if (value !== null && Number.isFinite(value)) {
+      target[key] = value;
     }
   }
-  const openCreateCertificateAuthorityFormDisposable = commands.registerCommand(
-    'certificate-manager.openCreateCertificateAuthorityForm',
-    openCreateCertificateAuthorityFormHandler
-  )
-  context.subscriptions.push(openCreateCertificateAuthorityFormDisposable);
+
+  const isNonEmptyObject = (value: Record<string, unknown>): boolean => {
+    return Object.keys(value).length > 0;
+  }
+
+  const upsertCertificateAuthorityInConfiguration = (
+    configuration: CertificatesConfigurationFile,
+    payload: CertificateAuthorityFormSubmitPayload
+  ): CertificatesConfigurationFile => {
+    const next: CertificatesConfigurationFile = { ...configuration };
+
+    const authoritiesRaw = next.authorities;
+    const authorities: Record<string, unknown> = (
+      authoritiesRaw !== undefined && authoritiesRaw !== null && typeof authoritiesRaw === 'object' && !Array.isArray(authoritiesRaw)
+        ? (authoritiesRaw as Record<string, unknown>)
+        : {}
+    );
+
+    const authorityEntry: Record<string, unknown> = {};
+
+    // certificate-subject
+    const certificateSubject: Record<string, unknown> = {};
+    setIfNonEmptyString(certificateSubject, 'commonName', payload.certificateCommonName);
+    setIfNonEmptyString(certificateSubject, 'organization', payload.certificateOrganization);
+    setIfNonEmptyString(certificateSubject, 'organizationalUnit', payload.certificateOrganizationalUnit);
+    setIfNonEmptyString(certificateSubject, 'locality', payload.certificateLocality);
+    setIfNonEmptyString(certificateSubject, 'state', payload.certificateStateOrProvince);
+    setIfNonEmptyString(certificateSubject, 'country', payload.certificateCountry);
+    setIfNonEmptyString(certificateSubject, 'email', payload.certificateEmailAddress);
+    if (isNonEmptyObject(certificateSubject)) {
+      authorityEntry['certificateSubject'] = certificateSubject;
+    }
+
+    // certificate-configuration
+    const certificateConfiguration: Record<string, unknown> = {};
+    if (payload.certificateKeySizeUseDefault === false) {
+      setIfNumber(certificateConfiguration, 'keySize', payload.certificateKeySize);
+    }
+    if (isNonEmptyObject(certificateConfiguration)) {
+      authorityEntry['certificateConfiguration'] = certificateConfiguration;
+    }
+
+    // certificate-validity
+    const certificateValidity: Record<string, unknown> = {};
+    if (payload.certificateValidityDaysUseDefault === false) {
+      setIfNumber(certificateValidity, 'days', payload.certificateValidityDays);
+    }
+    if (isNonEmptyObject(certificateValidity)) {
+      authorityEntry['certificateValidity'] = certificateValidity;
+    }
+
+    // storage
+    const storage: Record<string, unknown> = {};
+    if (payload.storageDirectoryPathUseDefault === false) {
+      setIfNonEmptyString(storage, 'directoryPath', payload.storageDirectoryPath);
+    }
+    if (isNonEmptyObject(storage)) {
+      authorityEntry['storage'] = storage;
+    }
+
+    authorities[payload.uuid] = authorityEntry;
+    next.authorities = authorities;
+    return next;
+  }
 
   // Helper to ensure workspaceFolder parameter is provided to command handlers
   type WorkspaceFolderCommandHandler = (workspaceFolder?: WorkspaceFolder) => Promise<void>;
@@ -165,6 +239,153 @@ async function activate(context: ExtensionContext) {
   const createConfigurationFileUri = (workspaceFolder: WorkspaceFolder): Uri => {
     return Uri.joinPath(workspaceFolder.uri, ".certificates.json");
   }
+
+  // Helper to read configuration file
+  const readConfigurationFile = async (configFileUri: Uri): Promise<CertificatesConfigurationFile> => {
+    const fileData = await workspace.fs.readFile(configFileUri);
+    const fileContent = Buffer.from(fileData).toString("utf8");
+    return JSON.parse(fileContent) as CertificatesConfigurationFile;
+  }
+
+  // Handler for messages from Certificate Authority Form webview
+  const openCertificateAuthorityFormMessageHandler = async (message?: CertificateAuthorityMessage | CertificateAuthorityFormSubmitMessage) => {
+    if (message === undefined) {
+      return void window.showInformationMessage(
+        'No message received from Certificate Authority Form webview.'
+      );
+    }
+
+    if (message.type === 'submitCertificateAuthorityForm') {
+      window.setStatusBarMessage('Saving Certificate Authority…', 2000);
+      try {
+        const selectedWorkspaceFolderUri = message.payload.workspaceFolderUri.trim();
+
+        const workspaceFolder = workspace.getWorkspaceFolder(Uri.parse(selectedWorkspaceFolderUri));
+        if (workspaceFolder === undefined) {
+          return void window.showWarningMessage(
+            'Selected workspace folder is not available. Cannot save Certificate Authority.'
+          );
+        }
+
+        const configFileUri = createConfigurationFileUri(workspaceFolder);
+        let existing: CertificatesConfigurationFile = {};
+        try {
+          const raw = await workspace.fs.readFile(configFileUri);
+          const text = Buffer.from(raw).toString('utf8');
+          existing = parseJsonObject(text) as CertificatesConfigurationFile;
+        }
+        catch {
+          // Missing or unreadable config file; create fresh.
+          existing = {};
+        }
+
+        const updated = upsertCertificateAuthorityInConfiguration(existing, message.payload);
+        const nextContent = JSON.stringify(updated, null, 2) + '\n';
+        await workspace.fs.writeFile(configFileUri, Buffer.from(nextContent, 'utf8'));
+        await openCertificateAuthorityFormWebviewPanel?.webview.postMessage({
+          type: 'certificateAuthorityFormValidationResult',
+          fieldErrors: {},
+        } satisfies CertificateAuthorityMessage);
+        refreshSidebarTreeDataProvider();
+        return void window.showInformationMessage(
+          'Certificate Authority saved to .certificates.json.'
+        );
+      }
+      catch (error) {
+        await openCertificateAuthorityFormWebviewPanel?.webview.postMessage({
+          type: 'certificateAuthorityFormValidationResult',
+          fieldErrors: {},
+        } satisfies CertificateAuthorityMessage);
+        return void window.showErrorMessage(
+          `Failed to save Certificate Authority: ${error instanceof Error ? error.message : String(error)}`
+        );
+      }
+    }
+
+    if (message.type === 'confirmResetInitial') {
+      const selection = await window.showWarningMessage(
+        'Reset all fields to their initial values?',
+        { modal: true },
+        'Reset'
+      );
+      const ok = selection === 'Reset';
+      return void await openCertificateAuthorityFormWebviewPanel?.webview.postMessage({
+        type: 'confirmResetInitialResult',
+        ok,
+      } satisfies CertificateAuthorityMessage);
+    }
+  }
+  const openCertificateAuthorityFormHandler = async (
+    workspaceFolder: WorkspaceFolder,
+    certificateAuthorityUUID?: string,
+  ) => {
+    if (openCertificateAuthorityFormWebviewPanel === undefined) {
+      const viewType = 'certificateAuthorityForm';
+      const title = 'Certificate Authority Form';
+      const showOptions = ViewColumn.Active;
+      const options = {
+        enableScripts: true,
+      };
+      openCertificateAuthorityFormWebviewPanel = window.createWebviewPanel(
+        viewType,
+        title,
+        showOptions,
+        options
+      );
+      openCertificateAuthorityFormWebviewPanel.webview.onDidReceiveMessage(openCertificateAuthorityFormMessageHandler);
+      openCertificateAuthorityFormWebviewPanel.onDidDispose(clearOpenCertificateAuthorityFormWebviewPanel);
+    }
+
+    const configuredCertificateKeySize = getConfiguredCertificateKeySize();
+    const configuredCertificateValidityDays = getConfiguredCertificateValidityDays();
+    const configuredStorageDirectoryPath = getConfiguredStorageDirectoryPath();
+
+    const formInitialValues: Partial<CertificateAuthorityFormProps['formInitialValues']> = {};
+    if (certificateAuthorityUUID !== undefined) {
+      const configFileUri = createConfigurationFileUri(workspaceFolder);
+      const configuration = await readConfigurationFile(configFileUri);
+      formInitialValues['certificateCommonName'] = configuration.authorities?.[certificateAuthorityUUID]?.certificateSubject?.commonName
+      formInitialValues['uuid'] = certificateAuthorityUUID;
+    }
+
+    openCertificateAuthorityFormWebviewPanel.webview.html = await (
+      <CertificateAuthorityForm
+        formSelectionOptions={{
+          workspaceFolders: (workspace.workspaceFolders ?? []).map((folder) => ({
+            uri: folder.uri.toString(),
+            name: folder.name,
+          })),
+        }}
+        formDefaultValues={{
+          certificateKeySize: configuredCertificateKeySize,
+          certificateValidityDays: configuredCertificateValidityDays,
+          storageDirectoryPath: configuredStorageDirectoryPath,
+        }}
+        formInitialValues={{
+          certificateCommonName: '',
+          certificateCountry: '',
+          certificateEmailAddress: '',
+          certificateKeySize: configuredCertificateKeySize,
+          certificateKeySizeUseDefault: true,
+          certificateValidityDays: configuredCertificateValidityDays,
+          certificateValidityDaysUseDefault: true,
+          storageDirectoryPathUseDefault: true,
+          storageDirectoryPath: configuredStorageDirectoryPath,
+          uuid: certificateAuthorityUUID ?? randomUUID(),
+          workspaceFolderUri: workspaceFolder.uri.toString(),
+        }}
+      />
+    );
+
+    if (openCertificateAuthorityFormWebviewPanel.visible === false) {
+      openCertificateAuthorityFormWebviewPanel.reveal(ViewColumn.Active);
+    }
+  }
+  const openCertificateAuthorityFormDisposable = commands.registerCommand(
+    'certificate-manager.openCertificateAuthorityForm',
+    ensureWorkspaceFolderParameter(openCertificateAuthorityFormHandler)
+  )
+  context.subscriptions.push(openCertificateAuthorityFormDisposable);
 
   // Register create configuration file command
   const createConfigurationHandler = async (workspaceFolder: WorkspaceFolder) => {
@@ -207,13 +428,6 @@ async function activate(context: ExtensionContext) {
     ensureWorkspaceFolderParameter(createConfigurationHandler)
   );
   context.subscriptions.push(createConfigurationDisposable);
-
-  // Helper to read configuration file
-  const readConfigurationFile = async (configFileUri: Uri): Promise<Configuration> => {
-    const fileData = await workspace.fs.readFile(configFileUri);
-    const fileContent = Buffer.from(fileData).toString("utf8");
-    return JSON.parse(fileContent) as Configuration;
-  }
 
   // Register load configurations command
   const loadConfigurationHandler = async (workspaceFolder: WorkspaceFolder) => {
@@ -330,7 +544,6 @@ async function activate(context: ExtensionContext) {
  *
  */
 function deactivate() {
-  console.log('Certificate extension deactivated');
 }
 
 export { activate, deactivate };

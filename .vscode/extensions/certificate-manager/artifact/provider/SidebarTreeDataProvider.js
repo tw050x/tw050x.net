@@ -164,7 +164,8 @@ class SidebarTreeDataProvider {
             // Action: Open Create Certificate Authority Form
             const openCreateCertificateAuthorityTreeItem = new ActionTreeItem_1.ActionTreeItem("create-certificate-authority", "Create Certificate Authority");
             openCreateCertificateAuthorityTreeItem.setCommand({
-                command: 'certificate-manager.openCreateCertificateAuthorityForm',
+                arguments: [element],
+                command: 'certificate-manager.openCertificateAuthorityForm',
                 title: "Create Certificate Authority",
             });
             openCreateCertificateAuthorityTreeItem.setIconPath(new vscode_1.ThemeIcon("file-add"));
