@@ -26,6 +26,7 @@
   "scripts": {
     "bake": "docker buildx bake --builder tw050x.net.builder --file bake.hcl --load",
     "certificate": "certificate",
+    "setup": "node ./script/setup.js",
     "e2e": "cypress open",
     "generate-random-secret-key": "node ./script/generate-random-secret-key.js",
     "generate-uuid": "node ./script/generate-uuid.js",

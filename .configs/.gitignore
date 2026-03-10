@@ -1,3 +1,5 @@
 *
 !.gitignore
 !configs.md
+!defaults/
+!defaults/**
