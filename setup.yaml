@@ -1,0 +1,28 @@
+include:
+  - compose.mongo.yaml
+
+services:
+  setup-mongo-replica-init:
+    image: mongo:8.0.12
+    depends_on:
+      mongo-primary:
+        condition: service_healthy
+      mongo-secondary-a:
+        condition: service_healthy
+    command:
+      - sh
+      - -lc
+      - mongosh "mongodb://root:password@mongo-primary:27017/admin?authSource=admin" --quiet --eval "load('/setup.js')"
+    networks:
+      mongo: {}
+    restart: "no"
+    volumes:
+      - type: bind
+        source: ./service/mongo/setup.js
+        target: /setup.js
+        read_only: true
+
+networks:
+  mongo:
+    driver: bridge
+    name: mongo

@@ -3,6 +3,11 @@ import * as path from 'path';
 import forge from 'node-forge';
 import { CACreateOptions, CertCreateOptions, CAFiles, CertFiles } from './types.js';
 
+function getDefaultCACommonName(caDir: string): string {
+  const suffix = path.basename(path.resolve(caDir)).trim() || 'root';
+  return `tw050x.dev Local Development CA (${suffix})`;
+}
+
 export async function createCA(options: CACreateOptions): Promise<CAFiles> {
   const caDir = path.resolve(options.dir);
   if (!fs.existsSync(caDir)) {
@@ -18,8 +23,7 @@ export async function createCA(options: CACreateOptions): Promise<CAFiles> {
   cert.validity.notAfter.setDate(cert.validity.notBefore.getDate() + (options.validityDays || 3650));
 
   const attrs = [
-    // TODO: customise the common name so as to not overwrite existing CAs that have been created for other projects
-    { name: 'commonName', value: options.commonName || 'tw050x.dev Local Development CA' },
+    { name: 'commonName', value: options.commonName || getDefaultCACommonName(options.dir) },
     { name: 'countryName', value: options.countryName || 'US' },
     { shortName: 'ST', value: options.stateName || 'State' },
     { name: 'localityName', value: options.localityName || 'City' },

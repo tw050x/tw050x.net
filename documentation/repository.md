@@ -55,7 +55,7 @@ This certificate is used for local development with the `tw050x.dev` domain. Thi
 Create a Certificate Authority:
 
 ```bash
-yarn certificate create-ca --dir="./ca/traefik"
+yarn certificate create-ca --dir="./ca/traefik" --common-name="tw050x.dev Local Development CA (traefik)"
 ```
 
 > Ensure you follow the instructions to install/trust the CA on your system. This should be printed as output of the `create-ca` command
@@ -80,16 +80,16 @@ These certificates are used for service to service communication only. You need 
 
 > Certificates are assumed to be in the `./certificates` directory and are loaded automatically by each service.
 
-Create a Certificate Authority:
+Create a Certificate Authority (you will find this easier to run one at a time):
 
 ```bash
-yarn certificate create-ca --dir="./ca/authorisation"
-yarn certificate create-ca --dir="./ca/error"
-yarn certificate create-ca --dir="./ca/marketing"
-yarn certificate create-ca --dir="./ca/navigation"
-yarn certificate create-ca --dir="./ca/payments"
-yarn certificate create-ca --dir="./ca/portal"
-yarn certificate create-ca --dir="./ca/users"
+yarn certificate create-ca --dir="./ca/authorisation" --common-name="tw050x.dev Local Development CA (authorisation)"
+yarn certificate create-ca --dir="./ca/error" --common-name="tw050x.dev Local Development CA (error)"
+yarn certificate create-ca --dir="./ca/marketing" --common-name="tw050x.dev Local Development CA (marketing)"
+yarn certificate create-ca --dir="./ca/navigation" --common-name="tw050x.dev Local Development CA (navigation)"
+yarn certificate create-ca --dir="./ca/payments" --common-name="tw050x.dev Local Development CA (payments)"
+yarn certificate create-ca --dir="./ca/portal" --common-name="tw050x.dev Local Development CA (portal)"
+yarn certificate create-ca --dir="./ca/users" --common-name="tw050x.dev Local Development CA (users)"
 ```
 
 > Ensure you follow the instructions to install/trust the CA on your system. This should be printed as output of the `create-ca` command
@@ -118,41 +118,22 @@ chmod 600 service/mongo/mongo-keyfile
 
 ### Mongo Replica Set
 
-This repo requires a MongoDB replica set to be running. The `docker compose` file will create the necessary containers for you. However you will need to connect to the primary instance and run the replica set initiation command.
-
-First start the primary and one secondary mongo instances:
+This repo requires a MongoDB replica set to be running. Use the setup compose file to start the required containers and run replica-set initiation in a one-shot container.
 
 ```bash
-docker compose up -d mongo-primary mongo-secondary-a
+docker compose -f setup.yaml run --rm setup-mongo-replica-init
 ```
 
-> You should only have to do this once. Unless you delete the volume directories in the `./service/mongo/data` directory.
-
-Next connect to the primary instance using `mongosh` in the container:
-
-```bash
-# Connect to the primary MongoDB instance
-docker compose exec -it mongo-primary mongosh --username root --password password --authenticationDatabase admin
-```
-
-Once connected run the following command to initiate the replica set:
-
-```js
-rs.initiate({
-  _id: "rs0",
-  members: [
-    { _id: 0, host: "mongo-primary:27017", priority: 2 },
-    { _id: 1, host: "mongo-secondary-a:27017", priority: 1 }
-  ]
-})
-```
-
-> You should notice the prompt change to include the replica set name.
+> You should only have to do this once, unless you delete the volume directories in the `./service/mongo/data` directory.
 
 You can check the status of the replica set using:
 
-```js
-rs.status()
+```bash
+docker compose -f setup.yaml exec -it mongo-primary mongosh \
+  --username root \
+  --password password \
+  --authenticationDatabase admin \
+  --eval "rs.status()"
 ```
 
 > You should see both instances listed as members of the replica set. And one of them should be marked as PRIMARY. The rest as SECONDARY.

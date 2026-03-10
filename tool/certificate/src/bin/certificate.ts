@@ -5,7 +5,7 @@ import { createCA, createCert } from '../generator.js';
 import { validateCA } from '../validator.js';
 
 // Usage:
-//   certificate create-ca --dir=<directory>
+//   certificate create-ca --dir=<directory> [--common-name=<common-name>]
 //   certificate create-cert --ca-dir=<ca-directory> --cert-dir=<cert-directory> --name=<name> [--domains=<domain1,domain2>]
 
 const args = process.argv.slice(2);
@@ -36,7 +36,7 @@ function getInstallCommand(caCertPath: string): string {
 async function main() {
   if (!command || !['create-ca', 'create-cert'].includes(command)) {
     console.log('Usage:');
-    console.log('  certificate create-ca --dir=<directory>');
+    console.log('  certificate create-ca --dir=<directory> [--common-name=<common-name>]');
     console.log('  certificate create-cert --ca-dir=<ca-directory> --cert-dir=<cert-directory> --name=<name> [--domains=<domain1,domain2>]');
     process.exit(1);
   }
@@ -45,6 +45,7 @@ async function main() {
 
   if (command === 'create-ca') {
     const dirFlag = readFlag('dir');
+    const commonNameFlag = readFlag('common-name');
     if (!dirFlag) {
       console.error('--dir is required for create-ca');
       process.exit(1);
@@ -52,7 +53,10 @@ async function main() {
     const caDir = path.isAbsolute(dirFlag) ? dirFlag : path.resolve(baseCwd, dirFlag);
 
     try {
-      const caFiles = await createCA({ dir: caDir });
+      const caFiles = await createCA({
+        dir: caDir,
+        commonName: commonNameFlag
+      });
       console.log(`Certificate Authority created successfully!`);
       console.log(`Certificate: ${caFiles.certPath}`);
       console.log(`Private Key: ${caFiles.keyPath}`);
