@@ -29,7 +29,6 @@
   ],
   "files": [],
   "references": [
-    { "path": "./.vscode/extensions/certificate-manager" },
     { "path": "./cypress" },
     { "path": "./library/database" },
     { "path": "./library/platform" },

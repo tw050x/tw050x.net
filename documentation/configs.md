@@ -6,7 +6,7 @@ This document outlines the usage of configs within the platform.
 
 Configs are files that contain a single configuration value. They are read using the `read()` function from the `@tw050x.net.library/platform/helper/configs` package. Read files are stored in an in memory cache for performance. The cache has a TTL of 5 minutes which is hardcoded into the library.
 
-If the retrieved config value is stale then it will be reread from disk before beign returned. We do not implement state-white-revalidate or similar strategies at this time.
+If the retrieved config value is stale then it will be reread from disk before being returned. We do not implement stale-while-revalidate or similar strategies at this time.
 
 This feature is powered by the docker config feature of docker swarms. In local development we simply mount the `.configs/` directory as a volume in the service container. This has the same effect as mounting many docker configs into the container.
 
@@ -37,7 +37,6 @@ This is the second segment and should represent a more specific grouping within 
 #### 3. **Config Name**:
 
 This is the third segment and should represent the specific config being defined. This should be conceptually low level and very specific to the actual config value.
-
 
 ---
 

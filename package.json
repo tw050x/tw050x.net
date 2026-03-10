@@ -38,9 +38,6 @@
   "type": "module",
   "version": "0.0.0",
   "workspaces": [
-    ".vscode/extensions/certificate-manager",
-    ".vscode/extensions/mongo",
-    ".vscode/extensions/redis",
     "cypress",
     "library/database",
     "library/platform",

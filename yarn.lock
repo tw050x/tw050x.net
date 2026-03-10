@@ -623,18 +623,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net.extension/mongo@workspace:.vscode/extensions/mongo":
-  version: 0.0.0-use.local
-  resolution: "@tw050x.net.extension/mongo@workspace:.vscode/extensions/mongo"
-  languageName: unknown
-  linkType: soft
-
-"@tw050x.net.extension/redis@workspace:.vscode/extensions/redis":
-  version: 0.0.0-use.local
-  resolution: "@tw050x.net.extension/redis@workspace:.vscode/extensions/redis"
-  languageName: unknown
-  linkType: soft
-
 "@tw050x.net.library/database@workspace:*, @tw050x.net.library/database@workspace:library/database":
   version: 0.0.0-use.local
   resolution: "@tw050x.net.library/database@workspace:library/database"
@@ -876,15 +864,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@tw050x.net/certificate-manager@workspace:.vscode/extensions/certificate-manager":
-  version: 0.0.0-use.local
-  resolution: "@tw050x.net/certificate-manager@workspace:.vscode/extensions/certificate-manager"
-  dependencies:
-    "@types/vscode": "npm:^1.107.0"
-    typescript: "npm:^5.7.2"
-  languageName: unknown
-  linkType: soft
-
 "@tw050x.net/platform@workspace:.":
   version: 0.0.0-use.local
   resolution: "@tw050x.net/platform@workspace:."
@@ -1085,13 +1064,6 @@ __metadata:
   version: 13.15.2
   resolution: "@types/validator@npm:13.15.2"
   checksum: 10c0/2c7ce5b745e2c856d0ecd193469cf0edd5081b17208dfab4f03dd5801b8893dcf4cbcfcb662c2b6a42032940effd33e16a56a7eba9e2776b1804111118e320dc
-  languageName: node
-  linkType: hard
-
-"@types/vscode@npm:^1.107.0":
-  version: 1.107.0
-  resolution: "@types/vscode@npm:1.107.0"
-  checksum: 10c0/91dcefaa646bb586189f80f64e2d63f3d2189ff521ce44872652ffbb80d4420fede685a6dbd1fa274fb5ef54501bff23e66ee5f15df9205b12c5bd6d8429988f
   languageName: node
   linkType: hard
 

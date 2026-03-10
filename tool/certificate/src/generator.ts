@@ -18,6 +18,7 @@ export async function createCA(options: CACreateOptions): Promise<CAFiles> {
   cert.validity.notAfter.setDate(cert.validity.notBefore.getDate() + (options.validityDays || 3650));
 
   const attrs = [
+    // TODO: customise the common name so as to not overwrite existing CAs that have been created for other projects
     { name: 'commonName', value: options.commonName || 'tw050x.dev Local Development CA' },
     { name: 'countryName', value: options.countryName || 'US' },
     { shortName: 'ST', value: options.stateName || 'State' },

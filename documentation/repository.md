@@ -22,6 +22,16 @@ yarn install
 
 For local development you will also need to install Docker. Check the [getting started guide](https://docs.docker.com/get-docker/) for details on how to install for your system.
 
+## Build
+
+You can run the following command to check that the entire repo builds. We only use `tsc` for build this node project. No other compiler or bundler is used.
+
+```bash
+yarn tsc --build
+```
+
+> If this build command failed at this stage then you will not be able to create the docker containers later in this setup guide. Reach out to the developers who maintain this repo to get get assistance.
+
 ## Setup Development Certificates
 
 This repo requires SSL certificates to be used for local development. You can use the certificate tool located in the `tool/certificate` directory to create a local Certificate Authority (CA) and issue SSL certificates for the services.
@@ -30,6 +40,12 @@ Begin by installing the tool's dependencies:
 
 ```bash
 yarn install
+```
+
+And then compile the certificate tools code:
+
+```bash
+yarn workspace @tw050x.net.tool/certificate run tsc
 ```
 
 ### Local Domain Certificate
@@ -177,14 +193,14 @@ This should be used in the `.configs/mongo.client.uri` file for the services tha
 mongodb://mongo-primary:27017,mongo-secondary-a:27017
 ```
 
-See the [configs.md](./documentation/configs.md) file for details on the configuration files used in this project.
+See the [configs.md](./configs.md) file for details on the configuration files used in this project.
 
 ## Development Servers
 
 First you will need to create a custom builder instance using the config in the root directory.
 
 ```bash
-yarn docker buildx create --use --name tw050x.net.builder
+docker buildx create --use --name tw050x.net.builder
 ```
 
 Then you can build the docker images for the services using `yarn bake`.
@@ -205,7 +221,7 @@ docker compose up --detach
 
 ### Typescript
 
-You will also need to run `tsc` on your machine for the proiject you are working on. The first time you run this this you must use the first option to build all projects.
+You will also need to run `tsc` on your machine for the project you are working on. The first time you run this this you must use the first option to build all projects.
 
 ```bash
 yarn tsc --build
