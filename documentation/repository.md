@@ -221,7 +221,8 @@ This will run `tsc` in watch mode for the repository.
 The web applications use `tailwindcss` for styling. You will need to run the tailwind compiler to generate the css files used by the applications.
 
 ```bash
-yarn workspace @tw050x.net.service/assets @tailwindcss/cli \
+yarn @tailwindcss/cli \
+  --cwd . \
   --input ./service/assets/style.css \
   --output ./service/assets/public/assets/stylesheet.css
 ```
@@ -244,10 +245,6 @@ The `.vscode/tasks.json` file contains tasks to help with development. The above
 You will also find launch configurations in the `.vscode/launch.json` file. These can be used to debug the services directly from within vscode.
 
 Each service is setup and configured to allow debugging. Simply select the desired service from the debug panel and start debugging.
-
-## Environment files
-
-See the [environment.md](./documentation/environment.md) file for details on the environment variables used in this project.
 
 ## Configs
 

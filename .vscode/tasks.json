@@ -127,11 +127,10 @@
       "type": "shell",
       "command": "yarn",
       "args": [
-        "workspace", "@tw050x.net.service/assets",
-          "@tailwindcss/cli",
-            "--cwd", "${workspaceFolder}",
-            "--input", "${workspaceFolder}/service/assets/style.css",
-            "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css"
+        "@tailwindcss/cli",
+          "--cwd", "${workspaceFolder}",
+          "--input", "${workspaceFolder}/service/assets/style.css",
+          "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css"
       ],
       "options": {
         "cwd": "${workspaceFolder}"
@@ -149,12 +148,11 @@
       "type": "shell",
       "command": "yarn",
       "args": [
-        "workspace", "@tw050x.net.service/assets",
-          "@tailwindcss/cli",
+        "@tailwindcss/cli",
           "--cwd", "${workspaceFolder}",
-            "--input", "${workspaceFolder}/service/assets/style.css",
-            "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css",
-            "--watch"
+          "--input", "${workspaceFolder}/service/assets/style.css",
+          "--output", "${workspaceFolder}/service/assets/public/assets/stylesheet.css",
+          "--watch"
       ],
       "options": {
         "cwd": "${workspaceFolder}"

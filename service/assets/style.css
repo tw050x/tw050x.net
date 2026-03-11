@@ -1,12 +1,4 @@
-@import "tailwindcss" source(none);
-
-@source "./stylesheet";
-@source "../../library/uikit/src";
-@source "../../service/error/src/template";
-@source "../../service/marketing/src/template";
-@source "../../service/navigation/src/template";
-@source "../../service/portal/src/template";
-@source "../../service/user/src/template";
+@import "tailwindcss";
 
 @theme {
   --inset-shadow-md: inset 0 2px 3px rgba(0, 0, 0, 0.25);
