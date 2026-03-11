@@ -93,7 +93,7 @@ export const useSession: Factory = (options) => async (context) => {
     }
 
     // Get the initial IP address from the X-Forwarded-For header
-  const xForwardedForHeader = context.incomingMessage.headers['x-forwarded-for'];
+    const xForwardedForHeader = context.incomingMessage.headers['x-forwarded-for'];
 
     // session is valid so set the user profile UUID
     userProfileUuid = record.userProfileUuid;
