@@ -25,4 +25,4 @@ jobs:
         run: yarn install --immutable
 
       - name: Run TypeScript build
-        run: yarn tsc
+        run: yarn workspaces foreach -A --topological-dev -v --exclude @tw050x.net.cypress/e2e --exclude @tw050x.net.service/assets --exclude @tw050x.net.service/traefik run tsc
