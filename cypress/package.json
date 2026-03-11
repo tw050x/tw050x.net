@@ -8,6 +8,5 @@
     "mongodb": "^6.12.0"
   },
   "name": "@tw050x.net.cypress/e2e",
-  "packageManager": "yarn@4.9.4",
-  "repository": "git@gitlab.com:tw050x.net.cypress/e2e.git"
+  "packageManager": "yarn@4.9.4"
 }
