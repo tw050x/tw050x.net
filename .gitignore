@@ -9,6 +9,9 @@ tmp/*
 # Chrome
 .chrome/
 
+# Cypress
+cypress/downloads/
+
 # Docker
 **/data/*
 
