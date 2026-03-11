@@ -1,6 +1,6 @@
 # Repository
 
-This repository contains the source code and documentation for the unnamed eCommerce platform. It includes various modules, services, and configurations necessary to run and maintain the platform.
+This repository contains the source code and documentation for the tw050x.net platform. It includes various modules, services, and configurations necessary to run and maintain the platform.
 
 ## Install
 

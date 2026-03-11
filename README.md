@@ -1,6 +1,6 @@
 # tw050x.net/platform
 
-Welcome to the unnamed ecommerce platform repository. This repository contains the code for the entire unnamed ecommerce platform. This file will get you started on running the platform locally. For high level platform documentation. see the documentation directory.
+Welcome to the tw050x.net platform repository. This repository contains the code for the entire tw050x.net platform. This file will get you started on running the platform locally. For high level platform documentation. see the documentation directory.
 
 ## Repository & Local Development
 
